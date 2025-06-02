@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <UserSecretsId>b00f11b8-5048-4556-8818-ccf6047a5d3b</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Kulku.Infrastructure\Kulku.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

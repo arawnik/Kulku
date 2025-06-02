@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "postgres1": {
+      "type": "postgresql",
+      "connectionId": "ConnectionStrings:DefaultConnection"
+    },
+    "postgres2": {
+      "type": "postgresql",
+      "connectionId": "ConnectionStrings:UserConnection"
+    }
+  }
+}
