@@ -8,6 +8,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0F6E716C-8553-4728-9DAC-16EDEFE5C25E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "documents", "documents", "{F5751812-2CAD-4B5B-82FC-2540BC3F2704}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kulku.Domain", "src\Kulku.Domain\Kulku.Domain.csproj", "{B74FE263-DC7E-4BB8-831E-35C9CD9933A7}"
 EndProject
