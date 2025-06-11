@@ -1,5 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Kulku.Application.Projects;
+using Kulku.Contract.Projects;
 using Microsoft.Extensions.DependencyInjection;
+using SoulNETLib.Clean.Application.Abstractions.CQRS;
 
 namespace Kulku.Application;
 
@@ -25,6 +28,15 @@ public static class ApplicationDependencyInjection
         // Application services
 
         // Business logic services
+        services.AddScoped<
+            IQueryHandler<GetKeywords.Query, ICollection<KeywordResponse>>,
+            GetKeywords.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetProjects.Query, ICollection<ProjectResponse>>,
+            GetProjects.Handler
+        >();
 
         return services;
     }

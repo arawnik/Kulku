@@ -1,6 +1,15 @@
-@Kulku.Web.Api_HostAddress = http://localhost:5144
+@Kulku.Web.Api_HostAddress = https://localhost:7219
+@Lang = fi
 
-GET {{Kulku.Web.Api_HostAddress}}/weatherforecast/
+
+# PROJECT
+
+### Get all projects
+GET {{Kulku.Web.Api_HostAddress}}/project/
 Accept: application/json
+Accept-Language: {{Lang}}
 
-###
+### Get project keywords
+GET {{Kulku.Web.Api_HostAddress}}/project/keywords/SK
+Accept: application/json
+Accept-Language: {{Lang}}

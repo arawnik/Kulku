@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Kulku.Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kulku.Persistence.Data;
@@ -10,15 +11,32 @@ namespace Kulku.Persistence.Data;
 [ExcludeFromCodeCoverage]
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    //General
-    //public DbSet<Household> Households { get; set; } = null!;
+    // Projects
+    public DbSet<Project> Projects { get; set; } = null!;
+    public DbSet<ProjectTranslation> ProjectTranslations { get; set; } = null!;
+    public DbSet<Keyword> Keywords { get; set; } = null!;
+    public DbSet<KeywordTranslation> KeywordTranslations { get; set; } = null!;
 
+    // Not required unless directly queried/searched
+    // public DbSet<ProjectKeyword> ProjectKeywords { get; set; } = null!;
+    public DbSet<Proficiency> Proficiencies { get; set; } = null!;
+    public DbSet<ProficiencyTranslation> ProficiencyTranslations { get; set; } = null!;
+
+    /// <summary>
+    /// Configures the entity model for the database context.
+    /// This method applies all entity relationships, constraints, and mappings using Fluent API,
+    /// including domain-specific configuration and identity/table mapping extensions.
+    /// </summary>
+    /// <param name="modelBuilder">The model builder used to construct the entity model.</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder, nameof(modelBuilder));
 
         //Call the base first.
         base.OnModelCreating(modelBuilder);
+
+        // Apply entity configurations
+        modelBuilder.ConvertEnumsToString();
 
         // Apply Fluent API configurations
         modelBuilder.ConfigureRelationships();

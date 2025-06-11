@@ -1,7 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Kulku.Persistence.Configurations.Projects;
+using Kulku.Persistence.Converters;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Kulku.Persistence.Data;
 
@@ -15,7 +18,19 @@ internal static class ModelBuilderExtensions
     /// Configures entity relationships, including many-to-many relationships.
     /// </summary>
     /// <param name="modelBuilder">The model builder instance used for defining relationships.</param>
-    internal static void ConfigureRelationships(this ModelBuilder modelBuilder) { }
+    internal static void ConfigureRelationships(this ModelBuilder modelBuilder)
+    {
+        ArgumentNullException.ThrowIfNull(modelBuilder, nameof(modelBuilder));
+
+        // Project module
+        modelBuilder.ApplyConfiguration(new ProjectConfiguration());
+        modelBuilder.ApplyConfiguration(new ProjectTranslationConfiguration());
+        modelBuilder.ApplyConfiguration(new KeywordConfiguration());
+        modelBuilder.ApplyConfiguration(new KeywordTranslationConfiguration());
+        modelBuilder.ApplyConfiguration(new ProjectKeywordConfiguration());
+        modelBuilder.ApplyConfiguration(new ProficiencyConfiguration());
+        modelBuilder.ApplyConfiguration(new ProficiencyTranslationConfiguration());
+    }
 
     /// <summary>
     /// Configures Identity-related table mappings.
@@ -33,5 +48,32 @@ internal static class ModelBuilderExtensions
         builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogin");
         builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaim");
         builder.Entity<IdentityUserToken<string>>().ToTable("UserToken");
+    }
+
+    /// <summary>
+    /// Applies a value converter to all enum properties across the model,
+    /// ensuring enums are stored as strings in the database rather than integers.
+    /// This makes the database more readable and avoids issues with enum value changes.
+    /// </summary>
+    /// <param name="modelBuilder">The EF Core model builder instance.</param>
+    internal static void ConvertEnumsToString(this ModelBuilder modelBuilder)
+    {
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            foreach (var property in entityType.GetProperties())
+            {
+                var enumType = Nullable.GetUnderlyingType(property.ClrType) ?? property.ClrType;
+
+                if (enumType.IsEnum)
+                {
+                    var converterType = typeof(EnumMemberValueConverter<>).MakeGenericType(
+                        enumType
+                    );
+                    var converter = (ValueConverter)Activator.CreateInstance(converterType)!;
+
+                    property.SetValueConverter(converter);
+                }
+            }
+        }
     }
 }

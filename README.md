@@ -18,6 +18,9 @@ Legal content is still being created for:
 
 For details on the project architecture, see [Architecture.md](./documents/Architecture.md)
 
+- Combination of CQRS separation with commands, commands handlers, queries, and query handlers. 
+	- But also creating them similar to vertical slices to keep related code together.
+	- Repository pattern separates data access from business logic and reduces direct dependencies on Entity Framework Core.
 
 ## 🚀 Getting Started
 

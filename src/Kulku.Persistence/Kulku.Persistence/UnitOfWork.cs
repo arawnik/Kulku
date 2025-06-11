@@ -1,5 +1,5 @@
-﻿using Kulku.Domain.Repositories;
-using Kulku.Persistence.Data;
+﻿using Kulku.Persistence.Data;
+using SoulNETLib.Clean.Domain.Repositories;
 
 namespace Kulku.Persistence;
 

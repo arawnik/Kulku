@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Kulku.Domain.Repositories;
+using Kulku.Infrastructure.Repositories;
 using Kulku.Persistence;
 using Kulku.Persistence.Data;
 using Kulku.Persistence.Pgsql;
@@ -8,6 +9,8 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using SoulNETLib.Clean.Domain.Repositories;
 
 namespace Kulku.Infrastructure;
 
@@ -41,6 +44,8 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Repositories
+        services.AddScoped<IProjectRepository, ProjectRepository>();
+        services.AddScoped<IKeywordRepository, KeywordRepository>();
 
         return services;
     }
@@ -64,6 +69,10 @@ public static class InfrastructureDependencyInjection
     {
         await using var serviceScope = builder.ApplicationServices.CreateAsyncScope();
 
+        var logger = serviceScope
+            .ServiceProvider.GetRequiredService<ILoggerFactory>()
+            .CreateLogger("MigrationRunner");
+
         // Resolve database contexts
         await using var userDbContext =
             serviceScope.ServiceProvider.GetRequiredService<UserDbContext>();
@@ -71,10 +80,21 @@ public static class InfrastructureDependencyInjection
             serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         // Apply pending migrations
-        await userDbContext.Database.MigrateAsync();
-        await appDbContext.Database.MigrateAsync();
+        try
+        {
+            logger.LogInformation("Applying migrations...");
 
-        AppDbInitializer.Initialize(appDbContext);
+            await userDbContext.Database.MigrateAsync();
+            await appDbContext.Database.MigrateAsync();
+
+            AppDbInitializer.Initialize(appDbContext);
+
+            logger.LogInformation("Migrations applied successfully.");
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Error occurred during migrations: {Message}", e.Message);
+        }
 
         return builder;
     }

@@ -3,6 +3,7 @@
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="SoulNETLib.Clean.Domain" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Kulku.Domain\Kulku.Domain.csproj" />

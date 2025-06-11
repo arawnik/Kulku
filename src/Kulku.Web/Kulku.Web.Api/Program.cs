@@ -1,10 +1,15 @@
 using Kulku.Application;
+using Kulku.Domain.Constants;
 using Kulku.Infrastructure;
+using Kulku.Web.Api.Endpoints;
 using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddLocalization();
+
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
@@ -20,12 +25,37 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+app.UseExceptionHandler(exceptionHandlerApp =>
+    exceptionHandlerApp.Run(async context => await Results.Problem().ExecuteAsync(context))
+);
+
+app.UseExceptionHandler(exceptionHandlerApp =>
+{
+    exceptionHandlerApp.Run(async httpContext =>
+    {
+        var pds = httpContext.RequestServices.GetService<IProblemDetailsService>();
+        if (pds == null || !await pds.TryWriteAsync(new() { HttpContext = httpContext }))
+        {
+            // Fallback behavior
+            await httpContext.Response.WriteAsync("Fallback: An error occurred.");
+        }
+    });
+});
+
 app.UseForwardedHeaders(
     new ForwardedHeadersOptions
     {
         ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
     }
 );
+
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(Defaults.Culture)
+    .AddSupportedCultures(Defaults.SupportedCultures)
+    .AddSupportedUICultures(Defaults.SupportedCultures);
+localizationOptions.ApplyCurrentCultureToResponseHeaders = true;
+
+app.UseRequestLocalization(localizationOptions);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -48,42 +78,7 @@ else
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing",
-    "Bracing",
-    "Chilly",
-    "Cool",
-    "Mild",
-    "Warm",
-    "Balmy",
-    "Hot",
-    "Sweltering",
-    "Scorching",
-};
-
-app.MapGet(
-        "/weatherforecast",
-        () =>
-        {
-#pragma warning disable CA5394 // Do not use insecure randomness
-            var forecast = Enumerable
-                .Range(1, 5)
-                .Select(index => new WeatherForecast(
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-                .ToArray();
-#pragma warning restore CA5394 // Do not use insecure randomness
-            return forecast;
-        }
-    )
-    .WithName("GetWeatherForecast");
+app.MapTestEndpoints();
+app.MapProjectEndpoints();
 
 await app.RunAsync();
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
