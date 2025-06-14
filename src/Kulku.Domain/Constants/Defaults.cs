@@ -8,7 +8,7 @@ namespace Kulku.Domain.Constants;
 public static class Defaults
 {
     /// <summary>
-    /// The default language used when no specific translation is provided.
+    /// The default language used when no specific info is provided.
     /// </summary>
     public const LanguageCode Language = LanguageCode.English;
     public const string Culture = "en";

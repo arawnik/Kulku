@@ -1,4 +1,5 @@
 ﻿using Kulku.Contract.Enums;
+using Kulku.Domain.Abstractions;
 using Kulku.Domain.Constants;
 
 namespace Kulku.Domain.Projects;
@@ -6,7 +7,10 @@ namespace Kulku.Domain.Projects;
 /// <summary>
 /// Represents a localized version of a proficiency entity, containing language-specific data.
 /// </summary>
-public class ProficiencyTranslation
+/// <remarks>
+/// Used to provide language-specific values for proficiency.
+/// </remarks>
+public class ProficiencyTranslation : ITranslationEntity
 {
     /// <summary>
     /// Unique identifier for the translation.
@@ -19,11 +23,6 @@ public class ProficiencyTranslation
     public Guid ProficiencyId { get; set; }
 
     /// <summary>
-    /// The language code that identifies the language of this translation.
-    /// </summary>
-    public LanguageCode Language { get; set; } = Defaults.Language;
-
-    /// <summary>
     /// Localized name of the proficiency level.
     /// </summary>
     public string Name { get; set; } = string.Empty;
@@ -32,6 +31,11 @@ public class ProficiencyTranslation
     /// Optional localized description of the proficiency level.
     /// </summary>
     public string? Description { get; set; }
+
+    /// <summary>
+    /// Language of the translation.
+    /// </summary>
+    public LanguageCode Language { get; set; } = Defaults.Language;
 
     /// <summary>
     /// Navigation property to the parent <see cref="Proficiency"/>.

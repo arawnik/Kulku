@@ -1,7 +1,7 @@
+using Carter;
 using Kulku.Application;
 using Kulku.Domain.Constants;
 using Kulku.Infrastructure;
-using Kulku.Web.Api.Endpoints;
 using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +18,19 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddCarter();
 builder.Services.AddProblemDetails();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        }
+    );
+});
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -78,7 +90,7 @@ else
 
 app.UseHttpsRedirection();
 
-app.MapTestEndpoints();
-app.MapProjectEndpoints();
+app.UseCors("AllowAll");
+app.MapCarter();
 
 await app.RunAsync();

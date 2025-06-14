@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Kulku.Persistence.Configurations.Cover;
 using Kulku.Persistence.Configurations.Projects;
 using Kulku.Persistence.Converters;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
@@ -30,6 +31,18 @@ internal static class ModelBuilderExtensions
         modelBuilder.ApplyConfiguration(new ProjectKeywordConfiguration());
         modelBuilder.ApplyConfiguration(new ProficiencyConfiguration());
         modelBuilder.ApplyConfiguration(new ProficiencyTranslationConfiguration());
+
+        // Cover module
+        modelBuilder.ApplyConfiguration(new CompanyConfiguration());
+        modelBuilder.ApplyConfiguration(new CompanyTranslationConfiguration());
+        modelBuilder.ApplyConfiguration(new EducationConfiguration());
+        modelBuilder.ApplyConfiguration(new EducationTranslationConfiguration());
+        modelBuilder.ApplyConfiguration(new ExperienceConfiguration());
+        modelBuilder.ApplyConfiguration(new ExperienceTranslationConfiguration());
+        modelBuilder.ApplyConfiguration(new InstitutionConfiguration());
+        modelBuilder.ApplyConfiguration(new InstitutionTranslationConfiguration());
+        modelBuilder.ApplyConfiguration(new IntroductionConfiguration());
+        modelBuilder.ApplyConfiguration(new IntroductionTranslationConfiguration());
     }
 
     /// <summary>

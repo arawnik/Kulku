@@ -1,11 +1,15 @@
 ﻿using Kulku.Contract.Enums;
+using Kulku.Domain.Abstractions;
 
 namespace Kulku.Domain.Projects;
 
 /// <summary>
-/// Represents a categorized descriptor.
+/// Represents a categorized descriptor keyword.
 /// </summary>
-public class Keyword
+/// <remarks>
+/// This entity supports multilingual translations via <see cref="KeywordTranslation"/> records.
+/// </remarks>
+public class Keyword : ITranslatableEntity<KeywordTranslation>
 {
     /// <summary>
     /// Unique identifier for the keyword.
@@ -34,7 +38,7 @@ public class Keyword
     public Guid ProficiencyId { get; set; }
 
     /// <summary>
-    /// Collection of language-specific translations for the keyword name.
+    /// A collection of localized translations for this keyword record.
     /// </summary>
     public ICollection<KeywordTranslation> Translations { get; init; } = [];
 

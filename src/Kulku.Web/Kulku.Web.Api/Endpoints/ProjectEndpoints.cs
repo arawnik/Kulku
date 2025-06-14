@@ -1,4 +1,5 @@
-﻿using Kulku.Application.Projects;
+﻿using Carter;
+using Kulku.Application.Projects;
 using Kulku.Contract.Enums;
 using Kulku.Contract.Projects;
 using Kulku.Web.Api.Middleware;
@@ -9,9 +10,9 @@ using SoulNETLib.Common.Extension;
 
 namespace Kulku.Web.Api.Endpoints;
 
-public static class ProjectEndpoints
+public class ProjectEndpoints : ICarterModule
 {
-    public static void MapProjectEndpoints(this IEndpointRouteBuilder app)
+    public void AddRoutes(IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("project");
 

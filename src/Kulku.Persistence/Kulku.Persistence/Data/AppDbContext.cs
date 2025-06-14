@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Kulku.Domain.Cover;
 using Kulku.Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,22 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     // public DbSet<ProjectKeyword> ProjectKeywords { get; set; } = null!;
     public DbSet<Proficiency> Proficiencies { get; set; } = null!;
     public DbSet<ProficiencyTranslation> ProficiencyTranslations { get; set; } = null!;
+
+    // Cover
+    public DbSet<Company> Companies { get; set; } = null!;
+    public DbSet<CompanyTranslation> CompanyTranslations { get; set; } = null!;
+
+    public DbSet<Education> Educations { get; set; } = null!;
+    public DbSet<EducationTranslation> EducationTranslations { get; set; } = null!;
+
+    public DbSet<Experience> Experiences { get; set; } = null!;
+    public DbSet<ExperienceTranslation> ExperienceTranslations { get; set; } = null!;
+
+    public DbSet<Institution> Institutions { get; set; } = null!;
+    public DbSet<InstitutionTranslation> InstitutionTranslations { get; set; } = null!;
+
+    public DbSet<Introduction> Introductions { get; set; } = null!;
+    public DbSet<IntroductionTranslation> IntroductionTranslations { get; set; } = null!;
 
     /// <summary>
     /// Configures the entity model for the database context.

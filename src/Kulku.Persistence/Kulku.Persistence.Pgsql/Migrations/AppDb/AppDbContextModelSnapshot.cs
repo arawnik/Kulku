@@ -17,10 +17,288 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "9.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ExperienceKeyword", b =>
+                {
+                    b.Property<Guid>("ExperienceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("KeywordsId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("ExperienceId", "KeywordsId");
+
+                    b.HasIndex("KeywordsId");
+
+                    b.ToTable("ExperienceKeyword");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.Company", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.CompanyTranslation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId", "Language")
+                        .IsUnique();
+
+                    b.ToTable("CompanyTranslations");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.Education", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date");
+
+                    b.Property<Guid>("InstitutionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InstitutionId");
+
+                    b.ToTable("Educations");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.EducationTranslation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<Guid>("EducationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EducationId", "Language")
+                        .IsUnique();
+
+                    b.ToTable("EducationTranslations");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.Experience", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly?>("EndDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("Experiences");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.ExperienceTranslation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<Guid>("ExperienceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExperienceId", "Language")
+                        .IsUnique();
+
+                    b.ToTable("ExperienceTranslations");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.Institution", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Institutions");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.InstitutionTranslation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("Department")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<Guid>("InstitutionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InstitutionId", "Language")
+                        .IsUnique();
+
+                    b.ToTable("InstitutionTranslations");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.Introduction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("AvatarUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("PubDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("SmallAvatarUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Introductions");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.IntroductionTranslation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<Guid>("IntroductionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Tagline")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IntroductionId", "Language")
+                        .IsUnique();
+
+                    b.ToTable("IntroductionTranslations");
+                });
 
             modelBuilder.Entity("Kulku.Domain.Projects.Keyword", b =>
                 {
@@ -199,6 +477,98 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
                     b.ToTable("ProjectTranslations");
                 });
 
+            modelBuilder.Entity("ExperienceKeyword", b =>
+                {
+                    b.HasOne("Kulku.Domain.Cover.Experience", null)
+                        .WithMany()
+                        .HasForeignKey("ExperienceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Kulku.Domain.Projects.Keyword", null)
+                        .WithMany()
+                        .HasForeignKey("KeywordsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.CompanyTranslation", b =>
+                {
+                    b.HasOne("Kulku.Domain.Cover.Company", "Company")
+                        .WithMany("Translations")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.Education", b =>
+                {
+                    b.HasOne("Kulku.Domain.Cover.Institution", "Institution")
+                        .WithMany()
+                        .HasForeignKey("InstitutionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Institution");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.EducationTranslation", b =>
+                {
+                    b.HasOne("Kulku.Domain.Cover.Education", "Education")
+                        .WithMany("Translations")
+                        .HasForeignKey("EducationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Education");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.Experience", b =>
+                {
+                    b.HasOne("Kulku.Domain.Cover.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.ExperienceTranslation", b =>
+                {
+                    b.HasOne("Kulku.Domain.Cover.Experience", "Experience")
+                        .WithMany("Translations")
+                        .HasForeignKey("ExperienceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Experience");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.InstitutionTranslation", b =>
+                {
+                    b.HasOne("Kulku.Domain.Cover.Institution", "Institution")
+                        .WithMany("Translations")
+                        .HasForeignKey("InstitutionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Institution");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.IntroductionTranslation", b =>
+                {
+                    b.HasOne("Kulku.Domain.Cover.Introduction", "Introduction")
+                        .WithMany("Translations")
+                        .HasForeignKey("IntroductionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Introduction");
+                });
+
             modelBuilder.Entity("Kulku.Domain.Projects.Keyword", b =>
                 {
                     b.HasOne("Kulku.Domain.Projects.Proficiency", "Proficiency")
@@ -260,6 +630,31 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
                         .IsRequired();
 
                     b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.Company", b =>
+                {
+                    b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.Education", b =>
+                {
+                    b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.Experience", b =>
+                {
+                    b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.Institution", b =>
+                {
+                    b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Cover.Introduction", b =>
+                {
+                    b.Navigation("Translations");
                 });
 
             modelBuilder.Entity("Kulku.Domain.Projects.Keyword", b =>

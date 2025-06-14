@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Kulku.Application.Cover;
 using Kulku.Application.Projects;
+using Kulku.Contract.Cover;
 using Kulku.Contract.Projects;
 using Microsoft.Extensions.DependencyInjection;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
@@ -36,6 +38,21 @@ public static class ApplicationDependencyInjection
         services.AddScoped<
             IQueryHandler<GetProjects.Query, ICollection<ProjectResponse>>,
             GetProjects.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetIntroduction.Query, IntroductionResponse?>,
+            GetIntroduction.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetExperiences.Query, ICollection<ExperienceResponse>>,
+            GetExperiences.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetEducations.Query, ICollection<EducationResponse>>,
+            GetEducations.Handler
         >();
 
         return services;

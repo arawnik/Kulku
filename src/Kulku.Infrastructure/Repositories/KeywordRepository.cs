@@ -28,8 +28,10 @@ public class KeywordRepository(AppDbContext context) : IKeywordRepository
     public async Task<Keyword?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _context
-            .Keywords.Where(p => p.Id == id)
+            .Keywords.Where(k => k.Id == id)
+            .Include(k => k.Translations)
             .Include(k => k.Proficiency)
+            .ThenInclude(kp => kp.Translations)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -51,13 +53,12 @@ public class KeywordRepository(AppDbContext context) : IKeywordRepository
                     .Translations.Where(t => t.Language == language)
                     .Select(t => new { t.Name })
                     .FirstOrDefault(),
-
                 Proficiency = new
                 {
                     k.Proficiency.Scale,
                     k.Proficiency.Order,
                     Translation = k
-                        .Proficiency.Translations.Where(pt => pt.Language == language)
+                        .Proficiency.Translations.Where(t => t.Language == language)
                         .Select(pt => new { pt.Name, pt.Description })
                         .FirstOrDefault(),
                 },
@@ -104,7 +105,7 @@ public class KeywordRepository(AppDbContext context) : IKeywordRepository
                     k.Proficiency.Scale,
                     k.Proficiency.Order,
                     Translation = k
-                        .Proficiency.Translations.Where(pt => pt.Language == language)
+                        .Proficiency.Translations.Where(t => t.Language == language)
                         .Select(pt => new { pt.Name, pt.Description })
                         .FirstOrDefault(),
                 },

@@ -47,6 +47,10 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IProjectRepository, ProjectRepository>();
         services.AddScoped<IKeywordRepository, KeywordRepository>();
 
+        services.AddScoped<IIntroductionRepository, IntroductionRepository>();
+        services.AddScoped<IExperienceRepository, ExperienceRepository>();
+        services.AddScoped<IEducationRepository, EducationRepository>();
+
         return services;
     }
 

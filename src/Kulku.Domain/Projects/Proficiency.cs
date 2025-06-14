@@ -1,9 +1,14 @@
-﻿namespace Kulku.Domain.Projects;
+﻿using Kulku.Domain.Abstractions;
+
+namespace Kulku.Domain.Projects;
 
 /// <summary>
 /// Represents a skill or competency level.
 /// </summary>
-public class Proficiency
+/// <remarks>
+/// This entity supports multilingual translations via <see cref="ProficiencyTranslation"/> records.
+/// </remarks>
+public class Proficiency : ITranslatableEntity<ProficiencyTranslation>
 {
     /// <summary>
     /// Unique identifier for the proficiency level.
@@ -22,7 +27,7 @@ public class Proficiency
     public int Order { get; set; } = 1;
 
     /// <summary>
-    /// Collection of localized translations for the proficiency name and description.
+    /// A collection of localized translations for this proficiency record.
     /// </summary>
     public ICollection<ProficiencyTranslation> Translations { get; init; } = [];
 

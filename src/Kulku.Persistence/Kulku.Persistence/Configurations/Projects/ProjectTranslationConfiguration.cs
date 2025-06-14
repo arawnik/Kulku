@@ -11,13 +11,10 @@ public class ProjectTranslationConfiguration : IEntityTypeConfiguration<ProjectT
     public void Configure(EntityTypeBuilder<ProjectTranslation> builder)
     {
         builder.HasKey(t => t.Id);
-
         builder.Property(k => k.Id).UuidGeneratedOnAdd();
 
         builder.Property(t => t.Name).IsRequired().HasMaxLength(Defaults.TextFieldLength);
-
         builder.Property(t => t.Info).IsRequired().HasMaxLength(Defaults.TextFieldLength);
-
         builder.Property(t => t.Description).HasMaxLength(Defaults.TextAreaLength);
 
         builder.HasIndex(t => new { t.ProjectId, t.Language }).IsUnique();

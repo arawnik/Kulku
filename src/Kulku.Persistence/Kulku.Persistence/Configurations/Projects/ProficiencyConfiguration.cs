@@ -10,11 +10,9 @@ public class ProficiencyConfiguration : IEntityTypeConfiguration<Proficiency>
     public void Configure(EntityTypeBuilder<Proficiency> builder)
     {
         builder.HasKey(p => p.Id);
-
         builder.Property(k => k.Id).UuidGeneratedOnAdd();
 
         builder.Property(p => p.Scale).IsRequired();
-
         builder.Property(p => p.Order).IsRequired();
 
         builder

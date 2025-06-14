@@ -22,10 +22,6 @@ public class ProjectRepository(AppDbContext context) : IProjectRepository
             .Include(p => p.Keywords)
             .ThenInclude(pk => pk.Keyword)
             .ThenInclude(k => k.Translations)
-            .Include(p => p.Keywords)
-            .ThenInclude(pk => pk.Keyword)
-            .ThenInclude(k => k.Proficiency)
-            .ThenInclude(pr => pr.Translations)
             .FirstOrDefaultAsync(cancellationToken);
     }
 

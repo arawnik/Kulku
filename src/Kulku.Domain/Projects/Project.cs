@@ -1,9 +1,14 @@
-﻿namespace Kulku.Domain.Projects;
+﻿using Kulku.Domain.Abstractions;
+
+namespace Kulku.Domain.Projects;
 
 /// <summary>
 /// Represents a portfolio project.
 /// </summary>
-public class Project
+/// <remarks>
+/// This entity supports multilingual translations via <see cref="ProjectTranslation"/> records.
+/// </remarks>
+public class Project : ITranslatableEntity<ProjectTranslation>
 {
     /// <summary>
     /// Unique identifier for the project.
@@ -27,7 +32,7 @@ public class Project
     public required Uri ImageUrl { get; set; }
 
     /// <summary>
-    /// Collection of language-specific translations for the project.
+    /// A collection of localized translations for this project record.
     /// </summary>
     public ICollection<ProjectTranslation> Translations { get; init; } = [];
 

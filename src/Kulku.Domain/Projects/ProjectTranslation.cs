@@ -1,4 +1,5 @@
 ﻿using Kulku.Contract.Enums;
+using Kulku.Domain.Abstractions;
 using Kulku.Domain.Constants;
 
 namespace Kulku.Domain.Projects;
@@ -6,7 +7,10 @@ namespace Kulku.Domain.Projects;
 /// <summary>
 /// Represents a localized version of a project entity, containing language-specific data.
 /// </summary>
-public class ProjectTranslation
+/// <remarks>
+/// Used to provide language-specific values for project.
+/// </remarks>
+public class ProjectTranslation : ITranslationEntity
 {
     /// <summary>
     /// Unique identifier for the project translation.
@@ -17,11 +21,6 @@ public class ProjectTranslation
     /// Foreign key reference to the parent project.
     /// </summary>
     public Guid ProjectId { get; set; }
-
-    /// <summary>
-    /// The language code that identifies the language of this translation.
-    /// </summary>
-    public LanguageCode Language { get; set; } = Defaults.Language;
 
     /// <summary>
     /// The localized name of the project.
@@ -38,6 +37,11 @@ public class ProjectTranslation
     /// Can be left empty.
     /// </summary>
     public string? Description { get; set; }
+
+    /// <summary>
+    /// Language of the translation.
+    /// </summary>
+    public LanguageCode Language { get; set; } = Defaults.Language;
 
     /// <summary>
     /// Navigation property for the related <see cref="Project"/> entity.
