@@ -1,0 +1,309 @@
+﻿/// <reference path="site.scss" />
+
+body {
+  padding-top: 6rem;
+}
+
+main {
+  padding-bottom: 2rem;
+}
+
+@include media-breakpoint-up(lg) {
+  .container-narrow {
+    max-width: 70rem;
+  }
+}
+
+.main-nav {
+  border-bottom: 1px solid $purple;
+}
+
+.footer {
+  color: $mid-gray;
+  @include box-shadow(0 0 0.7rem 0.1rem rgba(0, 0, 0, 0.45));
+}
+
+.header-subinfo {
+  color: $gray-500;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  font-size: calc(1.275rem + 0.3vw);
+}
+
+@include media-breakpoint-up(xl) {
+  .header-subinfo {
+    font-size: 1.5rem;
+  }
+}
+
+.popout-font {
+  font-family: 'Orbitron', sans-serif;
+}
+
+.popout-text {
+  color: $dark;
+  -webkit-text-stroke: 1px $body-color;
+}
+
+.easy-font {
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+.active {
+  color: $act-white !important;
+}
+
+.avatar-image {
+  margin-top: -1.5rem;
+  margin-bottom: -1.5rem;
+  max-width: 25rem;
+}
+
+@include media-breakpoint-down(md) {
+  .avatar-image {
+    margin-bottom: 0;
+    max-width: 25rem;
+  }
+
+  .avatar-image img {
+    width: 100%;
+    max-height: 13rem;
+  }
+
+  body {
+    padding-top: 9rem;
+  }
+}
+
+.lead {
+  color: $purple-300;
+  font-weight: 400;
+}
+
+.aphorism {
+  color: $purple;
+  font-weight: 500;
+}
+
+.author {
+  font-style: italic;
+}
+
+#contact-form textarea {
+  height: 8em;
+}
+
+#contact-form > .form-group {
+  margin-bottom: 1rem;
+}
+
+.well {
+  border: 1px solid $purple;
+}
+
+.featurette-container {
+  margin-bottom: 1.5rem;
+}
+
+.featurette-divider {
+  margin: 2rem 0;
+}
+
+.featurette-heading {
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.05rem;
+}
+
+.featurette img {
+  width: 100%;
+  height: auto;
+}
+
+.timeline {
+  position: relative;
+  margin: 0 auto;
+}
+
+.timeline::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  background-color: $purple;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  margin-left: -2px;
+}
+
+/* The circles on the timeline */
+.timeline-box::after {
+  content: '';
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0.7rem;
+  left: 0;
+  right: 0;
+
+  width: 1rem;
+  height: 1rem;
+
+  background-color: $light;
+  border: 1px solid $gray-600;
+
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.timeline-box h2,
+.timeline-box h3,
+.timeline-box h4,
+.timeline-box h5,
+.timeline-box .h2,
+.timeline-box .h3,
+.timeline-box .h4,
+.timeline-box .h5 {
+  line-height: 1.5rem;
+}
+
+.timeline-box p {
+  margin-top: 0.35rem;
+}
+
+.timeline .timeline-left {
+  text-align: right;
+}
+
+.timeline .timeline-right {
+  text-align: left;
+}
+
+.timeline-right p:last-of-type {
+  margin-bottom: 0;
+}
+
+/* Place the timelime to the left on small screens */
+@include media-breakpoint-down(md) {
+  .timeline::after {
+    left: 1.5rem;
+  }
+  .timeline-box::after {
+    margin-left: 1rem;
+  }
+  .timeline-box {
+    margin-left: 2rem;
+  }
+  .timeline .timeline-left {
+    text-align: left;
+  }
+  .timeline-box p {
+    margin-top: -0.35rem;
+  }
+  .info-block {
+    margin-bottom: 0.8rem;
+  }
+}
+
+.info-progress {
+  height: 1.1rem;
+  line-height: 1.1rem;
+
+  border: 1px solid $body-color;
+}
+
+.info-progress > .progress-bar {
+  background-color: $purple;
+}
+
+.progress > .progress-text {
+  color: $light;
+  font-size: 0.8rem;
+  line-height: 0.8rem;
+}
+
+.info-block {
+  margin-bottom: 1.5rem;
+}
+
+.info-block p {
+  margin-bottom: 0;
+}
+
+.info-block .progress {
+  margin-bottom: 0.46rem;
+}
+
+.list-badge {
+  margin-left: 0.25rem;
+  margin-top: 0.25rem;
+  background-color: $gray-700;
+}
+
+fieldset.collapsible {
+  border: 1px solid $purple;
+  margin-bottom: 0.8rem;
+}
+
+fieldset.collapsible > legend {
+  font-size: 1.2rem;
+  float: inherit;
+  width: auto;
+  padding: 0 1rem;
+  border-bottom: none;
+  margin-left: 3rem;
+  padding: 0 0.5rem;
+
+  cursor: pointer;
+}
+
+fieldset.collapsible > div {
+  display: none;
+  padding: 0.4rem;
+}
+
+/**
+ * ##########################################
+ * THEME: Dark
+ * ##########################################
+ */
+
+@include color-mode(dark) {
+  .timeline-box::after {
+    background-color: $gray-900;
+    border-color: $gray-600;
+  }
+
+  .aphorism {
+    color: $purple-300;
+    font-weight: 500;
+  }
+
+  .list-badge {
+    background-color: $accent-alt-color;
+  }
+
+  .popout-text {
+    color: $accent-color;
+  }
+}
+
+/**
+ * ##########################################
+ * THEME: Light
+ * ##########################################
+ */
+
+@include color-mode(light) {
+  body {
+    color: $body-color;
+    background-color: $background-color;
+  }
+
+  .well {
+    color: $light;
+    background-color: $dark;
+  }
+}

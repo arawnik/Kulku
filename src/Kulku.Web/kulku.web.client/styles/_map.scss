@@ -1,0 +1,14 @@
+﻿/// <reference path="site.scss" />
+//
+// Include any default variable overrides here
+//
+
+$theme-colors: map-merge(
+  $theme-colors,
+  (
+    'accent': $accent-color,
+    'primary': $primary,
+    'warning': $warning,
+    'info': $info,
+  )
+);

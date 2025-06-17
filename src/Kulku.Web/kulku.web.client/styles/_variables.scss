@@ -1,0 +1,24 @@
+﻿/// <reference path="site.scss" />
+//
+// Include any default variable overrides here
+//
+
+$color-mode-type: data;
+
+// Common
+$background-color: #efefef;
+$body-color: #232729;
+
+$link-color: #0a58ca;
+$link-hover-color: darken($link-color, 10%);
+
+// Light mode
+$accent-color: #8d72e1;
+$accent-alt-color: #59359a;
+
+$primary: #2d6da3;
+$warning: #c39712;
+$info: #098da7;
+
+$act-white: #f8f9fa;
+$mid-gray: #a6a6a6;
