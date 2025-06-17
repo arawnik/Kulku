@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Kulku.Application.Contacts;
 using Kulku.Application.Cover;
 using Kulku.Application.Projects;
 using Kulku.Contract.Cover;
@@ -53,6 +54,11 @@ public static class ApplicationDependencyInjection
         services.AddScoped<
             IQueryHandler<GetEducations.Query, ICollection<EducationResponse>>,
             GetEducations.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<SubmitContactRequest.Command>,
+            SubmitContactRequest.Handler
         >();
 
         return services;

@@ -61,6 +61,15 @@ namespace Kulku.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid reCAPTCHA. Please try again..
+        /// </summary>
+        public static string InvalidReCAPTCHA {
+            get {
+                return ResourceManager.GetString("InvalidReCAPTCHA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Test.
         /// </summary>
         public static string Test {

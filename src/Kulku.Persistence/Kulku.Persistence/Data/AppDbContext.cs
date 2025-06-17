@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Kulku.Domain.Contacts;
 using Kulku.Domain.Cover;
 using Kulku.Domain.Projects;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
     public DbSet<Introduction> Introductions { get; set; } = null!;
     public DbSet<IntroductionTranslation> IntroductionTranslations { get; set; } = null!;
+
+    public DbSet<ContactRequest> ContactRequests { get; set; } = null!;
 
     /// <summary>
     /// Configures the entity model for the database context.

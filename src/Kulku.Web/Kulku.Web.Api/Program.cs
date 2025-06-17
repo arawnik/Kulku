@@ -15,11 +15,11 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 });
 
+builder.Services.AddProblemDetails();
+builder.Services.AddCarter();
+
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
-
-builder.Services.AddCarter();
-builder.Services.AddProblemDetails();
 
 builder.Services.AddCors(options =>
 {

@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Kulku.Application.Helpers;
 using Kulku.Domain.Repositories;
+using Kulku.Infrastructure.Helpers;
 using Kulku.Infrastructure.Repositories;
 using Kulku.Persistence;
 using Kulku.Persistence.Data;
@@ -40,6 +42,10 @@ public static class InfrastructureDependencyInjection
 
         services.AddDataProtection().PersistKeysToDbContext<UserDbContext>();
 
+        // Service to service requirements
+        services.Configure<RecaptchaOptions>(configuration.GetSection("Recaptcha"));
+        services.AddHttpClient<IRecaptchaValidator, RecaptchaValidator>();
+
         // Providers
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -50,6 +56,8 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IIntroductionRepository, IntroductionRepository>();
         services.AddScoped<IExperienceRepository, ExperienceRepository>();
         services.AddScoped<IEducationRepository, EducationRepository>();
+
+        services.AddScoped<IContactRequestRepository, ContactRequestRepository>();
 
         return services;
     }
