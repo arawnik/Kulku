@@ -1,0 +1,43 @@
+services:
+  api:
+    image: kulku-api:dev
+    build:
+      context: .
+      dockerfile: src/Kulku.Web/Kulku.Web.Api/Dockerfile
+    ports:
+      - 5144:5144
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    env_file: .env.docker
+    networks:
+      - cvnet
+
+  admin:
+    image: kulku-admin:dev
+    build:
+      context: .
+      dockerfile: src/Kulku.Web/Kulku.Web.Admin/Dockerfile
+    ports:
+      - 5090:5090
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    env_file: .env.docker
+    networks:
+      - cvnet
+
+  client:
+    image: kulku-client:dev
+    build:
+      context: ./src/Kulku.Web/kulku.web.client
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - api
+    env_file: .env.docker
+    networks:
+      - cvnet
+
+networks:
+  cvnet:
+    driver: bridge

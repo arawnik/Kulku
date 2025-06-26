@@ -6,6 +6,9 @@ interface KeywordsSectionProps {
   skills: Keyword[] | undefined
   technologies: Keyword[] | undefined
   programmingLanguages: Keyword[] | undefined
+  skillsIsLoading: boolean
+  technologiesIsLoading: boolean
+  programmingLanguagesIsLoading: boolean
 }
 
 const KeywordsSection = ({ programmingLanguages, skills, technologies }: KeywordsSectionProps): JSX.Element => {

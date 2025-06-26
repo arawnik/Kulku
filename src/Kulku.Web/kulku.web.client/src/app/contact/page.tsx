@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { JSX, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Head from 'next/head'
 import Script from 'next/script'
@@ -8,8 +8,10 @@ import ReCAPTCHA from 'react-google-recaptcha'
 import { useSubmitContactForm } from '@/hooks/useSubmitContactForm'
 import { useAppContext } from '@/app-context'
 import { ContactForm } from '@/app/contact/models'
+import { mapProblemDetailsErrors } from '@/utils/errorUtils'
+import { omitKey } from '@/utils/objectUtils'
 
-const ContactPage = () => {
+const ContactPage = (): JSX.Element => {
   const { t } = useAppContext()
   const router = useRouter()
 
@@ -41,8 +43,8 @@ const ContactPage = () => {
           setErrors({})
           router.push('/thank-you')
         },
-        onError: (error: any) => {
-          setErrors(error || {})
+        onError: (error) => {
+          setErrors(mapProblemDetailsErrors(error))
         },
       }
     )
@@ -51,10 +53,7 @@ const ContactPage = () => {
   const handleCaptchaChange = (token: string | null) => {
     setCaptchaToken(token)
     if (token) {
-      setErrors((prevErrors) => {
-        const { captcha, ...rest } = prevErrors
-        return rest
-      })
+      setErrors((prev) => omitKey(prev, 'captcha'))
     }
   }
 
@@ -62,12 +61,12 @@ const ContactPage = () => {
     <>
       <Head>
         <title>{t('contactMe')}</title>
-        <Script
-          src="https://www.google.com/recaptcha/api.js"
-          async
-          defer
-        />
       </Head>
+      <Script
+        src="https://www.google.com/recaptcha/api.js"
+        async
+        defer
+      />
       <main className="container my-5">
         <h1 className="popout-font mb-3">{t('contactMe')}</h1>
         <hr />

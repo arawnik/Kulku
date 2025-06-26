@@ -5,6 +5,7 @@ import { useAppContext } from '@/app-context'
 
 interface ExperienceSectionProps {
   experiences: Experience[] | undefined
+  isLoading: boolean
 }
 
 const COLLAPSE_STATE_KEY = 'experience_collapsed_states'
@@ -45,7 +46,7 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps): JSX.Element
       <hr />
       <div className="timeline">
         {experiences
-          ? experiences.map((experience, index) => (
+          ? experiences.map((experience) => (
               <div
                 key={experience.id}
                 className="timeline-box row"

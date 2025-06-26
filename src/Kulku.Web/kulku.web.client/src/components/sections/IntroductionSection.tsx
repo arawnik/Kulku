@@ -3,13 +3,14 @@ import { JSX } from 'react'
 
 interface IntroductionSectionProps {
   intro: Introduction | undefined
+  isLoading: boolean
 }
 
 const IntroductionSection = ({ intro }: IntroductionSectionProps): JSX.Element => (
   <section>
     <div className="container container-narrow text-center">
       <p className="aphorism">
-        “Your present circumstances don't determine where you can go; they merely determine where you start”
+        “Your present circumstances don&apos;t determine where you can go; they merely determine where you start”
       </p>
       <p className="author">&mdash; Nido Qubein</p>
     </div>

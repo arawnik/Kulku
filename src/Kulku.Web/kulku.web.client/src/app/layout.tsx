@@ -1,8 +1,21 @@
 import type { Metadata } from 'next'
-import '@styles/App.scss'
+import { Orbitron, Source_Sans_3 } from 'next/font/google'
+import '@styles/app.scss'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import { StrictMode } from 'react'
 import ClientProviders from '@/components/ClientProviders'
+
+// load & optimize the fonts:
+const orbitron = Orbitron({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-orbitron',
+})
+const sourceSans3 = Source_Sans_3({
+  subsets: ['latin'],
+  weight: ['400', '600'],
+  variable: '--font-source-sans-3',
+})
 
 export const metadata: Metadata = {
   title: {
@@ -37,15 +50,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className="h-100"
+      className={`h-100 ${orbitron.variable} ${sourceSans3.variable}`}
       data-bs-theme="dark"
       suppressHydrationWarning
     >
       <head>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Orbitron|Source+Sans+Pro&display=swap"
-        />
         {/* Inline script for initial theme setup to prevent flash */}
         <script
           dangerouslySetInnerHTML={{

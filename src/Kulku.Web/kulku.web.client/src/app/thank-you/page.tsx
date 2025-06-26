@@ -2,8 +2,9 @@
 
 import Head from 'next/head'
 import { useAppContext } from '@/app-context'
+import { JSX } from 'react'
 
-const ThankYouPage = () => {
+const ThankYouPage = (): JSX.Element => {
   const { t } = useAppContext()
 
   return (

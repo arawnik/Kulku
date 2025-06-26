@@ -40,16 +40,13 @@ export const AppContextProvider = ({ children }: AppContextProviderProps): JSX.E
     document.documentElement.setAttribute('data-bs-theme', storedTheme)
 
     setMounted(true)
-  }, [i18n])
+  }, [])
 
-  const setLanguage = useCallback(
-    (lang: Language) => {
-      i18n.changeLanguage(lang)
-      localStorage.setItem('language', lang)
-      setLanguageState(lang)
-    },
-    [i18n]
-  )
+  const setLanguage = useCallback((lang: Language) => {
+    i18n.changeLanguage(lang)
+    localStorage.setItem('language', lang)
+    setLanguageState(lang)
+  }, [])
 
   const toggleTheme = useCallback(() => {
     const newTheme = theme === 'dark' ? 'light' : 'dark'

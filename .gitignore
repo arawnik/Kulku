@@ -368,3 +368,5 @@ src/Holdion.Web/Holdion.Web/Styles/lib/*
 # Ignore potential sensitive information
 NuGet.Config
 .env
+.env.local
+.env.docker

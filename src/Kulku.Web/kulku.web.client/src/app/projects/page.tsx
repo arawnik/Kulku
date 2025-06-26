@@ -1,10 +1,12 @@
 'use client'
 
 import Head from 'next/head'
+import Image from 'next/image'
 import { useAppContext } from '@/app-context'
 import { useProjects } from '@/hooks/useProjects'
+import { JSX } from 'react'
 
-const ProjectsPage = () => {
+const ProjectsPage = (): JSX.Element => {
   const { t } = useAppContext()
   const { data: projects, isLoading, error } = useProjects()
 
@@ -93,12 +95,13 @@ const ProjectsPage = () => {
                       </div>
                     </div>
                     <div className={`col-md-5 ${index % 2 !== 0 ? 'order-md-1' : ''}`}>
-                      <img
+                      <Image
                         className="border"
                         src={`https://jerejunttila.fi/media/${project.imageUrl}`}
                         alt={`${project.name} showcase`}
                         width={500}
                         height={300}
+                        priority
                       />
                     </div>
                   </div>

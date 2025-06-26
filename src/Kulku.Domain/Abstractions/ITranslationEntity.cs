@@ -8,5 +8,8 @@ namespace Kulku.Domain.Abstractions;
 /// </summary>
 public interface ITranslationEntity
 {
+    /// <summary>
+    /// Language of the translation.
+    /// </summary>
     public LanguageCode Language { get; set; }
 }

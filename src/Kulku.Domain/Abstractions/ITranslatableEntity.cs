@@ -7,5 +7,8 @@
 public interface ITranslatableEntity<TTranslation>
     where TTranslation : class, ITranslationEntity
 {
+    /// <summary>
+    /// A collection of localized translations for <see cref="ITranslatableEntity{TTranslation}"/>.
+    /// </summary>
     ICollection<TTranslation> Translations { get; init; }
 }

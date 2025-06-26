@@ -5,6 +5,7 @@ import { JSX } from 'react'
 
 interface EducationSectionProps {
   educations: Education[] | undefined
+  isLoading: boolean
 }
 
 const EducationSection = ({ educations }: EducationSectionProps): JSX.Element => {

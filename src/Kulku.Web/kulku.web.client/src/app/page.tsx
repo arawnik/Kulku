@@ -29,14 +29,26 @@ const CoverPage = (): JSX.Element => {
         <title>{intro ? intro.title : t('loading')}</title>
       </Head>
       <main>
-        <IntroductionSection intro={intro} />
+        <IntroductionSection
+          intro={intro}
+          isLoading={isLoadingIntro}
+        />
         <KeywordsSection
           skills={skills}
+          skillsIsLoading={isLoadingSkills}
           technologies={technologies}
+          technologiesIsLoading={isLoadingTech}
           programmingLanguages={programmingLanguages}
+          programmingLanguagesIsLoading={isLoadingLang}
         />
-        <EducationSection educations={educations} />
-        <ExperienceSection experiences={experiences} />
+        <EducationSection
+          educations={educations}
+          isLoading={isLoadingEdu}
+        />
+        <ExperienceSection
+          experiences={experiences}
+          isLoading={isLoadingExp}
+        />
       </main>
     </>
   )
