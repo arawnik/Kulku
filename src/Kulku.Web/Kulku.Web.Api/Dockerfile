@@ -20,7 +20,6 @@ WORKDIR /src
 COPY ["Directory.Build.props", "."]
 COPY ["Directory.Packages.props", "."]
 COPY [".editorconfig", "."]
-COPY ["NuGet.Config", "."]
 
 COPY ["src/Kulku.Web/Kulku.Web.Api/Kulku.Web.Api.csproj", "src/Kulku.Web/Kulku.Web.Api/"]
 

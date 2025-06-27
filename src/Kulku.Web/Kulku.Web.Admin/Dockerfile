@@ -18,7 +18,6 @@ WORKDIR /src
 COPY ["Directory.Packages.props", "."]
 COPY ["Directory.Build.props", "."]
 COPY [".editorconfig", "."]
-COPY ["NuGet.Config", "."]
 COPY ["src/Kulku.Web/Kulku.Web.Admin/Kulku.Web.Admin.csproj", "src/Kulku.Web/Kulku.Web.Admin/"]
 COPY ["src/Kulku.Infrastructure/Kulku.Infrastructure.csproj", "src/Kulku.Infrastructure/"]
 COPY ["src/Kulku.Application/Kulku.Application.csproj", "src/Kulku.Application/"]
