@@ -25,7 +25,7 @@ jobs:
             dockerfile: src/Kulku.Web/Kulku.Web.Api/Dockerfile
           - name: client
             context: src/Kulku.Web/kulku.web.client
-            dockerfile: Dockerfile
+            dockerfile: src/Kulku.Web/kulku.web.client/Dockerfile
 
     steps:
       - name: Checkout
