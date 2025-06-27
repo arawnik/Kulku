@@ -4,6 +4,7 @@ on:
   push:
     branches: [ "main" ]
   workflow_dispatch: # Manual trigger
+
 permissions:
   contents: read   # for checkout
   packages: write  # to push to GHCR
