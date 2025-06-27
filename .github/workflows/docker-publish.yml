@@ -1,9 +1,7 @@
-name: Docker Image CI
+name: Publish Docker Images
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
   workflow_dispatch: # Manual trigger
 
@@ -30,12 +28,14 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2.2.0
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build & push ${{ matrix.name }} image
         uses: docker/build-push-action@v4
         with:
