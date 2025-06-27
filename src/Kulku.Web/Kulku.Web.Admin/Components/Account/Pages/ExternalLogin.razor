@@ -84,7 +84,7 @@
 
         if (HttpMethods.IsGet(HttpContext.Request.Method))
         {
-            if (Action == LoginCallbackAction)
+            if (IsValidLoginCallback(Action))
             {
                 await OnLoginCallbackAsync();
                 return;
@@ -94,6 +94,12 @@
             // the login page if we get here some other way.
             RedirectManager.RedirectTo("Account/Login");
         }
+    }
+
+    private bool IsValidLoginCallback(string? action)
+    {
+        // Validate that the action matches the expected value and the user is authenticated
+        return action == LoginCallbackAction && HttpContext.User.Identity?.IsAuthenticated == true;
     }
 
     private async Task OnLoginCallbackAsync()
