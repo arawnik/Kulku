@@ -365,8 +365,7 @@ FodyWeavers.xsd
 # Ignore style libraries
 src/Holdion.Web/Holdion.Web/Styles/lib/*
 
-# Ignore potential sensitive information
-NuGet.Config
+# Ignore enf speficic information
 .env
 .env.local
 .env.docker
