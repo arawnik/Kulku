@@ -99,7 +99,7 @@
 
         showRemoveButton = passwordHash is not null || currentLogins.Count > 1;
 
-        if (HttpMethods.IsGet(HttpContext.Request.Method) && IsValidAction(Action))
+        if (HttpMethods.IsGet(HttpContext.Request.Method) && IsValidAction(Action, LinkLoginCallbackAction))
         {
             await OnGetLinkLoginCallbackAsync();
         }
@@ -137,9 +137,10 @@
 
         RedirectManager.RedirectToCurrentPageWithStatus("The external login was added.", HttpContext);
     }
-    private bool IsValidAction(string? action)
+
+    private bool IsValidAction(string? action, string expectedAction)
     {
-        // Validate the action against a whitelist of allowed actions
-        return action == LinkLoginCallbackAction;
+        // Validate that the action matches the expected value
+        return !string.IsNullOrEmpty(action) && action == expectedAction;
     }
 }
