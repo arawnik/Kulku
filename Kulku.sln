@@ -44,9 +44,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{39468866-C610-470B-8AD5-B8F133FAC024}"
 	ProjectSection(SolutionItems) = preProject
 		.dockerignore = .dockerignore
-		docker-compose.release.yml = docker-compose.release.yml
 		.env.docker = .env.docker
+		docker-compose.release.yml = docker-compose.release.yml
 		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflow", "workflow", "{A61AEF34-77ED-476C-B937-B149447F03EE}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\docker-publish.yml = .github\workflows\docker-publish.yml
 	EndProjectSection
 EndProject
 Global
