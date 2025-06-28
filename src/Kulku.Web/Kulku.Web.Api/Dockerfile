@@ -39,5 +39,13 @@ RUN dotnet publish "./Kulku.Web.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publ
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+
+# Create a non-root user
+RUN adduser --disabled-password --gecos "" --uid 5678 --shell /bin/false appuser
+
+COPY --from=publish --chown=appuser:appuser /app/publish .
+
+# Switch to non-root user
+USER appuser
+
 ENTRYPOINT ["dotnet", "Kulku.Web.Api.dll"]
