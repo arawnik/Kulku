@@ -39,4 +39,9 @@ RUN dotnet publish "./Kulku.Web.Admin.csproj" -c $BUILD_CONFIGURATION -o /app/pu
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# Run as non-root user
+RUN adduser -u 5678 --disabled-password --gecos "" --shell /bin/false appuser && chown -R appuser /app
+USER appuser
+
 ENTRYPOINT ["dotnet", "Kulku.Web.Admin.dll"]
