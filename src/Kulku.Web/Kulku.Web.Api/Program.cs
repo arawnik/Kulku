@@ -11,8 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 SecretLoader.LoadFileSecretsAsEnvironmentVariables(
     new Dictionary<string, string>
     {
-        { "ConnectionStrings:DefaultConnection", "kulku-default-conn" },
-        { "ConnectionStrings:UserConnection", "kulku-user-conn" },
+        { "ConnectionStrings__DefaultConnection", "kulku-default-conn" },
+        { "ConnectionStrings__UserConnection", "kulku-user-conn" },
     }
 );
 
