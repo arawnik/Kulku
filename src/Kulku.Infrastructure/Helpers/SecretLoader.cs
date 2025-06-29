@@ -1,10 +1,15 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace Kulku.Infrastructure.Helpers;
 
+/// <summary>
+/// Utility class for loading file-based Docker secrets from `/run/secrets`
+/// into your application's configuration or environment variables.
+/// </summary>
 public static class SecretLoader
 {
+    const string secretDir = "/run/secrets";
+
     /// <summary>
     /// Loads each secret-file under /run/secrets into the given configuration
     /// using colon-delimited keys (e.g. "ConnectionStrings:DefaultConnection").
@@ -15,8 +20,6 @@ public static class SecretLoader
         IDictionary<string, string> configKeyToSecretFileName
     )
     {
-        const string secretDir = "/run/secrets";
-
         foreach (var kv in configKeyToSecretFileName)
         {
             var configKey = kv.Key;
@@ -50,8 +53,6 @@ public static class SecretLoader
         IDictionary<string, string> envVarToSecretFileName
     )
     {
-        const string secretDir = "/run/secrets";
-
         foreach (var kv in envVarToSecretFileName)
         {
             var envVar = kv.Key;

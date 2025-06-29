@@ -94,9 +94,6 @@ else
 
     app.UseForwardedHeaders();
     app.UseHsts();
-
-    //TODO: Remove from non dev environments when alternative is set up!
-    //await app.RunMigrations();
 }
 
 app.UseHttpsRedirection();
