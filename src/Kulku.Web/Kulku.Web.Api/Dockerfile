@@ -2,7 +2,7 @@
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-USER $APP_UID
+ARG USER_UID=5678
 WORKDIR /app
 #EXPOSE 7219
 EXPOSE 5144
@@ -39,5 +39,13 @@ RUN dotnet publish "./Kulku.Web.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publ
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+
+# Create a non-root user
+RUN adduser --disabled-password --gecos "" --uid $USER_UID --shell /bin/false appuser
+
+COPY --from=publish --chown=appuser:appuser /app/publish .
+
+# Switch to non-root user
+USER appuser
+
 ENTRYPOINT ["dotnet", "Kulku.Web.Api.dll"]

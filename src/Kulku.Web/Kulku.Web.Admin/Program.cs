@@ -1,5 +1,6 @@
 using Kulku.Application;
 using Kulku.Infrastructure;
+using Kulku.Infrastructure.Helpers;
 using Kulku.Persistence;
 using Kulku.Persistence.Data;
 using Kulku.Web.Admin.Components;
@@ -9,6 +10,16 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add docker secrets to configuration for deployments
+SecretLoader.LoadFileSecretsIntoConfiguration(
+    builder.Configuration,
+    new Dictionary<string, string>
+    {
+        { "ConnectionStrings:DefaultConnection", "kulku-default-conn" },
+        { "ConnectionStrings:UserConnection", "kulku-user-conn" },
+    }
+);
 
 // Add services to the container.
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
@@ -68,9 +79,6 @@ else
 
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
-
-    //TODO: Remove from non dev environments when alternative is set up!
-    await app.RunMigrations();
 }
 
 app.UseHttpsRedirection();

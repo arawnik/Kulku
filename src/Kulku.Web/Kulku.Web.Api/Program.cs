@@ -2,9 +2,20 @@ using Carter;
 using Kulku.Application;
 using Kulku.Domain.Constants;
 using Kulku.Infrastructure;
+using Kulku.Infrastructure.Helpers;
 using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add docker secrets to configuration for deployments
+SecretLoader.LoadFileSecretsIntoConfiguration(
+    builder.Configuration,
+    new Dictionary<string, string>
+    {
+        { "ConnectionStrings:DefaultConnection", "kulku-default-conn" },
+        { "ConnectionStrings:UserConnection", "kulku-user-conn" },
+    }
+);
 
 // Add services to the container.
 
@@ -83,9 +94,6 @@ else
 
     app.UseForwardedHeaders();
     app.UseHsts();
-
-    //TODO: Remove from non dev environments when alternative is set up!
-    await app.RunMigrations();
 }
 
 app.UseHttpsRedirection();
