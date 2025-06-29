@@ -1,5 +1,6 @@
 using Kulku.Application;
 using Kulku.Infrastructure;
+using Kulku.Infrastructure.Helpers;
 using Kulku.Persistence;
 using Kulku.Persistence.Data;
 using Kulku.Web.Admin.Components;
@@ -11,10 +12,12 @@ using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add docker secrets to configuration for deployments
-builder.Configuration.AddKeyPerFile(
-    directoryPath: "/run/secrets",
-    optional: true,
-    reloadOnChange: false
+SecretLoader.LoadFileSecretsAsEnvironmentVariables(
+    new Dictionary<string, string>
+    {
+        { "ConnectionStrings__DefaultConnection", "kulku-default-conn" },
+        { "ConnectionStrings__UserConnection", "kulku-user-conn" },
+    }
 );
 
 // Add services to the container.
