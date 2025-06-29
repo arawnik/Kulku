@@ -70,7 +70,7 @@ else
     app.UseHsts();
 
     //TODO: Remove from non dev environments when alternative is set up!
-    await app.RunMigrations();
+    //await app.RunMigrations();
 }
 
 app.UseHttpsRedirection();
