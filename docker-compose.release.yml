@@ -1,54 +1,55 @@
+version: "3.9"
+
+secrets:
+  kulku-default-conn:
+    external: true
+  kulku-user-conn:
+    external: true
+
 services:
   api:
-    image: registry.gitlab.com/jerejunttila/kulku-api:stable
+    image: ghcr.io/arawnik/kulku-api:latest
     restart: unless-stopped
+    secrets:
+      - kulku-default-conn
+      - kulku-user-conn
     volumes:
-       - /var/www/holdion/cert:/https:ro
+       - /var/www/manager/letsencrypt:/etc/letsencrypt:ro
     environment:
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/fullchain.pem
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=/run/secrets/default-conn
-      - ConnectionStrings__UserConnection=/run/secrets/user-conn
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /etc/letsencrypt/live/npm-12/fullchain.pem
+      ASPNETCORE_Kestrel__Certificates__Default__KeyPath:  /etc/letsencrypt/live/npm-12/privkey.pem
+      ASPNETCORE_HTTPS_PORTS: 7219
+      ForceHttps: "true"
+      ASPNETCORE_ENVIRONMENT: Production
     ports:
       - 7219:7219
       - 5144:5144
-    secrets:
-      - default-conn
-      - user-conn
+
   admin:
-    image: registry.gitlab.com/jerejunttila/kulku-admin:stable
+    image: ghcr.io/arawnik/kulku-admin:latest
     restart: unless-stopped
+    secrets:
+      - kulku-default-conn
+      - kulku-user-conn
     volumes:
-       - /var/www/holdion/cert:/https:ro
+       - /var/www/manager/letsencrypt:/etc/letsencrypt:ro
     environment:
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/fullchain.pem
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ForceHttps
-      - AllowedHosts
-      - ASPNETCORE_FORWARDEDHEADERS_ENABLED
-      - ConnectionStrings__DefaultConnection=/run/secrets/default-conn
-      - ConnectionStrings__UserConnection=/run/secrets/user-conn
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /etc/letsencrypt/live/npm-12/fullchain.pem
+      ASPNETCORE_Kestrel__Certificates__Default__KeyPath:  /etc/letsencrypt/live/npm-12/privkey.pem
+      ASPNETCORE_HTTPS_PORTS: 7215
+      ForceHttps: "true"
+      ASPNETCORE_ENVIRONMENT: Production
     ports:
       - 7215:7215
       - 5090:5090
-    secrets:
-      - default-conn
-      - user-conn
+
   client:
-    image: registry.gitlab.com/jerejunttila/kulku-client:stable
+    image: ghcr.io/arawnik/kulku-client:latest
     restart: unless-stopped
-    volumes:
-       - /var/www/holdion/cert:/https:ro
     environment:
       - NEXT_PUBLIC_API_BASE_URL
       - NEXT_PUBLIC_RECAPTCHA_SITE_KEY
     ports:
-      - 8085:3000
+      - 8086:3000
     depends_on:
       - api
-
-secrets:
-  default-conn:
-    file: /var/www/jerejunttila/secrets/default-conn.txt
-  user-conn:
-    file: /var/www/jerejunttila/secrets/user-conn.txt
