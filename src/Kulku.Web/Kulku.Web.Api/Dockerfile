@@ -2,7 +2,7 @@
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-ARG APP_UID=5678
+ARG USER_UID=5678
 WORKDIR /app
 #EXPOSE 7219
 EXPOSE 5144
@@ -41,7 +41,7 @@ FROM base AS final
 WORKDIR /app
 
 # Create a non-root user
-RUN adduser --disabled-password --gecos "" --uid $APP_UID --shell /bin/false appuser
+RUN adduser --disabled-password --gecos "" --uid $USER_UID --shell /bin/false appuser
 
 COPY --from=publish --chown=appuser:appuser /app/publish .
 
