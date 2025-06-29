@@ -10,6 +10,13 @@ using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add docker secrets to configuration for deployments
+builder.Configuration.AddKeyPerFile(
+    directoryPath: "/run/secrets",
+    optional: true,
+    reloadOnChange: false
+);
+
 // Add services to the container.
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {

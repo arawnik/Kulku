@@ -6,6 +6,13 @@ using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add docker secrets to configuration for deployments
+builder.Configuration.AddKeyPerFile(
+    directoryPath: "/run/secrets",
+    optional: true,
+    reloadOnChange: false
+);
+
 // Add services to the container.
 
 builder.Services.AddLocalization();
