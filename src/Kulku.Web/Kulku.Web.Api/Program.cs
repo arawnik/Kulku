@@ -8,11 +8,12 @@ using Microsoft.AspNetCore.HttpOverrides;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add docker secrets to configuration for deployments
-SecretLoader.LoadFileSecretsAsEnvironmentVariables(
+SecretLoader.LoadFileSecretsIntoConfiguration(
+    builder.Configuration,
     new Dictionary<string, string>
     {
-        { "ConnectionStrings__DefaultConnection", "kulku-default-conn" },
-        { "ConnectionStrings__UserConnection", "kulku-user-conn" },
+        { "ConnectionStrings:DefaultConnection", "kulku-default-conn" },
+        { "ConnectionStrings:UserConnection", "kulku-user-conn" },
     }
 );
 
