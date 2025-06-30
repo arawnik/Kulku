@@ -10,6 +10,26 @@ import { useAppContext } from '@/app-context'
 import { ContactForm } from '@/app/contact/models'
 import { mapProblemDetailsErrors } from '@/utils/errorUtils'
 import { omitKey } from '@/utils/objectUtils'
+import { ProblemDetails } from '../models'
+
+const validateEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email)
+}
+
+const validateForm = (formData: ContactForm, captchaToken: string | null, t: (key: string) => string) => {
+  const errors: Record<string, string> = {}
+
+  if (!formData.name.trim()) errors.name = t('nameRequired')
+  if (!formData.email.trim()) errors.email = t('emailRequired')
+  else if (!validateEmail(formData.email)) errors.email = t('emailInvalid')
+
+  if (!formData.subject.trim()) errors.subject = t('subjectRequired')
+  if (!formData.message.trim()) errors.message = t('messageRequired')
+  if (!captchaToken) errors.captcha = t('reCaptchaMissing')
+
+  return errors
+}
 
 const ContactPage = (): JSX.Element => {
   const { t } = useAppContext()
@@ -29,13 +49,15 @@ const ContactPage = (): JSX.Element => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!captchaToken) {
-      setErrors({ captcha: t('reCaptchaMissing') })
+    const validationErrors = validateForm(formData, captchaToken, t)
+    if (Object.keys(validationErrors).length) {
+      setErrors(validationErrors)
       return
     }
 
+    // captchaToken Should always be set when form is valid
     mutate(
-      { ...formData, captchaToken },
+      { ...formData, captchaToken: captchaToken ?? '' },
       {
         onSuccess: () => {
           setFormData({ name: '', email: '', subject: '', message: '' })
@@ -44,7 +66,13 @@ const ContactPage = (): JSX.Element => {
           router.push('/thank-you')
         },
         onError: (error) => {
-          setErrors(mapProblemDetailsErrors(error))
+          const apiErrors = mapProblemDetailsErrors(error)
+          // In this case, add custom error into detail
+          const problem = error as unknown as ProblemDetails
+          if (problem.type === 'BusinessRule') {
+            apiErrors.captcha = problem.detail
+          }
+          setErrors(apiErrors)
         },
       }
     )
@@ -52,9 +80,7 @@ const ContactPage = (): JSX.Element => {
 
   const handleCaptchaChange = (token: string | null) => {
     setCaptchaToken(token)
-    if (token) {
-      setErrors((prev) => omitKey(prev, 'captcha'))
-    }
+    if (token) setErrors((prev) => omitKey(prev, 'captcha'))
   }
 
   return (
