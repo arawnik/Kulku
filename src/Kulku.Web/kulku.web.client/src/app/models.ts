@@ -46,7 +46,7 @@ export interface Experience {
   company: Company
   keywords: Keyword[]
   startDate: string // Date in string format
-  endDate: string // Date in string format or null
+  endDate?: string // Date in string format or null
 }
 
 export interface Education {
@@ -54,7 +54,7 @@ export interface Education {
   description: string
   institution: Institution
   startDate: string
-  endDate: string
+  endDate?: string
 }
 
 export interface ProblemDetails {

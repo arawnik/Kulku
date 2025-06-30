@@ -52,7 +52,9 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps): JSX.Element
                 className="timeline-box row"
               >
                 <div className="timeline-left col-md-6">
-                  <p className="h4">{formatEraText(experience.startDate, experience.endDate)}</p>
+                  <p className="h4">
+                    {formatEraText(experience.startDate, experience.endDate, undefined, t('present'))}
+                  </p>
                   <p className="h5">{experience.title}</p>
                 </div>
                 <div className="timeline-right col-md-6">

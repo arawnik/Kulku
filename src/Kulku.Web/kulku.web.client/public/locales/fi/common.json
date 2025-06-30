@@ -30,5 +30,6 @@
   "message": "Viesti",
   "thankYou": "Kiitokset!",
   "thankYouMessage": "Kiitokset viestistäsi. Olen yhteydessä asiasi tiimoilta mahdollisimman pikaisesti.",
-  "send": "Lähetä"
+  "send": "Lähetä",
+  "present": "Nykyhetki"
 }
