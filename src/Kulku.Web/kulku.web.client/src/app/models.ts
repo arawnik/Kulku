@@ -14,7 +14,7 @@ export interface Company {
 
 export interface Institution {
   name: string
-  department: string
+  department?: string
   description: string
 }
 
