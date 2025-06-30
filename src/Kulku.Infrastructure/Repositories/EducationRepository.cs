@@ -49,6 +49,8 @@ public class EducationRepository(AppDbContext context) : IEducationRepository
             .Select(e => new
             {
                 e.Id,
+                e.StartDate,
+                e.EndDate,
                 Translation = e
                     .Translations.Where(t => t.Language == language)
                     .Select(t => new { t.Title, t.Description })
@@ -65,8 +67,6 @@ public class EducationRepository(AppDbContext context) : IEducationRepository
                         })
                         .FirstOrDefault(),
                 },
-                e.StartDate,
-                e.EndDate,
             })
             .ToListAsync(cancellationToken);
 
