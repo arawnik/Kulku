@@ -30,7 +30,7 @@ public class InstitutionTranslation : ITranslationEntity
     /// <summary>
     /// Localized department within the institution, if applicable.
     /// </summary>
-    public string Department { get; set; } = string.Empty;
+    public string? Department { get; set; }
 
     /// <summary>
     /// Localized description of the institution.
