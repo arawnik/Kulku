@@ -46,6 +46,8 @@ public class IntroductionRepository(AppDbContext context) : IIntroductionReposit
             .OrderBy(i => i.PubDate)
             .Select(i => new
             {
+                i.AvatarUrl,
+                i.SmallAvatarUrl,
                 Translation = i
                     .Translations.Where(t => t.Language == language)
                     .Select(t => new
@@ -55,8 +57,6 @@ public class IntroductionRepository(AppDbContext context) : IIntroductionReposit
                         t.Tagline,
                     })
                     .FirstOrDefault(),
-                i.AvatarUrl,
-                i.SmallAvatarUrl,
             })
             .FirstOrDefaultAsync(cancellationToken);
 

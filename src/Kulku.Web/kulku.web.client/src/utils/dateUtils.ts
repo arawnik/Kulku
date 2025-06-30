@@ -29,15 +29,17 @@ export const getYearMonth = (date: string | Date, useHyphen: boolean = false): s
  * @param {string | Date} startDate - The start date in ISO format or Date object.
  * @param {string | Date | null} endDate - The end date in ISO format or Date object, or null for ongoing.
  * @param {boolean} [useHyphen=false] - If true, formats dates as "MM-yyyy"; otherwise, "MM/yyyy".
+ * @param {string} [presentText='Present'] - Translated "Present" text to show when ongoing.
  * @returns {string} Formatted date range with Present text if ongoing.
  */
 export const formatEraText = (
   startDate: string | Date,
-  endDate: string | Date | null = null,
-  useHyphen: boolean = false
+  endDate: string | Date | undefined,
+  useHyphen: boolean = false,
+  presentText: string = 'Present'
 ): string => {
   const startStr = startDate ? getYearMonth(startDate, useHyphen) : ''
-  const endStr = endDate ? getYearMonth(endDate, useHyphen) : 'Present'
+  const endStr = endDate ? getYearMonth(endDate, useHyphen) : presentText
 
   return `${startStr} - ${endStr}`
 }

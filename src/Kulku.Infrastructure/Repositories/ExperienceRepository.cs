@@ -61,25 +61,27 @@ public class ExperienceRepository(AppDbContext context) : IExperienceRepository
                         .Select(ct => new { ct.Name, ct.Description })
                         .FirstOrDefault(),
                 },
-                Keywords = e.Keywords.Select(ek => new
-                {
-                    Translation = ek
-                        .Translations.Where(t => t.Language == language)
-                        .Select(t => new { t.Name })
-                        .FirstOrDefault(),
-                    ek.Type,
-                    Proficiency = new
+                Keywords = e
+                    .Keywords.OrderBy(ek => ek.Order)
+                    .Select(ek => new
                     {
+                        ek.Type,
+                        ek.Order,
+                        ek.Display,
                         Translation = ek
-                            .Proficiency.Translations.Where(t => t.Language == language)
-                            .Select(t => new { t.Name, t.Description })
+                            .Translations.Where(t => t.Language == language)
+                            .Select(t => new { t.Name })
                             .FirstOrDefault(),
-                        ek.Proficiency.Scale,
-                        ek.Proficiency.Order,
-                    },
-                    ek.Order,
-                    ek.Display,
-                }),
+                        Proficiency = new
+                        {
+                            ek.Proficiency.Scale,
+                            ek.Proficiency.Order,
+                            Translation = ek
+                                .Proficiency.Translations.Where(t => t.Language == language)
+                                .Select(t => new { t.Name, t.Description })
+                                .FirstOrDefault(),
+                        },
+                    }),
                 e.StartDate,
                 e.EndDate,
             })

@@ -3,7 +3,7 @@ import i18nextConfig from '../../next-i18next.config'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || ''
 
-export async function apiFetch<T>(url: string, options?: RequestInit): Promise<T> {
+const apiFetch = async <T>(url: string, options?: RequestInit): Promise<T> => {
   const headers = new Headers(options?.headers)
   headers.set('Accept-Language', i18n?.language || i18nextConfig.i18n.defaultLocale)
   headers.set('Content-Type', 'application/json')
@@ -22,3 +22,5 @@ export async function apiFetch<T>(url: string, options?: RequestInit): Promise<T
 
   return response.json()
 }
+
+export default apiFetch

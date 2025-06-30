@@ -12,7 +12,7 @@ public class ProjectKeywordConfiguration : IEntityTypeConfiguration<ProjectKeywo
 
         builder
             .HasOne(pk => pk.Project)
-            .WithMany(p => p.Keywords)
+            .WithMany(p => p.ProjectKeywords)
             .HasForeignKey(pk => pk.ProjectId);
 
         builder

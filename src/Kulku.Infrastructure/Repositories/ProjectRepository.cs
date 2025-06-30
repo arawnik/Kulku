@@ -19,7 +19,7 @@ public class ProjectRepository(AppDbContext context) : IProjectRepository
         return await _context
             .Projects.Where(p => p.Id == id)
             .Include(p => p.Translations)
-            .Include(p => p.Keywords)
+            .Include(p => p.ProjectKeywords)
             .ThenInclude(pk => pk.Keyword)
             .ThenInclude(k => k.Translations)
             .FirstOrDefaultAsync(cancellationToken);
@@ -42,12 +42,12 @@ public class ProjectRepository(AppDbContext context) : IProjectRepository
         var language = CultureLanguageHelper.GetCurrentLanguage();
 
         var result = await _context
-            .Projects.Select(p => new
+            .Projects.OrderBy(p => p.Order)
+            .Select(p => new
             {
                 p.Url,
                 p.ImageUrl,
                 p.Order,
-
                 Translation = p
                     .Translations.Where(t => t.Language == language)
                     .Select(t => new
@@ -57,31 +57,29 @@ public class ProjectRepository(AppDbContext context) : IProjectRepository
                         t.Description,
                     })
                     .FirstOrDefault(),
-
-                Keywords = p.Keywords.Select(pk => new
-                {
-                    pk.Keyword.Type,
-                    pk.Keyword.Order,
-                    pk.Keyword.Display,
-
-                    Translation = pk
-                        .Keyword.Translations.Where(t => t.Language == language)
-                        .Select(t => new { t.Name })
-                        .FirstOrDefault(),
-
-                    Proficiency = new
+                Keywords = p
+                    .ProjectKeywords.OrderBy(pk => pk.Keyword.Order)
+                    .Select(pk => new
                     {
-                        pk.Keyword.Proficiency.Scale,
-                        pk.Keyword.Proficiency.Order,
-
+                        pk.Keyword.Type,
+                        pk.Keyword.Order,
+                        pk.Keyword.Display,
                         Translation = pk
-                            .Keyword.Proficiency.Translations.Where(t => t.Language == language)
-                            .Select(t => new { t.Name, t.Description })
+                            .Keyword.Translations.Where(t => t.Language == language)
+                            .Select(t => new { t.Name })
                             .FirstOrDefault(),
-                    },
-                }),
+
+                        Proficiency = new
+                        {
+                            pk.Keyword.Proficiency.Scale,
+                            pk.Keyword.Proficiency.Order,
+                            Translation = pk
+                                .Keyword.Proficiency.Translations.Where(t => t.Language == language)
+                                .Select(t => new { t.Name, t.Description })
+                                .FirstOrDefault(),
+                        },
+                    }),
             })
-            .OrderBy(p => p.Order)
             .ToListAsync(cancellationToken);
 
         return

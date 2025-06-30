@@ -23,7 +23,7 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder
-            .HasMany(p => p.Keywords)
+            .HasMany(p => p.ProjectKeywords)
             .WithOne(pk => pk.Project)
             .HasForeignKey(pk => pk.ProjectId)
             .OnDelete(DeleteBehavior.Cascade);

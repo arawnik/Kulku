@@ -37,7 +37,7 @@ public class Project : ITranslatableEntity<ProjectTranslation>
     public ICollection<ProjectTranslation> Translations { get; init; } = [];
 
     /// <summary>
-    /// Collection of keyword associations that describe the technologies, skills, or topics related to the project.
+    /// Keywords associated with this project.
     /// </summary>
-    public ICollection<ProjectKeyword> Keywords { get; init; } = [];
+    public ICollection<ProjectKeyword> ProjectKeywords { get; init; } = [];
 }

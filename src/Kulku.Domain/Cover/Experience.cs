@@ -37,7 +37,7 @@ public class Experience : ITranslatableEntity<ExperienceTranslation>
     public ICollection<ExperienceTranslation> Translations { get; init; } = [];
 
     /// <summary>
-    /// Keywords associated with this experience (e.g., skills or technologies used).
+    /// Keywords associated with this experience.
     /// </summary>
     public ICollection<Keyword> Keywords { get; init; } = [];
 

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Orbitron, Source_Sans_3 } from 'next/font/google'
 import '@styles/app.scss'
 import 'bootstrap-icons/font/bootstrap-icons.css'
-import { StrictMode } from 'react'
+import { JSX, StrictMode } from 'react'
 import ClientProviders from '@/components/ClientProviders'
 
 // load & optimize the fonts:
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+const RootLayout = ({ children }: { children: React.ReactNode }): JSX.Element => {
   return (
     <html
       lang="en"
@@ -75,3 +75,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   )
 }
+
+export default RootLayout
