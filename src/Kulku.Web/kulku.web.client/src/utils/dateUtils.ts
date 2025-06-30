@@ -34,7 +34,7 @@ export const getYearMonth = (date: string | Date, useHyphen: boolean = false): s
  */
 export const formatEraText = (
   startDate: string | Date,
-  endDate: string | Date | null = null,
+  endDate: string | Date | undefined,
   useHyphen: boolean = false,
   presentText: string = 'Present'
 ): string => {

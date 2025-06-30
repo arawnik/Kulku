@@ -4,8 +4,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useAppContext } from '@/app-context'
 import { usePathname } from 'next/navigation'
+import { JSX } from 'react'
 
-const HeaderComponent: React.FC = () => {
+const HeaderComponent = (): JSX.Element => {
   const { t, theme, toggleTheme, setLanguage, oppositeLanguage } = useAppContext()
   const pathname = usePathname()
 

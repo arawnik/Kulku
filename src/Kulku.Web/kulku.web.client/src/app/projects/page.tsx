@@ -3,7 +3,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import { useAppContext } from '@/app-context'
-import { useProjects } from '@/hooks/useProjects'
+import useProjects from '@/hooks/useProjects'
 import { JSX } from 'react'
 
 const ProjectsPage = (): JSX.Element => {

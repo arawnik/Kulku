@@ -24,7 +24,7 @@ const EducationSection = ({ educations }: EducationSectionProps): JSX.Element =>
                 className="timeline-box row"
               >
                 <div className="timeline-left col-md-6">
-                  <p className="h4">{getYear(education.endDate)}</p>
+                  <p className="h4">{education.endDate ? getYear(education.endDate) : ''}</p>
                 </div>
                 <div className="timeline-right col-md-6">
                   <p className="h5">
