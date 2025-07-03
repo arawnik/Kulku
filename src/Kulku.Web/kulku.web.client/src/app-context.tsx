@@ -1,17 +1,10 @@
 'use client'
 
 import React, { createContext, JSX, ReactNode, useCallback, useContext, useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import i18n from '@/utils/i18nClient'
 
-type Language = 'fi' | 'en'
-type Theme = 'light' | 'dark'
+export type Theme = 'light' | 'dark'
 
 interface AppContextProps {
-  t: (key: string) => string
-  i18n: typeof i18n
-  setLanguage: (language: Language) => void
-  oppositeLanguage: Language
   theme: Theme
   toggleTheme: () => void
 }
@@ -23,29 +16,16 @@ type AppContextProviderProps = {
 }
 
 export const AppContextProvider = ({ children }: AppContextProviderProps): JSX.Element => {
-  const { t } = useTranslation('common')
-  const [language, setLanguageState] = useState<Language>('en')
   const [theme, setTheme] = useState<Theme>('dark')
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    // Initialize Language
-    const storedLanguage = (localStorage.getItem('language') as Language) || 'en'
-    i18n.changeLanguage(storedLanguage)
-    setLanguageState(storedLanguage)
-
     // Initialize Theme
     const storedTheme = (localStorage.getItem('theme') as Theme) || 'dark'
     setTheme(storedTheme)
     document.documentElement.setAttribute('data-bs-theme', storedTheme)
 
     setMounted(true)
-  }, [])
-
-  const setLanguage = useCallback((lang: Language) => {
-    i18n.changeLanguage(lang)
-    localStorage.setItem('language', lang)
-    setLanguageState(lang)
   }, [])
 
   const toggleTheme = useCallback(() => {
@@ -55,18 +35,12 @@ export const AppContextProvider = ({ children }: AppContextProviderProps): JSX.E
     document.documentElement.setAttribute('data-bs-theme', newTheme)
   }, [theme])
 
-  const oppositeLanguage: Language = language === 'en' ? 'fi' : 'en'
-
   // Prevent hydration error on load
   if (!mounted) {
     return <></>
   }
 
-  return (
-    <AppContext.Provider value={{ t, i18n, setLanguage, oppositeLanguage, theme, toggleTheme }}>
-      {children}
-    </AppContext.Provider>
-  )
+  return <AppContext.Provider value={{ theme, toggleTheme }}>{children}</AppContext.Provider>
 }
 
 export const useAppContext = () => {

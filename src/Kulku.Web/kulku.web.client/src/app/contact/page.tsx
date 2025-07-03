@@ -1,16 +1,15 @@
 'use client'
-
 import { JSX, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Head from 'next/head'
 import Script from 'next/script'
+import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import ReCAPTCHA from 'react-google-recaptcha'
-import useSubmitContactForm from '@/hooks/useSubmitContactForm'
-import { useAppContext } from '@/app-context'
-import { ContactForm } from '@/app/contact/models'
-import { mapProblemDetailsErrors } from '@/utils/errorUtils'
 import { omitKey } from '@/utils/objectUtils'
-import { ProblemDetails } from '../models'
+import { ProblemDetails } from '@/app/models'
+import { ContactForm } from '@/app/contact/models'
+import useSubmitContactForm from '@/hooks/useSubmitContactForm'
+import { mapProblemDetailsErrors } from '@/utils/errorUtils'
 
 const validateEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -32,7 +31,7 @@ const validateForm = (formData: ContactForm, captchaToken: string | null, t: (ke
 }
 
 const ContactPage = (): JSX.Element => {
-  const { t } = useAppContext()
+  const t = useTranslations()
   const router = useRouter()
 
   const [formData, setFormData] = useState<ContactForm>({

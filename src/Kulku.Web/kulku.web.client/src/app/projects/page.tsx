@@ -1,13 +1,13 @@
 'use client'
 
+import { JSX } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
-import { useAppContext } from '@/app-context'
+import { useTranslations } from 'next-intl'
 import useProjects from '@/hooks/useProjects'
-import { JSX } from 'react'
 
 const ProjectsPage = (): JSX.Element => {
-  const { t } = useAppContext()
+  const t = useTranslations()
   const { data: projects, isLoading, error } = useProjects()
 
   if (error) {

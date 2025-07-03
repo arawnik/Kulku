@@ -1,6 +1,6 @@
-import { useAppContext } from '@/app-context'
-import { Keyword } from '@/app/models'
 import { JSX } from 'react'
+import { useTranslations } from 'next-intl'
+import { Keyword } from '@/app/models'
 
 interface KeywordsSectionProps {
   skills: Keyword[] | undefined
@@ -12,7 +12,7 @@ interface KeywordsSectionProps {
 }
 
 const KeywordsSection = ({ programmingLanguages, skills, technologies }: KeywordsSectionProps): JSX.Element => {
-  const { t } = useAppContext()
+  const t = useTranslations()
 
   return (
     <section className="container container-narrow text-center">

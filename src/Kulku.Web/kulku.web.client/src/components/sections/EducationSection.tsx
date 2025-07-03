@@ -1,7 +1,7 @@
-import { useAppContext } from '@/app-context'
+import { JSX } from 'react'
+import { useTranslations } from 'next-intl'
 import { Education } from '@/app/models'
 import { getYear } from '@/utils/dateUtils'
-import { JSX } from 'react'
 
 interface EducationSectionProps {
   educations: Education[] | undefined
@@ -9,7 +9,7 @@ interface EducationSectionProps {
 }
 
 const EducationSection = ({ educations }: EducationSectionProps): JSX.Element => {
-  const { t } = useAppContext()
+  const t = useTranslations()
 
   return (
     <section className="container container-narrow text-center">

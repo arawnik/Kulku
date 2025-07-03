@@ -1,11 +1,11 @@
 'use client'
 
-import Head from 'next/head'
-import { useAppContext } from '@/app-context'
 import { JSX } from 'react'
+import Head from 'next/head'
+import { useTranslations } from 'next-intl'
 
 const ThankYouPage = (): JSX.Element => {
-  const { t } = useAppContext()
+  const t = useTranslations()
 
   return (
     <>
