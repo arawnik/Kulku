@@ -5,6 +5,8 @@ secrets:
     external: true
   kulku-user-conn:
     external: true
+  kulku-recaptcha-secret:
+    external: true
 
 services:
   api:
@@ -13,6 +15,7 @@ services:
     secrets:
       - kulku-default-conn
       - kulku-user-conn
+      - kulku-recaptcha-secret
     volumes:
        - /var/www/manager/letsencrypt:/etc/letsencrypt:ro
     environment:

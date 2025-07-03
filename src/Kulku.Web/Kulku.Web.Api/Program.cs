@@ -14,6 +14,7 @@ SecretLoader.LoadFileSecretsIntoConfiguration(
     {
         { "ConnectionStrings:DefaultConnection", "kulku-default-conn" },
         { "ConnectionStrings:UserConnection", "kulku-user-conn" },
+        { "Recaptcha:SecretKey", "kulku-recaptcha-secret" },
     }
 );
 
