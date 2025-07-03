@@ -1,16 +1,31 @@
 'use client'
 
+import { JSX } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useTranslations } from 'next-intl'
+import { setCookie } from 'cookies-next'
+import { useRouter, usePathname } from 'next/navigation'
 import { useAppContext } from '@/app-context'
-import { usePathname } from 'next/navigation'
-import { JSX } from 'react'
+import { useLanguage } from '@/language-context'
 
 const HeaderComponent = (): JSX.Element => {
-  const { t, theme, toggleTheme, setLanguage, oppositeLanguage } = useAppContext()
+  const { theme, toggleTheme } = useAppContext()
+  const t = useTranslations()
+  const router = useRouter()
   const pathname = usePathname()
+  const { oppositeLanguage } = useLanguage()
 
   const navLinkClass = (path: string) => (pathname === path ? 'active' : '')
+
+  const switchLanguage = () => {
+    setCookie('language', oppositeLanguage, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 365, // 1 year, maximum age for cookie
+    })
+    localStorage.setItem('language', oppositeLanguage)
+    router.refresh()
+  }
 
   return (
     <header>
@@ -89,9 +104,7 @@ const HeaderComponent = (): JSX.Element => {
                   className="d-flex ms-2"
                   data-bs-toggle="tooltip"
                   title={t('oppositeLang')}
-                  onClick={() => {
-                    setLanguage(oppositeLanguage)
-                  }}
+                  onClick={switchLanguage}
                   style={{ cursor: 'pointer' }}
                 >
                   <Image

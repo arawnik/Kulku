@@ -1,7 +1,7 @@
 import React, { useState, useEffect, JSX } from 'react'
+import { useTranslations } from 'next-intl'
 import { Experience } from '@/app/models'
 import { formatEraText } from '@/utils/dateUtils'
-import { useAppContext } from '@/app-context'
 
 interface ExperienceSectionProps {
   experiences: Experience[] | undefined
@@ -12,7 +12,7 @@ const COLLAPSE_STATE_KEY = 'experience_collapsed_states'
 const COLLAPSE_STATE_DEFAULT = true
 
 const ExperienceSection = ({ experiences }: ExperienceSectionProps): JSX.Element => {
-  const { t } = useAppContext()
+  const t = useTranslations()
   const [isCollapsed, setIsCollapsed] = useState<{ [key: number]: boolean }>({})
 
   useEffect(() => {

@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
-import apiFetch from '@/utils/apiClient'
 import { Education } from '@/app/models'
-import { useAppContext } from '@/app-context'
+import { useLanguage } from '@/language-context'
+import apiFetch from '@/utils/apiClient'
 
 const useEducations = () => {
-  const { i18n } = useAppContext()
+  const { language } = useLanguage()
   return useQuery<Education[]>({
-    queryKey: ['educations', i18n.language],
-    queryFn: () => apiFetch<Education[]>('/education/'),
+    queryKey: ['educations', language],
+    queryFn: () => apiFetch<Education[]>('/education/', language),
   })
 }
 

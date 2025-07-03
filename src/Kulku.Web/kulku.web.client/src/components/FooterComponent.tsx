@@ -1,4 +1,5 @@
 'use client'
+
 import { JSX } from 'react'
 
 const FooterComponent = (): JSX.Element => {

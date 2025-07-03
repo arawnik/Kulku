@@ -1,5 +1,5 @@
-import { Introduction } from '@/app/models'
 import { JSX } from 'react'
+import { Introduction } from '@/app/models'
 
 interface IntroductionSectionProps {
   intro: Introduction | undefined

@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
-import apiFetch from '@/utils/apiClient'
 import { Experience } from '@/app/models'
-import { useAppContext } from '@/app-context'
+import { useLanguage } from '@/language-context'
+import apiFetch from '@/utils/apiClient'
 
 const useExperiences = () => {
-  const { i18n } = useAppContext()
+  const { language } = useLanguage()
   return useQuery<Experience[]>({
-    queryKey: ['experiences', i18n.language],
-    queryFn: () => apiFetch<Experience[]>('/experience/'),
+    queryKey: ['experiences', language],
+    queryFn: () => apiFetch<Experience[]>('/experience/', language),
   })
 }
 

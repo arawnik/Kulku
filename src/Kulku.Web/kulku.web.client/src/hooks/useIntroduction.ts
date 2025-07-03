@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
-import apiFetch from '@/utils/apiClient'
 import { Introduction } from '@/app/models'
-import { useAppContext } from '@/app-context'
+import { useLanguage } from '@/language-context'
+import apiFetch from '@/utils/apiClient'
 
 const useIntroduction = () => {
-  const { i18n } = useAppContext()
+  const { language } = useLanguage()
   return useQuery<Introduction | undefined>({
-    queryKey: ['introduction', i18n.language],
-    queryFn: () => apiFetch<Introduction | undefined>('/introduction/'),
+    queryKey: ['introduction', language],
+    queryFn: () => apiFetch<Introduction | undefined>('/introduction/', language),
   })
 }
 

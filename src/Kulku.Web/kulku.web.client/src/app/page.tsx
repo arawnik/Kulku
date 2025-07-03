@@ -1,20 +1,20 @@
 'use client'
 
 import { JSX } from 'react'
+import Head from 'next/head'
+import { useTranslations } from 'next-intl'
 import { KeywordType } from '@/app/models'
 import IntroductionSection from '@/components/sections/IntroductionSection'
 import ExperienceSection from '@/components/sections/ExperienceSection'
 import EducationSection from '@/components/sections/EducationSection'
 import KeywordsSection from '@/components/sections/KeywordsSection'
-import { useAppContext } from '@/app-context'
-import Head from 'next/head'
 import useIntroduction from '@/hooks/useIntroduction'
 import useExperiences from '@/hooks/useExperiences'
 import useEducations from '@/hooks/useEducations'
 import useKeywords from '@/hooks/useKeywords'
 
 const CoverPage = (): JSX.Element => {
-  const { t } = useAppContext()
+  const t = useTranslations()
 
   const { data: intro, isLoading: isLoadingIntro } = useIntroduction()
   const { data: experiences, isLoading: isLoadingExp } = useExperiences()
