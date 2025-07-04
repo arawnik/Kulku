@@ -23,7 +23,7 @@ Copy `.env.template` to `.env` and fill in secrets.
 
 ### 2. Apply Migrations
 
-Follow instructions in the [Database Changes](../../../readme.md#🧪-database-changes) section of main level readme.
+Follow instructions in the [Database Changes](../../../readme.md#-database-changes) section of main level readme.
 
 
 ### 3. Run Locally

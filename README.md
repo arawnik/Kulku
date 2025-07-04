@@ -84,11 +84,11 @@ Here's how to set up the project locally
    cd Kulku
    ```
 2. Follow instructions of each project to get them running:
-   - For [**Frontend** (React + Next.js)](src/Kulku.Web/kulku.web.client/readme.md)
-   - For [**API** (.NET Api)](src/Kulku.Web/Kulku.Web.Api/readme.md)
-   - For [**Admin** (Blazor)](src/Kulku.Web/Kulku.Web.Admin/readme.md)
+   - For [**Frontend** (React + Next.js)](src/Kulku.Web/kulku.web.client/README.md)
+   - For [**API** (.NET Api)](src/Kulku.Web/Kulku.Web.Api/README.md)
+   - For [**Admin** (Blazor)](src/Kulku.Web/Kulku.Web.Admin/README.md)
 3. Apply migrations to the database:
-   Follow the instructions in the [Database Changes](#🧪-database-changes) section below to apply migrations.
+   Follow the instructions in the [Database Changes](#-database-changes) section below to apply migrations.
 
 ### 🐳 Using through Docker
 
