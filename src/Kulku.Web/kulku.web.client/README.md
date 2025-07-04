@@ -1,33 +1,56 @@
-# Important Notices
+# Kulku.Web.Client
 
-This project is personal work and is not maintained actively. The core functionalities are set up so updates are on inspiration basis.
+Public-facing [React](https://react.dev) (with [Next.js](https://nextjs.org) framework) front-end site.
 
-This is a [React](https://react.dev) (with [Next.js](https://nextjs.org) framework) app version for my CV frontend.
 
-# Getting Started
+## 🚀 Quick Start
 
-## Prerequisites
+### Prerequisites
+- Node.js (≥22) & npm or Yarn  
+- [.NET 9 API backend](../Kulku.Web.Api) running at `https://localhost:7219`  
+- (Optional) Docker & Docker Compose  
 
-- [Node.js](https://nodejs.org/en) (developed with v22.15.0)
 
-## Testing locally
-
-1. Install dependencies: `npm install`
-2. Run the development server: `npm run dev`
-3. Open [http://localhost:3000](http://localhost:3000) with your browser
-
-## Using Docker
-
-0. Install [Docker](https://www.docker.com/) on your machine
-1. Build your container: `docker build -t jela-react .`
-   1. With build variables `docker build --build-arg NEXT_PUBLIC_API_BASE_URL=http://localhost:8083/api -t jela-react .`
-2. Run your container: `docker run -p 3000:3000 jela-react`
-
-### Developing
-
-Prettier
-
+### 1. Clone & Configure
 ```bash
-npx prettier . --write
-npx prettier . --check
+git clone git@github.com:arawnik/Kulku.git
+cd src/Kulku.Web/kulku.web.client
 ```
+
+Copy `.env.template` to `.env` and fill in secrets.
+
+
+### 2. Install Dependencies
+```bash
+npm install
+# or
+yarn install
+```
+
+
+### 3. Run in Development
+```bash
+npm run dev
+# or
+yarn dev
+```
+The site will be available at `http://localhost:3000`.
+
+
+### 4. Build & Start
+```bash
+npm run build
+npm run start
+# or
+yarn build
+yarn start
+```
+
+
+## 🐳 Docker (Optional)
+
+0. Env vars are loaded from the top-level `.env.docker` (by default no SSL, api port 5144).
+1. From repo root:
+   ```bash
+   docker-compose up -d --build client
+   ```
