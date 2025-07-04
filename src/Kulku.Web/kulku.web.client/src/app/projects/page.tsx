@@ -97,7 +97,7 @@ const ProjectsPage = (): JSX.Element => {
                     <div className={`col-md-5 ${index % 2 !== 0 ? 'order-md-1' : ''}`}>
                       <Image
                         className="border"
-                        src={`https://jerejunttila.fi/media/${project.imageUrl}`}
+                        src={`/static/projects/${project.imageUrl}`}
                         alt={`${project.name} showcase`}
                         width={500}
                         height={300}

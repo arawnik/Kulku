@@ -8,4 +8,9 @@
     <!-- Folder where production build objects will be placed -->
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="public\static\downloads\" />
+    <Folder Include="public\static\profile\" />
+    <Folder Include="public\static\projects\" />
+  </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getTranslations } from 'next-intl/server'
 import ClientProviders from '@/components/ClientProviders'
+import { getBaseUrl } from '@/utils/uriUtils'
 import { Orbitron, Source_Sans_3 } from 'next/font/google'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import '@styles/app.scss'
@@ -23,6 +24,9 @@ export const generateMetadata = async (): Promise<Metadata> => {
   const locale = await getLocale()
   const t = await getTranslations()
 
+  const baseUrl = await getBaseUrl()
+  const imageUrl = `${baseUrl}/static/social/social-bg.webp`
+
   return {
     title: {
       template: '%s | Jere Junttila',
@@ -34,10 +38,10 @@ export const generateMetadata = async (): Promise<Metadata> => {
       locale: locale,
       description: t('metaDescription'),
       type: 'website',
-      url: 'https://jerejunttila.fi',
+      url: baseUrl,
       images: [
         {
-          url: 'https://jerejunttila.fi/static/img/social-bg.jpg',
+          url: imageUrl,
           width: 800,
           height: 640,
           alt: 'Jere Junttila Portfolio',
@@ -48,7 +52,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
       card: 'summary_large_image',
       title: 'Jere Junttila',
       description: t('metaDescription'),
-      images: ['https://jerejunttila.fi/static/img/social-bg.jpg'],
+      images: [imageUrl],
     },
   }
 }
