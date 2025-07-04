@@ -10,7 +10,7 @@ Blazor WebAssembly admin panel for Kulku’s content management.
 - PostgreSQL (local or container)  
 - (Optional) Docker & Docker Compose  
 
-- 
+
 ### 1. Clone & Configure
 
 1. Clone the repository:
@@ -18,7 +18,6 @@ Blazor WebAssembly admin panel for Kulku’s content management.
    git clone git@github.com:arawnik/Kulku.git
    cd src/Kulku.Web/Kulku.Web.Admin
    ```
-
 2. Set up env:
    Copy `.env.template` to `.env` and fill in secrets.
 
