@@ -13,12 +13,13 @@
 
 ### 1. Clone & Configure
 
-```bash
-git clone git@github.com:arawnik/Kulku.git
-cd Kulku/src/Kulku.Web/Kulku.Web.Api
-```
-
-Copy `.env.template` to `.env` and fill in secrets.
+1. Clone the repository:
+   ```bash
+   git clone git@github.com:arawnik/Kulku.git
+   cd Kulku/src/Kulku.Web/Kulku.Web.Api
+   ```
+2. Set up env:
+   Copy `.env.template` to `.env` and fill in secrets.
 
 
 ### 2. Apply Migrations
@@ -27,10 +28,12 @@ Follow instructions in the [Database Changes](../../../README.md#-database-chang
 
 
 ### 3. Run Locally
-```bash
-cd src/Kulku.Web/Kulku.Web.Api
-dotnet run
-```
+
+- From repo root:
+   ```bash
+   cd src/Kulku.Web/Kulku.Web.Api
+   dotnet run
+   ```
 
 - API runs on `https://localhost:7219` by default.
 - Sample queries in: [Kulku.Web.Api.http](Kulku.Web.Api.http)

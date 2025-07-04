@@ -13,12 +13,14 @@ Blazor WebAssembly admin panel for Kulku’s content management.
 - 
 ### 1. Clone & Configure
 
-```bash
-git clone git@github.com:arawnik/Kulku.git
-cd src/Kulku.Web/Kulku.Web.Admin
-```
+1. Clone the repository:
+   ```bash
+   git clone git@github.com:arawnik/Kulku.git
+   cd src/Kulku.Web/Kulku.Web.Admin
+   ```
 
-Copy `.env.template` to `.env` and fill in secrets.
+2. Set up env:
+   Copy `.env.template` to `.env` and fill in secrets.
 
 
 ### 2. Apply Migrations
@@ -27,10 +29,12 @@ Follow instructions in the [Database Changes](../../../README.md#-database-chang
 
 
 ### 3. Run Locally
-```bash
-cd src/Kulku.Web/Kulku.Web.Admin
-dotnet run
-```
+
+- From repo root:
+   ```bash
+   cd src/Kulku.Web/Kulku.Web.Admin
+   dotnet run
+   ```
 - The app listens on `https://localhost:7215` by default.
 
 
