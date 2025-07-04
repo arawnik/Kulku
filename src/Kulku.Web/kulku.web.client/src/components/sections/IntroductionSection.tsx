@@ -22,12 +22,12 @@ const IntroductionSection = ({ intro }: IntroductionSectionProps): JSX.Element =
               <picture>
                 <source
                   media="(max-width:767px)"
-                  srcSet={'https://jerejunttila.fi/media/' + intro.smallAvatarUrl}
+                  srcSet={'/static/profile/' + intro.smallAvatarUrl}
                   width="400"
                   height="208"
                 />
                 <img
-                  src={'https://jerejunttila.fi/media/' + intro.avatarUrl}
+                  src={'/static/profile/' + intro.avatarUrl}
                   className="img-fluid"
                   alt="Avatar"
                   width="400"

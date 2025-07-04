@@ -108,7 +108,7 @@ const HeaderComponent = (): JSX.Element => {
                   style={{ cursor: 'pointer' }}
                 >
                   <Image
-                    src={`/img/${oppositeLanguage}.svg`}
+                    src={`/static/icons/${oppositeLanguage}.svg`}
                     height={26}
                     width={32}
                     alt={oppositeLanguage}
@@ -154,7 +154,7 @@ const HeaderComponent = (): JSX.Element => {
               </li>
               <li>
                 <a
-                  href="https://jerejunttila.fi/media/pdf/CV_JereJunttila.pdf"
+                  href="/static/downloads/CV_JereJunttila.pdf"
                   className="nav-link text-secondary"
                   target="_blank"
                   rel="noopener noreferrer"

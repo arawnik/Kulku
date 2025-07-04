@@ -55,3 +55,8 @@ next-env.d.ts
 *.njsproj
 *.sln
 *.sw?
+
+# Content related changing
+public/static/downloads
+public/static/profile
+public/static/projects

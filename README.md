@@ -1,10 +1,17 @@
-﻿## 🌟 Key Features
+﻿Welcome to Kulku, the code repository that powers my personal CV site and its administrative backend.
+This project is designed to showcase my professional profile, publicly shareable solo projects, and work as a code sample.
+
+## 🌟 Key Features
 
 ### Site
-- 
+- Dynamic CV & Portfolio: Easily update work experience, education, skills, and project showcases without code changes.
+- Contact & Inquiries: Built-in form with spam protection and email forwarding.
+- Theming & Localization: Light/dark mode toggle and multilingual support (English & Finnish).
+- Responsive & Accessible: Optimized for mobile, tablet, and desktop. Also SEO optimized for search engines.
 
-### Admin
-- 
+### Backend
+- Clean architecture: Separation of concerns with a focus on maintainability and testability.
+- CQRS & Vertical Slices: Command handlers, query handlers, and validators organized in feature slices for maintainability.
 
 
 ## 🔐 Important Notices
@@ -25,19 +32,17 @@ For details on the project architecture, see [Architecture.md](./documents/Archi
 ## 🚀 Getting Started
 
 ### Prerequisites
-- .NET 9 SDK
-- Docker + Docker Compose
-- PostgreSQL (default)
+- [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download)
+- [Docker + Docker Compose](https://www.docker.com/)
+- [PostgreSQL](https://www.postgresql.org/)
 - EF Core CLI tools (for migrations)
-- npm (react + next.js)
+- [Node (react + next.js)](https://nodejs.org/en)
 
 
 ### 🛠 Installing
 
 
 ## 🐳 Docker Usage
-
-### Build and run
 
 
 ## 🧪 Database Changes
@@ -64,34 +69,26 @@ dotnet test
 
 ## 🚀 Deployment
 
-Deployment is managed via Azure DevOps Pipelines. You can view the current status via the build badges at the top.
+Continuous integration is managed via GitHub actions:
 
-CI/CD pipeline includes:
-- Build validation
-- Publish builds for main branch. Generates a Docker image into GitLab
-
-
-## 📦 Additional Project Information
-
-### Versioning
-
-This project uses **date-based versioning**.  
-Format: `YYYYMMDD` (e.g. `20250406`)  
-See [tags on this repository](https://dev.azure.com/jerejunttila/_git/Kulku/tags) for previous versions.
+- Build validation on pull requests
+- Publish builds for main branch. Generates a Docker image into GitHub Container Registry.
 
 
 ## 🧰 Built With
 
-- [.NET 9](https://dotnet.microsoft.com/)
-- [Blazor WebAssembly](https://learn.microsoft.com/en-us/aspnet/core/blazor)
-- [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
-- [PostgreSQL](https://www.postgresql.org/)
-- [Bootstrap 5.3](https://getbootstrap.com/)
-
-
-## 🤝 Contributing
-
-This project is currently under private development. Public contributions may be accepted in the future. Please stay tuned for updates and contribution guidelines.
+- Backend
+  - [.NET 9](https://dotnet.microsoft.com/)
+  - [Blazor WebAssembly](https://learn.microsoft.com/en-us/aspnet/core/blazor)
+  - [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
+  - [PostgreSQL](https://www.postgresql.org/)
+- Frontend:
+  - [React](https://react.dev/)
+  - [Next.js](https://nextjs.org/)
+  - [Bootstrap 5.3](https://getbootstrap.com/)
+  - [TanStack Query](https://tanstack.com/query/latest)
+- Admin:
+  - [Blazor WebApp](https://learn.microsoft.com/en-us/aspnet/core/blazor)
 
 
 ## 📜 License
@@ -99,17 +96,8 @@ This project is currently under private development. Public contributions may be
 The project is licensed under [TBD] – See `LICENSE` file once available.
 
 
-## 🙏 Acknowledgments
-
-Special thanks to:
-
-- .NET open source contributors
-- PostgreSQL developers
-- Azure DevOps pipelines and deployment tooling
-
-
 ## 👤 Authors
 
 - [**Jere Junttila**](https://jerejunttila.fi/)
 
-See also the list of members who contributed on [Azure DevOps](https://dev.azure.com/jerejunttila/).
+See also the list of members who contributed on [GitHub](https://github.com/arawnik/Kulku/graphs/contributors).
