@@ -17,7 +17,7 @@ services:
       - kulku-user-conn
       - kulku-recaptcha-secret
     volumes:
-       - /var/www/manager/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/manager/letsencrypt:/etc/letsencrypt:ro
     environment:
       ASPNETCORE_Kestrel__Certificates__Default__Path: /etc/letsencrypt/live/npm-12/fullchain.pem
       ASPNETCORE_Kestrel__Certificates__Default__KeyPath:  /etc/letsencrypt/live/npm-12/privkey.pem
@@ -35,7 +35,7 @@ services:
       - kulku-default-conn
       - kulku-user-conn
     volumes:
-       - /var/www/manager/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/manager/letsencrypt:/etc/letsencrypt:ro
     environment:
       ASPNETCORE_Kestrel__Certificates__Default__Path: /etc/letsencrypt/live/npm-12/fullchain.pem
       ASPNETCORE_Kestrel__Certificates__Default__KeyPath:  /etc/letsencrypt/live/npm-12/privkey.pem
@@ -49,6 +49,10 @@ services:
   client:
     image: ghcr.io/arawnik/kulku-client:latest
     restart: unless-stopped
+    volumes:
+      - /var/www/jerejunttila/out/downloads:/app/public/static/downloads:ro
+      - /var/www/jerejunttila/out/profile:/app/public/static/profile:ro
+      - /var/www/jerejunttila/out/projects:/app/public/static/projects:ro
     environment:
       - NEXT_PUBLIC_API_BASE_URL
       - NEXT_PUBLIC_RECAPTCHA_SITE_KEY
