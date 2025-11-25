@@ -17,6 +17,7 @@ public class ExperienceTranslationConfiguration : IEntityTypeConfiguration<Exper
         builder.Property(t => t.Description).HasMaxLength(Defaults.TextAreaLength);
         builder.Property(t => t.Language).IsRequired();
 
-        builder.HasIndex(t => new { t.ExperienceId, t.Language }).IsUnique();
+        // Indexing for performance
+        builder.HasIndex(t => new { t.Language, t.ExperienceId }).IsUnique();
     }
 }

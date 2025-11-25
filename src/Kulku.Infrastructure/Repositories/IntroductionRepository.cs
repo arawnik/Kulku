@@ -44,30 +44,21 @@ public class IntroductionRepository(AppDbContext context) : IIntroductionReposit
         var result = await _context
             .Introductions.Where(i => i.PubDate <= DateTime.UtcNow)
             .OrderBy(i => i.PubDate)
-            .Select(i => new
-            {
-                i.AvatarUrl,
-                i.SmallAvatarUrl,
-                Translation = i
-                    .Translations.Where(t => t.Language == language)
-                    .Select(t => new
-                    {
-                        t.Title,
-                        t.Content,
-                        t.Tagline,
-                    })
-                    .FirstOrDefault(),
-            })
+            .LeftJoin(
+                _context.IntroductionTranslations.Where(t => t.Language == language),
+                i => i.Id,
+                t => t.IntroductionId,
+                (i, it) =>
+                    new IntroductionResponse(
+                        Title: it != null ? it.Title : string.Empty,
+                        Content: it != null ? it.Content : string.Empty,
+                        Tagline: it != null ? it.Tagline : string.Empty,
+                        AvatarUrl: i.AvatarUrl,
+                        SmallAvatarUrl: i.SmallAvatarUrl
+                    )
+            )
             .FirstOrDefaultAsync(cancellationToken);
 
-        return result is null
-            ? null
-            : new IntroductionResponse(
-                Title: result.Translation?.Title ?? string.Empty,
-                Content: result.Translation?.Content ?? string.Empty,
-                Tagline: result.Translation?.Tagline ?? string.Empty,
-                AvatarUrl: result.AvatarUrl,
-                SmallAvatarUrl: result.SmallAvatarUrl
-            );
+        return result;
     }
 }

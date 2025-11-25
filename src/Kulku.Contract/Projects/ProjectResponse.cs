@@ -3,7 +3,7 @@
 public record ProjectResponse(
     string Name,
     string Info,
-    string Description,
+    string? Description,
     Uri Url,
     int Order,
     Uri ImageUrl,

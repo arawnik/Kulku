@@ -1,12 +1,12 @@
 ﻿# Kulku.Web.Api
 
-.NET 9 Minimal API for Kulku’s backend.
+.NET 10 Minimal API for Kulku’s backend.
 
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - PostgreSQL (local or container)
 - (Optional) Docker & Docker Compose
 

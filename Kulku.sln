@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.13.35828.75
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11205.157 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -38,6 +38,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kulku.Persistence", "src\Kulku.Persistence\Kulku.Persistence\Kulku.Persistence.csproj", "{B15A0F4F-D9DA-4C3A-9081-5A535DAF9851}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kulku.Persistence.Pgsql", "src\Kulku.Persistence\Kulku.Persistence.Pgsql\Kulku.Persistence.Pgsql.csproj", "{3B684B6B-0551-4F51-8AF3-E52AEF83A8C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kulku.Persistence.SqlServer", "src\Kulku.Persistence\Kulku.Persistence.SqlServer\Kulku.Persistence.SqlServer.csproj", "{406A0A23-1FAF-479F-B6D3-42839D6C084E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kulku.Contract", "src\Kulku.Contract\Kulku.Contract.csproj", "{7B1D5DC2-5932-4D8F-BC4F-92A908EBA861}"
 EndProject
@@ -98,6 +100,10 @@ Global
 		{7B1D5DC2-5932-4D8F-BC4F-92A908EBA861}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B1D5DC2-5932-4D8F-BC4F-92A908EBA861}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B1D5DC2-5932-4D8F-BC4F-92A908EBA861}.Release|Any CPU.Build.0 = Release|Any CPU
+		{406A0A23-1FAF-479F-B6D3-42839D6C084E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{406A0A23-1FAF-479F-B6D3-42839D6C084E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{406A0A23-1FAF-479F-B6D3-42839D6C084E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{406A0A23-1FAF-479F-B6D3-42839D6C084E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -112,6 +118,7 @@ Global
 		{B15A0F4F-D9DA-4C3A-9081-5A535DAF9851} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{3B684B6B-0551-4F51-8AF3-E52AEF83A8C0} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{7B1D5DC2-5932-4D8F-BC4F-92A908EBA861} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{406A0A23-1FAF-479F-B6D3-42839D6C084E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E558D3BE-431A-46DC-B614-EF829A356AA1}

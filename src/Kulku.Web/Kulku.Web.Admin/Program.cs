@@ -6,7 +6,6 @@ using Kulku.Persistence.Data;
 using Kulku.Web.Admin.Components;
 using Kulku.Web.Admin.Components.Account;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,15 +21,9 @@ SecretLoader.LoadFileSecretsIntoConfiguration(
 );
 
 // Add services to the container.
-builder.Services.Configure<ForwardedHeadersOptions>(options =>
-{
-    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-});
-
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
 builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<
     AuthenticationStateProvider,
@@ -50,8 +43,10 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder
     .Services.AddIdentityCore<ApplicationUser>(options =>
-        options.SignIn.RequireConfirmedAccount = true
-    )
+    {
+        options.SignIn.RequireConfirmedAccount = true;
+        options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
+    })
     .AddEntityFrameworkStores<UserDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
@@ -59,13 +54,6 @@ builder
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 var app = builder.Build();
-
-app.UseForwardedHeaders(
-    new ForwardedHeadersOptions
-    {
-        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
-    }
-);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -75,12 +63,10 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    app.UseForwardedHeaders();
-
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
 
 app.UseAntiforgery();

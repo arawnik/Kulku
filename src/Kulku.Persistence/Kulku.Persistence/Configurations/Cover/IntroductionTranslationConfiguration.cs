@@ -19,6 +19,7 @@ public class IntroductionTranslationConfiguration
         builder.Property(t => t.Content).HasMaxLength(Defaults.TextAreaLength);
         builder.Property(t => t.Language).IsRequired();
 
-        builder.HasIndex(t => new { t.IntroductionId, t.Language }).IsUnique();
+        // Indexing for performance
+        builder.HasIndex(t => new { t.Language, t.IntroductionId }).IsUnique();
     }
 }

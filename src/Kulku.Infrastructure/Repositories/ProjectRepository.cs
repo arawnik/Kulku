@@ -43,70 +43,53 @@ public class ProjectRepository(AppDbContext context) : IProjectRepository
 
         var result = await _context
             .Projects.OrderBy(p => p.Order)
-            .Select(p => new
-            {
-                p.Url,
-                p.ImageUrl,
-                p.Order,
-                Translation = p
-                    .Translations.Where(t => t.Language == language)
-                    .Select(t => new
-                    {
-                        t.Name,
-                        t.Info,
-                        t.Description,
-                    })
-                    .FirstOrDefault(),
-                Keywords = p
-                    .ProjectKeywords.OrderBy(pk => pk.Keyword.Order)
+            .LeftJoin(
+                _context.ProjectTranslations.Where(t => t.Language == language),
+                p => p.Id,
+                pt => pt.ProjectId,
+                (p, pt) => new { p, pt }
+            )
+            .Select(x => new ProjectResponse(
+                Name: x.pt != null ? x.pt.Name : string.Empty,
+                Info: x.pt != null ? x.pt.Info : string.Empty,
+                Description: x.pt != null ? x.pt.Description : string.Empty,
+                Url: x.p.Url,
+                Order: x.p.Order,
+                ImageUrl: x.p.ImageUrl,
+                Keywords: x.p.ProjectKeywords.OrderBy(pk => pk.Keyword.Order)
+                    // Avoid multiple selects by shaping first
                     .Select(pk => new
                     {
-                        pk.Keyword.Type,
-                        pk.Keyword.Order,
-                        pk.Keyword.Display,
-                        Translation = pk
+                        pk.Keyword,
+                        KeywordName = pk
                             .Keyword.Translations.Where(t => t.Language == language)
-                            .Select(t => new { t.Name })
+                            .Select(t => t.Name)
                             .FirstOrDefault(),
-
-                        Proficiency = new
-                        {
-                            pk.Keyword.Proficiency.Scale,
-                            pk.Keyword.Proficiency.Order,
-                            Translation = pk
-                                .Keyword.Proficiency.Translations.Where(t => t.Language == language)
-                                .Select(t => new { t.Name, t.Description })
-                                .FirstOrDefault(),
-                        },
-                    }),
-            })
-            .ToListAsync(cancellationToken);
-
-        return
-        [
-            .. result.Select(p => new ProjectResponse(
-                Name: p.Translation?.Name ?? string.Empty,
-                Info: p.Translation?.Info ?? string.Empty,
-                Description: p.Translation?.Description ?? string.Empty,
-                Url: p.Url,
-                Order: p.Order,
-                ImageUrl: p.ImageUrl,
-                Keywords:
-                [
-                    .. p.Keywords.Select(k => new KeywordResponse(
-                        Name: k.Translation?.Name ?? string.Empty,
-                        Type: k.Type,
+                        ProficiencyTranslation = pk
+                            .Keyword.Proficiency.Translations.Where(t => t.Language == language)
+                            .Select(t => new { t.Name, t.Description })
+                            .FirstOrDefault(),
+                    })
+                    // then map into DTO
+                    .Select(k => new KeywordResponse(
+                        Name: k.KeywordName ?? string.Empty,
+                        Type: k.Keyword.Type,
                         Proficiency: new ProficiencyResponse(
-                            Name: k.Proficiency.Translation?.Name ?? string.Empty,
-                            Description: k.Proficiency.Translation?.Description ?? string.Empty,
-                            Scale: k.Proficiency.Scale,
-                            Order: k.Proficiency.Order
+                            Name: k.ProficiencyTranslation != null
+                                ? k.ProficiencyTranslation.Name
+                                : string.Empty,
+                            Description: k.ProficiencyTranslation != null
+                                ? k.ProficiencyTranslation.Description
+                                : string.Empty,
+                            Scale: k.Keyword.Proficiency.Scale,
+                            Order: k.Keyword.Proficiency.Order
                         ),
-                        Order: k.Order,
-                        Display: k.Display
-                    )),
-                ]
-            )),
-        ];
+                        Order: k.Keyword.Order,
+                        Display: k.Keyword.Display
+                    ))
+                    .ToList()
+            ))
+            .ToListAsync(cancellationToken);
+        return result;
     }
 }

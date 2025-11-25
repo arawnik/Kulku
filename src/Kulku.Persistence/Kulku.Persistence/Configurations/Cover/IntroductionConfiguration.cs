@@ -21,5 +21,8 @@ public class IntroductionConfiguration : IEntityTypeConfiguration<Introduction>
             .WithOne(t => t.Introduction)
             .HasForeignKey(t => t.IntroductionId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        // Indexing for performance
+        builder.HasIndex(e => e.PubDate);
     }
 }

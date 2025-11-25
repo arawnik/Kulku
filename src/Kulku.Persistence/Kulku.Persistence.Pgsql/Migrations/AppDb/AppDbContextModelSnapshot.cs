@@ -17,7 +17,7 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.6")
+                .HasAnnotation("ProductVersion", "10.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -105,7 +105,9 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId", "Language")
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("Language", "CompanyId")
                         .IsUnique();
 
                     b.ToTable("CompanyTranslations");
@@ -128,6 +130,8 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
                         .HasColumnType("date");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EndDate");
 
                     b.HasIndex("InstitutionId");
 
@@ -160,7 +164,9 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EducationId", "Language")
+                    b.HasIndex("EducationId");
+
+                    b.HasIndex("Language", "EducationId")
                         .IsUnique();
 
                     b.ToTable("EducationTranslations");
@@ -185,6 +191,8 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
+
+                    b.HasIndex("EndDate");
 
                     b.ToTable("Experiences");
                 });
@@ -215,7 +223,9 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExperienceId", "Language")
+                    b.HasIndex("ExperienceId");
+
+                    b.HasIndex("Language", "ExperienceId")
                         .IsUnique();
 
                     b.ToTable("ExperienceTranslations");
@@ -263,7 +273,9 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
 
                     b.HasKey("Id");
 
-                    b.HasIndex("InstitutionId", "Language")
+                    b.HasIndex("InstitutionId");
+
+                    b.HasIndex("Language", "InstitutionId")
                         .IsUnique();
 
                     b.ToTable("InstitutionTranslations");
@@ -288,6 +300,8 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PubDate");
 
                     b.ToTable("Introductions");
                 });
@@ -323,7 +337,9 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IntroductionId", "Language")
+                    b.HasIndex("IntroductionId");
+
+                    b.HasIndex("Language", "IntroductionId")
                         .IsUnique();
 
                     b.ToTable("IntroductionTranslations");
@@ -640,7 +656,7 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
                         .IsRequired();
 
                     b.HasOne("Kulku.Domain.Projects.Project", "Project")
-                        .WithMany("Keywords")
+                        .WithMany("ProjectKeywords")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -702,7 +718,7 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
 
             modelBuilder.Entity("Kulku.Domain.Projects.Project", b =>
                 {
-                    b.Navigation("Keywords");
+                    b.Navigation("ProjectKeywords");
 
                     b.Navigation("Translations");
                 });

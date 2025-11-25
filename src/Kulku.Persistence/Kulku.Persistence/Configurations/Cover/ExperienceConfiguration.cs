@@ -25,5 +25,8 @@ public class ExperienceConfiguration : IEntityTypeConfiguration<Experience>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(e => e.Keywords).WithMany();
+
+        // Indexing for performance
+        builder.HasIndex(e => e.EndDate);
     }
 }
