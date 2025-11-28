@@ -6,7 +6,8 @@ import ClientProviders from '@/components/ClientProviders'
 import { getBaseUrl } from '@/utils/uriUtils'
 import { Orbitron, Source_Sans_3 } from 'next/font/google'
 import 'bootstrap-icons/font/bootstrap-icons.css'
-import '@styles/app.scss'
+//TODO: Go back to next style scss when bootstrap 6 launches
+//import '@styles/app.scss'
 
 // load & optimize the fonts:
 const orbitron = Orbitron({
@@ -77,6 +78,10 @@ const RootLayout = async ({ children }: { children: React.ReactNode }): Promise<
               })();
             `,
           }}
+        />
+        <link
+          rel="stylesheet"
+          href="/css/app.min.css"
         />
       </head>
       <body className={'d-flex flex-column h-100 flex'}>

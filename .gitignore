@@ -363,7 +363,7 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Ignore style libraries
-src/Holdion.Web/Holdion.Web/Styles/lib/*
+style/Ui.Style/lib/
 
 # Ignore enf speficic information
 .env
