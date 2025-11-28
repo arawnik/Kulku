@@ -7,6 +7,8 @@ WORKDIR /app
 #EXPOSE 7219
 EXPOSE 5144
 
+USER $APP_UID
+
 #ENV ASPNETCORE_HTTPS_PORTS=7219
 ENV ASPNETCORE_HTTP_PORTS=5144
 
@@ -40,12 +42,6 @@ RUN dotnet publish "./Kulku.Web.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publ
 FROM base AS final
 WORKDIR /app
 
-# Create a non-root user
-RUN adduser --disabled-password --gecos "" --uid $USER_UID --shell /bin/false appuser
-
-COPY --from=publish --chown=appuser:appuser /app/publish .
-
-# Switch to non-root user
-USER appuser
+COPY --from=publish /app/publish .
 
 ENTRYPOINT ["dotnet", "Kulku.Web.Api.dll"]
