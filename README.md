@@ -111,12 +111,12 @@ Entity Framework Core is used for database migrations. Use the following command
 
 ```bash  
 # Add new migration
-dotnet ef migrations add MigrationName -p Kulku.Persistence/Kulku.Persistence.Pgsql -s Kulku.Web/Kulku.Web.Admin --context AppDbContext
-dotnet ef migrations add MigrationName -p Kulku.Persistence/Kulku.Persistence.Pgsql -s Kulku.Web/Kulku.Web.Admin --context UserDbContext
+dotnet ef migrations add MigrationName -p src/Kulku.Persistence/Kulku.Persistence.Pgsql -s src/Kulku.Web/Kulku.Web.Admin --context AppDbContext
+dotnet ef migrations add MigrationName -p src/Kulku.Persistence/Kulku.Persistence.Pgsql -s src/Kulku.Web/Kulku.Web.Admin --context UserDbContext
 
 # Apply migrations
-dotnet ef database update -p Kulku.Persistence/Kulku.Persistence.Pgsql -s Kulku.Web/Kulku.Web.Admin --context AppDbContext
-dotnet ef database update -p Kulku.Persistence/Kulku.Persistence.Pgsql -s Kulku.Web/Kulku.Web.Admin --context UserDbContext
+dotnet ef database update -p src/Kulku.Persistence/Kulku.Persistence.Pgsql -s src/Kulku.Web/Kulku.Web.Admin --context AppDbContext
+dotnet ef database update -p src/Kulku.Persistence/Kulku.Persistence.Pgsql -s src/Kulku.Web/Kulku.Web.Admin --context UserDbContext
 ```
 
 ### In deployment
