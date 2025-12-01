@@ -119,6 +119,12 @@ dotnet ef database update -p Kulku.Persistence/Kulku.Persistence.Pgsql -s Kulku.
 dotnet ef database update -p Kulku.Persistence/Kulku.Persistence.Pgsql -s Kulku.Web/Kulku.Web.Admin --context UserDbContext
 ```
 
+### In deployment
+
+You should consider creating scripts and apply migrations manually in production-like environments.
+
+It is possible to run migrations on startup by setting Management:MigrateOnStart to true in admin project and restarting the app.
+
 
 ## ✅ Running the Tests
 

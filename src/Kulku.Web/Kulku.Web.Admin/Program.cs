@@ -3,6 +3,7 @@ using Kulku.Infrastructure;
 using Kulku.Infrastructure.Helpers;
 using Kulku.Persistence;
 using Kulku.Persistence.Data;
+using Kulku.Web.Admin;
 using Kulku.Web.Admin.Components;
 using Kulku.Web.Admin.Components.Account;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -55,12 +56,15 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+var settings = app.Configuration.GetRequiredSection("Management").Get<ManagementSettings>();
+
+if (settings?.MigrateOnStart == true)
 {
     await app.RunMigrations();
 }
-else
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
