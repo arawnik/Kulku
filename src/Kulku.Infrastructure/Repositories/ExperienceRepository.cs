@@ -47,74 +47,69 @@ public class ExperienceRepository(AppDbContext context) : IExperienceRepository
         var result = await _context
             .Experiences.OrderBy(e => e.EndDate.HasValue)
             .ThenByDescending(e => e.EndDate)
-            .Select(e => new
-            {
-                e.Id,
-                Translation = e
-                    .Translations.Where(t => t.Language == language)
-                    .Select(t => new { t.Title, t.Description })
-                    .FirstOrDefault(),
-                Company = new
-                {
-                    Translation = e
-                        .Company.Translations.Where(t => t.Language == language)
-                        .Select(ct => new { ct.Name, ct.Description })
-                        .FirstOrDefault(),
-                },
-                Keywords = e
-                    .Keywords.OrderBy(ek => ek.Order)
+            .LeftJoin(
+                _context.ExperienceTranslations.Where(t => t.Language == language),
+                e => e.Id,
+                t => t.ExperienceId,
+                (e, et) => new { e, et }
+            )
+            .LeftJoin(
+                _context.CompanyTranslations.Where(t => t.Language == language),
+                x => x.e.CompanyId,
+                ct => ct.CompanyId,
+                (x, ct) =>
+                    new
+                    {
+                        x.e,
+                        x.et,
+                        ct,
+                    }
+            )
+            .Select(x => new ExperienceResponse(
+                Id: x.e.Id,
+                Title: x.et != null ? x.et.Title : string.Empty,
+                Description: x.et != null ? x.et.Description : string.Empty,
+                Company: new CompanyResponse(
+                    Name: x.ct != null ? x.ct.Name : string.Empty,
+                    Description: x.ct != null ? x.ct.Description : string.Empty
+                ),
+                Keywords: x.e.Keywords.OrderBy(ek => ek.Order)
+                    // Avoid multiple selects by shaping first
                     .Select(ek => new
                     {
-                        ek.Type,
-                        ek.Order,
-                        ek.Display,
-                        Translation = ek
+                        Keyword = ek,
+                        KeywordName = ek
                             .Translations.Where(t => t.Language == language)
-                            .Select(t => new { t.Name })
+                            .Select(t => t.Name)
                             .FirstOrDefault(),
-                        Proficiency = new
-                        {
-                            ek.Proficiency.Scale,
-                            ek.Proficiency.Order,
-                            Translation = ek
-                                .Proficiency.Translations.Where(t => t.Language == language)
-                                .Select(t => new { t.Name, t.Description })
-                                .FirstOrDefault(),
-                        },
-                    }),
-                e.StartDate,
-                e.EndDate,
-            })
+                        ProficiencyTranslation = ek
+                            .Proficiency.Translations.Where(t => t.Language == language)
+                            .Select(t => new { t.Name, t.Description })
+                            .FirstOrDefault(),
+                    })
+                    // then map into DTO
+                    .Select(k => new KeywordResponse(
+                        Name: k.KeywordName ?? string.Empty,
+                        Type: k.Keyword.Type,
+                        Proficiency: new ProficiencyResponse(
+                            Name: k.ProficiencyTranslation != null
+                                ? k.ProficiencyTranslation.Name
+                                : string.Empty,
+                            Description: k.ProficiencyTranslation != null
+                                ? k.ProficiencyTranslation.Description
+                                : string.Empty,
+                            Scale: k.Keyword.Proficiency.Scale,
+                            Order: k.Keyword.Proficiency.Order
+                        ),
+                        Order: k.Keyword.Order,
+                        Display: k.Keyword.Display
+                    ))
+                    .ToList(),
+                StartDate: x.e.StartDate,
+                EndDate: x.e.EndDate
+            ))
             .ToListAsync(cancellationToken);
 
-        return
-        [
-            .. result.Select(e => new ExperienceResponse(
-                Id: e.Id,
-                Title: e.Translation?.Title ?? string.Empty,
-                Description: e.Translation?.Description ?? string.Empty,
-                Company: new CompanyResponse(
-                    Name: e.Company.Translation?.Name ?? string.Empty,
-                    Description: e.Company.Translation?.Description ?? string.Empty
-                ),
-                Keywords:
-                [
-                    .. e.Keywords.Select(ek => new KeywordResponse(
-                        Name: ek.Translation?.Name ?? string.Empty,
-                        Type: ek.Type,
-                        Proficiency: new ProficiencyResponse(
-                            Name: ek.Proficiency.Translation?.Name ?? string.Empty,
-                            Description: ek.Proficiency.Translation?.Description ?? string.Empty,
-                            Scale: ek.Proficiency.Scale,
-                            Order: ek.Proficiency.Order
-                        ),
-                        Order: ek.Order,
-                        Display: ek.Display
-                    )),
-                ],
-                StartDate: e.StartDate,
-                EndDate: e.EndDate
-            )),
-        ];
+        return result;
     }
 }

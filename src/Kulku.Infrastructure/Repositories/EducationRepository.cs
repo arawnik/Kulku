@@ -46,44 +46,31 @@ public class EducationRepository(AppDbContext context) : IEducationRepository
         var result = await _context
             .Educations.OrderBy(e => e.EndDate.HasValue)
             .ThenByDescending(e => e.EndDate)
-            .Select(e => new
-            {
-                e.Id,
-                e.StartDate,
-                e.EndDate,
-                Translation = e
-                    .Translations.Where(t => t.Language == language)
-                    .Select(t => new { t.Title, t.Description })
-                    .FirstOrDefault(),
-                Institution = new
-                {
-                    Translation = e
-                        .Institution.Translations.Where(t => t.Language == language)
-                        .Select(et => new
-                        {
-                            et.Name,
-                            et.Department,
-                            et.Description,
-                        })
-                        .FirstOrDefault(),
-                },
-            })
+            .LeftJoin(
+                _context.EducationTranslations.Where(t => t.Language == language),
+                e => e.Id,
+                t => t.EducationId,
+                (e, t) => new { e, t }
+            )
+            .LeftJoin(
+                _context.InstitutionTranslations.Where(it => it.Language == language),
+                et => et.e.InstitutionId,
+                it => it.InstitutionId,
+                (et, it) =>
+                    new EducationResponse(
+                        Id: et.e.Id,
+                        Title: et.t != null ? et.t.Title : string.Empty,
+                        Description: et.t != null ? et.t.Description : string.Empty,
+                        Institution: new InstitutionResponse(
+                            Name: it != null ? it.Name : string.Empty,
+                            Department: it != null ? it.Department : string.Empty,
+                            Description: it != null ? it.Description : string.Empty
+                        ),
+                        StartDate: et.e.StartDate,
+                        EndDate: et.e.EndDate
+                    )
+            )
             .ToListAsync(cancellationToken);
-
-        return
-        [
-            .. result.Select(e => new EducationResponse(
-                Id: e.Id,
-                Title: e.Translation?.Title ?? string.Empty,
-                Description: e.Translation?.Description ?? string.Empty,
-                Institution: new InstitutionResponse(
-                    Name: e.Institution.Translation?.Name ?? string.Empty,
-                    Department: e.Institution.Translation?.Department ?? string.Empty,
-                    Description: e.Institution.Translation?.Description ?? string.Empty
-                ),
-                StartDate: e.StartDate,
-                EndDate: e.EndDate
-            )),
-        ];
+        return result;
     }
 }

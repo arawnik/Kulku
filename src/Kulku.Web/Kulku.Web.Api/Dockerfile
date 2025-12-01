@@ -1,18 +1,20 @@
 # See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 ARG USER_UID=5678
 WORKDIR /app
 #EXPOSE 7219
 EXPOSE 5144
+
+USER $APP_UID
 
 #ENV ASPNETCORE_HTTPS_PORTS=7219
 ENV ASPNETCORE_HTTP_PORTS=5144
 
 
 # This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
@@ -40,12 +42,6 @@ RUN dotnet publish "./Kulku.Web.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publ
 FROM base AS final
 WORKDIR /app
 
-# Create a non-root user
-RUN adduser --disabled-password --gecos "" --uid $USER_UID --shell /bin/false appuser
-
-COPY --from=publish --chown=appuser:appuser /app/publish .
-
-# Switch to non-root user
-USER appuser
+COPY --from=publish /app/publish .
 
 ENTRYPOINT ["dotnet", "Kulku.Web.Api.dll"]

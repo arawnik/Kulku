@@ -4,10 +4,18 @@ on:
   push:
     branches: [ "main" ]
   workflow_dispatch: # Manual trigger
+    inputs:
+      tag:
+        type: string
+        description: Image Tag
+        default: 'latest'
 
 permissions:
   contents: read
   packages: write
+
+env:
+  IMAGE_TAG: ${{ github.event.inputs.tag || 'latest' }}
 
 jobs:
   build-and-publish:
@@ -43,5 +51,5 @@ jobs:
           file: ${{ matrix.dockerfile }}
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/kulku-${{ matrix.name }}:latest
+            ghcr.io/${{ github.repository_owner }}/kulku-${{ matrix.name }}:${{ env.IMAGE_TAG }}
             ghcr.io/${{ github.repository_owner }}/kulku-${{ matrix.name }}:${{ github.sha }}

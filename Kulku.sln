@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.13.35828.75
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11205.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kulku.Persistence", "src\Ku
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kulku.Persistence.Pgsql", "src\Kulku.Persistence\Kulku.Persistence.Pgsql\Kulku.Persistence.Pgsql.csproj", "{3B684B6B-0551-4F51-8AF3-E52AEF83A8C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kulku.Persistence.SqlServer", "src\Kulku.Persistence\Kulku.Persistence.SqlServer\Kulku.Persistence.SqlServer.csproj", "{406A0A23-1FAF-479F-B6D3-42839D6C084E}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kulku.Contract", "src\Kulku.Contract\Kulku.Contract.csproj", "{7B1D5DC2-5932-4D8F-BC4F-92A908EBA861}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{39468866-C610-470B-8AD5-B8F133FAC024}"
@@ -53,6 +55,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{A61AEF
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\docker-publish.yml = .github\workflows\docker-publish.yml
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "style", "style", "{93D3D3BA-8671-4666-8A2D-D74EF288C31E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ui.Style", "style\Ui.Style\Ui.Style.csproj", "{0559D4A3-87DF-5E25-BB78-379E8EDF3ED9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -94,10 +100,18 @@ Global
 		{3B684B6B-0551-4F51-8AF3-E52AEF83A8C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B684B6B-0551-4F51-8AF3-E52AEF83A8C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B684B6B-0551-4F51-8AF3-E52AEF83A8C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{406A0A23-1FAF-479F-B6D3-42839D6C084E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{406A0A23-1FAF-479F-B6D3-42839D6C084E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{406A0A23-1FAF-479F-B6D3-42839D6C084E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{406A0A23-1FAF-479F-B6D3-42839D6C084E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7B1D5DC2-5932-4D8F-BC4F-92A908EBA861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7B1D5DC2-5932-4D8F-BC4F-92A908EBA861}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B1D5DC2-5932-4D8F-BC4F-92A908EBA861}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B1D5DC2-5932-4D8F-BC4F-92A908EBA861}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0559D4A3-87DF-5E25-BB78-379E8EDF3ED9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0559D4A3-87DF-5E25-BB78-379E8EDF3ED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0559D4A3-87DF-5E25-BB78-379E8EDF3ED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0559D4A3-87DF-5E25-BB78-379E8EDF3ED9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -111,7 +125,9 @@ Global
 		{65F4FDFE-37A3-E9B1-E9BF-446C5E58C856} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{B15A0F4F-D9DA-4C3A-9081-5A535DAF9851} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{3B684B6B-0551-4F51-8AF3-E52AEF83A8C0} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{406A0A23-1FAF-479F-B6D3-42839D6C084E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{7B1D5DC2-5932-4D8F-BC4F-92A908EBA861} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{0559D4A3-87DF-5E25-BB78-379E8EDF3ED9} = {93D3D3BA-8671-4666-8A2D-D74EF288C31E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E558D3BE-431A-46DC-B614-EF829A356AA1}

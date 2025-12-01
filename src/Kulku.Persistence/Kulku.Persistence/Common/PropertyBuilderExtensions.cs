@@ -10,6 +10,7 @@ public static class PropertyBuilderExtensions
     /// </summary>
     public static PropertyBuilder<Guid> UuidGeneratedOnAdd(this PropertyBuilder<Guid> builder)
     {
-        return builder.ValueGeneratedOnAdd().HasDefaultValueSql("gen_random_uuid()");
+        //TODO: This is an issue if trying another db provider than PgSql
+        return builder.HasDefaultValueSql("gen_random_uuid()");
     }
 }

@@ -26,5 +26,8 @@ public class EducationConfiguration : IEntityTypeConfiguration<Education>
             .WithMany()
             .HasForeignKey(e => e.InstitutionId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        // Indexing for performance
+        builder.HasIndex(e => e.EndDate);
     }
 }

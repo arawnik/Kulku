@@ -6,7 +6,7 @@ Blazor WebAssembly admin panel for Kulku’s content management.
 ## 🚀 Quick Start
 
 ### Prerequisites
-- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)  
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)  
 - PostgreSQL (local or container)  
 - (Optional) Docker & Docker Compose  
 

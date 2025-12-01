@@ -22,8 +22,8 @@ This project is designed to showcase my professional profile, publicly shareable
 ### 1. System Context
 A high-level list of all major components:
 - **Public Site** (Next.js / React)
-- **API** (ASP.NET 9 + MinimalAPI)
-- **Admin site** (ASP.NET 9 + Blazor)
+- **API** (ASP.NET 10 + MinimalAPI)
+- **Admin site** (ASP.NET 10 + Blazor)
 - **Data Store** (PostgreSQL)
 
 ### 2. Core Patterns & Principles
@@ -72,7 +72,7 @@ Here's how to set up the project either locally or using Docker.
 Here's how to set up the project locally
 
 #### Prerequisites
-- [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download)
+- [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download)
 - [Docker + Docker Compose](https://www.docker.com/)
 - [PostgreSQL](https://www.postgresql.org/)
 - [Node (react + next.js)](https://nodejs.org/en)
@@ -111,12 +111,19 @@ Entity Framework Core is used for database migrations. Use the following command
 
 ```bash  
 # Add new migration
-dotnet ef migrations add MigrationName -p Kulku.Persistence.Pgsql -s Kulku.Web.Admin -context AppDbContext
+dotnet ef migrations add MigrationName -p src/Kulku.Persistence/Kulku.Persistence.Pgsql -s src/Kulku.Web/Kulku.Web.Admin --context AppDbContext
+dotnet ef migrations add MigrationName -p src/Kulku.Persistence/Kulku.Persistence.Pgsql -s src/Kulku.Web/Kulku.Web.Admin --context UserDbContext
 
 # Apply migrations
-dotnet ef database update -p Kulku.Persistence.Pgsql -s Kulku.Web.Admin -context AppDbContext
-dotnet ef database update -p Kulku.Persistence.Pgsql -s Kulku.Web.Admin -context UserDbContext
+dotnet ef database update -p src/Kulku.Persistence/Kulku.Persistence.Pgsql -s src/Kulku.Web/Kulku.Web.Admin --context AppDbContext
+dotnet ef database update -p src/Kulku.Persistence/Kulku.Persistence.Pgsql -s src/Kulku.Web/Kulku.Web.Admin --context UserDbContext
 ```
+
+### In deployment
+
+You should consider creating scripts and apply migrations manually in production-like environments.
+
+It is possible to run migrations on startup by setting Management:MigrateOnStart to true in admin project and restarting the app.
 
 
 ## ✅ Running the Tests
@@ -139,7 +146,7 @@ Continuous integration is managed via GitHub actions:
 ## 🧰 Built With
 
 - Backend
-  - [.NET 9](https://dotnet.microsoft.com/)
+  - [.NET 10](https://dotnet.microsoft.com/)
   - [Blazor WebAssembly](https://learn.microsoft.com/en-us/aspnet/core/blazor)
   - [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
   - [PostgreSQL](https://www.postgresql.org/)

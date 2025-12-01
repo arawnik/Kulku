@@ -42,43 +42,12 @@ public class KeywordRepository(AppDbContext context) : IKeywordRepository
     {
         var language = CultureLanguageHelper.GetCurrentLanguage();
 
-        var result = await _context
-            .Keywords.Where(k => k.Id == id && k.Display)
-            .Select(k => new
-            {
-                k.Type,
-                k.Order,
-                k.Display,
-                Translation = k
-                    .Translations.Where(t => t.Language == language)
-                    .Select(t => new { t.Name })
-                    .FirstOrDefault(),
-                Proficiency = new
-                {
-                    k.Proficiency.Scale,
-                    k.Proficiency.Order,
-                    Translation = k
-                        .Proficiency.Translations.Where(t => t.Language == language)
-                        .Select(pt => new { pt.Name, pt.Description })
-                        .FirstOrDefault(),
-                },
-            })
+        var baseQuery = _context.Keywords.Where(k => k.Id == id && k.Display);
+
+        var result = await BuildKeywordQuery(language, baseQuery)
             .FirstOrDefaultAsync(cancellationToken);
 
-        return result is null
-            ? null
-            : new KeywordResponse(
-                Name: result.Translation?.Name ?? string.Empty,
-                Type: result.Type,
-                Proficiency: new ProficiencyResponse(
-                    Name: result.Proficiency.Translation?.Name ?? string.Empty,
-                    Description: result.Proficiency.Translation?.Description ?? string.Empty,
-                    Scale: result.Proficiency.Scale,
-                    Order: result.Proficiency.Order
-                ),
-                Order: result.Order,
-                Display: result.Display
-            );
+        return result;
     }
 
     public async Task<ICollection<KeywordResponse>> QueryByTypeAsync(
@@ -88,45 +57,44 @@ public class KeywordRepository(AppDbContext context) : IKeywordRepository
     {
         var language = CultureLanguageHelper.GetCurrentLanguage();
 
-        var result = await _context
+        var baseQuery = _context
             .Keywords.Where(k => k.Type == type && k.Display)
-            .Select(k => new
-            {
-                k.Type,
-                k.Order,
-                k.Display,
-                Translation = k
-                    .Translations.Where(t => t.Language == language)
-                    .Select(t => new { t.Name })
-                    .FirstOrDefault(),
+            .OrderBy(k => k.Order);
 
-                Proficiency = new
-                {
-                    k.Proficiency.Scale,
-                    k.Proficiency.Order,
-                    Translation = k
-                        .Proficiency.Translations.Where(t => t.Language == language)
-                        .Select(pt => new { pt.Name, pt.Description })
-                        .FirstOrDefault(),
-                },
-            })
-            .OrderBy(k => k.Order)
-            .ToListAsync(cancellationToken);
+        var result = await BuildKeywordQuery(language, baseQuery).ToListAsync(cancellationToken);
 
-        return
-        [
-            .. result.Select(k => new KeywordResponse(
-                Name: k.Translation?.Name ?? string.Empty,
-                Type: k.Type,
-                Proficiency: new ProficiencyResponse(
-                    Name: k.Proficiency.Translation?.Name ?? string.Empty,
-                    Description: k.Proficiency.Translation?.Description ?? string.Empty,
-                    Scale: k.Proficiency.Scale,
-                    Order: k.Proficiency.Order
-                ),
-                Order: k.Order,
-                Display: k.Display
-            )),
-        ];
+        return result;
+    }
+
+    private IQueryable<KeywordResponse> BuildKeywordQuery(
+        LanguageCode language,
+        IQueryable<Keyword> baseQuery
+    )
+    {
+        return baseQuery
+            .LeftJoin(
+                _context.KeywordTranslations.Where(t => t.Language == language),
+                k => k.Id,
+                t => t.KeywordId,
+                (k, kt) => new { k, kt }
+            )
+            .LeftJoin(
+                _context.ProficiencyTranslations.Where(pt => pt.Language == language),
+                x => x.k.ProficiencyId,
+                pt => pt.ProficiencyId,
+                (x, pt) =>
+                    new KeywordResponse(
+                        Name: x.kt != null ? x.kt.Name : string.Empty,
+                        Type: x.k.Type,
+                        Proficiency: new ProficiencyResponse(
+                            Name: pt != null ? pt.Name : string.Empty,
+                            Description: pt != null ? pt.Description : string.Empty,
+                            Scale: x.k.Proficiency.Scale,
+                            Order: x.k.Proficiency.Order
+                        ),
+                        Order: x.k.Order,
+                        Display: x.k.Display
+                    )
+            );
     }
 }
