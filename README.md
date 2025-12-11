@@ -1,4 +1,4 @@
-﻿Welcome to Kulku, the code repository that powers my personal CV site and its administrative backend.
+Welcome to Kulku, the code repository that powers my personal CV site and its administrative backend.
 This project is designed to showcase my professional profile, publicly shareable solo projects, and work as a code sample.
 
 ---
