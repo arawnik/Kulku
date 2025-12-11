@@ -75,8 +75,6 @@ export const getCanonicalHostForLanguage = (language: Language): string => {
 
 /**
  * Returns the canonical origin (protocol + host) for a language.
- * - Uses http for localhost-style dev hosts
- * - Uses https for everything else
  */
 export const getCanonicalOriginForLanguage = (language: Language): string => {
   const host = getCanonicalHostForLanguage(language)
