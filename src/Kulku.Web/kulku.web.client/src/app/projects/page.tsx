@@ -72,7 +72,7 @@ const ProjectsPage = async (): Promise<JSX.Element> => {
                 ) : null}
 
                 {project.url && (
-                  <p className="pt-1 text-md">
+                  <p className="text-md pt-1">
                     <a
                       href={project.url}
                       target="_blank"
