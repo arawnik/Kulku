@@ -363,7 +363,7 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Ignore style libraries
-style/Ui.Style/lib/
+src/Kulku.Web/Kulku.Web.Admin/styles/lib/
 
 # Ignore enf speficic information
 .env

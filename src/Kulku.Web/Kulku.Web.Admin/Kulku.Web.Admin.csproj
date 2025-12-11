@@ -17,5 +17,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Kulku.Infrastructure\Kulku.Infrastructure.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="styles\lib\" />
+    <Folder Include="wwwroot\css\" />
+  </ItemGroup>
 
 </Project>

@@ -6,10 +6,9 @@
     {
       "provider": "unpkg",
       "library": "bootstrap@5.3.8",
-      "destination": "lib/bootstrap/",
+      "destination": "styles/lib/bootstrap/",
       "files": [
-        "scss/**",
-        "package.json"
+        "scss/**"
       ]
     }
   ]
