@@ -6,6 +6,10 @@ This project is designed to showcase my professional profile, publicly shareable
 
 ## 🌟 Key Features
 
+The system has two internal presentation layers: Web.Api (REST) and Web.Admin (Blazor Server). 
+Both depend on the same Application layer. The public web.client frontend uses Web.Api over HTTP, 
+while Web.Admin uses direct C# calls, demonstrating that the Application layer is UI-agnostic and reusable.
+
 ### Site
 - Dynamic CV & Portfolio: Easily update work experience, education, skills, and project showcases without code changes.
 - Contact & Inquiries: Built-in form with spam protection and email forwarding.
@@ -23,7 +27,7 @@ This project is designed to showcase my professional profile, publicly shareable
 A high-level list of all major components:
 - **Public Site** (Next.js / React)
 - **API** (ASP.NET 10 + MinimalAPI)
-- **Admin site** (ASP.NET 10 + Blazor)
+- **Admin Site** (ASP.NET 10 + Blazor)
 - **Data Store** (PostgreSQL)
 
 ### 2. Core Patterns & Principles

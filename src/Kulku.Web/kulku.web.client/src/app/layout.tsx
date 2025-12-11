@@ -1,45 +1,61 @@
-import { JSX, StrictMode } from 'react'
 import type { Metadata } from 'next'
+import { Geist_Mono, Orbitron, Source_Sans_3 } from 'next/font/google'
+import { JSX, ReactNode } from 'react'
 import { NextIntlClientProvider } from 'next-intl'
-import { getLocale, getTranslations } from 'next-intl/server'
-import ClientProviders from '@/components/ClientProviders'
-import { getBaseUrl } from '@/utils/uriUtils'
-import { Orbitron, Source_Sans_3 } from 'next/font/google'
-import 'bootstrap-icons/font/bootstrap-icons.css'
-//TODO: Go back to next style scss when bootstrap 6 launches
-//import '@styles/app.scss'
+import { getLocale, getMessages, getTranslations } from 'next-intl/server'
+import { getCurrentLanguage, SUPPORTED_LANGUAGES, type Language } from '@/i18n/language'
+import { getCanonicalOriginForLanguage } from '@/i18n/hostConfig'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+import './globals.css'
 
-// load & optimize the fonts:
-const orbitron = Orbitron({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-  variable: '--font-orbitron',
-})
 const sourceSans3 = Source_Sans_3({
   subsets: ['latin'],
   weight: ['400', '600'],
   variable: '--font-source-sans-3',
 })
+const geistMono = Geist_Mono({
+  subsets: ['latin'],
+  variable: '--font-geist-mono',
+})
+const orbitron = Orbitron({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-orbitron',
+})
 
 export const generateMetadata = async (): Promise<Metadata> => {
-  const locale = await getLocale()
-  const t = await getTranslations()
+  const language: Language = await getCurrentLanguage()
+  const t = await getTranslations('meta')
 
-  const baseUrl = await getBaseUrl()
-  const imageUrl = `${baseUrl}/static/social/social-bg.webp`
+  const baseOrigin = getCanonicalOriginForLanguage(language)
+  const imageUrl = `${baseOrigin}/static/social/social-bg.webp`
+
+  // Build language alternates from existing host config
+  const languageAlternates: Record<string, string> = {}
+  for (const lang of SUPPORTED_LANGUAGES) {
+    languageAlternates[lang] = getCanonicalOriginForLanguage(lang as Language)
+  }
 
   return {
     title: {
       template: '%s | Jere Junttila',
       default: 'Jere Junttila',
     },
-    description: t('metaDescription'),
+    description: t('description'),
+    metadataBase: new URL(baseOrigin),
+
+    alternates: {
+      canonical: baseOrigin,
+      languages: languageAlternates,
+    },
+
     openGraph: {
       title: 'Jere Junttila',
-      locale: locale,
-      description: t('metaDescription'),
+      locale: language,
+      description: t('description'),
       type: 'website',
-      url: baseUrl,
+      url: baseOrigin,
       images: [
         {
           url: imageUrl,
@@ -52,44 +68,34 @@ export const generateMetadata = async (): Promise<Metadata> => {
     twitter: {
       card: 'summary_large_image',
       title: 'Jere Junttila',
-      description: t('metaDescription'),
+      description: t('description'),
       images: [imageUrl],
     },
   }
 }
 
-const RootLayout = async ({ children }: { children: React.ReactNode }): Promise<JSX.Element> => {
+type RootProps = Readonly<{
+  children: ReactNode
+}>
+
+const RootLayout = async ({ children }: RootProps): Promise<JSX.Element> => {
   const locale = await getLocale()
+  const messages = await getMessages()
 
   return (
     <html
       lang={locale}
-      className={`h-100 ${orbitron.variable} ${sourceSans3.variable}`}
-      data-bs-theme="dark"
+      className={`${sourceSans3.variable} ${geistMono.variable} ${orbitron.variable}`}
     >
-      <head>
-        {/* Inline script for initial theme setup to prevent flash */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                const theme = localStorage.getItem('theme') || 'dark';
-                document.documentElement.setAttribute('data-bs-theme', theme);
-              })();
-            `,
-          }}
-        />
-        <link
-          rel="stylesheet"
-          href="/css/app.min.css"
-        />
-      </head>
-      <body className={'d-flex flex-column h-100 flex'}>
-        <StrictMode>
-          <NextIntlClientProvider>
-            <ClientProviders>{children}</ClientProviders>
-          </NextIntlClientProvider>
-        </StrictMode>
+      <body className="bg-background text-foreground font-sans antialiased">
+        <NextIntlClientProvider
+          locale={locale}
+          messages={messages}
+        >
+          <Header />
+          <main className="flex min-h-screen justify-center">{children}</main>
+          <Footer />
+        </NextIntlClientProvider>
       </body>
     </html>
   )

@@ -1,13 +1,11 @@
+import '@/setup/ignore-dev-certs'
+
 import type { NextConfig } from 'next'
 import createNextIntlPlugin from 'next-intl/plugin'
 
 const nextConfig: NextConfig = {
-  sassOptions: {
-    quietDeps: true, // Suppresses deprecation warnings from dependencies like Bootstrap
-  },
-  reactStrictMode: true,
+  reactCompiler: true,
   output: 'standalone',
 }
-
-const withNextIntl = createNextIntlPlugin()
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
 export default withNextIntl(nextConfig)
