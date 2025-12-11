@@ -1,4 +1,4 @@
-﻿# Kulku.Web.Admin
+# Kulku.Web.Admin
 
 Blazor WebAssembly admin panel for Kulku’s content management.
 

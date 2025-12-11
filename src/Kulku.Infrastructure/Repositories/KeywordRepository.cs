@@ -1,4 +1,4 @@
-﻿using Kulku.Contract.Enums;
+using Kulku.Contract.Enums;
 using Kulku.Contract.Projects;
 using Kulku.Domain.Projects;
 using Kulku.Domain.Repositories;

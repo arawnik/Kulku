@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Json;
+using System.Net.Http.Json;
 using Kulku.Application.Helpers;
 using Microsoft.Extensions.Options;
 

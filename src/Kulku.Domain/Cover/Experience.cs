@@ -1,4 +1,4 @@
-﻿using Kulku.Domain.Abstractions;
+using Kulku.Domain.Abstractions;
 using Kulku.Domain.Projects;
 
 namespace Kulku.Domain.Cover;

@@ -1,3 +1,3 @@
-﻿namespace Kulku.Contract.Cover;
+namespace Kulku.Contract.Cover;
 
 public record CompanyResponse(string Name, string Description);

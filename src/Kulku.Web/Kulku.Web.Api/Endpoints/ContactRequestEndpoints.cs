@@ -1,4 +1,4 @@
-﻿using Carter;
+using Carter;
 using Kulku.Application.Contacts;
 using Kulku.Contract.Contacts;
 using Kulku.Web.Api.Middleware;

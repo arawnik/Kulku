@@ -1,4 +1,4 @@
-﻿namespace Kulku.Domain.Contacts;
+namespace Kulku.Domain.Contacts;
 
 /// <summary>
 /// Represents a user-submitted contact request, typically sent via a public-facing form.

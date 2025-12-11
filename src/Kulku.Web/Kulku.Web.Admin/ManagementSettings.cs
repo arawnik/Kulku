@@ -1,4 +1,4 @@
-﻿namespace Kulku.Web.Admin;
+namespace Kulku.Web.Admin;
 
 public sealed class ManagementSettings
 {

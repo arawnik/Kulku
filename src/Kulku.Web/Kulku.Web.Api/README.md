@@ -1,4 +1,4 @@
-﻿# Kulku.Web.Api
+# Kulku.Web.Api
 
 .NET 10 Minimal API for Kulku’s backend.
 

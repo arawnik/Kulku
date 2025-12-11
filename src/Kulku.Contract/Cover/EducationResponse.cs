@@ -1,4 +1,4 @@
-﻿namespace Kulku.Contract.Cover;
+namespace Kulku.Contract.Cover;
 
 public record EducationResponse(
     Guid Id,

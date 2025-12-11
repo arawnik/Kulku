@@ -1,4 +1,4 @@
-﻿using Kulku.Domain.Cover;
+using Kulku.Domain.Cover;
 using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

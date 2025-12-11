@@ -1,4 +1,4 @@
-﻿using Kulku.Domain.Projects;
+using Kulku.Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
