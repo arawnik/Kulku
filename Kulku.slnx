@@ -1,0 +1,39 @@
+<Solution>
+  <Folder Name="/docker/">
+    <File Path=".dockerignore" />
+    <File Path=".env.docker" />
+    <File Path="docker-compose.release.yml" />
+    <File Path="docker-compose.yml" />
+  </Folder>
+  <Folder Name="/documents/">
+    <File Path=".env.template" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/GitHub/">
+    <File Path=".github/workflows/docker-publish.yml" />
+  </Folder>
+  <Folder Name="/solution/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="coverlet.runsettings" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Kulku.Application/Kulku.Application.csproj" />
+    <Project Path="src/Kulku.Contract/Kulku.Contract.csproj" />
+    <Project Path="src/Kulku.Domain/Kulku.Domain.csproj" />
+    <Project Path="src/Kulku.Infrastructure/Kulku.Infrastructure.csproj" />
+    <Project Path="src/Kulku.Persistence/Kulku.Persistence.Pgsql/Kulku.Persistence.Pgsql.csproj" />
+    <Project Path="src/Kulku.Persistence/Kulku.Persistence.SqlServer/Kulku.Persistence.SqlServer.csproj" />
+    <Project Path="src/Kulku.Persistence/Kulku.Persistence/Kulku.Persistence.csproj" />
+    <Project Path="src/Kulku.Web/Kulku.Web.Admin/Kulku.Web.Admin.csproj" />
+    <Project Path="src/Kulku.Web/Kulku.Web.Api/Kulku.Web.Api.csproj" />
+    <Project Path="src/Kulku.Web/Kulku.Web.Client/kulku.web.client.esproj">
+      <Build />
+      <Deploy />
+    </Project>
+  </Folder>
+  <Folder Name="/test/" />
+</Solution>

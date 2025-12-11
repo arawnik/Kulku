@@ -85,8 +85,6 @@ app.UseRequestLocalization(localizationOptions);
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-
-    await app.RunMigrations();
 }
 else
 {
