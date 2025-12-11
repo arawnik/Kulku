@@ -72,7 +72,7 @@ const ProjectsPage = async (): Promise<JSX.Element> => {
                 ) : null}
 
                 {project.url && (
-                  <p className="pt-1 text-sm">
+                  <p className="pt-1 text-md">
                     <a
                       href={project.url}
                       target="_blank"
@@ -91,7 +91,7 @@ const ProjectsPage = async (): Promise<JSX.Element> => {
                 )}
               </div>
               <div className={imageColClass}>
-                <div className="border-accent/40 relative aspect-[5/3] overflow-hidden rounded-md border bg-zinc-200">
+                <div className="border-accent/60 relative aspect-[1/1] overflow-hidden rounded-md border">
                   {project.imageUrl ? (
                     <Image
                       src={`/static/projects/${project.imageUrl}`}

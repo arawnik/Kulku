@@ -74,7 +74,7 @@ const KeywordSection = async ({
                         'linear-gradient(90deg, var(--color-accent-alt) 0%, var(--color-accent) 100%)',
                     }}
                   />
-                  <span className="absolute inset-0 flex items-center justify-center text-sm drop-shadow-[0_1px_1px_rgba(0,0,0,0.7)]">
+                  <span className="absolute inset-0 flex items-center justify-center text-sm text-heading-dark drop-shadow-[0_1px_1px_rgba(0,0,0,0.7)]">
                     {label}
                   </span>
                 </div>

@@ -5,7 +5,7 @@
       {
         "Path": "src\\Kulku.Web\\Kulku.Web.Api\\Kulku.Web.Api.csproj",
         "Action": "Start",
-        "DebugTarget": "https"
+        "DebugTarget": "http"
       },
       {
         "Path": "src\\Kulku.Web\\Kulku.Web.Client\\kulku.web.client.esproj",
