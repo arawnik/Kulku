@@ -1,5 +1,3 @@
-import '@/setup/ignore-dev-certs'
-
 import type { NextConfig } from 'next'
 import createNextIntlPlugin from 'next-intl/plugin'
 
