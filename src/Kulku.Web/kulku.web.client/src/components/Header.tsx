@@ -65,7 +65,22 @@ const Header = (): JSX.Element => {
 
         {/* MOBILE */}
         <div className="flex w-full items-center justify-between md:hidden">
-          <span className="text-foreground-muted text-lg"></span>
+          <nav className="text-md items-center gap-6 flex">
+            {navItems.map((item) => {
+              const active = isActive(item.href)
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`py-1 text-center font-medium transition-colors ${active ? 'text-accent' : 'text-foreground-muted hover:text-foreground'
+                    }`}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {t(item.key)}
+                </Link>
+              )
+            })}
+          </nav>
 
           <button
             type="button"
@@ -88,26 +103,6 @@ const Header = (): JSX.Element => {
       {mobileOpen && (
         <div className="border-accent/40 bg-background border-t md:hidden">
           <div className="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-4 text-sm">
-            <nav className="flex flex-col gap-2">
-              {navItems.map((item) => {
-                const active = isActive(item.href)
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`py-1 text-center font-medium transition-colors ${
-                      active ? 'text-accent' : 'text-foreground-muted hover:text-foreground'
-                    }`}
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    {t(item.key)}
-                  </Link>
-                )
-              })}
-            </nav>
-
-            <hr className="text-foreground-muted opacity-25" />
-
             <div className="flex justify-center">
               <LanguageSwitcher />
             </div>

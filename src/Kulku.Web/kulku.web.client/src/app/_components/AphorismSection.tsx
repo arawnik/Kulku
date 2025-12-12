@@ -2,7 +2,7 @@ import { JSX } from 'react'
 
 const AphorismSection = (): JSX.Element => {
   return (
-    <div className="mx-auto my-4 max-w-4xl">
+    <div className="md:mx-auto mx-2 my-4 max-w-4xl">
       <p className="text-md text-accent-alt text-center">
         “Your present circumstances don&apos;t determine where you can go; they merely determine
         where you start”
