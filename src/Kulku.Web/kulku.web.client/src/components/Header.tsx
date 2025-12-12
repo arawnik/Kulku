@@ -41,7 +41,7 @@ const Header = (): JSX.Element => {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`font-medium whitespace-nowrap transition-colors ${
+                className={`font-medium font-semibold whitespace-nowrap transition-colors ${
                   active
                     ? 'text-accent hover:text-accent-alt'
                     : 'text-foreground-muted hover:text-foreground'
@@ -72,7 +72,7 @@ const Header = (): JSX.Element => {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`py-1 text-center font-medium transition-colors ${active ? 'text-accent' : 'text-foreground-muted hover:text-foreground'
+                  className={`py-1 text-center font-medium font-semibold transition-colors ${active ? 'text-accent' : 'text-foreground-muted hover:text-foreground'
                     }`}
                   onClick={() => setMobileOpen(false)}
                 >
