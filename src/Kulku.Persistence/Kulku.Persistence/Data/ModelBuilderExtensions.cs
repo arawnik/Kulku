@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Kulku.Persistence.Configurations.Cover;
 using Kulku.Persistence.Configurations.Projects;
 using Kulku.Persistence.Converters;

@@ -1,4 +1,4 @@
-﻿using Kulku.Contract.Projects;
+using Kulku.Contract.Projects;
 
 namespace Kulku.Contract.Cover;
 

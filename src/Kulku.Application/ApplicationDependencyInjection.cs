@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Kulku.Application.Contacts;
 using Kulku.Application.Cover;
 using Kulku.Application.Projects;

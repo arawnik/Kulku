@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <UserSecretsId>aspnet-Kulku.Web.Admin-ce2177f5-f91d-4f66-a5cf-3229ae550afa</UserSecretsId>
@@ -16,6 +16,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Kulku.Infrastructure\Kulku.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="styles\lib\" />
+    <Folder Include="wwwroot\css\" />
   </ItemGroup>
 
 </Project>

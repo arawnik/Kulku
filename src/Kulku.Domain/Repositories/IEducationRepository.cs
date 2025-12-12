@@ -1,4 +1,4 @@
-﻿using Kulku.Contract.Cover;
+using Kulku.Contract.Cover;
 using Kulku.Domain.Abstractions;
 using Kulku.Domain.Cover;
 

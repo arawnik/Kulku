@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Kulku.Application.Helpers;
 using Kulku.Domain.Repositories;
 using Kulku.Infrastructure.Helpers;

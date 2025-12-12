@@ -1,41 +1,56 @@
 {
-  "loading": "Loading ...",
-  "education": "Education",
-  "experience": "Experience",
-  "keywords": "Keywords",
-  "skills": "Skills",
-  "technologies": "Technologies",
-  "intro": "Intro",
-  "projects": "Projects",
-  "contactMe": "Contact me",
-  "admin": "Admin",
-  "lightMode": "Light mode",
-  "darkMode": "Dark mode",
-  "switchTheme": "Switch theme",
-  "linkedInProfile": "LinkedIn profile",
-  "twitterProfile": "Twitter profile",
-  "githubProfile": "Github profile",
-  "downloadableCV": "Downloadable oldschool CV Pdf",
-  "oppositeLang": "Suomeksi",
-  "programmingLanguages": "Programming languages",
-  "checkItOut": "Check it out",
-  "nameRequired": "Name is required",
-  "emailRequired": "Email is required",
-  "emailInvalid": "Invalid email",
-  "subjectRequired": "Subject is required",
-  "messageRequired": "Message is required",
-  "reCaptchaMissing": "Please, let me know that you're not a bot!",
-  "yourName": "Your Name",
-  "yourEmail": "Your Email",
-  "yourSubject": "Your Subject",
-  "yourMessage": "Your Message",
-  "name": "Name",
-  "email": "Email",
-  "subject": "Subject",
-  "message": "Message",
-  "thankYou": "Thank you!",
-  "thankYouMessage": "Thank you for your message. I will be in contact with you as soon as possible.",
-  "send": "Send",
-  "present": "Present",
-  "metaDescription": "Step into my portfolio. Get to know the developer behind the projects."
+  "meta": {
+    "description": "Step into my portfolio. Get to know the developer behind the projects."
+  },
+  "keywords": {
+    "programmingLanguages": "Programming languages",
+    "skills": "Skills",
+    "technologies": "Technologies"
+  },
+  "header": {
+    "cover": "Intro",
+    "projects": "Projects",
+    "contact": "Contact Me",
+    "downloadableCV": "Downloadable CV",
+    "oppositeLang": "Suomeksi"
+  },
+  "home": {
+    "education": "Education",
+    "experience": "Experience",
+    "present": "present",
+    "keywords": "Keywords"
+  },
+  "projects": {
+    "title": "Projects",
+    "description": "A collection of software projects demonstrating my approach to full-stack development, clean architecture, system design, and modern web technologies.",
+    "subTitle": "Public software projects demonstrating my approach to full-stack development, clean architecture, system design, and modern web technologies",
+    "viewLink": "Check out"
+  },
+  "contact": {
+    "title": "Contact me",
+    "description": "Please feel free to use this form to send me a message and I’ll get back to you.",
+    "subTitle": "Send me a message and I’ll get back to you.",
+    "nameLabel": "Your name",
+    "emailLabel": "Your email",
+    "subjectLabel": "Subject",
+    "messageLabel": "Message",
+    "namePlaceholder": "Name",
+    "emailPlaceholder": "Email address",
+    "subjectPlaceholder": "Subject",
+    "messagePlaceholder": "Message",
+    "send": "Send",
+    "sending": "Sending",
+    "nameRequired": "Name is required",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Please enter a valid email address",
+    "subjectRequired": "Subject is required",
+    "messageRequired": "Message is required",
+    "reCaptchaMissing": "Please, let me know that you're not a bot!",
+    "genericError": "Something went wrong. Please try again"
+  },
+  "thankYou": {
+    "title": "Thank you!",
+    "description": "A page dedicated as a thank you for sending me a message!",
+    "message": "Thank you for your message. I will be in contact with you as soon as possible."
+  }
 }

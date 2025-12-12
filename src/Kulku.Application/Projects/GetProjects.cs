@@ -1,4 +1,4 @@
-﻿using Kulku.Contract.Projects;
+using Kulku.Contract.Projects;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;

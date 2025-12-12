@@ -1,4 +1,4 @@
-﻿using SoulNETLib.Clean.Domain.Repositories;
+using SoulNETLib.Clean.Domain.Repositories;
 
 namespace Kulku.Domain.Abstractions;
 

@@ -1,4 +1,4 @@
-﻿using Carter;
+using Carter;
 using Kulku.Application.Projects;
 using Kulku.Contract.Enums;
 using Kulku.Contract.Projects;

@@ -1,4 +1,4 @@
-﻿using Kulku.Contract.Cover;
+using Kulku.Contract.Cover;
 using Kulku.Domain.Cover;
 using Kulku.Domain.Repositories;
 using Kulku.Infrastructure.Helpers;

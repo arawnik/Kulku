@@ -1,115 +1,118 @@
-'use client'
-
 import { JSX } from 'react'
-import Head from 'next/head'
 import Image from 'next/image'
-import { useTranslations } from 'next-intl'
-import useProjects from '@/hooks/useProjects'
+import { getTranslations } from 'next-intl/server'
+import { getCurrentLanguage, type Language } from '@/i18n/language'
+import { getProjects } from '@/lib/api/project'
+import { type Metadata } from 'next'
+import PageHeader from '@/components/PageHeader'
 
-const ProjectsPage = (): JSX.Element => {
-  const t = useTranslations()
-  const { data: projects, isLoading, error } = useProjects()
-
-  if (error) {
-    return <div className="container">{t('errorLoadingData')}</div>
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations('projects')
+  return {
+    title: t('title'),
+    description: t('description'),
   }
+}
+
+const ProjectsPage = async (): Promise<JSX.Element> => {
+  const t = await getTranslations('projects')
+  const language: Language = await getCurrentLanguage()
+
+  const [projects] = await Promise.all([getProjects(language)])
+
+  const sorted = projects.slice().sort((a, b) => a.order - b.order)
 
   return (
-    <>
-      <Head>
-        <title>{t('projects')}</title>
-      </Head>
-      <main className="container">
-        <h2 className="popout-font">{t('projects')}</h2>
+    <section className="w-full max-w-5xl space-y-8 px-4 py-8">
+      <PageHeader
+        title={t('title')}
+        subTitle={t('subTitle')}
+      />
 
-        <div className="featurette-container">
-          {isLoading
-            ? Array(2)
-                .fill(null)
-                .map((_, index) => (
-                  <div key={index}>
-                    <hr className="featurette-divider" />
-                    <div className={`row featurette ${index % 2 !== 0 ? 'order-md-2' : ''}`}>
-                      <div className={`col-md-7 ${index % 2 !== 0 ? 'order-md-2' : ''} d-flex flex-column`}>
-                        <div className="align-items-stretch mb-auto">
-                          <h3 className="featurette-heading">
-                            <span className="main-header placeholder col-4"></span>{' '}
-                            <span className="text-muted placeholder col-3"></span>
-                          </h3>
-                          <p>
-                            <span className="placeholder col-8 mb-2"></span>
-                            <span className="placeholder col-6 mb-2"></span>
-                            <span className="placeholder col-7"></span>
-                          </p>
-                        </div>
-                        <div className="align-items-end">
-                          <div className="info-block">
-                            <span className="badge list-badge placeholder col-2"></span>
-                            <span className="badge list-badge placeholder col-3 ms-1"></span>
-                            <span className="badge list-badge placeholder col-2 ms-1"></span>
-                          </div>
-                          <p className="mt-2">
-                            <span className="placeholder col-3"></span>
-                          </p>
-                        </div>
-                      </div>
-                      <div className={`col-md-5 ${index % 2 !== 0 ? 'order-md-1' : ''}`}>
-                        <div
-                          className="placeholder"
-                          style={{ width: '100%', height: '300px', backgroundColor: '#a3a6ad' }}
-                        ></div>
-                      </div>
-                    </div>
+      <div className="space-y-12">
+        {sorted.map((project, index) => {
+          const isOdd = index % 2 === 1
+          const textColClass = `space-y-3 ${isOdd ? 'md:order-2' : ''}`
+          const imageColClass = `${isOdd ? 'md:order-1' : ''}`
+
+          return (
+            <article
+              key={project.name}
+              className="grid gap-6 md:grid-cols-2 md:items-center"
+            >
+              <div className={textColClass}>
+                <header className="space-y-1">
+                  <h3 className="text-xl font-semibold">{project.name}</h3>
+                  {project.info && <p className="text-foreground-muted text-sm">{project.info}</p>}
+                </header>
+
+                {project.description && (
+                  <p
+                    className="text-sm leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: project.description }}
+                  />
+                )}
+
+                {project.keywords?.length ? (
+                  <div className="space-y-2">
+                    <ul className="flex flex-wrap gap-1.5">
+                      {project.keywords
+                        .filter((k) => k.display)
+                        .sort((a, b) => a.order - b.order)
+                        .map((keyword) => (
+                          <li
+                            key={`${project.name}-${keyword.name}`}
+                            className="border-accent rounded-md border px-2 py-0.5 text-[11px] font-medium"
+                          >
+                            {keyword.name}
+                          </li>
+                        ))}
+                    </ul>
                   </div>
-                ))
-            : projects?.map((project, index) => (
-                <div key={index}>
-                  <hr className="featurette-divider" />
-                  <div className={`row featurette ${index % 2 !== 0 ? 'order-md-2' : ''}`}>
-                    <div className={`col-md-7 ${index % 2 !== 0 ? 'order-md-2' : ''} d-flex flex-column`}>
-                      <div className="align-items-stretch mb-auto">
-                        <h3 className="featurette-heading">
-                          <span className="main-header">{project.name}</span>{' '}
-                          <span className="text-muted">{project.info}</span>
-                        </h3>
-                        <p dangerouslySetInnerHTML={{ __html: project.description }}></p>
-                      </div>
-                      <div className="align-items-end">
-                        <div className="info-block">
-                          {project.keywords.map((keyword, keywordIndex) => (
-                            <span
-                              key={keywordIndex}
-                              className="badge list-badge"
-                            >
-                              {keyword.name}
-                            </span>
-                          ))}
-                        </div>
-                        <a
-                          href={project.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <i className="bi bi-box-arrow-up-right"></i> {t('checkItOut')}
-                        </a>
-                      </div>
+                ) : null}
+
+                {project.url && (
+                  <p className="text-md pt-1">
+                    <a
+                      href={project.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-accent inline-flex items-center gap-1 underline-offset-2 hover:underline"
+                    >
+                      <span>{t('viewLink')}</span>
+                      <span
+                        aria-hidden="true"
+                        className="text-xs"
+                      >
+                        ↗
+                      </span>
+                    </a>
+                  </p>
+                )}
+              </div>
+              <div className={imageColClass}>
+                <div className="border-accent/60 relative aspect-[1/1] overflow-hidden rounded-md border">
+                  {project.imageUrl ? (
+                    <Image
+                      src={`/static/projects/${project.imageUrl}`}
+                      alt={`${project.name} showcase`}
+                      fill
+                      sizes="(min-width: 768px) 40vw, 100vw"
+                      className="object-cover"
+                      priority={index === 0}
+                    />
+                  ) : (
+                    <div className="text-foreground-muted flex h-full items-center justify-center text-xs">
+                      {t('noImage')}
                     </div>
-                    <div className={`col-md-5 ${index % 2 !== 0 ? 'order-md-1' : ''}`}>
-                      <Image
-                        className="border"
-                        src={`/static/projects/${project.imageUrl}`}
-                        alt={`${project.name} showcase`}
-                        width={500}
-                        height={300}
-                        priority
-                      />
-                    </div>
-                  </div>
+                  )}
                 </div>
-              ))}
-        </div>
-      </main>
-    </>
+              </div>
+            </article>
+          )
+        })}
+      </div>
+    </section>
   )
 }
 

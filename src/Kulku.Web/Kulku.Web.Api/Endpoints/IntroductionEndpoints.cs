@@ -1,4 +1,4 @@
-﻿using Carter;
+using Carter;
 using Kulku.Application.Cover;
 using Kulku.Contract.Cover;
 using Kulku.Web.Api.Middleware;

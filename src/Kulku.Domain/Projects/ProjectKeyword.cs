@@ -1,4 +1,4 @@
-﻿namespace Kulku.Domain.Projects;
+namespace Kulku.Domain.Projects;
 
 /// <summary>
 /// Represents the association between a <see cref="Project"/> and a <see cref="Keyword"/>.

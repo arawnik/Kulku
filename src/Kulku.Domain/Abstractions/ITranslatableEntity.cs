@@ -1,4 +1,4 @@
-﻿namespace Kulku.Domain.Abstractions;
+namespace Kulku.Domain.Abstractions;
 
 /// <summary>
 /// Interface for domain entities that support translations.

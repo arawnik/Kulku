@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SoulNETLib.Common.Extension;
 
 namespace Kulku.Persistence.Converters;

@@ -1,0 +1,85 @@
+@import 'tailwindcss';
+
+/* --------------------------------------------------------
+   Base CSS Variables (Light Mode + Defaults)
+   -------------------------------------------------------- */
+:root {
+  /* Background + Core Text */
+  --background: #efefef;
+  --background-muted: #adb5bd;
+  --foreground: #232729;
+  --foreground-muted: #4a4f52;
+
+  /* Headings */
+  --heading-dark: #ffffff;
+
+  /* Links */
+  --link: #0a58ca;
+  --link-hover: #084fb5;
+
+  /* Light theme accents */
+  --accent: #8d72e1;
+  --accent-alt: #6f42c1;
+
+  /* Light mode core colors */
+  --primary: #2d6da3;
+  --warning: #c39712;
+  --info: #098da7;
+}
+
+/* --------------------------------------------------------
+   Tailwind Theme Tokens (Maps CSS vars → Tailwind classes)
+   -------------------------------------------------------- */
+@theme inline {
+  /* Base */
+  --color-background: var(--background);
+  --color-background-muted: var(--background-muted);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+
+  /* Typography */
+  --color-heading-dark: var(--heading-dark);
+
+  /* Links */
+  --color-link: var(--link);
+  --color-link-hover: var(--link-hover);
+
+  /* Accent + Brand */
+  --color-accent: var(--accent);
+  --color-accent-alt: var(--accent-alt);
+
+  /* Main theme colors */
+  --color-primary: var(--primary);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+
+  /* Neutral */
+  --color-white: var(--white);
+  --color-gray-mid: var(--gray-mid);
+
+  /* Fonts */
+  --font-sans: var(--font-source-sans-3);
+  --font-mono: var(--font-geist-mono);
+  --font-orbitron: var(--font-orbitron);
+}
+
+/* --------------------------------------------------------
+   Dark Mode Overrides (Only variables change)
+   -------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #212529;
+    --background-muted: #bbbbbb;
+    --foreground: #efefef;
+    --foreground-muted: #bbbbbb;
+
+    --heading-dark: #ffffff;
+
+    --accent: #6f42c1;
+    --accent-alt: #8d72e1;
+  }
+}
+
+/* --------------------------------------------------------
+   Custom Styling
+   -------------------------------------------------------- */

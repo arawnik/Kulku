@@ -1,4 +1,4 @@
-﻿namespace Kulku.Contract.Contacts;
+namespace Kulku.Contract.Contacts;
 
 public record ContactRequestDto(
     string Name,

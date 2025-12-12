@@ -1,4 +1,4 @@
-﻿namespace Kulku.Contract.Projects;
+namespace Kulku.Contract.Projects;
 
 public record ProjectResponse(
     string Name,

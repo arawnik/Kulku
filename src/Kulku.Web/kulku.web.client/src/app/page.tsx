@@ -1,56 +1,54 @@
-'use client'
-
 import { JSX } from 'react'
-import Head from 'next/head'
-import { useTranslations } from 'next-intl'
-import { KeywordType } from '@/app/models'
-import IntroductionSection from '@/components/sections/IntroductionSection'
-import ExperienceSection from '@/components/sections/ExperienceSection'
-import EducationSection from '@/components/sections/EducationSection'
-import KeywordsSection from '@/components/sections/KeywordsSection'
-import useIntroduction from '@/hooks/useIntroduction'
-import useExperiences from '@/hooks/useExperiences'
-import useEducations from '@/hooks/useEducations'
-import useKeywords from '@/hooks/useKeywords'
+import { getTranslations } from 'next-intl/server'
+import { getCurrentLanguage, type Language } from '@/i18n/language'
+import { getKeywords, KeywordType } from '@/lib/api/keyword'
+import { getIntroduction } from '@/lib/api/introduction'
+import { getEducations } from '@/lib/api/education'
+import { getExperiences } from '@/lib/api/experience'
+import HrHeader from '@/components/HrHeader'
+import AphorismSection from './_components/AphorismSection'
+import IntroductionSection from './_components/IntroductionSection'
+import KeywordSection from './_components/KeywordSection'
+import EducationSection from './_components/EducationSection'
+import ExperienceSection from './_components/ExperienceSection'
 
-const CoverPage = (): JSX.Element => {
-  const t = useTranslations()
+const CoverPage = async (): Promise<JSX.Element> => {
+  const t = await getTranslations('home')
+  const language: Language = await getCurrentLanguage()
 
-  const { data: intro, isLoading: isLoadingIntro } = useIntroduction()
-  const { data: experiences, isLoading: isLoadingExp } = useExperiences()
-  const { data: educations, isLoading: isLoadingEdu } = useEducations()
-  const { data: skills, isLoading: isLoadingSkills } = useKeywords(KeywordType.Skill)
-  const { data: technologies, isLoading: isLoadingTech } = useKeywords(KeywordType.Technology)
-  const { data: programmingLanguages, isLoading: isLoadingLang } = useKeywords(KeywordType.Language)
+  const [
+    introduction,
+    languageKeywords,
+    skillKeywords,
+    technologyKeywords,
+    educations,
+    experiences,
+  ] = await Promise.all([
+    getIntroduction(language),
+    getKeywords(KeywordType.Language, language),
+    getKeywords(KeywordType.Skill, language),
+    getKeywords(KeywordType.Technology, language),
+    getEducations(language),
+    getExperiences(language),
+  ])
 
   return (
-    <>
-      <Head>
-        <title>{intro ? intro.title : t('loading')}</title>
-      </Head>
-      <main>
-        <IntroductionSection
-          intro={intro}
-          isLoading={isLoadingIntro}
-        />
-        <KeywordsSection
-          skills={skills}
-          skillsIsLoading={isLoadingSkills}
-          technologies={technologies}
-          technologiesIsLoading={isLoadingTech}
-          programmingLanguages={programmingLanguages}
-          programmingLanguagesIsLoading={isLoadingLang}
-        />
-        <EducationSection
-          educations={educations}
-          isLoading={isLoadingEdu}
-        />
-        <ExperienceSection
-          experiences={experiences}
-          isLoading={isLoadingExp}
-        />
-      </main>
-    </>
+    <div>
+      <AphorismSection />
+      <IntroductionSection intro={introduction} />
+
+      <KeywordSection
+        languageKeywords={languageKeywords}
+        skillKeywords={skillKeywords}
+        technologyKeywords={technologyKeywords}
+      />
+
+      <HrHeader>{t('education')}</HrHeader>
+      <EducationSection educations={educations} />
+
+      <HrHeader>{t('experience')}</HrHeader>
+      <ExperienceSection experiences={experiences} />
+    </div>
   )
 }
 

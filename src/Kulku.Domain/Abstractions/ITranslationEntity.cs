@@ -1,4 +1,4 @@
-﻿using Kulku.Contract.Enums;
+using Kulku.Contract.Enums;
 
 namespace Kulku.Domain.Abstractions;
 

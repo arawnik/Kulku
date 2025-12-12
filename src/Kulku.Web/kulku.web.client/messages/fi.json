@@ -1,41 +1,56 @@
 {
-  "loading": "Ladataan ...",
-  "education": "Koulutus",
-  "experience": "Kokemus",
-  "keywords": "Avainsanat",
-  "skills": "Osaaminen",
-  "technologies": "Teknologiat",
-  "intro": "Esittely",
-  "projects": "Projektit",
-  "contactMe": "Ota yhteyttä",
-  "admin": "Hallinta",
-  "lightMode": "Vaalea teema",
-  "darkMode": "Tumma teema",
-  "switchTheme": "Vaihda teemaa",
-  "linkedInProfile": "LinkedIn profiili",
-  "twitterProfile": "Twitter profiili",
-  "githubProfile": "Github profiili",
-  "downloadableCV": "Ladattava CV Pdf",
-  "oppositeLang": "In English",
-  "programmingLanguages": "Ohjelmointikielet",
-  "checkItOut": "Käy katsomassa",
-  "nameRequired": "Nimi vaaditaan",
-  "emailRequired": "Sähköpostiosoite vaaditaan",
-  "emailInvalid": "Virheellinen sähköpostiosoite",
-  "subjectRequired": "Aihe vaaditaan",
-  "messageRequired": "Viesti vaaditaan",
-  "reCaptchaMissing": "Osoitathan, ettet ole botti!",
-  "yourName": "Nimesi",
-  "yourEmail": "Sähköpostiosoitteesi",
-  "yourSubject": "Aiheesi",
-  "yourMessage": "Viestisi",
-  "name": "Nimi",
-  "email": "Sähköpostiosoite",
-  "subject": "Aihe",
-  "message": "Viesti",
-  "thankYou": "Kiitokset!",
-  "thankYouMessage": "Kiitokset viestistäsi. Olen yhteydessä asiasi tiimoilta mahdollisimman pikaisesti.",
-  "send": "Lähetä",
-  "present": "Nykyhetki",
-  "metaDescription": "Astele sisään portfoliooni. Tutustu kehittäjään projektien takana."
+  "meta": {
+    "description": "Astele portfoliooni. Tutustu kehittäjään projektien takana."
+  },
+  "keywords": {
+    "programmingLanguages": "Ohjelmointikielet",
+    "skills": "Osaaminen",
+    "technologies": "Teknologiat"
+  },
+  "header": {
+    "cover": "Esittely",
+    "projects": "Projektit",
+    "contact": "Ota yhteyttä",
+    "downloadableCV": "Ladattava CV",
+    "oppositeLang": "In English"
+  },
+  "home": {
+    "education": "Koulutus",
+    "experience": "Kokemus",
+    "present": "nykyhetki",
+    "keywords": "Avainsanat"
+  },
+  "projects": {
+    "title": "Projektit",
+    "description": "Kokoelma ohjelmistoprojekteja, jotka kuvaavat lähestymistapaani full-stack-kehitykseen, puhtaaseen arkkitehtuuriin ja moderneihin web-teknologioihin.",
+    "subTitle": "Lähestymistapani full-stack-kehitykseen, puhtaaseen arkkitehtuuriin ja moderneihin web-teknologioihin",
+    "viewLink": "Käy katsomassa"
+  },
+  "contact": {
+    "title": "Ota yhteyttä",
+    "description": "Ole hyvä ja käytä tätä lomaketta jos haluat kysyä jotain niin olen sinuun yhteydessä.",
+    "subTitle": "Lähetä viestiä niin olen sinuun yhteydessä!",
+    "nameLabel": "Nimesi",
+    "emailLabel": "Sähköpostiosoitteesi",
+    "subjectLabel": "Aiheesi",
+    "messageLabel": "Viestisi",
+    "namePlaceholder": "Nimi",
+    "emailPlaceholder": "Sähköpostiosoite",
+    "subjectPlaceholder": "Aihe",
+    "messagePlaceholder": "Viesti",
+    "send": "Lähetä",
+    "sending": "Lähetetään",
+    "nameRequired": "Nimi vaaditaan",
+    "emailRequired": "Sähköpostiosoite vaaditaan",
+    "emailInvalid": "Virheellinen sähköpostiosoite",
+    "subjectRequired": "Aihe vaaditaan",
+    "messageRequired": "Viesti vaaditaan",
+    "reCaptchaMissing": "Osoitathan, ettet ole botti!",
+    "genericError": "Something went wrong. Please try again."
+  },
+  "thankYou": {
+    "title": "Kiitokset!",
+    "description": "Kiitos viestistäsi. Olen yhteydessä asiasi tiimoilta mahdollisimman pikaisesti.",
+    "message": "Kiitokset viestistäsi. Olen yhteydessä asiasi tiimoilta mahdollisimman pikaisesti."
+  }
 }

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Kulku.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

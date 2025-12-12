@@ -1,4 +1,4 @@
-﻿using Carter;
+using Carter;
 using Kulku.Domain.Resources;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;

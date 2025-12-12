@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Kulku.Contract.Enums;
 using Kulku.Domain.Constants;
 using SoulNETLib.Common.Extension;

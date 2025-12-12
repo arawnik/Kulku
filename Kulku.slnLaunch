@@ -1,0 +1,47 @@
+[
+  {
+    "Name": "Site",
+    "Projects": [
+      {
+        "Path": "src\\Kulku.Web\\Kulku.Web.Api\\Kulku.Web.Api.csproj",
+        "Action": "Start",
+        "DebugTarget": "http"
+      },
+      {
+        "Path": "src\\Kulku.Web\\Kulku.Web.Client\\kulku.web.client.esproj",
+        "Action": "Start",
+        "DebugTarget": "Localhost (Chrome)"
+      }
+    ]
+  },
+  {
+    "Name": "Admin",
+    "Projects": [
+      {
+        "Path": "src\\Kulku.Web\\Kulku.Web.Admin\\Kulku.Web.Admin.csproj",
+        "Action": "Start",
+        "DebugTarget": "https"
+      }
+    ]
+  },
+  {
+    "Name": "Full",
+    "Projects": [
+      {
+        "Path": "src\\Kulku.Web\\Kulku.Web.Api\\Kulku.Web.Api.csproj",
+        "Action": "Start",
+        "DebugTarget": "https"
+      },
+      {
+        "Path": "src\\Kulku.Web\\Kulku.Web.Admin\\Kulku.Web.Admin.csproj",
+        "Action": "Start",
+        "DebugTarget": "https"
+      },
+      {
+        "Path": "src\\Kulku.Web\\Kulku.Web.Client\\kulku.web.client.esproj",
+        "Action": "Start",
+        "DebugTarget": "Localhost (Chrome)"
+      }
+    ]
+  }
+]

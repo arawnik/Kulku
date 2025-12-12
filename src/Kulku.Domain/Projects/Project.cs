@@ -1,4 +1,4 @@
-﻿using Kulku.Domain.Abstractions;
+using Kulku.Domain.Abstractions;
 
 namespace Kulku.Domain.Projects;
 

@@ -1,4 +1,4 @@
-﻿using Kulku.Application.Helpers;
+using Kulku.Application.Helpers;
 using Kulku.Contract.Contacts;
 using Kulku.Domain.Contacts;
 using Kulku.Domain.Repositories;

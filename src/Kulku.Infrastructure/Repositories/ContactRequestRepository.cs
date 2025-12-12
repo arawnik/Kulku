@@ -1,4 +1,4 @@
-﻿using Kulku.Domain.Contacts;
+using Kulku.Domain.Contacts;
 using Kulku.Domain.Repositories;
 using Kulku.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
