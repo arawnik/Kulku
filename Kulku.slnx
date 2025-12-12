@@ -13,6 +13,7 @@
     <File Path=".github/workflows/docker-publish.yml" />
   </Folder>
   <Folder Name="/solution/">
+    <File Path=".csharpierrc.yml" />
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
