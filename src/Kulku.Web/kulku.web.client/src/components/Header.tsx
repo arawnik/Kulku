@@ -65,15 +65,16 @@ const Header = (): JSX.Element => {
 
         {/* MOBILE */}
         <div className="flex w-full items-center justify-between md:hidden">
-          <nav className="text-md items-center gap-6 flex">
+          <nav className="text-md flex items-center gap-6">
             {navItems.map((item) => {
               const active = isActive(item.href)
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`py-1 text-center font-medium font-semibold transition-colors ${active ? 'text-accent' : 'text-foreground-muted hover:text-foreground'
-                    }`}
+                  className={`py-1 text-center font-medium font-semibold transition-colors ${
+                    active ? 'text-accent' : 'text-foreground-muted hover:text-foreground'
+                  }`}
                   onClick={() => setMobileOpen(false)}
                 >
                   {t(item.key)}
@@ -86,22 +87,22 @@ const Header = (): JSX.Element => {
             type="button"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Toggle navigation"
-            className={`border-accent/60 hover:bg-accent hover:text-background/90 flex h-10 w-10 items-center justify-center rounded-md border transition-colors ${
+            className={`border-accent/70 flex h-10 w-10 items-center justify-center rounded-md border transition-colors ${
               mobileOpen
-                ? 'bg-accent text-background hover:bg-accent-alt'
-                : 'hover:bg-accent hover:text-background/90'
+                ? 'bg-accent hover:bg-accent-alt text-heading-dark'
+                : 'hover:bg-accent hover:text-heading-dark'
             }`}
           >
             {mobileOpen ? (
-              <FaHamburger className="text-foreground-muted h-5 w-5 transition-transform duration-200" />
+              <FaHamburger className="h-5 w-5 transition-transform duration-200" />
             ) : (
-              <FaBars className="text-foreground-muted h-5 w-5 transition-transform duration-200" />
+              <FaBars className="h-5 w-5 transition-transform duration-200" />
             )}
           </button>
         </div>
       </div>
       {mobileOpen && (
-        <div className="border-accent/40 bg-background border-t md:hidden">
+        <div className="border-accent/70 bg-background border-t md:hidden">
           <div className="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-4 text-sm">
             <div className="flex justify-center">
               <LanguageSwitcher />
