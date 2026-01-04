@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace Kulku.Infrastructure.Helpers;
+namespace Kulku.Infrastructure.Security;
 
 /// <summary>
 /// Utility class for loading file-based Docker secrets from `/run/secrets`
@@ -31,15 +31,6 @@ public static class SecretLoader
                 var value = File.ReadAllText(path).Trim();
                 // **Directly override** the IConfiguration value:
                 configuration[configKey] = value;
-                Console.WriteLine(
-                    $"[SecretLoader] Loaded secret '{secretFile}' into configuration key '{configKey}'."
-                );
-            }
-            else
-            {
-                Console.WriteLine(
-                    $"[SecretLoader] Secret file '{secretFile}' not found at '{path}'."
-                );
             }
         }
     }
@@ -63,13 +54,6 @@ public static class SecretLoader
             {
                 var value = File.ReadAllText(path).Trim();
                 Environment.SetEnvironmentVariable(envVar, value);
-                Console.WriteLine(
-                    $"[SecretLoader] Loaded secret '{secretFile}' into env-var '{envVar}'."
-                );
-            }
-            else
-            {
-                Console.WriteLine($"[SecretLoader] Secret file not found: {path}");
             }
         }
     }

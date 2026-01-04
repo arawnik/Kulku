@@ -128,6 +128,7 @@ dotnet ef database update -p src/Kulku.Persistence/Kulku.Persistence.Pgsql -s sr
 You should consider creating scripts and apply migrations manually in production-like environments.
 
 It is possible to run migrations on startup by setting Management:MigrateOnStart to true in admin project and restarting the app.
+Currently automated migrations can only be done through the admin project.
 
 
 ## ✅ Running the Tests

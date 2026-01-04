@@ -10,6 +10,7 @@
     <File Path="README.md" />
   </Folder>
   <Folder Name="/GitHub/">
+    <File Path=".github/copilot-instructions.md" />
     <File Path=".github/workflows/docker-publish.yml" />
   </Folder>
   <Folder Name="/solution/">

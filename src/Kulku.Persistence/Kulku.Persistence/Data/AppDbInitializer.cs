@@ -23,6 +23,6 @@ public static class AppDbInitializer
     /// </exception>
     public static void Initialize(AppDbContext context)
     {
-        context.Database.MigrateAsync();
+        //TODO: Implement database seeding logic here.
     }
 }

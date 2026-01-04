@@ -26,8 +26,6 @@ public static class ApplicationDependencyInjection
     /// <returns>The updated <see cref="IServiceCollection"/> with registered application services.</returns>
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddLocalization();
-
         // Application services
 
         // Business logic services

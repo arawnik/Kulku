@@ -2,7 +2,7 @@ using System.Net.Http.Json;
 using Kulku.Application.Abstractions.Security;
 using Microsoft.Extensions.Options;
 
-namespace Kulku.Infrastructure.Helpers;
+namespace Kulku.Infrastructure.Security;
 
 /// <summary>
 /// Validates reCAPTCHA tokens by calling the Google reCAPTCHA verification endpoint.

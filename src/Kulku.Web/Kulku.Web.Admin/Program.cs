@@ -1,6 +1,6 @@
 using Kulku.Application;
 using Kulku.Infrastructure;
-using Kulku.Infrastructure.Helpers;
+using Kulku.Infrastructure.Security;
 using Kulku.Persistence;
 using Kulku.Persistence.Data;
 using Kulku.Web.Admin;

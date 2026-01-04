@@ -3,9 +3,9 @@ using Kulku.Application.Abstractions.Security;
 using Kulku.Application.Cover.Ports;
 using Kulku.Application.Projects.Ports;
 using Kulku.Domain.Repositories;
-using Kulku.Infrastructure.Helpers;
 using Kulku.Infrastructure.Queries;
 using Kulku.Infrastructure.Repositories;
+using Kulku.Infrastructure.Security;
 using Kulku.Persistence;
 using Kulku.Persistence.Data;
 using Kulku.Persistence.Pgsql;
@@ -69,8 +69,6 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IIntroductionQueries, IntroductionQueries>();
         services.AddScoped<IExperienceQueries, ExperienceQueries>();
         services.AddScoped<IEducationQueries, EducationQueries>();
-
-        services.AddScoped<IContactRequestRepository, ContactRequestRepository>();
 
         return services;
     }
