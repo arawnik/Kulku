@@ -1,4 +1,3 @@
-using Kulku.Contract.Enums;
 using Kulku.Domain.Abstractions;
 
 namespace Kulku.Domain.Projects;

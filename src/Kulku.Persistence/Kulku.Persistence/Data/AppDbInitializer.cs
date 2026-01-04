@@ -23,6 +23,6 @@ public static class AppDbInitializer
     /// </exception>
     public static void Initialize(AppDbContext context)
     {
-        context.Database.EnsureCreated();
+        context.Database.MigrateAsync();
     }
 }

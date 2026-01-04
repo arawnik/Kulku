@@ -1,5 +1,7 @@
-using Kulku.Contract.Cover;
-using Kulku.Domain.Repositories;
+using Kulku.Application.Abstractions.Localization;
+using Kulku.Application.Cover.Models;
+using Kulku.Application.Cover.Ports;
+using Kulku.Domain;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 
@@ -7,19 +9,21 @@ namespace Kulku.Application.Cover;
 
 public static class GetExperiences
 {
-    public sealed record Query() : IQuery<ICollection<ExperienceResponse>>;
+    public sealed record Query(LanguageCode Language)
+        : IQuery<IReadOnlyList<ExperienceModel>>,
+            ILocalizedRequest;
 
-    internal sealed class Handler(IExperienceRepository repository)
-        : IQueryHandler<Query, ICollection<ExperienceResponse>>
+    internal sealed class Handler(IExperienceQueries queries)
+        : IQueryHandler<Query, IReadOnlyList<ExperienceModel>>
     {
-        private readonly IExperienceRepository _repository = repository;
+        private readonly IExperienceQueries _queries = queries;
 
-        public async Task<Result<ICollection<ExperienceResponse>>> Handle(
+        public async Task<Result<IReadOnlyList<ExperienceModel>>> Handle(
             Query query,
             CancellationToken cancellationToken
         )
         {
-            return Result.Success(await _repository.QueryAllAsync(cancellationToken));
+            return Result.Success(await _queries.ListAllAsync(query.Language, cancellationToken));
         }
     }
 }

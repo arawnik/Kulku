@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SoulNETLib.Clean.Domain;
 
-namespace Kulku.Web.Api.Middleware;
+namespace Kulku.Web.Api.Http;
 
-public static class EndpointHelper
+public static class ResultHttpExtensions
 {
     public static Results<
         Ok<TSuccess>,
@@ -31,7 +31,7 @@ public static class EndpointHelper
     private static NotFound<ProblemDetails> Handle404(Error? error)
     {
         return TypedResults.NotFound(
-            CreateErrorDetails("Not found", StatusCodes.Status404NotFound, error)
+            ProblemDetailsFactory.Create("Not found", StatusCodes.Status404NotFound, error)
         );
     }
 
@@ -42,7 +42,7 @@ public static class EndpointHelper
         {
             { IsSuccess: true } => throw new InvalidOperationException(),
             IValidationResult validationResult => TypedResults.BadRequest(
-                CreateErrorDetails(
+                ProblemDetailsFactory.Create(
                     "Validation Error",
                     StatusCodes.Status400BadRequest,
                     result.Error,
@@ -50,36 +50,11 @@ public static class EndpointHelper
                 )
             ),
             _ => TypedResults.BadRequest(
-                CreateErrorDetails("Bad Request", StatusCodes.Status400BadRequest, result.Error)
+                ProblemDetailsFactory.Create(
+                    "Bad Request",
+                    StatusCodes.Status400BadRequest,
+                    result.Error
+                )
             ),
         };
-
-    public static ProblemDetails CreateErrorDetails(
-        string title,
-        int status,
-        Error? error,
-        IEnumerable<Error>? validationErrors = null
-    )
-    {
-        var problemDetails = new ProblemDetails { Title = title, Status = status };
-
-        if (validationErrors != null)
-        {
-            var errorsDict = validationErrors
-                .GroupBy(e => e.Code)
-                .ToDictionary(g => g.Key, g => g.Select(e => e.Message).ToList());
-
-            problemDetails.Type = error?.Code ?? ErrorCodes.Validation;
-            problemDetails.Detail = error?.Message ?? IValidationResult.ValidationError.Message;
-            problemDetails.Extensions["errors"] = errorsDict;
-        }
-        else
-        {
-            problemDetails.Type = error?.Code ?? ErrorCodes.General;
-            problemDetails.Detail =
-                error?.Message ?? "Error occurred while processing your request.";
-        }
-
-        return problemDetails;
-    }
 }

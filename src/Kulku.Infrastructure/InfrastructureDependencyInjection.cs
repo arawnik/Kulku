@@ -1,7 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
-using Kulku.Application.Helpers;
+using Kulku.Application.Abstractions.Security;
+using Kulku.Application.Cover.Ports;
+using Kulku.Application.Projects.Ports;
 using Kulku.Domain.Repositories;
 using Kulku.Infrastructure.Helpers;
+using Kulku.Infrastructure.Queries;
 using Kulku.Infrastructure.Repositories;
 using Kulku.Persistence;
 using Kulku.Persistence.Data;
@@ -59,6 +62,16 @@ public static class InfrastructureDependencyInjection
 
         services.AddScoped<IContactRequestRepository, ContactRequestRepository>();
 
+        // Queries
+        services.AddScoped<IProjectQueries, ProjectQueries>();
+        services.AddScoped<IKeywordQueries, KeywordQueries>();
+
+        services.AddScoped<IIntroductionQueries, IntroductionQueries>();
+        services.AddScoped<IExperienceQueries, ExperienceQueries>();
+        services.AddScoped<IEducationQueries, EducationQueries>();
+
+        services.AddScoped<IContactRequestRepository, ContactRequestRepository>();
+
         return services;
     }
 
@@ -97,7 +110,6 @@ public static class InfrastructureDependencyInjection
             logger.LogInformation("Applying migrations...");
 
             await userDbContext.Database.MigrateAsync();
-            await appDbContext.Database.MigrateAsync();
 
             AppDbInitializer.Initialize(appDbContext);
 

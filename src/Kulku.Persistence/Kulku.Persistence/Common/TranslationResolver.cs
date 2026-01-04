@@ -1,4 +1,4 @@
-using Kulku.Contract.Enums;
+using Kulku.Domain;
 using Kulku.Domain.Abstractions;
 
 namespace Kulku.Persistence.Common;

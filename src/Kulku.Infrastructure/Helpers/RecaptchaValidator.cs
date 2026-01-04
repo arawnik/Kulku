@@ -1,5 +1,5 @@
 using System.Net.Http.Json;
-using Kulku.Application.Helpers;
+using Kulku.Application.Abstractions.Security;
 using Microsoft.Extensions.Options;
 
 namespace Kulku.Infrastructure.Helpers;

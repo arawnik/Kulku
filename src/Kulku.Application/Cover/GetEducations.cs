@@ -1,5 +1,7 @@
-using Kulku.Contract.Cover;
-using Kulku.Domain.Repositories;
+using Kulku.Application.Abstractions.Localization;
+using Kulku.Application.Cover.Models;
+using Kulku.Application.Cover.Ports;
+using Kulku.Domain;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 
@@ -7,19 +9,21 @@ namespace Kulku.Application.Cover;
 
 public static class GetEducations
 {
-    public sealed record Query() : IQuery<ICollection<EducationResponse>>;
+    public sealed record Query(LanguageCode Language)
+        : IQuery<IReadOnlyList<EducationModel>>,
+            ILocalizedRequest;
 
-    internal sealed class Handler(IEducationRepository repository)
-        : IQueryHandler<Query, ICollection<EducationResponse>>
+    internal sealed class Handler(IEducationQueries queries)
+        : IQueryHandler<Query, IReadOnlyList<EducationModel>>
     {
-        private readonly IEducationRepository _repository = repository;
+        private readonly IEducationQueries _queries = queries;
 
-        public async Task<Result<ICollection<EducationResponse>>> Handle(
+        public async Task<Result<IReadOnlyList<EducationModel>>> Handle(
             Query query,
             CancellationToken cancellationToken
         )
         {
-            return Result.Success(await _repository.QueryAllAsync(cancellationToken));
+            return Result.Success(await _queries.ListAllAsync(query.Language, cancellationToken));
         }
     }
 }

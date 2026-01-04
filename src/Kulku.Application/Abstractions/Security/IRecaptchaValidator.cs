@@ -1,4 +1,4 @@
-namespace Kulku.Application.Helpers;
+namespace Kulku.Application.Abstractions.Security;
 
 /// <summary>
 /// Validates reCAPTCHA tokens by calling the Google reCAPTCHA verification endpoint.

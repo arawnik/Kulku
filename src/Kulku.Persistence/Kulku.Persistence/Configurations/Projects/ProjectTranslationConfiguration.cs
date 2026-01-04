@@ -1,4 +1,4 @@
-using Kulku.Domain.Constants;
+using Kulku.Domain;
 using Kulku.Domain.Projects;
 using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;

@@ -17,7 +17,7 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.0")
+                .HasAnnotation("ProductVersion", "10.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -41,23 +41,28 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("Subject")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("timestamp with time zone");
@@ -96,7 +101,9 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
 
                     b.Property<string>("Language")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(2)
+                        .IsUnicode(false)
+                        .HasColumnType("character varying(2)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -155,7 +162,9 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
 
                     b.Property<string>("Language")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(2)
+                        .IsUnicode(false)
+                        .HasColumnType("character varying(2)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -214,7 +223,9 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
 
                     b.Property<string>("Language")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(2)
+                        .IsUnicode(false)
+                        .HasColumnType("character varying(2)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -264,7 +275,9 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
 
                     b.Property<string>("Language")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(2)
+                        .IsUnicode(false)
+                        .HasColumnType("character varying(2)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -323,7 +336,9 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
 
                     b.Property<string>("Language")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(2)
+                        .IsUnicode(false)
+                        .HasColumnType("character varying(2)");
 
                     b.Property<string>("Tagline")
                         .IsRequired()
@@ -384,7 +399,9 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
 
                     b.Property<string>("Language")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(2)
+                        .IsUnicode(false)
+                        .HasColumnType("character varying(2)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -430,7 +447,9 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
 
                     b.Property<string>("Language")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(2)
+                        .IsUnicode(false)
+                        .HasColumnType("character varying(2)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -504,7 +523,9 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
 
                     b.Property<string>("Language")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(2)
+                        .IsUnicode(false)
+                        .HasColumnType("character varying(2)");
 
                     b.Property<string>("Name")
                         .IsRequired()

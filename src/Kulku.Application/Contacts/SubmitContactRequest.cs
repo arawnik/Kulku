@@ -1,5 +1,5 @@
-using Kulku.Application.Helpers;
-using Kulku.Contract.Contacts;
+using Kulku.Application.Abstractions.Security;
+using Kulku.Application.Contacts.Models;
 using Kulku.Domain.Contacts;
 using Kulku.Domain.Repositories;
 using Kulku.Domain.Resources;

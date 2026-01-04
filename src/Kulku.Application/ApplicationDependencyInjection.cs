@@ -1,9 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
 using Kulku.Application.Contacts;
 using Kulku.Application.Cover;
+using Kulku.Application.Cover.Models;
 using Kulku.Application.Projects;
-using Kulku.Contract.Cover;
-using Kulku.Contract.Projects;
+using Kulku.Application.Projects.Models;
 using Microsoft.Extensions.DependencyInjection;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 
@@ -32,27 +32,27 @@ public static class ApplicationDependencyInjection
 
         // Business logic services
         services.AddScoped<
-            IQueryHandler<GetKeywords.Query, ICollection<KeywordResponse>>,
+            IQueryHandler<GetKeywords.Query, IReadOnlyList<KeywordModel>>,
             GetKeywords.Handler
         >();
 
         services.AddScoped<
-            IQueryHandler<GetProjects.Query, ICollection<ProjectResponse>>,
+            IQueryHandler<GetProjects.Query, IReadOnlyList<ProjectModel>>,
             GetProjects.Handler
         >();
 
         services.AddScoped<
-            IQueryHandler<GetIntroduction.Query, IntroductionResponse?>,
+            IQueryHandler<GetIntroduction.Query, IntroductionModel?>,
             GetIntroduction.Handler
         >();
 
         services.AddScoped<
-            IQueryHandler<GetExperiences.Query, ICollection<ExperienceResponse>>,
+            IQueryHandler<GetExperiences.Query, IReadOnlyList<ExperienceModel>>,
             GetExperiences.Handler
         >();
 
         services.AddScoped<
-            IQueryHandler<GetEducations.Query, ICollection<EducationResponse>>,
+            IQueryHandler<GetEducations.Query, IReadOnlyList<EducationModel>>,
             GetEducations.Handler
         >();
 

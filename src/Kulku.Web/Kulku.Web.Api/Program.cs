@@ -1,8 +1,10 @@
 using Carter;
 using Kulku.Application;
-using Kulku.Domain.Constants;
+using Kulku.Application.Abstractions.Localization;
+using Kulku.Domain;
 using Kulku.Infrastructure;
 using Kulku.Infrastructure.Helpers;
+using Kulku.Web.Api.Localization;
 using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +34,9 @@ builder.Services.AddCarter();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ILanguageContext, RequestLanguageContext>();
 
 builder.Services.AddCors(options =>
 {

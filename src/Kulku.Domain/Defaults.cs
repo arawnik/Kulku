@@ -1,6 +1,4 @@
-using Kulku.Contract.Enums;
-
-namespace Kulku.Domain.Constants;
+namespace Kulku.Domain;
 
 /// <summary>
 /// Defines application-wide default values for domain-level entities and operations.

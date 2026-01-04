@@ -1,7 +1,8 @@
 using Carter;
+using Kulku.Application.Abstractions.Localization;
 using Kulku.Application.Cover;
-using Kulku.Contract.Cover;
-using Kulku.Web.Api.Middleware;
+using Kulku.Application.Cover.Models;
+using Kulku.Web.Api.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
@@ -18,13 +19,17 @@ public class EducationEndpoints : ICarterModule
     }
 
     public static async Task<
-        Results<Ok<ICollection<EducationResponse>>, NotFound, BadRequest<ProblemDetails>>
+        Results<Ok<IReadOnlyList<EducationModel>>, NotFound, BadRequest<ProblemDetails>>
     > GetEducationsAsync(
-        [FromServices] IQueryHandler<GetEducations.Query, ICollection<EducationResponse>> handler,
+        [FromServices] IQueryHandler<GetEducations.Query, IReadOnlyList<EducationModel>> handler,
+        [FromServices] ILanguageContext languageContext,
         CancellationToken cancellationToken
     )
     {
-        var result = await handler.Handle(new GetEducations.Query(), cancellationToken);
+        var result = await handler.Handle(
+            new GetEducations.Query(languageContext.Current),
+            cancellationToken
+        );
         if (result.IsSuccess)
         {
             return TypedResults.Ok(result.Value);
