@@ -24,7 +24,6 @@ COPY ["src/Kulku.Web/Kulku.Web.Admin/Kulku.Web.Admin.csproj", "src/Kulku.Web/Kul
 COPY ["src/Kulku.Infrastructure/Kulku.Infrastructure.csproj", "src/Kulku.Infrastructure/"]
 COPY ["src/Kulku.Application/Kulku.Application.csproj", "src/Kulku.Application/"]
 COPY ["src/Kulku.Domain/Kulku.Domain.csproj", "src/Kulku.Domain/"]
-COPY ["src/Kulku.Contract/Kulku.Contract.csproj", "src/Kulku.Contract/"]
 COPY ["src/Kulku.Persistence/Kulku.Persistence.Pgsql/Kulku.Persistence.Pgsql.csproj", "src/Kulku.Persistence/Kulku.Persistence.Pgsql/"]
 COPY ["src/Kulku.Persistence/Kulku.Persistence/Kulku.Persistence.csproj", "src/Kulku.Persistence/Kulku.Persistence/"]
 
