@@ -10,6 +10,7 @@
     <File Path="README.md" />
   </Folder>
   <Folder Name="/GitHub/">
+    <File Path=".github/copilot-instructions.md" />
     <File Path=".github/workflows/docker-publish.yml" />
   </Folder>
   <Folder Name="/solution/">
@@ -23,7 +24,6 @@
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/Kulku.Application/Kulku.Application.csproj" />
-    <Project Path="src/Kulku.Contract/Kulku.Contract.csproj" />
     <Project Path="src/Kulku.Domain/Kulku.Domain.csproj" />
     <Project Path="src/Kulku.Infrastructure/Kulku.Infrastructure.csproj" />
     <Project Path="src/Kulku.Persistence/Kulku.Persistence.Pgsql/Kulku.Persistence.Pgsql.csproj" />

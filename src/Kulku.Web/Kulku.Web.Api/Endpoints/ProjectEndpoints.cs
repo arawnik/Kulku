@@ -1,8 +1,9 @@
 using Carter;
+using Kulku.Application.Abstractions.Localization;
 using Kulku.Application.Projects;
-using Kulku.Contract.Enums;
-using Kulku.Contract.Projects;
-using Kulku.Web.Api.Middleware;
+using Kulku.Application.Projects.Models;
+using Kulku.Domain.Projects;
+using Kulku.Web.Api.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
@@ -21,13 +22,17 @@ public class ProjectEndpoints : ICarterModule
     }
 
     public static async Task<
-        Results<Ok<ICollection<ProjectResponse>>, NotFound, BadRequest<ProblemDetails>>
+        Results<Ok<IReadOnlyList<ProjectModel>>, NotFound, BadRequest<ProblemDetails>>
     > GetProjectsAsync(
-        [FromServices] IQueryHandler<GetProjects.Query, ICollection<ProjectResponse>> handler,
+        [FromServices] IQueryHandler<GetProjects.Query, IReadOnlyList<ProjectModel>> handler,
+        [FromServices] ILanguageContext languageContext,
         CancellationToken cancellationToken
     )
     {
-        var result = await handler.Handle(new GetProjects.Query(), cancellationToken);
+        var result = await handler.Handle(
+            new GetProjects.Query(languageContext.Current),
+            cancellationToken
+        );
         if (result.IsSuccess)
         {
             return TypedResults.Ok(result.Value);
@@ -36,18 +41,19 @@ public class ProjectEndpoints : ICarterModule
     }
 
     public static async Task<
-        Results<Ok<ICollection<KeywordResponse>>, NotFound, BadRequest<ProblemDetails>>
+        Results<Ok<IReadOnlyList<KeywordModel>>, NotFound, BadRequest<ProblemDetails>>
     > GetKeywordsAsync(
         [FromRoute] string type,
-        [FromServices] IQueryHandler<GetKeywords.Query, ICollection<KeywordResponse>> handler,
+        [FromServices] IQueryHandler<GetKeywords.Query, IReadOnlyList<KeywordModel>> handler,
+        [FromServices] ILanguageContext languageContext,
         CancellationToken cancellationToken
     )
     {
-        if (!type.TryParseEnumMember(out KeywordType? parsedType))
+        if (!Enum.TryParse<KeywordType>(type, ignoreCase: true, out var parsedType))
             return TypedResults.NotFound();
 
         var result = await handler.Handle(
-            new GetKeywords.Query((KeywordType)parsedType),
+            new GetKeywords.Query((KeywordType)parsedType, languageContext.Current),
             cancellationToken
         );
         if (result.IsSuccess)

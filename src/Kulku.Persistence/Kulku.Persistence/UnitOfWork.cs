@@ -32,8 +32,7 @@ public sealed class UnitOfWork(AppDbContext context) : IUnitOfWork
     /// </exception>
     public async Task<int> CompleteAsync(CancellationToken cancellationToken = default)
     {
-        //_context.ChangeTracker.DetectChanges();
-        //Console.WriteLine(_context.ChangeTracker.DebugView.LongView);
+        //Debug data: _context.ChangeTracker.DebugView.LongView;
         return await _context.SaveChangesAsync(cancellationToken);
     }
 }

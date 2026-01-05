@@ -1,7 +1,7 @@
 using Carter;
 using Kulku.Application.Contacts;
-using Kulku.Contract.Contacts;
-using Kulku.Web.Api.Middleware;
+using Kulku.Application.Contacts.Models;
+using Kulku.Web.Api.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;

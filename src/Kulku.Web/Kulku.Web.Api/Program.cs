@@ -1,8 +1,10 @@
 using Carter;
 using Kulku.Application;
-using Kulku.Domain.Constants;
+using Kulku.Application.Abstractions.Localization;
+using Kulku.Domain;
 using Kulku.Infrastructure;
-using Kulku.Infrastructure.Helpers;
+using Kulku.Infrastructure.Security;
+using Kulku.Web.Api.Localization;
 using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,12 +35,25 @@ builder.Services.AddCarter();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ILanguageContext, RequestLanguageContext>();
+
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
 builder.Services.AddCors(options =>
 {
+    options.AddPolicy(
+        "DefaultCors",
+        policy =>
+        {
+            // Restrictive policy: only configured origins allowed.
+            policy.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod();
+        }
+    );
     options.AddPolicy(
         "AllowAll",
         policy =>
         {
+            // Permissive policy: allow all origins (for development).
             policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
         }
     );
@@ -53,26 +68,6 @@ app.UseExceptionHandler(exceptionHandlerApp =>
     exceptionHandlerApp.Run(async context => await Results.Problem().ExecuteAsync(context))
 );
 
-app.UseExceptionHandler(exceptionHandlerApp =>
-{
-    exceptionHandlerApp.Run(async httpContext =>
-    {
-        var pds = httpContext.RequestServices.GetService<IProblemDetailsService>();
-        if (pds == null || !await pds.TryWriteAsync(new() { HttpContext = httpContext }))
-        {
-            // Fallback behavior
-            await httpContext.Response.WriteAsync("Fallback: An error occurred.");
-        }
-    });
-});
-
-app.UseForwardedHeaders(
-    new ForwardedHeadersOptions
-    {
-        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
-    }
-);
-
 var localizationOptions = new RequestLocalizationOptions()
     .SetDefaultCulture(Defaults.Culture)
     .AddSupportedCultures(Defaults.SupportedCultures)
@@ -85,19 +80,24 @@ app.UseRequestLocalization(localizationOptions);
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseCors("AllowAll");
 }
 else
 {
     app.MapOpenApi().RequireAuthorization();
-    app.UseExceptionHandler();
+    app.UseCors("DefaultCors");
 
-    app.UseForwardedHeaders();
+    app.UseForwardedHeaders(
+        new ForwardedHeadersOptions
+        {
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+        }
+    );
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowAll");
 app.MapCarter();
 
 await app.RunAsync();

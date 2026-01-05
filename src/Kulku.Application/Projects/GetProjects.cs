@@ -1,5 +1,7 @@
-using Kulku.Contract.Projects;
-using Kulku.Domain.Repositories;
+using Kulku.Application.Abstractions.Localization;
+using Kulku.Application.Projects.Models;
+using Kulku.Application.Projects.Ports;
+using Kulku.Domain;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 
@@ -7,19 +9,21 @@ namespace Kulku.Application.Projects;
 
 public static class GetProjects
 {
-    public sealed record Query() : IQuery<ICollection<ProjectResponse>>;
+    public sealed record Query(LanguageCode Language)
+        : IQuery<IReadOnlyList<ProjectModel>>,
+            ILocalizedRequest;
 
-    internal sealed class Handler(IProjectRepository repository)
-        : IQueryHandler<Query, ICollection<ProjectResponse>>
+    internal sealed class Handler(IProjectQueries queries)
+        : IQueryHandler<Query, IReadOnlyList<ProjectModel>>
     {
-        private readonly IProjectRepository _repository = repository;
+        private readonly IProjectQueries _queries = queries;
 
-        public async Task<Result<ICollection<ProjectResponse>>> Handle(
+        public async Task<Result<IReadOnlyList<ProjectModel>>> Handle(
             Query query,
             CancellationToken cancellationToken
         )
         {
-            return Result.Success(await _repository.QueryAllAsync(cancellationToken));
+            return Result.Success(await _queries.ListAllAsync(query.Language, cancellationToken));
         }
     }
 }

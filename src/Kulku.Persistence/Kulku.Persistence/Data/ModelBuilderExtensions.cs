@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using Kulku.Persistence.Configurations.Cover;
-using Kulku.Persistence.Configurations.Projects;
+using Kulku.Domain;
 using Kulku.Persistence.Converters;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
@@ -15,36 +14,6 @@ namespace Kulku.Persistence.Data;
 [ExcludeFromCodeCoverage]
 internal static class ModelBuilderExtensions
 {
-    /// <summary>
-    /// Configures entity relationships, including many-to-many relationships.
-    /// </summary>
-    /// <param name="modelBuilder">The model builder instance used for defining relationships.</param>
-    internal static void ConfigureRelationships(this ModelBuilder modelBuilder)
-    {
-        ArgumentNullException.ThrowIfNull(modelBuilder, nameof(modelBuilder));
-
-        // Project module
-        modelBuilder.ApplyConfiguration(new ProjectConfiguration());
-        modelBuilder.ApplyConfiguration(new ProjectTranslationConfiguration());
-        modelBuilder.ApplyConfiguration(new KeywordConfiguration());
-        modelBuilder.ApplyConfiguration(new KeywordTranslationConfiguration());
-        modelBuilder.ApplyConfiguration(new ProjectKeywordConfiguration());
-        modelBuilder.ApplyConfiguration(new ProficiencyConfiguration());
-        modelBuilder.ApplyConfiguration(new ProficiencyTranslationConfiguration());
-
-        // Cover module
-        modelBuilder.ApplyConfiguration(new CompanyConfiguration());
-        modelBuilder.ApplyConfiguration(new CompanyTranslationConfiguration());
-        modelBuilder.ApplyConfiguration(new EducationConfiguration());
-        modelBuilder.ApplyConfiguration(new EducationTranslationConfiguration());
-        modelBuilder.ApplyConfiguration(new ExperienceConfiguration());
-        modelBuilder.ApplyConfiguration(new ExperienceTranslationConfiguration());
-        modelBuilder.ApplyConfiguration(new InstitutionConfiguration());
-        modelBuilder.ApplyConfiguration(new InstitutionTranslationConfiguration());
-        modelBuilder.ApplyConfiguration(new IntroductionConfiguration());
-        modelBuilder.ApplyConfiguration(new IntroductionTranslationConfiguration());
-    }
-
     /// <summary>
     /// Configures Identity-related table mappings.
     /// </summary>
@@ -64,28 +33,57 @@ internal static class ModelBuilderExtensions
     }
 
     /// <summary>
-    /// Applies a value converter to all enum properties across the model,
-    /// ensuring enums are stored as strings in the database rather than integers.
-    /// This makes the database more readable and avoids issues with enum value changes.
+    /// Applies a value converter to all enum properties across the model.
+    /// <list type="bullet">
+    /// <item>
+    /// If a property already has a converter configured explicitly, it is left untouched.
+    /// </item>
+    /// <item>
+    /// <see cref="LanguageCode"/> is mapped using <see cref="LanguageCodeValueConverter"/>.
+    /// </item>
+    /// <item>
+    /// All other enums are mapped using <see cref="EnumMemberValueConverter{TEnum}"/>, storing a
+    /// readable string representation instead of an integer.
+    /// </item>
+    /// </list>
     /// </summary>
     /// <param name="modelBuilder">The EF Core model builder instance.</param>
-    internal static void ConvertEnumsToString(this ModelBuilder modelBuilder)
+    internal static void ApplyEnumConverters(this ModelBuilder modelBuilder)
     {
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             foreach (var property in entityType.GetProperties())
             {
+                // Respect explicit configuration.
+                if (property.GetValueConverter() is not null)
+                    continue;
+
                 var enumType = Nullable.GetUnderlyingType(property.ClrType) ?? property.ClrType;
+                if (enumType is null || !enumType.IsEnum)
+                    continue;
 
-                if (enumType.IsEnum)
+                // Handle special cases
+                if (enumType == typeof(LanguageCode))
                 {
-                    var converterType = typeof(EnumMemberValueConverter<>).MakeGenericType(
-                        enumType
-                    );
-                    var converter = (ValueConverter)Activator.CreateInstance(converterType)!;
+                    property.SetValueConverter(new LanguageCodeValueConverter());
 
-                    property.SetValueConverter(converter);
+                    property.SetMaxLength(2);
+                    property.SetIsUnicode(false);
+
+                    continue;
                 }
+
+                // Apply the general converter if we got here.
+                var converterType = typeof(EnumMemberValueConverter<>).MakeGenericType(enumType);
+
+                if (Activator.CreateInstance(converterType) is not ValueConverter converter)
+                {
+                    throw new InvalidOperationException(
+                        $"Failed to create enum converter for '{enumType.FullName}'."
+                    );
+                }
+
+                property.SetValueConverter(converter);
             }
         }
     }

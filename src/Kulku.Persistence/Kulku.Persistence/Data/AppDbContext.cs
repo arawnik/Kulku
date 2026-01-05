@@ -1,7 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
+using Kulku.Domain;
 using Kulku.Domain.Contacts;
 using Kulku.Domain.Cover;
 using Kulku.Domain.Projects;
+using Kulku.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kulku.Persistence.Data;
@@ -43,6 +45,37 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<ContactRequest> ContactRequests { get; set; } = null!;
 
     /// <summary>
+    /// Configures global EF Core model conventions for this DbContext.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// By default, all enum properties are persisted as their string names rather than
+    /// numeric values. This improves database readability and avoids issues caused by
+    /// enum value reordering.
+    /// </para>
+    /// <para>
+    /// Certain domain enums require stable, curated database representations that must
+    /// remain independent of enum member names. These enums are explicitly configured
+    /// with dedicated value converters.
+    /// </para>
+    /// </remarks>
+    /// <param name="configurationBuilder">
+    /// The model configuration builder used to define global conventions.
+    /// </param>
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        // Default: store ALL enums as strings (their enum names).
+        configurationBuilder.Properties<Enum>().HaveConversion<string>();
+
+        // Exception: LanguageCode uses curated DB codes.
+        configurationBuilder
+            .Properties<LanguageCode>()
+            .HaveConversion<LanguageCodeValueConverter>()
+            .HaveMaxLength(2)
+            .AreUnicode(false);
+    }
+
+    /// <summary>
     /// Configures the entity model for the database context.
     /// This method applies all entity relationships, constraints, and mappings using Fluent API,
     /// including domain-specific configuration and identity/table mapping extensions.
@@ -55,10 +88,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         //Call the base first.
         base.OnModelCreating(modelBuilder);
 
-        // Apply entity configurations
-        modelBuilder.ConvertEnumsToString();
-
-        // Apply Fluent API configurations
-        modelBuilder.ConfigureRelationships();
+        // Apply all IEntityTypeConfiguration<T> in this assembly.
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
     }
 }

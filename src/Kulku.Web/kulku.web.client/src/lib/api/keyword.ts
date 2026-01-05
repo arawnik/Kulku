@@ -2,9 +2,9 @@ import { apiFetch } from '@/lib/fetch'
 import { type Language } from '@/i18n/language'
 
 export enum KeywordType {
-  Language = 'LA', // Programming Language
-  Skill = 'SK', // Skill
-  Technology = 'TE', // Technology
+  Language = 'Language', // Programming Language
+  Skill = 'Skill', // Skill
+  Technology = 'Technology', // Technology
 }
 
 export type Proficiency = {

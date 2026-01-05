@@ -28,11 +28,13 @@ public static class SqlServerDependencyInjection
         var defaultConnection =
             configuration.GetConnectionString("MsDefaultConnection")
             ?? throw new InvalidOperationException(
-                "Connection string 'DefaultConnection' not found."
+                "Connection string 'MsDefaultConnection' not found."
             );
         var userConnection =
             configuration.GetConnectionString("MsUserConnection")
-            ?? throw new InvalidOperationException("Connection string 'UserConnection' not found.");
+            ?? throw new InvalidOperationException(
+                "Connection string 'MsUserConnection' not found."
+            );
 
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(
