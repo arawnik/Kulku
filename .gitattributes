@@ -1,11 +1,11 @@
 ###############################################################################
-# Global defaults: normalize text as LF (and optionally UTF-8) in the repo
+# Global defaults: normalize text as LF (and UTF-8) in the repo
 ###############################################################################
 
 # For all text files:
 #  - Normalize line endings to LF in the repository
 #  - Checkout with LF in the working tree
-#  - (Optional) Ensure working tree encoding is UTF-8
+#  - Ensure working tree encoding is UTF-8
 * text=auto eol=lf working-tree-encoding=UTF-8
 
 ###############################################################################
