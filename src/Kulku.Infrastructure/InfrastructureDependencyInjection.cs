@@ -108,6 +108,7 @@ public static class InfrastructureDependencyInjection
             logger.LogInformation("Applying migrations...");
 
             await userDbContext.Database.MigrateAsync();
+            await appDbContext.Database.MigrateAsync();
 
             AppDbInitializer.Initialize(appDbContext);
 
