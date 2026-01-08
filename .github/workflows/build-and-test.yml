@@ -3,12 +3,13 @@ name: Test Build
 on:
   pull_request:
     branches: [ main ]
-    paths:
-    - '**.cs'
-    - '**.csproj'
+
+permissions:
+  contents: read
 
 env:
   DOTNET_VERSION: '10.0.x'
+  NODE_VERSION: '22'
 
 jobs:
   build-and-test:
@@ -28,11 +29,26 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Install dependencies
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: src/Kulku.Web/kulku.web.client/package-lock.json
+
+      - name: Install client
+        working-directory: src/Kulku.Web/kulku.web.client
+        run: npm ci
+
+      - name: Restore server
         run: dotnet restore ./Kulku.slnx
       
       - name: Build
         run: dotnet build -c Release --no-restore
     
-      - name: Test
+      - name: Test server
         run: dotnet test --no-restore --verbosity normal
+
+      - name: Test client
+        working-directory: src/Kulku.Web/kulku.web.client
+        run: npm test
