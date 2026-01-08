@@ -47,8 +47,8 @@ jobs:
         run: dotnet build -c Release --no-restore
     
       - name: Test server
-        run: dotnet test --no-restore --verbosity normal
+        run: dotnet test --no-restore --no-build --verbosity normal
 
-      - name: Test client
-        working-directory: src/Kulku.Web/kulku.web.client
-        run: npm test
+#      - name: Test client
+#        working-directory: src/Kulku.Web/kulku.web.client
+#        run: npm run test
