@@ -15,10 +15,37 @@ permissions:
   packages: write
 
 env:
+  DOTNET_VERSION: '10.0.x'  
   IMAGE_TAG: ${{ github.event.inputs.tag || 'latest' }}
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore and build solution
+        run: |
+          dotnet restore
+          dotnet build -c Release --no-restore
+
+      - name: Run unit tests
+        run: |
+          set -e
+          # Run tests for every test project under the test/ folder
+          for proj in $(find test -name '*.csproj'); do
+            echo "Running tests for: $proj"
+            dotnet test "$proj" -c Release --no-build --verbosity normal
+          done
+
   build-and-publish:
+    needs: test
     runs-on: ubuntu-latest
     strategy:
       matrix:
