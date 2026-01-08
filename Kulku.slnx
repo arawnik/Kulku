@@ -32,7 +32,7 @@
     <Project Path="src/Kulku.Persistence/Kulku.Persistence/Kulku.Persistence.csproj" />
     <Project Path="src/Kulku.Web/Kulku.Web.Admin/Kulku.Web.Admin.csproj" />
     <Project Path="src/Kulku.Web/Kulku.Web.Api/Kulku.Web.Api.csproj" />
-    <Project Path="src/Kulku.Web/Kulku.Web.Client/kulku.web.client.esproj">
+    <Project Path="src/Kulku.Web/kulku.web.client/kulku.web.client.esproj">
       <Build />
       <Deploy />
     </Project>
