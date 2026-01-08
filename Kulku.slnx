@@ -40,6 +40,5 @@
   <Folder Name="/test/">
     <Project Path="test/Kulku.Application.Tests/Kulku.Application.Tests.csproj" Id="3ef98232-b42d-412a-a2ad-d7ecbf23834c" />
     <Project Path="test/Kulku.Domain.Tests/Kulku.Domain.Tests.csproj" Id="c2b79e38-113b-40f6-8361-da1e837bacfc" />
-    <Project Path="test/Kulku.Infrastructure.Tests/Kulku.Infrastructure.Tests.csproj" Id="63896970-8ec2-47c3-bfc1-8fb9d628c6ec" />
   </Folder>
 </Solution>
