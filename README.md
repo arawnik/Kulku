@@ -1,3 +1,7 @@
+[![Publish Build](https://github.com/arawnik/Kulku/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/arawnik/Kulku/actions/workflows/docker-publish.yml)
+[![CodeQL](https://github.com/arawnik/Kulku/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/arawnik/Kulku/actions/workflows/github-code-scanning/codeql)
+[![Dependabot Updates](https://github.com/arawnik/Kulku/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/arawnik/Kulku/actions/workflows/dependabot/dependabot-updates)
+
 Welcome to Kulku, the code repository that powers my personal CV site and its administrative backend.
 This project is designed to showcase my professional profile, publicly shareable solo projects, and work as a code sample.
 

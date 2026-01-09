@@ -21,5 +21,11 @@
     <PackageVersion Include="SoulNETLib.Clean.Application" Version="0.2.3" />
     <PackageVersion Include="SoulNETLib.Clean.Domain" Version="0.2.3" />
     <PackageVersion Include="SoulNETLib.Common" Version="0.2.3" />
+    <!-- Test-only packages -->
+    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.4" />
+    <PackageVersion Include="Moq" Version="4.18.4" />
   </ItemGroup>
 </Project>

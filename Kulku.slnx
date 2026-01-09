@@ -11,6 +11,7 @@
   </Folder>
   <Folder Name="/GitHub/">
     <File Path=".github/copilot-instructions.md" />
+    <File Path=".github/workflows/build-and-test.yml" />
     <File Path=".github/workflows/docker-publish.yml" />
   </Folder>
   <Folder Name="/solution/">
@@ -31,10 +32,13 @@
     <Project Path="src/Kulku.Persistence/Kulku.Persistence/Kulku.Persistence.csproj" />
     <Project Path="src/Kulku.Web/Kulku.Web.Admin/Kulku.Web.Admin.csproj" />
     <Project Path="src/Kulku.Web/Kulku.Web.Api/Kulku.Web.Api.csproj" />
-    <Project Path="src/Kulku.Web/Kulku.Web.Client/kulku.web.client.esproj">
+    <Project Path="src/Kulku.Web/kulku.web.client/kulku.web.client.esproj">
       <Build />
       <Deploy />
     </Project>
   </Folder>
-  <Folder Name="/test/" />
+  <Folder Name="/test/">
+    <Project Path="test/Kulku.Application.Tests/Kulku.Application.Tests.csproj" Id="3ef98232-b42d-412a-a2ad-d7ecbf23834c" />
+    <Project Path="test/Kulku.Domain.Tests/Kulku.Domain.Tests.csproj" Id="c2b79e38-113b-40f6-8361-da1e837bacfc" />
+  </Folder>
 </Solution>
