@@ -1,0 +1,291 @@
+@page "/developer/ideas/new"
+@page "/developer/ideas/{Id:guid}"
+@inject CrmProtoStore Store
+@inject NavigationManager Nav
+
+<PageTitle>@(IsNew ? "New Idea" : "Edit Idea")</PageTitle>
+
+<div class="container-fluid py-4">
+	<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+		<div>
+			<h1 class="h4 mb-1">@Title</h1>
+			<div class="text-muted">
+				This is not backlog. Capture and validate first — link to prospects only when it helps.
+			</div>
+		</div>
+
+		<div class="d-flex gap-2">
+			<NavLink class="btn btn-sm btn-outline-secondary" href="developer/ideas">Back</NavLink>
+
+			@if (!IsNew)
+			{
+				<button class="btn btn-sm btn-outline-danger" @onclick="Delete">
+					Delete
+				</button>
+			}
+		</div>
+	</div>
+
+	<div class="row g-3">
+		<div class="col-12 col-xl-7">
+			<div class="card shadow-sm">
+				<div class="card-header">
+					<strong>Idea</strong>
+				</div>
+				<div class="card-body">
+					<EditForm Model="@Model" OnValidSubmit="@Save">
+						<DataAnnotationsValidator />
+						<ValidationSummary />
+
+						<div class="mb-3">
+							<label class="form-label">Title</label>
+							<input class="form-control" @bind="Model.Title" />
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label">One-liner</label>
+							<input class="form-control" @bind="Model.OneLiner" placeholder="Short hook / intent" />
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label">Description</label>
+							<textarea class="form-control" rows="6" @bind="Model.Description"></textarea>
+							<div class="form-text">
+								Capture intent, scope boundaries, why it matters, and what “validated” means.
+							</div>
+						</div>
+
+						<div class="row g-3 mb-3">
+							<div class="col-md-6">
+								<label class="form-label">Status</label>
+								<select class="form-select" @bind="Model.Status">
+									@foreach (var s in Enum.GetValues<IdeaStatus>())
+									{
+										<option value="@s">@s</option>
+									}
+								</select>
+							</div>
+
+							<div class="col-md-3">
+								<label class="form-label">Value</label>
+								<input class="form-control" type="number" min="1" max="10" @bind="Model.ValueScore" />
+							</div>
+
+							<div class="col-md-3">
+								<label class="form-label">Feasibility</label>
+								<input class="form-control" type="number" min="1" max="10" @bind="Model.FeasibilityScore" />
+							</div>
+						</div>
+
+						<div class="d-flex gap-2">
+							<button type="submit" class="btn btn-primary">Save</button>
+							<button type="button" class="btn btn-outline-secondary" @onclick="Reset">Reset</button>
+						</div>
+					</EditForm>
+				</div>
+				<div class="card-footer text-muted small">
+					Tip: if feasibility is low, keep it in “Seed” until you have a simplifying insight.
+				</div>
+			</div>
+		</div>
+
+		<div class="col-12 col-xl-5">
+			<div class="card shadow-sm mb-3">
+				<div class="card-header">
+					<strong>Categories</strong>
+					<div class="text-muted small">Shared taxonomy with prospects/companies.</div>
+				</div>
+				<div class="card-body">
+					@if (Store.Categories.Count == 0)
+					{
+						<div class="text-muted">No categories yet.</div>
+					}
+					else
+					{
+						@foreach (var cat in Store.Categories.OrderBy(c => c.Name))
+						{
+							<div class="form-check mb-2">
+								<input class="form-check-input"
+									   type="checkbox"
+									   checked="@SelectedCategoryIds.Contains(cat.Id)"
+									   @onchange="e => ToggleCategory(cat.Id, (bool)e.Value!)" />
+								<label class="form-check-label">
+									@cat.Name
+								</label>
+							</div>
+						}
+					}
+				</div>
+			</div>
+
+			<div class="card shadow-sm">
+				<div class="card-header">
+					<strong>Link prospects/companies</strong>
+					<div class="text-muted small">Optional — only when it helps validation.</div>
+				</div>
+				<div class="card-body">
+					@if (Store.Companies.Count == 0)
+					{
+						<div class="text-muted">No companies yet.</div>
+					}
+					else
+					{
+						@foreach (var c in Store.Companies.OrderBy(c => c.Name))
+						{
+							<div class="form-check mb-2">
+								<input class="form-check-input"
+									   type="checkbox"
+									   checked="@SelectedCompanyIds.Contains(c.Id)"
+									   @onchange="e => ToggleCompany(c.Id, (bool)e.Value!)" />
+								<label class="form-check-label">
+									@c.Name
+									<span class="text-muted small">(@c.Stage)</span>
+								</label>
+							</div>
+						}
+					}
+				</div>
+
+				<div class="card-footer text-muted small">
+					Example uses: “who to ask for feedback”, “who would benefit”, “who signals demand”.
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter] public Guid? Id { get; set; }
+
+	private bool IsNew => !Id.HasValue;
+	private string Title => IsNew ? "New Idea" : "Edit Idea";
+
+	private sealed class EditIdeaModel
+	{
+		public string Title { get; set; } = "";
+		public string? OneLiner { get; set; }
+		public string Description { get; set; } = "";
+
+		public IdeaStatus Status { get; set; } = IdeaStatus.Seed;
+		public int ValueScore { get; set; } = 5;
+		public int FeasibilityScore { get; set; } = 5;
+	}
+
+	private EditIdeaModel Model = new();
+	private HashSet<Guid> SelectedCategoryIds = new();
+	private HashSet<Guid> SelectedCompanyIds = new();
+
+	private IdeaLite? Loaded;
+
+	protected override void OnInitialized()
+	{
+		if (IsNew)
+		{
+			Loaded = null;
+			return;
+		}
+
+		Loaded = Store.GetIdea(Id!.Value);
+		if (Loaded is null)
+		{
+			// proto behavior: if invalid id, go back
+			Nav.NavigateTo("developer/ideas");
+			return;
+		}
+
+		Model = new EditIdeaModel
+		{
+			Title = Loaded.Title,
+			OneLiner = Loaded.OneLiner,
+			Description = Loaded.Description,
+			Status = Loaded.Status,
+			ValueScore = Loaded.ValueScore,
+			FeasibilityScore = Loaded.FeasibilityScore
+		};
+
+		SelectedCategoryIds = Loaded.CategoryIds.ToHashSet();
+		SelectedCompanyIds = Loaded.LinkedCompanyIds.ToHashSet();
+	}
+
+	private void ToggleCategory(Guid id, bool isChecked)
+	{
+		if (isChecked) SelectedCategoryIds.Add(id);
+		else SelectedCategoryIds.Remove(id);
+	}
+
+	private void ToggleCompany(Guid id, bool isChecked)
+	{
+		if (isChecked) SelectedCompanyIds.Add(id);
+		else SelectedCompanyIds.Remove(id);
+	}
+
+	private void Reset()
+	{
+		if (IsNew)
+		{
+			Model = new EditIdeaModel();
+			SelectedCategoryIds.Clear();
+			SelectedCompanyIds.Clear();
+			return;
+		}
+
+		// Reload from source
+		if (Loaded is null) return;
+
+		Model = new EditIdeaModel
+		{
+			Title = Loaded.Title,
+			OneLiner = Loaded.OneLiner,
+			Description = Loaded.Description,
+			Status = Loaded.Status,
+			ValueScore = Loaded.ValueScore,
+			FeasibilityScore = Loaded.FeasibilityScore
+		};
+
+		SelectedCategoryIds = Loaded.CategoryIds.ToHashSet();
+		SelectedCompanyIds = Loaded.LinkedCompanyIds.ToHashSet();
+	}
+
+	private Task Save()
+	{
+		// Minimal proto validation. Later: DataAnnotations.
+		if (string.IsNullOrWhiteSpace(Model.Title) || string.IsNullOrWhiteSpace(Model.Description))
+		{
+			return Task.CompletedTask;
+		}
+
+		var now = DateTime.Today;
+
+		var id = IsNew ? Guid.NewGuid() : Id!.Value;
+		var createdAt = IsNew ? now : (Loaded?.CreatedAt ?? now);
+
+		var idea = new IdeaLite(
+			Id: id,
+			Title: Model.Title.Trim(),
+			OneLiner: string.IsNullOrWhiteSpace(Model.OneLiner) ? null : Model.OneLiner.Trim(),
+			Description: Model.Description.Trim(),
+			Status: Model.Status,
+			ValueScore: Clamp(Model.ValueScore, 1, 10),
+			FeasibilityScore: Clamp(Model.FeasibilityScore, 1, 10),
+			CreatedAt: createdAt,
+			UpdatedAt: now,
+			CategoryIds: SelectedCategoryIds.ToList(),
+			LinkedCompanyIds: SelectedCompanyIds.ToList()
+		);
+
+		Store.AddOrUpdateIdea(idea);
+
+		Nav.NavigateTo("developer/ideas");
+		return Task.CompletedTask;
+	}
+
+	private Task Delete()
+	{
+		if (!Id.HasValue) return Task.CompletedTask;
+		Store.DeleteIdea(Id.Value);
+		Nav.NavigateTo("developer/ideas");
+		return Task.CompletedTask;
+	}
+
+	private static int Clamp(int v, int min, int max) => v < min ? min : (v > max ? max : v);
+}
