@@ -1,0 +1,140 @@
+@page "/cv/experience"
+@using Kulku.Application.Cover.Models
+
+<PageTitle>Experience</PageTitle>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+            <h1 class="h4 mb-1">Experience</h1>
+            <div class="text-muted">Read view</div>
+        </div>
+        <NavLink class="btn btn-sm btn-outline-secondary" href="/cv">Back</NavLink>
+    </div>
+    @if (!_loaded)
+    {
+        <div class="text-muted">Loading…</div>
+    }
+    else
+    {
+        if (Experiences.Count <= 0)
+        {
+            <div class="alert alert-secondary">There are no active experiences.</div>
+        }
+        else
+        {
+            <div class="row g-3">
+                @foreach (var exp in Experiences)
+                {
+                    <div class="col-12">
+                        <div class="card edu-card">
+                            @{
+                                var translations = (exp.Translations ?? Enumerable.Empty<ExperienceTranslationItem>()).OrderBy(t => t.Language.ToString()).ToList();
+                                var companyTranslations = exp.CompanyTranslations ?? Enumerable.Empty<CompanyTranslationItem>();
+                                var primary = translations.FirstOrDefault();
+                                string primaryTitle = primary?.Title ?? string.Empty;
+                                var primaryCompany = companyTranslations.FirstOrDefault(c => c.Language == (primary?.Language ?? default));
+                                string primaryCompanyName = primaryCompany?.Name ?? string.Empty;
+                            }
+
+                            <div class="card-header d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5 class="mb-0 edu-title popout-font">@primaryTitle</h5>
+                                    <div class="easy-font edu-sub">@primaryCompanyName</div>
+                                </div>
+                                <div class="text-end edu-meta">
+                                    <div class="fw-semibold">@exp.StartDate.ToString("yyyy") - @(exp.EndDate.HasValue ? exp.EndDate.Value.ToString("yyyy") : "Present")</div>
+                                    <div class="text-muted small"><span class="badge bg-secondary">@((exp.Translations?.Count() ?? 0)) translations</span></div>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                @if ((exp.Translations?.Any()).GetValueOrDefault())
+                                {
+                                    var list = (exp.Translations ?? Enumerable.Empty<ExperienceTranslationItem>()).OrderBy(t => t.Language.ToString()).ToList();
+                                    if (list.Count == 1)
+                                    {
+                                        var item = list[0];
+                                        var comp = exp.CompanyTranslations?.FirstOrDefault(c => c.Language == item.Language);
+                                        <div>
+                                            <div class="fw-semibold mb-1">@LanguageDisplayName(item.Language) — @item.Title</div>
+                                            <div class="text-muted small mb-2">@comp?.Name</div>
+                                            <div>@((new MarkupString(item.Description)))</div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        var uid = $"exp-tabs-{exp.ExperienceId}";
+                                        <ul class="nav nav-tabs mb-3" role="tablist">
+                                            @for (int i = 0; i < list.Count; i++)
+                                            {
+                                                var item = list[i];
+                                                var tabId = $"{uid}-tab-{item.Language}";
+                                                <li class="nav-item" role="presentation">
+                                                    <button class="nav-link @(i == 0 ? "active" : string.Empty)" id="@tabId" data-bs-toggle="tab" data-bs-target="#@tabId-pane" type="button" role="tab" aria-controls="@tabId-pane" aria-selected="@(i==0)">
+                                                        @LanguageDisplayName(item.Language)
+                                                    </button>
+                                                </li>
+                                            }
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="@($"{uid}-tab-compare")" data-bs-toggle="tab" data-bs-target="#@($"{uid}-tab-compare-pane")" type="button" role="tab" aria-controls="@($"{uid}-tab-compare-pane")" aria-selected="false">Compare</button>
+                                            </li>
+                                        </ul>
+
+                                        <div class="tab-content">
+                                            @for (int i = 0; i < list.Count; i++)
+                                            {
+                                                var item = list[i];
+                                                var tabId = $"{uid}-tab-{item.Language}";
+                                                var comp = exp.CompanyTranslations?.FirstOrDefault(c => c.Language == item.Language);
+                                                <div class="tab-pane fade @(i == 0 ? "show active" : string.Empty)" id="@tabId-pane" role="tabpanel" aria-labelledby="@tabId">
+                                                    <div class="fw-semibold mb-1">@item.Title</div>
+                                                    <div class="text-muted small mb-2">@comp?.Name</div>
+                                                    <div>@((new MarkupString(item.Description)))</div>
+                                                </div>
+                                            }
+
+                                            <div class="tab-pane fade" id="@($"{uid}-tab-compare-pane")" role="tabpanel" aria-labelledby="@($"{uid}-tab-compare")">
+                                                <div class="row">
+                                                    @foreach (var item in list)
+                                                    {
+                                                        var comp = exp.CompanyTranslations?.FirstOrDefault(c => c.Language == item.Language);
+                                                        <div class="col-12 col-md-6 mb-3">
+                                                            <div class="border rounded p-3 h-100 edu-compare-panel">
+                                                                <div class="fw-semibold mb-1">@LanguageDisplayName(item.Language)</div>
+                                                                <div class="text-muted small mb-1">@comp?.Name</div>
+                                                                <div class="fw-semibold">@item.Title</div>
+                                                                <div class="mt-2">@((new MarkupString(item.Description)))</div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="text-muted">No translations available.</div>
+                                }
+
+                                @if (exp.KeywordNames?.Any() == true)
+                                {
+                                    <div class="mt-3">
+                                        <strong>Keywords</strong>
+                                        <div class="d-flex flex-wrap gap-2 mt-2">
+                                            @foreach (var kw in exp.KeywordNames)
+                                            {
+                                                <span class="badge bg-light text-dark">@kw</span>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>

@@ -44,4 +44,26 @@ public static class LanguageCodeMapper
             _ => Defaults.Language,
         };
     }
+
+    /// <summary>
+    /// Returns the <see cref="LanguageCode"/> corresponding to the specified <paramref name="cultureName"/>.
+    /// </summary>
+    /// <param name="cultureName">The name of the culture to map to a language code. This value can be a standard culture name such as "en-US" or
+    /// "fi-FI". If null, empty, or not a valid culture name, the default language code is returned.</param>
+    /// <returns>A <see cref="LanguageCode"/> that corresponds to the specified culture name, or the default language code if the
+    /// culture name is null, empty, or invalid.</returns>
+    public static LanguageCode FromCulture(string cultureName)
+    {
+        if (string.IsNullOrWhiteSpace(cultureName))
+            return Defaults.Language;
+        try
+        {
+            var culture = new CultureInfo(cultureName);
+            return FromCulture(culture);
+        }
+        catch (CultureNotFoundException)
+        {
+            return Defaults.Language;
+        }
+    }
 }

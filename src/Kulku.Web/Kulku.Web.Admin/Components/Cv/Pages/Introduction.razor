@@ -1,0 +1,46 @@
+@page "/cv/introduction"
+
+<PageTitle>Introduction</PageTitle>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+            <h1 class="h4 mb-1">Introduction</h1>
+            <div class="text-muted">Read view</div>
+        </div>
+        <NavLink class="btn btn-sm btn-outline-secondary" href="/cv">Back</NavLink>
+    </div>
+    @if (!_loaded)
+    {
+        <div class="text-muted">Loading…</div>
+    }
+    else
+    {
+        if (Introductions.Count <= 0)
+        {
+            <div class="alert alert-secondary">There are no active introductions.</div>
+        }
+		else
+		{
+			<div class="row g-3">
+            @foreach (var introduction in Introductions)
+            {
+                <div class="col-12 col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex gap-3 align-items-start">
+                                <img src="@introduction.SmallAvatarUrl" class="rounded" style="width:64px;height:64px;object-fit:cover" alt="Avatar" />
+                                <div>
+                                    <h2 class="h5 mb-1">@introduction.Title</h2>
+                                    <div class="text-muted mb-2">@introduction.Tagline</div>
+                                    <div>@(new MarkupString(introduction.Content))</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+		  </div>
+		}
+    }
+</div>

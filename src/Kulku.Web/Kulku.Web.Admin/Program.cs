@@ -1,4 +1,6 @@
 using Kulku.Application;
+using Kulku.Application.Abstractions.Localization;
+using Kulku.Domain;
 using Kulku.Infrastructure;
 using Kulku.Infrastructure.Security;
 using Kulku.Persistence;
@@ -6,6 +8,8 @@ using Kulku.Persistence.Data;
 using Kulku.Web.Admin;
 using Kulku.Web.Admin.Components;
 using Kulku.Web.Admin.Components.Account;
+using Kulku.Web.Admin.Components.Developer;
+using Kulku.Web.Admin.Localization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 
@@ -22,6 +26,10 @@ SecretLoader.LoadFileSecretsIntoConfiguration(
 );
 
 // Add services to the container.
+
+builder.Services.AddLocalization();
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
 builder.Services.AddCascadingAuthenticationState();
@@ -42,6 +50,8 @@ builder
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddScoped<ILanguageContext, RequestLanguageContext>();
+
 builder
     .Services.AddIdentityCore<ApplicationUser>(options =>
     {
@@ -54,6 +64,9 @@ builder
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
+//TODO: Remove when crm has actual implementation.
+builder.Services.AddSingleton<CrmProtoStore>();
+
 var app = builder.Build();
 
 var settings = app.Configuration.GetRequiredSection("Management").Get<ManagementSettings>();
@@ -62,6 +75,14 @@ if (settings?.MigrateOnStart == true)
 {
     await app.RunMigrations();
 }
+
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(Defaults.Culture)
+    .AddSupportedCultures(Defaults.SupportedCultures)
+    .AddSupportedUICultures(Defaults.SupportedCultures);
+localizationOptions.ApplyCurrentCultureToResponseHeaders = true;
+
+app.UseRequestLocalization(localizationOptions);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

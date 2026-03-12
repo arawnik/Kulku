@@ -1,0 +1,102 @@
+@page "/cv/keywords"
+
+<PageTitle>Keywords</PageTitle>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+            <h1 class="h4 mb-1">Keywords</h1>
+            <div class="text-muted">Read view</div>
+        </div>
+        <NavLink class="btn btn-sm btn-outline-secondary" href="/cv">Back</NavLink>
+    </div>
+
+    @if (!_loaded)
+    {
+        <div class="text-muted">Loading…</div>
+    }
+    else
+    {
+        if (!LanguageKeywords.Any() && !SkillKeywords.Any() && !TechnologyKeywords.Any())
+        {
+            <div class="alert alert-secondary">There are no active keywords.</div>
+        }
+        else
+        {
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="h5 mb-3">Programming languages</h2>
+
+                            @if (LanguageKeywords?.Any() != true)
+                            {
+                                <div class="text-muted">No programming language keywords.</div>
+                            }
+                            else
+                            {
+                                @foreach (var kw in LanguageKeywords.OrderBy(k => k.Order))
+                                {
+                                    var percent = Math.Max(0, Math.Min(100, kw.Proficiency?.Scale ?? 0));
+                                    var label = kw.Proficiency?.Name ?? $"{percent}%";
+
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <div class="fw-medium">@kw.Name</div>
+                                            <div class="text-muted">@label</div>
+                                        </div>
+                                        <div class="bg-light rounded" style="height:10px;overflow:hidden">
+                                            <div class="bg-primary h-100" style="width:@(percent)%"></div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h2 class="h5 mb-3">Skills</h2>
+
+                            @if (SkillKeywords?.Any() != true)
+                            {
+                                <div class="text-muted">No skill keywords.</div>
+                            }
+                            else
+                            {
+                                <div class="d-flex flex-wrap gap-2">
+                                    @foreach (var kw in SkillKeywords.OrderBy(k => k.Order))
+                                    {
+                                        <span class="badge bg-light text-dark border">@kw.Name</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="h5 mb-3">Technologies</h2>
+
+                            @if (TechnologyKeywords?.Any() != true)
+                            {
+                                <div class="text-muted">No technology keywords.</div>
+                            }
+                            else
+                            {
+                                <div class="d-flex flex-wrap gap-2">
+                                    @foreach (var kw in TechnologyKeywords.OrderBy(k => k.Order))
+                                    {
+                                        <span class="badge bg-light text-dark border">@kw.Name</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

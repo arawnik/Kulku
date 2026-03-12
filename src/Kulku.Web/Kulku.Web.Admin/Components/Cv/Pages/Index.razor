@@ -1,0 +1,152 @@
+@page "/cv"
+@inject NavigationManager Nav
+
+<PageTitle>CV</PageTitle>
+
+<div class="container-fluid py-4">
+	<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-4">
+		<div>
+			<h1 class="h3 mb-1">CV Overview</h1>
+			<div class="text-muted">Read-only views. Editing happens in the admin area.</div>
+		</div>
+
+		<div class="d-flex gap-2">
+			<NavLink class="btn btn-sm btn-outline-secondary" href="/admin/cv">Admin CV</NavLink>
+		</div>
+	</div>
+
+	<div class="row g-3">
+		<div class="col-12 col-lg-6">
+			<div class="card shadow-sm h-100">
+				<div class="card-header d-flex justify-content-between align-items-center">
+					<strong>Introduction</strong>
+					<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/introduction">Open</NavLink>
+				</div>
+				<div class="card-body text-muted">
+					@if (!_loaded)
+					{
+						<div class="text-muted">Loading…</div>
+					}
+					else if (IntroductionPreview is null)
+					{
+						<div class="text-muted">No active introduction.</div>
+					}
+					else
+					{
+						<h5 class="mb-1">@IntroductionPreview.Title</h5>
+						<div class="text-muted">@IntroductionPreview.Tagline</div>
+						<div class="mt-2">@((new MarkupString(IntroductionPreview.Content)))</div>
+					}
+				</div>
+			</div>
+		</div>
+
+		<div class="col-12 col-lg-6">
+			<div class="card shadow-sm h-100">
+				<div class="card-header d-flex justify-content-between align-items-center">
+					<strong>Keywords</strong>
+					<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/keywords">Open</NavLink>
+				</div>
+				<div class="card-body text-muted">
+				@if (!_loaded)
+				{
+					<div class="text-muted">Loading…</div>
+				}
+				else
+				{
+					@if (!LanguageKeywords.Any() && !SkillKeywords.Any() && !TechnologyKeywords.Any())
+					{
+						<div class="text-muted">No keywords available.</div>
+					}
+					else
+					{
+						<div class="d-flex gap-3">
+							<div>
+								<strong>Languages</strong>
+								<div class="text-muted">@LanguageKeywords.Count()</div>
+							</div>
+							<div>
+								<strong>Skills</strong>
+								<div class="text-muted">@SkillKeywords.Count()</div>
+							</div>
+							<div>
+								<strong>Technologies</strong>
+								<div class="text-muted">@TechnologyKeywords.Count()</div>
+							</div>
+						</div>
+					}
+				}
+				</div>
+			</div>
+		</div>
+
+		<div class="col-12 col-lg-6">
+			<div class="card shadow-sm h-100">
+				<div class="card-header d-flex justify-content-between align-items-center">
+					<strong>Experience</strong>
+					<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/experience">Open</NavLink>
+				</div>
+				<div class="card-body text-muted">
+			@if (!_loaded)
+			{
+				<div class="text-muted">Loading…</div>
+			}
+			else if (!Experiences.Any())
+			{
+				<div class="text-muted">No experiences available.</div>
+			}
+			else
+			{
+				<div class="text-muted">@Experiences.Count() experiences — latest: @Experiences.First().Title</div>
+			}
+				</div>
+			</div>
+		</div>
+
+		<div class="col-12 col-lg-6">
+			<div class="card shadow-sm h-100">
+				<div class="card-header d-flex justify-content-between align-items-center">
+					<strong>Education</strong>
+					<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/education">Open</NavLink>
+				</div>
+				<div class="card-body text-muted">
+			@if (!_loaded)
+			{
+				<div class="text-muted">Loading…</div>
+			}
+			else if (!Educations.Any())
+			{
+				<div class="text-muted">No education entries available.</div>
+			}
+			else
+			{
+				<div class="text-muted">@Educations.Count() entries — latest: @Educations.First().Title</div>
+			}
+				</div>
+			</div>
+		</div>
+
+		<div class="col-12">
+			<div class="card shadow-sm">
+				<div class="card-header d-flex justify-content-between align-items-center">
+					<strong>Projects</strong>
+					<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/projects">Open</NavLink>
+				</div>
+				<div class="card-body text-muted">
+			@if (!_loaded)
+			{
+				<div class="text-muted">Loading…</div>
+			}
+			else if (!Projects.Any())
+			{
+				<div class="text-muted">No projects available.</div>
+			}
+			else
+			{
+				<div class="text-muted">@Projects.Count() projects — featured: @Projects.First().Name</div>
+			}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

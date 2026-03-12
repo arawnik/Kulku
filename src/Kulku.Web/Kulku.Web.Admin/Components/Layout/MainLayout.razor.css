@@ -1,15 +1,23 @@
 .page {
   display: flex;
+  flex-direction: row;
   min-height: 100vh;
+  height: 100vh;
 }
 
-.app-sidebar {
-  flex: 0 0 auto;
-}
+  .page > aside {
+    flex: 0 0 auto;
+  }
 
-main {
-  flex: 1;
-  min-width: 0;
+  .page > main {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 100vh;
+    overflow: auto;
+  }
+
+.content {
+  padding-top: 1rem;
 }
 
 #blazor-error-ui {

@@ -4,8 +4,8 @@
 
 <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark kulku-sidebar @(IsCollapsed ? "kulku-sidebar--collapsed" : string.Empty)">
   <div class="d-flex align-items-center justify-content-between mb-2">
-    <NavLink class="d-flex align-items-center gap-2 text-white text-decoration-none" href="" Match="NavLinkMatch.All">
-      <span class="fs-5 fw-semibold kulku-brand-text">Kulku</span>
+    <NavLink class="d-flex align-items-center gap-2 text-white text-decoration-none" href="">
+      <span class="fs-5 fw-semibold kulku-brand-text">Kulku Admin</span>
     </NavLink>
 
     <button type="button" class="btn btn-sm btn-outline-light kulku-sidebar-toggle" title="Toggle sidebar" @onclick="ToggleCollapsed">
@@ -32,9 +32,9 @@
     </li>
 
     <li class="nav-item">
-      <NavLink class="nav-link text-white kulku-navlink" href="counter">
+      <NavLink class="nav-link text-white kulku-navlink" href="cv">
         <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>
-        <span class="kulku-link-text">Counter</span>
+        <span class="kulku-link-text">Cv</span>
       </NavLink>
     </li>
 
@@ -104,7 +104,7 @@
 @code {
   private string? currentUrl;
 
-  // Prototype-only: keep in-memory. If you want, we can persist per-user later.
+  //TODO: Persist per-user.
   private bool IsCollapsed { get; set; }
 
   protected override void OnInitialized()
@@ -121,5 +121,5 @@
     StateHasChanged();
   }
 
-  public void Dispose() => NavigationManager.LocationChanged -= OnLocationChanged;
+  protected override void OnDispose() => NavigationManager.LocationChanged -= OnLocationChanged;
 }
