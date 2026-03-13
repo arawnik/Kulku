@@ -6,6 +6,21 @@
              Title="Edit Education"
              OnClose="OnCancel">
     <ChildContent>
+        @if (ErrorMessage is not null)
+        {
+            <div class="alert alert-danger py-2 mb-3">
+                <strong>@ErrorMessage</strong>
+                @if (GetGeneralErrors().Length > 0)
+                {
+                    <ul class="mb-0 mt-1">
+                        @foreach (var error in GetGeneralErrors())
+                        {
+                            <li>@error</li>
+                        }
+                    </ul>
+                }
+            </div>
+        }
         @if (_form != null)
         {
             <EditForm EditContext="@_editContext">
@@ -20,8 +35,12 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">End Date <span class="text-muted fw-normal">(empty = ongoing)</span></label>
-                        <input type="date" class="form-control"
+                        <input type="date" class="form-control @(HasFieldErrors("EndDate") ? "is-invalid" : "")"
                                @bind="_form.EndDate" disabled="@IsSaving" />
+                        @foreach (var msg in GetFieldErrors("EndDate"))
+                        {
+                            <div class="invalid-feedback">@msg</div>
+                        }
                     </div>
                 </div>
 
@@ -39,9 +58,13 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label">Title</label>
-                                <input type="text" class="form-control"
+                                <input type="text" class="form-control @(HasFieldErrors($"Translations[{index}].Title") ? "is-invalid" : "")"
                                        @bind="_form.Translations[index].Title"
                                        disabled="@IsSaving" />
+                                @foreach (var msg in GetFieldErrors($"Translations[{index}].Title"))
+                                {
+                                    <div class="invalid-feedback">@msg</div>
+                                }
                             </div>
                             <div>
                                 <label class="form-label">Description</label>
@@ -87,6 +110,12 @@
 
     [Parameter]
     public bool IsSaving { get; set; }
+
+    [Parameter]
+    public string? ErrorMessage { get; set; }
+
+    [Parameter]
+    public Dictionary<string, string[]> ValidationErrors { get; set; } = [];
 
     private EducationEditFormModel? _form;
     private EditContext? _editContext;
@@ -146,6 +175,15 @@
 
         await OnSave.InvokeAsync(updated);
     }
+
+    private string[] GetFieldErrors(string field) =>
+        ValidationErrors.TryGetValue(field, out var errors) ? errors : [];
+
+    private bool HasFieldErrors(string field) =>
+        ValidationErrors.ContainsKey(field);
+
+    private string[] GetGeneralErrors() =>
+        ValidationErrors.TryGetValue(string.Empty, out var errors) ? errors : [];
 
     private sealed class EducationEditFormModel
     {

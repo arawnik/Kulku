@@ -1,6 +1,7 @@
 using Kulku.Application.Cover.Education;
 using Kulku.Application.Cover.Education.Models;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Web.Admin.Components.Cv.Pages;
 
@@ -20,6 +21,7 @@ partial class Education(
     private EducationTranslationsModel? CurrentEditModel { get; set; }
     private bool IsSaving { get; set; }
     private string? _errorMessage;
+    private Dictionary<string, string[]> _validationErrors = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -49,6 +51,7 @@ partial class Education(
     private async Task HandleEdit(Guid educationId)
     {
         _errorMessage = null;
+        _validationErrors = [];
         EditingEducationId = educationId;
 
         var result = await detailHandler.Handle(
@@ -70,6 +73,7 @@ partial class Education(
     private async Task HandleSave(EducationTranslationsModel model)
     {
         _errorMessage = null;
+        _validationErrors = [];
         IsSaving = true;
 
         try
@@ -99,7 +103,13 @@ partial class Education(
             }
             else
             {
-                _errorMessage = "Failed to save changes. Please try again.";
+                _errorMessage =
+                    result.Error?.Message ?? "Failed to save changes. Please try again.";
+                _validationErrors = result is IValidationResult validation
+                    ? validation
+                        .Errors.GroupBy(e => e.Field ?? string.Empty)
+                        .ToDictionary(g => g.Key, g => g.Select(e => e.Message).ToArray())
+                    : [];
             }
         }
         finally
@@ -118,5 +128,6 @@ partial class Education(
         EditingEducationId = null;
         CurrentEditModel = null;
         _errorMessage = null;
+        _validationErrors = [];
     }
 }
