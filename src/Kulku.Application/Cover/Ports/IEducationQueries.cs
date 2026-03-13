@@ -9,4 +9,13 @@ public interface IEducationQueries
         LanguageCode language,
         CancellationToken cancellationToken = default
     );
+
+    Task<IReadOnlyList<EducationTranslationsModel>> ListAllWithTranslationsAsync(
+        CancellationToken cancellationToken = default
+    );
+
+    Task<EducationTranslationsModel?> FindByIdWithTranslationsAsync(
+        Guid educationId,
+        CancellationToken cancellationToken = default
+    );
 }

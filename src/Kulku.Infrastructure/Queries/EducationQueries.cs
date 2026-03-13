@@ -45,4 +45,70 @@ public class EducationQueries(AppDbContext context) : IEducationQueries
             .ToListAsync(cancellationToken);
         return result;
     }
+
+    public async Task<IReadOnlyList<EducationTranslationsModel>> ListAllWithTranslationsAsync(
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await _context
+            .Educations.AsNoTracking()
+            .Select(e => new EducationTranslationsModel(
+                EducationId: e.Id,
+                InstitutionId: e.InstitutionId,
+                StartDate: e.StartDate,
+                EndDate: e.EndDate,
+                Translations: e.Translations.Select(t => new EducationTranslationItem(
+                        t.Language,
+                        t.Title,
+                        t.Description
+                    ))
+                    .ToList(),
+                InstitutionTranslations: e.Institution.Translations.Select(
+                        it => new InstitutionTranslationItem(
+                            it.Language,
+                            it.Name,
+                            it.Department,
+                            it.Description
+                        )
+                    )
+                    .ToList()
+            ))
+            .ToListAsync(cancellationToken);
+
+        return result;
+    }
+
+    public async Task<EducationTranslationsModel?> FindByIdWithTranslationsAsync(
+        Guid educationId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await _context
+            .Educations.AsNoTracking()
+            .Where(e => e.Id == educationId)
+            .Select(e => new EducationTranslationsModel(
+                EducationId: e.Id,
+                InstitutionId: e.InstitutionId,
+                StartDate: e.StartDate,
+                EndDate: e.EndDate,
+                Translations: e.Translations.Select(t => new EducationTranslationItem(
+                        t.Language,
+                        t.Title,
+                        t.Description
+                    ))
+                    .ToList(),
+                InstitutionTranslations: e.Institution.Translations.Select(
+                        it => new InstitutionTranslationItem(
+                            it.Language,
+                            it.Name,
+                            it.Department,
+                            it.Description
+                        )
+                    )
+                    .ToList()
+            ))
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return result;
+    }
 }

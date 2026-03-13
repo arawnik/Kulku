@@ -1,0 +1,47 @@
+using Kulku.Application.Cover.Models;
+using Kulku.Application.Cover.Ports;
+using Kulku.Domain;
+using Kulku.Persistence.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace Kulku.Infrastructure.Queries;
+
+public class InstitutionQueries(AppDbContext context) : IInstitutionQueries
+{
+    private readonly AppDbContext _context = context;
+
+    public async Task<IReadOnlyList<InstitutionModel>> ListAllAsync(
+        LanguageCode language,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await _context
+            .InstitutionTranslations.AsNoTracking()
+            .Where(t => t.Language == language)
+            .Select(t => new InstitutionModel(t.Name, t.Department, t.Description))
+            .ToListAsync(cancellationToken);
+
+        return result;
+    }
+
+    public async Task<IReadOnlyList<InstitutionTranslationsModel>> ListAllWithTranslationsAsync(
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await _context
+            .Institutions.AsNoTracking()
+            .Select(i => new InstitutionTranslationsModel(
+                InstitutionId: i.Id,
+                Translations: i.Translations.Select(t => new InstitutionTranslationItem(
+                        t.Language,
+                        t.Name,
+                        t.Department,
+                        t.Description
+                    ))
+                    .ToList()
+            ))
+            .ToListAsync(cancellationToken);
+
+        return result;
+    }
+}

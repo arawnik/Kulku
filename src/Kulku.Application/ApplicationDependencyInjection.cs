@@ -55,8 +55,44 @@ public static class ApplicationDependencyInjection
         >();
 
         services.AddScoped<
+            IQueryHandler<
+                GetExperienceTranslations.Query,
+                IReadOnlyList<ExperienceTranslationsModel>
+            >,
+            GetExperienceTranslations.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<
+                GetEducationTranslations.Query,
+                IReadOnlyList<EducationTranslationsModel>
+            >,
+            GetEducationTranslations.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetEducationDetail.Query, EducationTranslationsModel?>,
+            GetEducationDetail.Handler
+        >();
+
+        services.AddScoped<
             ICommandHandler<SubmitContactRequest.Command>,
             SubmitContactRequest.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<UpdateEducation.Command>,
+            UpdateEducation.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<DeleteEducation.Command>,
+            DeleteEducation.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<CreateEducation.Command, Guid>,
+            CreateEducation.Handler
         >();
 
         return services;

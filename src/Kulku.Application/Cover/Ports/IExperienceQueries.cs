@@ -9,4 +9,8 @@ public interface IExperienceQueries
         LanguageCode language,
         CancellationToken cancellationToken = default
     );
+
+    Task<IReadOnlyList<ExperienceTranslationsModel>> ListAllWithTranslationsAsync(
+        CancellationToken cancellationToken = default
+    );
 }

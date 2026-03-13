@@ -1,128 +1,47 @@
 @page "/cv/education"
 @using Kulku.Application.Cover.Models
 
-<PageTitle>Education</PageTitle>
+<PageTitle>Education — Admin</PageTitle>
 
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-start mb-3">
         <div>
             <h1 class="h4 mb-1">Education</h1>
-            <div class="text-muted">Read view</div>
+            <div class="text-muted">Manage education entries and translations</div>
         </div>
         <NavLink class="btn btn-sm btn-outline-secondary" href="/cv">Back</NavLink>
     </div>
+
     @if (!_loaded)
     {
         <div class="text-muted">Loading…</div>
     }
+    else if (Educations.Count <= 0)
+    {
+        <div class="alert alert-secondary">There are no education entries.</div>
+    }
     else
     {
-        if (Educations.Count <= 0)
-        {
-            <div class="alert alert-secondary">There are no active education entries.</div>
-        }
-        else
-        {
-            <div class="row g-3">
-                @foreach (var edu in Educations)
-                {
-                    <div class="col-12 col-lg-6">
-                        <div class="card">
-                            @* Card header with primary translation and dates *@
-                            @{
-                                var allTranslations = (edu.Translations ?? Enumerable.Empty<EducationTranslationItem>()).OrderBy(t => t.Language.ToString()).ToList();
-                                var instTranslations = edu.InstitutionTranslations ?? Enumerable.Empty<InstitutionTranslationItem>();
-                                var primary = allTranslations.FirstOrDefault();
-                                string primaryTitle = primary?.Title ?? string.Empty;
-                                var primaryInst = instTranslations.FirstOrDefault(it => it.Language == (primary?.Language ?? default));
-                                string primaryInstName = primaryInst?.Name ?? string.Empty;
-                            }
+        <div class="row g-3">
+            @foreach (var edu in Educations)
+            {
+                <EducationCard Education="edu" OnEdit="HandleEdit" />
+            }
+        </div>
+    }
 
-                            <div class="card-header d-flex justify-content-between align-items-start">
-                                <div>
-                                    <h5 class="mb-0">@primaryTitle</h5>
-                                    <div class="text-muted small">@primaryInstName</div>
-                                </div>
-                                <div class="text-end">
-                                    <div class="fw-semibold">@edu.StartDate.ToString("yyyy") - @(edu.EndDate.HasValue ? edu.EndDate.Value.ToString("yyyy") : "Present")</div>
-                                    <div class="text-muted small">@((edu.Translations?.Count() ?? 0)) translations</div>
-                                </div>
-                            </div>
-
-                            <div class="card-body">
-                                @if ((edu.Translations?.Any()).GetValueOrDefault())
-                                {
-                                    var translationsList = (edu.Translations ?? Enumerable.Empty<EducationTranslationItem>()).OrderBy(t => t.Language.ToString()).ToList();
-                                    if (translationsList.Count == 1)
-                                    {
-                                        var item = translationsList[0];
-                                        var inst = edu.InstitutionTranslations?.FirstOrDefault(it => it.Language == item.Language);
-                                        <div>
-                                            <div class="fw-semibold mb-1">@LanguageDisplayName(item.Language) — @item.Title</div>
-                                            <div class="text-muted small mb-2">@inst?.Name @if(!string.IsNullOrEmpty(inst?.Department)){<span>&middot; @inst.Department</span>}</div>
-                                            <div>@((new MarkupString(item.Description)))</div>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        var uid = $"edu-tabs-{edu.EducationId}";
-                                        <ul class="nav nav-tabs mb-3" role="tablist">
-                                            @for (int i = 0; i < translationsList.Count; i++)
-                                            {
-                                                var item = translationsList[i];
-                                                var tabId = $"{uid}-tab-{item.Language}";
-                                                <li class="nav-item" role="presentation">
-                                                    <button class="nav-link @(i == 0 ? "active" : string.Empty)" id="@tabId" data-bs-toggle="tab" data-bs-target="#@tabId-pane" type="button" role="tab" aria-controls="@tabId-pane" aria-selected="@(i==0)">
-                                                        @LanguageDisplayName(item.Language)
-                                                    </button>
-                                                </li>
-                                            }
-                                            <li class="nav-item" role="presentation">
-                                                <button class="nav-link" id="@($"{uid}-tab-compare")" data-bs-toggle="tab" data-bs-target="#@($"{uid}-tab-compare-pane")" type="button" role="tab" aria-controls="@($"{uid}-tab-compare-pane")" aria-selected="false">Compare</button>
-                                            </li>
-                                        </ul>
-
-                                        <div class="tab-content">
-                                            @for (int i = 0; i < translationsList.Count; i++)
-                                            {
-                                                var item = translationsList[i];
-                                                var tabId = $"{uid}-tab-{item.Language}";
-                                                var inst = edu.InstitutionTranslations?.FirstOrDefault(it => it.Language == item.Language);
-                                                <div class="tab-pane fade @(i == 0 ? "show active" : string.Empty)" id="@tabId-pane" role="tabpanel" aria-labelledby="@tabId">
-                                                    <div class="fw-semibold mb-1">@item.Title</div>
-                                                    <div class="text-muted small mb-2">@inst?.Name @if(!string.IsNullOrEmpty(inst?.Department)){<span>&middot; @inst.Department</span>}</div>
-                                                    <div>@((new MarkupString(item.Description)))</div>
-                                                </div>
-                                            }
-
-                                            <div class="tab-pane fade" id="@($"{uid}-tab-compare-pane")" role="tabpanel" aria-labelledby="@($"{uid}-tab-compare")">
-                                                <div class="row">
-                                                    @foreach (var item in translationsList)
-                                                    {
-                                                        var inst = edu.InstitutionTranslations?.FirstOrDefault(it => it.Language == item.Language);
-                                                        <div class="col-12 col-md-6 mb-3">
-                                                            <div class="border rounded p-3 h-100">
-                                                                <div class="fw-semibold mb-1">@LanguageDisplayName(item.Language)</div>
-                                                                <div class="text-muted small mb-1">@inst?.Name @if(!string.IsNullOrEmpty(inst?.Department)){<span>&middot; @inst.Department</span>}</div>
-                                                                <div class="fw-semibold">@item.Title</div>
-                                                                <div class="mt-2">@((new MarkupString(item.Description)))</div>
-                                                            </div>
-                                                        </div>
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                }
-                                else
-                                {
-                                    <div class="text-muted">No translations available.</div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
+    @if (_errorMessage is not null)
+    {
+        <div class="alert alert-danger mt-3">@_errorMessage</div>
     }
 </div>
+
+@if (EditingEducationId != null && CurrentEditModel != null)
+{
+    <EducationEditModal
+        Model="CurrentEditModel"
+        OnSave="HandleSave"
+        OnCancel="HandleCancel"
+        IsSaving="IsSaving"
+    />
+}

@@ -86,7 +86,7 @@
 					<strong>Experience</strong>
 					<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/experience">Open</NavLink>
 				</div>
-				<div class="card-body text-muted">
+				<div class="card-body">
 			@if (!_loaded)
 			{
 				<div class="text-muted">Loading…</div>
@@ -97,7 +97,20 @@
 			}
 			else
 			{
-				<div class="text-muted">@Experiences.Count() experiences — latest: @Experiences.First().Title</div>
+				<div class="list-group list-group-flush">
+					@foreach (var exp in Experiences)
+					{
+						<div class="list-group-item px-0">
+							<div class="d-flex justify-content-between align-items-start">
+								<div class="fw-semibold small">@exp.Title</div>
+								<span class="text-muted small text-nowrap ms-2">
+									@exp.StartDate.ToString("yyyy")–@(exp.EndDate?.ToString("yyyy") ?? "Present")
+								</span>
+							</div>
+							<div class="text-muted small">@exp.Company.Name</div>
+						</div>
+					}
+				</div>
 			}
 				</div>
 			</div>
@@ -109,7 +122,7 @@
 					<strong>Education</strong>
 					<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/education">Open</NavLink>
 				</div>
-				<div class="card-body text-muted">
+				<div class="card-body">
 			@if (!_loaded)
 			{
 				<div class="text-muted">Loading…</div>
@@ -120,7 +133,20 @@
 			}
 			else
 			{
-				<div class="text-muted">@Educations.Count() entries — latest: @Educations.First().Title</div>
+				<div class="list-group list-group-flush">
+					@foreach (var edu in Educations)
+					{
+						<div class="list-group-item px-0">
+							<div class="d-flex justify-content-between align-items-start">
+								<div class="fw-semibold small">@edu.Title</div>
+								<span class="text-muted small text-nowrap ms-2">
+									@edu.StartDate.ToString("yyyy")–@(edu.EndDate?.ToString("yyyy") ?? "Present")
+								</span>
+							</div>
+							<div class="text-muted small">@edu.Institution.Name</div>
+						</div>
+					}
+				</div>
 			}
 				</div>
 			</div>
@@ -132,7 +158,7 @@
 					<strong>Projects</strong>
 					<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/projects">Open</NavLink>
 				</div>
-				<div class="card-body text-muted">
+				<div class="card-body">
 			@if (!_loaded)
 			{
 				<div class="text-muted">Loading…</div>
@@ -143,7 +169,18 @@
 			}
 			else
 			{
-				<div class="text-muted">@Projects.Count() projects — featured: @Projects.First().Name</div>
+				<div class="list-group list-group-flush">
+					@foreach (var project in Projects)
+					{
+						<div class="list-group-item px-0">
+							<div class="fw-semibold small">@project.Name</div>
+							@if (!string.IsNullOrEmpty(project.Description))
+							{
+								<div class="text-muted small text-truncate">@project.Description</div>
+							}
+						</div>
+					}
+				</div>
 			}
 				</div>
 			</div>

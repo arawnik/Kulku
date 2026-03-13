@@ -1,0 +1,163 @@
+@using Kulku.Application.Cover.Models
+@using Kulku.Domain
+
+<ModalDialog Visible="@(Model != null && _form != null)"
+             Title="Edit Education"
+             OnClose="OnCancel">
+    <ChildContent>
+        @if (_form != null)
+        {
+            <EditForm EditContext="@_editContext">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">Start Date</label>
+                        <input type="date" class="form-control"
+                               @bind="_form.StartDate" disabled="@IsSaving" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">End Date <span class="text-muted fw-normal">(empty = ongoing)</span></label>
+                        <input type="date" class="form-control"
+                               @bind="_form.EndDate" disabled="@IsSaving" />
+                    </div>
+                </div>
+
+                <h6 class="mb-3">Translations</h6>
+
+                @for (var i = 0; i < _form.Translations.Count; i++)
+                {
+                    var index = i;
+                    var trans = _form.Translations[index];
+
+                    <div class="card mb-3">
+                        <div class="card-header py-2">
+                            <strong>@LanguageDisplayHelper.DisplayName(trans.Language)</strong>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Title</label>
+                                <input type="text" class="form-control"
+                                       @bind="_form.Translations[index].Title"
+                                       disabled="@IsSaving" />
+                            </div>
+                            <div>
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" rows="4"
+                                          @bind="_form.Translations[index].Description"
+                                          disabled="@IsSaving"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </EditForm>
+        }
+    </ChildContent>
+    <FooterContent>
+        <button type="button" class="btn btn-secondary"
+                @onclick="OnCancel" disabled="@IsSaving">
+            Cancel
+        </button>
+        <button type="button" class="btn btn-primary"
+                @onclick="HandleSubmit" disabled="@IsSaving">
+            @if (IsSaving)
+            {
+                <span class="spinner-border spinner-border-sm me-1"></span>
+                <span>Saving…</span>
+            }
+            else
+            {
+                <span>Save Changes</span>
+            }
+        </button>
+    </FooterContent>
+</ModalDialog>
+
+@code {
+    [Parameter, EditorRequired]
+    public EducationTranslationsModel? Model { get; set; }
+
+    [Parameter]
+    public EventCallback<EducationTranslationsModel> OnSave { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    [Parameter]
+    public bool IsSaving { get; set; }
+
+    private EducationEditFormModel? _form;
+    private EditContext? _editContext;
+
+    /// <summary>
+    /// Track which model instance we built the form from so we only rebuild
+    /// when the parent actually provides a different education, not on every re-render.
+    /// </summary>
+    private Guid? _lastModelId;
+
+    protected override void OnParametersSet()
+    {
+        if (Model is null)
+        {
+            _form = null;
+            _editContext = null;
+            _lastModelId = null;
+            return;
+        }
+
+        if (_lastModelId == Model.EducationId)
+            return;
+
+        _lastModelId = Model.EducationId;
+        _form = new EducationEditFormModel
+        {
+            EducationId = Model.EducationId,
+            StartDate = Model.StartDate,
+            EndDate = Model.EndDate,
+            Translations = Model.Translations
+                .Select(t => new TranslationEditModel
+                {
+                    Language = t.Language,
+                    Title = t.Title,
+                    Description = t.Description,
+                })
+                .ToList(),
+        };
+        _editContext = new EditContext(_form);
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (_form is null || Model is null || _editContext is null) return;
+        if (!_editContext.Validate()) return;
+
+        var updatedTranslations = _form.Translations
+            .Select(t => new EducationTranslationItem(t.Language, t.Title, t.Description))
+            .ToList();
+
+        var updated = Model with
+        {
+            StartDate = _form.StartDate,
+            EndDate = _form.EndDate,
+            Translations = updatedTranslations,
+        };
+
+        await OnSave.InvokeAsync(updated);
+    }
+
+    private sealed class EducationEditFormModel
+    {
+        public Guid EducationId { get; init; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly? EndDate { get; set; }
+        public List<TranslationEditModel> Translations { get; set; } = [];
+    }
+
+    private sealed class TranslationEditModel
+    {
+        public LanguageCode Language { get; init; }
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+    }
+}
