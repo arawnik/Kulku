@@ -1,5 +1,6 @@
+using Kulku.Application.Cover.Experience.Models;
+using Kulku.Application.Cover.Experience.Ports;
 using Kulku.Application.Cover.Models;
-using Kulku.Application.Cover.Ports;
 using Kulku.Application.Projects.Models;
 using Kulku.Domain;
 using Kulku.Persistence.Data;
@@ -91,6 +92,8 @@ public class ExperienceQueries(AppDbContext context) : IExperienceQueries
     {
         var result = await _context
             .Experiences.AsNoTracking()
+            .OrderBy(e => e.EndDate.HasValue)
+            .ThenByDescending(e => e.EndDate)
             .Select(e => new ExperienceTranslationsModel(
                 ExperienceId: e.Id,
                 CompanyId: e.CompanyId,

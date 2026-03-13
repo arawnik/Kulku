@@ -9,3 +9,10 @@ public sealed record InstitutionTranslationsModel(
     Guid InstitutionId,
     IReadOnlyList<InstitutionTranslationItem> Translations
 );
+
+public sealed record InstitutionTranslationItem(
+    LanguageCode Language,
+    string Name,
+    string? Department,
+    string Description
+);

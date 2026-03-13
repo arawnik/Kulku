@@ -4,23 +4,28 @@ using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
+using DomainEducation = Kulku.Domain.Cover.Education;
 
-namespace Kulku.Application.Cover;
+namespace Kulku.Application.Cover.Education;
 
+/// <summary>
+/// Creates a new education entry with translations.
+/// </summary>
 public static class CreateEducation
 {
+    /// <summary>
+    /// Command to create a new education entry.
+    /// </summary>
+    /// <param name="InstitutionId">The institution this education belongs to.</param>
+    /// <param name="StartDate">When the education started.</param>
+    /// <param name="EndDate">When the education ended, or <c>null</c> if ongoing.</param>
+    /// <param name="Translations">Localized title and description per language.</param>
     public sealed record Command(
         Guid InstitutionId,
         DateOnly StartDate,
         DateOnly? EndDate,
         IReadOnlyList<EducationTranslationDto> Translations
     ) : ICommand<Guid>;
-
-    public sealed record EducationTranslationDto(
-        LanguageCode Language,
-        string Title,
-        string Description
-    );
 
     internal sealed class Handler(IEducationRepository educationRepository, IUnitOfWork unitOfWork)
         : ICommandHandler<Command, Guid>
@@ -30,11 +35,15 @@ public static class CreateEducation
 
         public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errors = Validate(command);
+            var errors = EducationCommandValidator.Validate(
+                command.StartDate,
+                command.EndDate,
+                command.Translations
+            );
             if (errors.Length > 0)
                 return ValidationResult<Guid>.WithErrors(errors);
 
-            var education = new Education
+            var education = new DomainEducation
             {
                 InstitutionId = command.InstitutionId,
                 StartDate = command.StartDate,
@@ -54,27 +63,6 @@ public static class CreateEducation
             await _unitOfWork.CompleteAsync(cancellationToken);
 
             return Result.Success(education.Id);
-        }
-
-        private static Error[] Validate(Command command)
-        {
-            List<Error> errors = [];
-
-            if (command.Translations.Count == 0)
-                errors.Add(Error.BusinessRule("At least one translation is required."));
-
-            if (command.EndDate.HasValue && command.EndDate < command.StartDate)
-                errors.Add(Error.BusinessRule("End date cannot be before start date."));
-
-            foreach (var t in command.Translations)
-            {
-                if (string.IsNullOrWhiteSpace(t.Title))
-                    errors.Add(
-                        Error.BusinessRule($"Title is required for the {t.Language} translation.")
-                    );
-            }
-
-            return [.. errors];
         }
     }
 }

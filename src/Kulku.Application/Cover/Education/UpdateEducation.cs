@@ -1,26 +1,30 @@
-using Kulku.Domain;
 using Kulku.Domain.Cover;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
+using DomainEducation = Kulku.Domain.Cover.Education;
 
-namespace Kulku.Application.Cover;
+namespace Kulku.Application.Cover.Education;
 
+/// <summary>
+/// Updates an existing education entry and merges its translations.
+/// </summary>
 public static class UpdateEducation
 {
+    /// <summary>
+    /// Command to update an existing education entry.
+    /// </summary>
+    /// <param name="EducationId">The education entry to update.</param>
+    /// <param name="StartDate">Updated start date.</param>
+    /// <param name="EndDate">Updated end date, or <c>null</c> if ongoing.</param>
+    /// <param name="Translations">Full set of translations to replace existing ones.</param>
     public sealed record Command(
         Guid EducationId,
         DateOnly StartDate,
         DateOnly? EndDate,
         IReadOnlyList<EducationTranslationDto> Translations
     ) : ICommand;
-
-    public sealed record EducationTranslationDto(
-        LanguageCode Language,
-        string Title,
-        string Description
-    );
 
     internal sealed class Handler(IEducationRepository educationRepository, IUnitOfWork unitOfWork)
         : ICommandHandler<Command>
@@ -30,7 +34,11 @@ public static class UpdateEducation
 
         public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errors = Validate(command);
+            var errors = EducationCommandValidator.Validate(
+                command.StartDate,
+                command.EndDate,
+                command.Translations
+            );
             if (errors.Length > 0)
                 return ValidationResult.WithErrors(errors);
 
@@ -51,29 +59,8 @@ public static class UpdateEducation
             return Result.Success();
         }
 
-        private static Error[] Validate(Command command)
-        {
-            List<Error> errors = [];
-
-            if (command.Translations.Count == 0)
-                errors.Add(Error.BusinessRule("At least one translation is required."));
-
-            if (command.EndDate.HasValue && command.EndDate < command.StartDate)
-                errors.Add(Error.BusinessRule("End date cannot be before start date."));
-
-            foreach (var t in command.Translations)
-            {
-                if (string.IsNullOrWhiteSpace(t.Title))
-                    errors.Add(
-                        Error.BusinessRule($"Title is required for the {t.Language} translation.")
-                    );
-            }
-
-            return [.. errors];
-        }
-
         private static void MergeTranslations(
-            Education education,
+            DomainEducation education,
             IReadOnlyList<EducationTranslationDto> incoming
         )
         {

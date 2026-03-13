@@ -3,10 +3,17 @@ using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 
-namespace Kulku.Application.Cover;
+namespace Kulku.Application.Cover.Education;
 
+/// <summary>
+/// Deletes an education entry and its associated translations.
+/// </summary>
 public static class DeleteEducation
 {
+    /// <summary>
+    /// Command to delete an education entry.
+    /// </summary>
+    /// <param name="EducationId">The education entry to remove.</param>
     public sealed record Command(Guid EducationId) : ICommand;
 
     internal sealed class Handler(IEducationRepository educationRepository, IUnitOfWork unitOfWork)

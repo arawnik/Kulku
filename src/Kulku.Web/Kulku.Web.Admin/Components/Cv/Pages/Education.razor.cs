@@ -1,10 +1,10 @@
-using Kulku.Application.Cover;
-using Kulku.Application.Cover.Models;
-using Kulku.Domain;
+using Kulku.Application.Cover.Education;
+using Kulku.Application.Cover.Education.Models;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 
 namespace Kulku.Web.Admin.Components.Cv.Pages;
 
+#pragma warning disable CA1724 // Type name conflicts with imported namespace (Blazor page name)
 partial class Education(
     IQueryHandler<
         GetEducationTranslations.Query,
@@ -33,11 +33,15 @@ partial class Education(
             CancellationToken
         );
 
-        Educations = result.IsSuccess && result.Value is not null
-            ? [.. result.Value
-                .OrderByDescending(m => m.EndDate.HasValue)
-                .ThenByDescending(m => m.EndDate)]
-            : [];
+        Educations =
+            result.IsSuccess && result.Value is not null
+                ?
+                [
+                    .. result
+                        .Value.OrderByDescending(m => m.EndDate.HasValue)
+                        .ThenByDescending(m => m.EndDate),
+                ]
+                : [];
 
         _loaded = true;
     }
@@ -70,14 +74,21 @@ partial class Education(
 
         try
         {
-            var translations = model.Translations
-                .Select(t => new UpdateEducation.EducationTranslationDto(
-                    t.Language, t.Title, t.Description))
+            var translations = model
+                .Translations.Select(t => new EducationTranslationDto(
+                    t.Language,
+                    t.Title,
+                    t.Description
+                ))
                 .ToList();
 
             var result = await updateHandler.Handle(
                 new UpdateEducation.Command(
-                    model.EducationId, model.StartDate, model.EndDate, translations),
+                    model.EducationId,
+                    model.StartDate,
+                    model.EndDate,
+                    translations
+                ),
                 CancellationToken
             );
 

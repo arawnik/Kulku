@@ -1,5 +1,6 @@
+using Kulku.Application.Cover.Education.Models;
+using Kulku.Application.Cover.Education.Ports;
 using Kulku.Application.Cover.Models;
-using Kulku.Application.Cover.Ports;
 using Kulku.Domain;
 using Kulku.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +53,8 @@ public class EducationQueries(AppDbContext context) : IEducationQueries
     {
         var result = await _context
             .Educations.AsNoTracking()
+            .OrderBy(e => e.EndDate.HasValue)
+            .ThenByDescending(e => e.EndDate)
             .Select(e => new EducationTranslationsModel(
                 EducationId: e.Id,
                 InstitutionId: e.InstitutionId,

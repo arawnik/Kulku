@@ -1,11 +1,11 @@
 using Kulku.Application.Abstractions.Localization;
+using Kulku.Application.Cover.Introduction.Ports;
 using Kulku.Application.Cover.Models;
-using Kulku.Application.Cover.Ports;
 using Kulku.Domain;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 
-namespace Kulku.Application.Cover;
+namespace Kulku.Application.Cover.Introduction;
 
 public static class GetIntroduction
 {

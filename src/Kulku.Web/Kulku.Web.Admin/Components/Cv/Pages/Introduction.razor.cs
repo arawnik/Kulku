@@ -1,11 +1,12 @@
 using Kulku.Application.Abstractions.Localization;
-using Kulku.Application.Cover;
+using Kulku.Application.Cover.Introduction;
 using Kulku.Application.Cover.Models;
 using Kulku.Domain;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 
 namespace Kulku.Web.Admin.Components.Cv.Pages;
 
+#pragma warning disable CA1724 // Type name conflicts with imported namespace (Blazor page name)
 partial class Introduction(IQueryHandler<GetIntroduction.Query, IntroductionModel?> handler)
 {
     private readonly IQueryHandler<GetIntroduction.Query, IntroductionModel?> _handler = handler;

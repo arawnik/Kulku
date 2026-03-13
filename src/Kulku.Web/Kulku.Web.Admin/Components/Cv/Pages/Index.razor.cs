@@ -1,5 +1,7 @@
 using Kulku.Application.Abstractions.Localization;
-using Kulku.Application.Cover;
+using Kulku.Application.Cover.Education;
+using Kulku.Application.Cover.Experience;
+using Kulku.Application.Cover.Introduction;
 using Kulku.Application.Cover.Models;
 using Kulku.Application.Projects;
 using Kulku.Application.Projects.Models;

@@ -1,6 +1,6 @@
 using Kulku.Domain;
 
-namespace Kulku.Application.Cover.Models;
+namespace Kulku.Application.Cover.Experience.Models;
 
 public sealed record ExperienceTranslationItem(
     LanguageCode Language,

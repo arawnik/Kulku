@@ -1,7 +1,8 @@
+using Kulku.Application.Cover.Experience.Models;
 using Kulku.Application.Cover.Models;
 using Kulku.Domain;
 
-namespace Kulku.Application.Cover.Ports;
+namespace Kulku.Application.Cover.Experience.Ports;
 
 public interface IExperienceQueries
 {

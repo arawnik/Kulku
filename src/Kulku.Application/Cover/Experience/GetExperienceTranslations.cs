@@ -1,9 +1,9 @@
-using Kulku.Application.Cover.Models;
-using Kulku.Application.Cover.Ports;
+using Kulku.Application.Cover.Experience.Models;
+using Kulku.Application.Cover.Experience.Ports;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 
-namespace Kulku.Application.Cover;
+namespace Kulku.Application.Cover.Experience;
 
 public static class GetExperienceTranslations
 {

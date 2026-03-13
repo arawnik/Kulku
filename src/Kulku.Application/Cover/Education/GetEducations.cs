@@ -1,14 +1,20 @@
 using Kulku.Application.Abstractions.Localization;
+using Kulku.Application.Cover.Education.Ports;
 using Kulku.Application.Cover.Models;
-using Kulku.Application.Cover.Ports;
 using Kulku.Domain;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 
-namespace Kulku.Application.Cover;
+namespace Kulku.Application.Cover.Education;
 
+/// <summary>
+/// Retrieves all education entries for a specific language.
+/// </summary>
 public static class GetEducations
 {
+    /// <summary>
+    /// Query to list all education entries in the given language.
+    /// </summary>
     public sealed record Query(LanguageCode Language)
         : IQuery<IReadOnlyList<EducationModel>>,
             ILocalizedRequest;

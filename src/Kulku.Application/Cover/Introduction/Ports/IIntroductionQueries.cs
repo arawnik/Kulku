@@ -1,7 +1,7 @@
 using Kulku.Application.Cover.Models;
 using Kulku.Domain;
 
-namespace Kulku.Application.Cover.Ports;
+namespace Kulku.Application.Cover.Introduction.Ports;
 
 public interface IIntroductionQueries
 {

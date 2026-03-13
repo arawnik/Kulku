@@ -1,10 +1,11 @@
-using Kulku.Application.Cover;
-using Kulku.Application.Cover.Models;
+using Kulku.Application.Cover.Experience;
+using Kulku.Application.Cover.Experience.Models;
 using Kulku.Domain;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 
 namespace Kulku.Web.Admin.Components.Cv.Pages;
 
+#pragma warning disable CA1724 // Type name conflicts with imported namespace (Blazor page name)
 partial class Experience(
     IQueryHandler<
         GetExperienceTranslations.Query,
