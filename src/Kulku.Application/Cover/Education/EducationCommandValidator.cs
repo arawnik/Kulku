@@ -20,17 +20,19 @@ internal static class EducationCommandValidator
         List<Error> errors = [];
 
         if (translations.Count == 0)
-            errors.Add(Error.Validation("Translations", "At least one translation is required."));
+            errors.Add(
+                Error.Validation(nameof(translations), "At least one translation is required.")
+            );
 
         if (endDate.HasValue && endDate < startDate)
-            errors.Add(Error.Validation("EndDate", "End date cannot be before start date."));
+            errors.Add(Error.Validation(nameof(endDate), "End date cannot be before start date."));
 
         for (var i = 0; i < translations.Count; i++)
         {
             if (string.IsNullOrWhiteSpace(translations[i].Title))
                 errors.Add(
                     Error.Validation(
-                        $"Translations[{i}].Title",
+                        $"{nameof(translations)}[{i}].Title",
                         $"Title is required for the {translations[i].Language} translation."
                     )
                 );

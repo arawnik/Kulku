@@ -17,7 +17,8 @@ public class EducationQueries(AppDbContext context) : IEducationQueries
     )
     {
         var result = await _context
-            .Educations.OrderBy(e => e.EndDate.HasValue)
+            .Educations.AsNoTracking()
+            .OrderBy(e => e.EndDate.HasValue)
             .ThenByDescending(e => e.EndDate)
             .LeftJoin(
                 _context.EducationTranslations.Where(t => t.Language == language),

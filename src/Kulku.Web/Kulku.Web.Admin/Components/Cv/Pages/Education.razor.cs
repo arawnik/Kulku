@@ -1,5 +1,6 @@
 using Kulku.Application.Cover.Education;
 using Kulku.Application.Cover.Education.Models;
+using Kulku.Web.Admin.Components.Cv.Components;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 
@@ -21,7 +22,7 @@ partial class Education(
     private EducationTranslationsModel? CurrentEditModel { get; set; }
     private bool IsSaving { get; set; }
     private string? _errorMessage;
-    private Dictionary<string, string[]> _validationErrors = [];
+    private EducationEditModal? _editModal;
 
     protected override async Task OnInitializedAsync()
     {
@@ -40,7 +41,7 @@ partial class Education(
                 ?
                 [
                     .. result
-                        .Value.OrderByDescending(m => m.EndDate.HasValue)
+                        .Value.OrderBy(m => m.EndDate.HasValue)
                         .ThenByDescending(m => m.EndDate),
                 ]
                 : [];
@@ -51,7 +52,6 @@ partial class Education(
     private async Task HandleEdit(Guid educationId)
     {
         _errorMessage = null;
-        _validationErrors = [];
         EditingEducationId = educationId;
 
         var result = await detailHandler.Handle(
@@ -73,7 +73,6 @@ partial class Education(
     private async Task HandleSave(EducationTranslationsModel model)
     {
         _errorMessage = null;
-        _validationErrors = [];
         IsSaving = true;
 
         try
@@ -101,15 +100,14 @@ partial class Education(
                 CloseEditor();
                 await LoadEducationsAsync();
             }
+            else if (result is IValidationResult validation)
+            {
+                _editModal?.SetServerErrors(validation.Errors);
+            }
             else
             {
                 _errorMessage =
                     result.Error?.Message ?? "Failed to save changes. Please try again.";
-                _validationErrors = result is IValidationResult validation
-                    ? validation
-                        .Errors.GroupBy(e => e.Field ?? string.Empty)
-                        .ToDictionary(g => g.Key, g => g.Select(e => e.Message).ToArray())
-                    : [];
             }
         }
         finally
@@ -128,6 +126,5 @@ partial class Education(
         EditingEducationId = null;
         CurrentEditModel = null;
         _errorMessage = null;
-        _validationErrors = [];
     }
 }

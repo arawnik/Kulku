@@ -1,6 +1,9 @@
+@using System.ComponentModel.DataAnnotations
 @using Kulku.Application.Cover.Education.Models
 @using Kulku.Application.Cover.Models
 @using Kulku.Domain
+@using Kulku.Web.Admin.Components.Shared
+@using SoulNETLib.Clean.Domain
 
 <ModalDialog Visible="@(Model != null && _form != null)"
              Title="Edit Education"
@@ -8,39 +11,25 @@
     <ChildContent>
         @if (ErrorMessage is not null)
         {
-            <div class="alert alert-danger py-2 mb-3">
-                <strong>@ErrorMessage</strong>
-                @if (GetGeneralErrors().Length > 0)
-                {
-                    <ul class="mb-0 mt-1">
-                        @foreach (var error in GetGeneralErrors())
-                        {
-                            <li>@error</li>
-                        }
-                    </ul>
-                }
-            </div>
+            <div class="alert alert-danger py-2 mb-3">@ErrorMessage</div>
         }
         @if (_form != null)
         {
             <EditForm EditContext="@_editContext">
                 <DataAnnotationsValidator />
-                <ValidationSummary />
+                <ServerValidation @ref="_serverValidation" />
 
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label class="form-label">Start Date</label>
-                        <input type="date" class="form-control"
-                               @bind="_form.StartDate" disabled="@IsSaving" />
+                        <InputDate @bind-Value="_form.StartDate" class="form-control"
+                                   disabled="@IsSaving" />
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">End Date <span class="text-muted fw-normal">(empty = ongoing)</span></label>
-                        <input type="date" class="form-control @(HasFieldErrors("EndDate") ? "is-invalid" : "")"
-                               @bind="_form.EndDate" disabled="@IsSaving" />
-                        @foreach (var msg in GetFieldErrors("EndDate"))
-                        {
-                            <div class="invalid-feedback">@msg</div>
-                        }
+                        <InputDate @bind-Value="_form.EndDate" class="form-control"
+                                   disabled="@IsSaving" />
+                        <ValidationMessage For="@(() => _form.EndDate)" />
                     </div>
                 </div>
 
@@ -58,19 +47,15 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label">Title</label>
-                                <input type="text" class="form-control @(HasFieldErrors($"Translations[{index}].Title") ? "is-invalid" : "")"
-                                       @bind="_form.Translations[index].Title"
-                                       disabled="@IsSaving" />
-                                @foreach (var msg in GetFieldErrors($"Translations[{index}].Title"))
-                                {
-                                    <div class="invalid-feedback">@msg</div>
-                                }
+                                <InputText @bind-Value="_form.Translations[index].Title"
+                                           class="form-control" disabled="@IsSaving" />
+                                <ValidationMessage For="@(() => _form.Translations[index].Title)" />
                             </div>
                             <div>
                                 <label class="form-label">Description</label>
-                                <textarea class="form-control" rows="4"
-                                          @bind="_form.Translations[index].Description"
-                                          disabled="@IsSaving"></textarea>
+                                <InputTextArea @bind-Value="_form.Translations[index].Description"
+                                               class="form-control" rows="4"
+                                               disabled="@IsSaving" />
                             </div>
                         </div>
                     </div>
@@ -111,20 +96,30 @@
     [Parameter]
     public bool IsSaving { get; set; }
 
+    /// <summary>
+    /// General error message for non-validation failures (e.g. "Not found", load errors).
+    /// </summary>
     [Parameter]
     public string? ErrorMessage { get; set; }
 
-    [Parameter]
-    public Dictionary<string, string[]> ValidationErrors { get; set; } = [];
-
     private EducationEditFormModel? _form;
     private EditContext? _editContext;
+    private ServerValidation? _serverValidation;
 
     /// <summary>
     /// Track which model instance we built the form from so we only rebuild
     /// when the parent actually provides a different education, not on every re-render.
     /// </summary>
     private Guid? _lastModelId;
+
+    /// <summary>
+    /// Pushes server validation errors into the form's validation state.
+    /// Called by the parent page after a failed save.
+    /// </summary>
+    public void SetServerErrors(IEnumerable<Error> errors)
+    {
+        _serverValidation?.DisplayErrors(errors);
+    }
 
     protected override void OnParametersSet()
     {
@@ -136,25 +131,26 @@
             return;
         }
 
-        if (_lastModelId == Model.EducationId)
-            return;
-
-        _lastModelId = Model.EducationId;
-        _form = new EducationEditFormModel
+        if (_lastModelId != Model.EducationId)
         {
-            EducationId = Model.EducationId,
-            StartDate = Model.StartDate,
-            EndDate = Model.EndDate,
-            Translations = Model.Translations
-                .Select(t => new TranslationEditModel
-                {
-                    Language = t.Language,
-                    Title = t.Title,
-                    Description = t.Description,
-                })
-                .ToList(),
-        };
-        _editContext = new EditContext(_form);
+            _lastModelId = Model.EducationId;
+            _form = new EducationEditFormModel
+            {
+                EducationId = Model.EducationId,
+                StartDate = Model.StartDate,
+                EndDate = Model.EndDate,
+                Translations = Model.Translations
+                    .Select(t => new TranslationEditModel
+                    {
+                        Language = t.Language,
+                        Title = t.Title,
+                        Description = t.Description,
+                    })
+                    .ToList(),
+            };
+            _editContext = new EditContext(_form);
+            _editContext.SetFieldCssClassProvider(new BootstrapFieldCssClassProvider());
+        }
     }
 
     private async Task HandleSubmit()
@@ -176,15 +172,6 @@
         await OnSave.InvokeAsync(updated);
     }
 
-    private string[] GetFieldErrors(string field) =>
-        ValidationErrors.TryGetValue(field, out var errors) ? errors : [];
-
-    private bool HasFieldErrors(string field) =>
-        ValidationErrors.ContainsKey(field);
-
-    private string[] GetGeneralErrors() =>
-        ValidationErrors.TryGetValue(string.Empty, out var errors) ? errors : [];
-
     private sealed class EducationEditFormModel
     {
         public Guid EducationId { get; init; }
@@ -196,7 +183,10 @@
     private sealed class TranslationEditModel
     {
         public LanguageCode Language { get; init; }
+
+        [Required(ErrorMessage = "Title is required.")]
         public string Title { get; set; } = string.Empty;
+
         public string Description { get; set; } = string.Empty;
     }
 }

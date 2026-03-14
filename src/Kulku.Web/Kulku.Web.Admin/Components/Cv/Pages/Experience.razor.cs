@@ -33,7 +33,7 @@ partial class Experience(
         Experiences =
             result.IsSuccess && result.Value is not null
                 ? result
-                    .Value.OrderByDescending(m => m.EndDate.HasValue)
+                    .Value.OrderBy(m => m.EndDate.HasValue)
                     .ThenByDescending(m => m.EndDate)
                     .ToList()
                 : Array.Empty<ExperienceTranslationsModel>();

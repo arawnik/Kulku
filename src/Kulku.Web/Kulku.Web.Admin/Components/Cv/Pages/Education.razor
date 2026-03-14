@@ -38,12 +38,11 @@
 
 @if (EditingEducationId != null && CurrentEditModel != null)
 {
-    <EducationEditModal
+    <EducationEditModal @ref="_editModal"
         Model="CurrentEditModel"
         OnSave="HandleSave"
         OnCancel="HandleCancel"
         IsSaving="IsSaving"
         ErrorMessage="@_errorMessage"
-        ValidationErrors="_validationErrors"
     />
 }
