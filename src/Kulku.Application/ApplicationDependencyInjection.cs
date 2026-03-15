@@ -54,16 +54,28 @@ public static class ApplicationDependencyInjection
         >();
 
         services.AddScoped<
-            IQueryHandler<GetEducations.Query, IReadOnlyList<EducationModel>>,
-            GetEducations.Handler
-        >();
-
-        services.AddScoped<
             IQueryHandler<
                 GetExperienceTranslations.Query,
                 IReadOnlyList<ExperienceTranslationsModel>
             >,
             GetExperienceTranslations.Handler
+        >();
+
+        services.AddScoped<ICommandHandler<UpdateExperience.Command>, UpdateExperience.Handler>();
+
+        services.AddScoped<
+            IQueryHandler<GetExperienceDetail.Query, ExperienceTranslationsModel?>,
+            GetExperienceDetail.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetEducationDetail.Query, EducationTranslationsModel?>,
+            GetEducationDetail.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetEducations.Query, IReadOnlyList<EducationModel>>,
+            GetEducations.Handler
         >();
 
         services.AddScoped<
@@ -74,29 +86,18 @@ public static class ApplicationDependencyInjection
             GetEducationTranslations.Handler
         >();
 
+        services.AddScoped<ICommandHandler<UpdateEducation.Command>, UpdateEducation.Handler>();
+
+        services.AddScoped<ICommandHandler<DeleteEducation.Command>, DeleteEducation.Handler>();
+
         services.AddScoped<
-            IQueryHandler<GetEducationDetail.Query, EducationTranslationsModel?>,
-            GetEducationDetail.Handler
+            ICommandHandler<CreateEducation.Command, Guid>,
+            CreateEducation.Handler
         >();
 
         services.AddScoped<
             ICommandHandler<SubmitContactRequest.Command>,
             SubmitContactRequest.Handler
-        >();
-
-        services.AddScoped<
-            ICommandHandler<UpdateEducation.Command>,
-            UpdateEducation.Handler
-        >();
-
-        services.AddScoped<
-            ICommandHandler<DeleteEducation.Command>,
-            DeleteEducation.Handler
-        >();
-
-        services.AddScoped<
-            ICommandHandler<CreateEducation.Command, Guid>,
-            CreateEducation.Handler
         >();
 
         return services;

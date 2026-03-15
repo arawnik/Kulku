@@ -26,6 +26,8 @@ public class ExperienceConfiguration : IEntityTypeConfiguration<Experience>
 
         builder.HasMany(e => e.Keywords).WithMany();
 
+        builder.Property(e => e.EndDate).IsRequired(false);
+
         // Indexing for performance
         builder.HasIndex(e => e.EndDate);
     }

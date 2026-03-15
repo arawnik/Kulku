@@ -1,0 +1,18 @@
+.edit-link {
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.15s ease-in-out;
+}
+
+.edit-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.experience-description {
+    max-height: 4.5em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
