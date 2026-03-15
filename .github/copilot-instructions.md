@@ -113,3 +113,79 @@ This repository is a public-facing showcase. Optimize for coherence, readability
 - Avoid introducing new dependencies that break layer boundaries.
 - Prefer minimal, coherent structures over excessive “purist” sharding.
 - Suggest migrations when changing persisted enum representations or data.
+
+## Blazor Admin CRUD pattern
+
+Each admin section for a translatable entity follows a consistent vertical slice:
+
+- **Page code-behind** (`*.razor.cs`):
+  - Primary constructor DI for query/command handlers and read-side ports.
+  - `ModalMode? _modalMode` tracks whether the modal is in Create or Edit mode (null = closed).
+  - `HandleCreate()` — loads parent entities (e.g. companies, institutions) once, builds a blank model with translations for all `Defaults.SupportedCultures`, sets `_modalMode = ModalMode.Create`.
+  - `HandleEdit(Guid)` — fetches detail via query handler, sets `_modalMode = ModalMode.Edit`.
+  - `HandleSave(model)` — routes to create or update handler based on `_modalMode`. On success: close editor, reload list. On `IValidationResult`: push field errors via `_editModal?.SetServerErrors(...)`. On other failure: set `_errorMessage` banner.
+  - `HandleDelete(Guid)` — calls delete handler, reloads list on success.
+  - `CloseEditor()` — resets `_modalMode`, model, and `_errorMessage` to null.
+
+- **Edit modal** (`*EditModal.razor`):
+  - `Mode` parameter (`ModalMode`, defaults to `Edit`).
+  - Parent entity dropdown (e.g. institution, company) shown only in Create mode.
+  - `ServerValidation @ref` inside `EditForm` for server error display.
+  - Exposes `SetServerErrors(IEnumerable<Error>)` for the parent page to call.
+  - Adaptive title and submit button text based on `Mode`.
+  - `OnParametersSet` rebuilds form only when the model ID changes (prevents re-render thrashing).
+  - Inner form model classes with `[Required]` on mandatory fields (e.g. `Title`) for client-side validation.
+
+- **Card component** (`*Card.razor`):
+  - `OnEdit` and `OnDelete` `EventCallback<Guid>` parameters.
+  - Edit button (`btn-outline-primary`) and Delete button (`btn-outline-danger`) with `<Icon>` components.
+  - `ConfirmDialog` for delete confirmation — no inline confirm/cancel, use the shared modal.
+
+- **Ordering for date-ranged entries**:
+  - Ongoing entries (null `EndDate`) appear first.
+  - Then sort by `EndDate` descending, then `StartDate` descending as tiebreaker.
+  - Apply this sort in the page code-behind after receiving query results, not in the query itself.
+
+## Server validation in Blazor forms
+
+- Use the `ServerValidation` component (`Components/Shared/ServerValidation.cs`) inside `EditForm` alongside `DataAnnotationsValidator`.
+- The parent page calls `SetServerErrors(validation.Errors)` via `@ref` after a failed save returns `IValidationResult`.
+- `ServerValidation` uses `ToFieldIdentifier` to walk dotted property paths (e.g. `Translations[0].Title`) and resolve them to the correct `FieldIdentifier` on the form model.
+- Property lookup is **case-insensitive** (`BindingFlags.IgnoreCase`) because server validators use `nameof(parameter)` which produces camelCase, while form model properties are PascalCase.
+- Do **NOT** subscribe to `OnFieldChanged` — server errors are cleared only on the next `OnValidationRequested` (triggered by `EditContext.Validate()`). Subscribing to `OnFieldChanged` causes server errors to disappear during Blazor re-render cascades.
+- Use `BootstrapFieldCssClassProvider` on every `EditContext` for Bootstrap `is-valid`/`is-invalid` CSS classes.
+
+## Result and IValidationResult handling in Blazor
+
+- Create commands return `Result<Guid>`, update/delete commands return `Result`.
+- `Result<Guid>` **cannot** implicitly convert to `Result` — handle create and update paths separately.
+- Always check `result is IValidationResult validation` **before** any conversion or error access, because converting with `Result.Failure(result.Error!)` loses the `IValidationResult` interface.
+- For validation failures: push field-level errors via `SetServerErrors()`. Do **not** also set `_errorMessage` banner.
+- For non-validation failures (not found, server error): set `_errorMessage` banner only.
+
+## Shared component conventions (Web.Admin)
+
+Reusable components live in `Components/Shared/` and are globally available via `Components/_Imports.razor`:
+- **Never add per-file `@using Kulku.Web.Admin.Components.Shared`** — it is already imported globally.
+- `Icon.razor` + `IconKind.cs` — Inline SVG icons using `fill="currentColor"` and `vertical-align: -.125em`. Add new icons to the `IconKind` enum and the `GetPath()` switch expression.
+- `ConfirmDialog.razor` — Modal confirmation dialog with customizable title, message, button text/style/icon.
+- `ModalDialog.razor` — Base modal wrapper with `ChildContent` and `FooterContent` render fragments.
+- `ServerValidation.cs` — Server error → `EditContext` bridge (see section above).
+- `BootstrapFieldCssClassProvider.cs` — Bootstrap-compatible field CSS class provider.
+- `ModalMode.cs` — `Create`/`Edit` enum for dual-mode modals.
+
+## DI registration discipline
+
+- **No assembly scanning** — every handler and port implementation is explicitly registered.
+- Command/query handlers: `ApplicationDependencyInjection.cs` (`AddApplication()`).
+- Query implementations and repositories: `InfrastructureDependencyInjection.cs` (`AddInfrastructure()`).
+- When adding a new use case, always update **both** files.
+- Group registrations by feature (experience, education, projects, etc.) for readability.
+
+## Command validation pattern
+
+- Shared validation logic lives in a `*CommandValidator` static class (e.g. `ExperienceCommandValidator`) with a `Validate()` method.
+- Both Create and Update handlers call the same validator to avoid duplication.
+- Returns `Error[]` — empty array means valid.
+- Use `Error.Validation(fieldPath, message)` where `fieldPath` matches the form model structure (e.g. `"translations[0].Title"`).
+- `nameof()` produces camelCase field names — this is intentional. The `ServerValidation.ToFieldIdentifier` method resolves them case-insensitively via `BindingFlags.IgnoreCase`.
