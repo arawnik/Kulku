@@ -84,14 +84,26 @@ partial class Index(
             CancellationToken
         );
         if (eres.IsSuccess)
-            Experiences = eres.Value ?? [];
+            Experiences =
+            [
+                .. (eres.Value ?? [])
+                    .OrderBy(m => m.EndDate.HasValue)
+                    .ThenByDescending(m => m.EndDate)
+                    .ThenByDescending(m => m.StartDate),
+            ];
 
         var edres = await _educationHandler.Handle(
             new GetEducations.Query(lang),
             CancellationToken
         );
         if (edres.IsSuccess)
-            Educations = edres.Value ?? [];
+            Educations =
+            [
+                .. (edres.Value ?? [])
+                    .OrderBy(m => m.EndDate.HasValue)
+                    .ThenByDescending(m => m.EndDate)
+                    .ThenByDescending(m => m.StartDate),
+            ];
 
         var pres = await _projectsHandler.Handle(new GetProjects.Query(lang), CancellationToken);
         if (pres.IsSuccess)

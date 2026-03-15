@@ -1,3 +1,4 @@
+using Kulku.Application.Cover.Models;
 using Kulku.Domain;
 
 namespace Kulku.Application.Cover.Experience.Models;
@@ -7,8 +8,6 @@ public sealed record ExperienceTranslationItem(
     string Title,
     string Description
 );
-
-public sealed record CompanyTranslationItem(LanguageCode Language, string Name, string Description);
 
 public sealed record ExperienceTranslationsModel(
     Guid ExperienceId,

@@ -1,6 +1,10 @@
 using Kulku.Application.Cover.Experience;
 using Kulku.Application.Cover.Experience.Models;
+using Kulku.Application.Cover.Models;
+using Kulku.Application.Cover.Ports;
+using Kulku.Domain;
 using Kulku.Web.Admin.Components.Cv.Components;
+using Kulku.Web.Admin.Components.Shared;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 
@@ -13,16 +17,20 @@ partial class Experience(
         IReadOnlyList<ExperienceTranslationsModel>
     > translationsHandler,
     IQueryHandler<GetExperienceDetail.Query, ExperienceTranslationsModel?> detailHandler,
-    ICommandHandler<UpdateExperience.Command> updateHandler
+    ICommandHandler<UpdateExperience.Command> updateHandler,
+    ICommandHandler<CreateExperience.Command, Guid> createHandler,
+    ICommandHandler<DeleteExperience.Command> deleteHandler,
+    ICompanyQueries companyQueries
 )
 {
     private IReadOnlyList<ExperienceTranslationsModel> Experiences { get; set; } = [];
     private bool _loaded;
-    private Guid? EditingExperienceId { get; set; }
+    private ModalMode? _modalMode;
     private ExperienceTranslationsModel? CurrentEditModel { get; set; }
     private bool IsSaving { get; set; }
     private string? _errorMessage;
     private ExperienceEditModal? _editModal;
+    private IReadOnlyList<CompanyTranslationsModel>? _companies;
 
     protected override async Task OnInitializedAsync()
     {
@@ -42,17 +50,40 @@ partial class Experience(
                 [
                     .. result
                         .Value.OrderBy(m => m.EndDate.HasValue)
-                        .ThenByDescending(m => m.EndDate),
+                        .ThenByDescending(m => m.EndDate)
+                        .ThenByDescending(m => m.StartDate),
                 ]
                 : [];
 
         _loaded = true;
     }
 
+    private async Task HandleCreate()
+    {
+        _errorMessage = null;
+        _companies ??= await companyQueries.ListAllWithTranslationsAsync(CancellationToken);
+
+        var blankTranslations = Defaults
+            .SupportedCultures.Select(LanguageCodeFromCulture)
+            .Where(lc => lc.HasValue)
+            .Select(lc => new ExperienceTranslationItem(lc!.Value, string.Empty, string.Empty))
+            .ToList();
+
+        CurrentEditModel = new ExperienceTranslationsModel(
+            ExperienceId: Guid.NewGuid(),
+            CompanyId: Guid.Empty,
+            StartDate: DateOnly.FromDateTime(DateTime.Today),
+            EndDate: null,
+            Translations: blankTranslations,
+            CompanyTranslations: [],
+            KeywordNames: []
+        );
+        _modalMode = ModalMode.Create;
+    }
+
     private async Task HandleEdit(Guid experienceId)
     {
         _errorMessage = null;
-        EditingExperienceId = experienceId;
 
         var result = await detailHandler.Handle(
             new GetExperienceDetail.Query(experienceId),
@@ -62,10 +93,10 @@ partial class Experience(
         if (result.IsSuccess)
         {
             CurrentEditModel = result.Value;
+            _modalMode = ModalMode.Edit;
         }
         else
         {
-            EditingExperienceId = null;
             _errorMessage = "Failed to load experience details.";
         }
     }
@@ -85,7 +116,38 @@ partial class Experience(
                 ))
                 .ToList();
 
-            var result = await updateHandler.Handle(
+            Result result;
+            if (_modalMode == ModalMode.Create)
+            {
+                var createResult = await createHandler.Handle(
+                    new CreateExperience.Command(
+                        model.CompanyId,
+                        model.StartDate,
+                        model.EndDate,
+                        translations
+                    ),
+                    CancellationToken
+                );
+
+                if (createResult.IsSuccess)
+                {
+                    CloseEditor();
+                    await LoadExperiencesAsync();
+                    return;
+                }
+
+                if (createResult is IValidationResult createValidation)
+                {
+                    _editModal?.SetServerErrors(createValidation.Errors);
+                    return;
+                }
+
+                _errorMessage =
+                    createResult.Error?.Message ?? "Failed to create experience. Please try again.";
+                return;
+            }
+
+            result = await updateHandler.Handle(
                 new UpdateExperience.Command(
                     model.ExperienceId,
                     model.StartDate,
@@ -116,6 +178,25 @@ partial class Experience(
         }
     }
 
+    private async Task HandleDelete(Guid experienceId)
+    {
+        _errorMessage = null;
+
+        var result = await deleteHandler.Handle(
+            new DeleteExperience.Command(experienceId),
+            CancellationToken
+        );
+
+        if (result.IsSuccess)
+        {
+            await LoadExperiencesAsync();
+        }
+        else
+        {
+            _errorMessage = result.Error?.Message ?? "Failed to delete experience entry.";
+        }
+    }
+
     private void HandleCancel()
     {
         CloseEditor();
@@ -123,8 +204,16 @@ partial class Experience(
 
     private void CloseEditor()
     {
-        EditingExperienceId = null;
+        _modalMode = null;
         CurrentEditModel = null;
         _errorMessage = null;
     }
+
+    private static LanguageCode? LanguageCodeFromCulture(string culture) =>
+        culture switch
+        {
+            "en" => LanguageCode.English,
+            "fi" => LanguageCode.Finnish,
+            _ => null,
+        };
 }

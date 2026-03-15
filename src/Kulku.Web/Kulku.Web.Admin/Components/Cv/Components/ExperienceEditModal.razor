@@ -1,10 +1,11 @@
 @using System.ComponentModel.DataAnnotations
 @using Kulku.Application.Cover.Experience.Models
+@using Kulku.Application.Cover.Models
 @using Kulku.Domain
 @using SoulNETLib.Clean.Domain
 
-<ModalDialog Visible="@(Model != null && _form != null)"
-             Title="Edit Experience"
+<ModalDialog Visible="@(_form != null)"
+             Title="@(Mode == ModalMode.Create ? "Create Experience" : "Edit Experience")"
              OnClose="OnCancel">
     <ChildContent>
         @if (ErrorMessage is not null)
@@ -16,6 +17,23 @@
             <EditForm EditContext="@_editContext">
                 <DataAnnotationsValidator />
                 <ServerValidation @ref="_serverValidation" />
+
+                @if (Mode == ModalMode.Create && Companies is not null)
+                {
+                    <div class="mb-4">
+                        <label class="form-label">Company</label>
+                        <InputSelect @bind-Value="_form.CompanyId" class="form-select"
+                                     disabled="@IsSaving">
+                            <option value="">— Select company —</option>
+                            @foreach (var company in Companies)
+                            {
+                                var name = company.Translations.FirstOrDefault()?.Name ?? "Unnamed";
+                                <option value="@company.CompanyId">@name</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => _form.CompanyId)" />
+                    </div>
+                }
 
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
@@ -75,7 +93,7 @@
             }
             else
             {
-                <span>Save Changes</span>
+                <span>@(Mode == ModalMode.Create ? "Create" : "Save Changes")</span>
             }
         </button>
     </FooterContent>
@@ -84,6 +102,15 @@
 @code {
     [Parameter, EditorRequired]
     public ExperienceTranslationsModel? Model { get; set; }
+
+    [Parameter]
+    public ModalMode Mode { get; set; } = ModalMode.Edit;
+
+    /// <summary>
+    /// Available companies for the dropdown. Only used in <see cref="ModalMode.Create"/> mode.
+    /// </summary>
+    [Parameter]
+    public IReadOnlyList<CompanyTranslationsModel>? Companies { get; set; }
 
     [Parameter]
     public EventCallback<ExperienceTranslationsModel> OnSave { get; set; }
@@ -135,6 +162,7 @@
             _form = new ExperienceEditFormModel
             {
                 ExperienceId = Model.ExperienceId,
+                CompanyId = Model.CompanyId,
                 StartDate = Model.StartDate,
                 EndDate = Model.EndDate,
                 Translations = Model.Translations
@@ -156,12 +184,22 @@
         if (_form is null || Model is null || _editContext is null) return;
         if (!_editContext.Validate()) return;
 
+        if (Mode == ModalMode.Create && _form.CompanyId == Guid.Empty)
+        {
+            _serverValidation?.DisplayErrors(
+            [
+                new Error("CompanyId.Required", "Please select a company.", "CompanyId"),
+            ]);
+            return;
+        }
+
         var updatedTranslations = _form.Translations
             .Select(t => new ExperienceTranslationItem(t.Language, t.Title, t.Description))
             .ToList();
 
         var updated = Model with
         {
+            CompanyId = _form.CompanyId,
             StartDate = _form.StartDate,
             EndDate = _form.EndDate,
             Translations = updatedTranslations,
@@ -173,6 +211,7 @@
     private sealed class ExperienceEditFormModel
     {
         public Guid ExperienceId { get; init; }
+        public Guid CompanyId { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly? EndDate { get; set; }
         public List<TranslationEditModel> Translations { get; set; } = [];

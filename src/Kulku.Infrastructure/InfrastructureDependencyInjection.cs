@@ -73,6 +73,7 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IExperienceQueries, ExperienceQueries>();
         services.AddScoped<IEducationQueries, EducationQueries>();
         services.AddScoped<IInstitutionQueries, InstitutionQueries>();
+        services.AddScoped<ICompanyQueries, CompanyQueries>();
 
         return services;
     }

@@ -9,7 +9,12 @@
             <h1 class="h4 mb-1">Experience</h1>
             <div class="text-muted">Manage experience entries and translations</div>
         </div>
-        <NavLink class="btn btn-sm btn-outline-secondary" href="/cv">Back</NavLink>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-sm btn-outline-success" @onclick="HandleCreate">
+                <Icon Kind="IconKind.Plus" CssClass="me-1" />Add Experience
+            </button>
+            <NavLink class="btn btn-sm btn-outline-secondary" href="/cv">Back</NavLink>
+        </div>
     </div>
 
     @if (!_loaded)
@@ -25,21 +30,23 @@
         <div class="row g-3">
             @foreach (var exp in Experiences)
             {
-                <ExperienceCard Experience="exp" OnEdit="HandleEdit" />
+                <ExperienceCard Experience="exp" OnEdit="HandleEdit" OnDelete="HandleDelete" />
             }
         </div>
     }
 
-    @if (_errorMessage is not null && EditingExperienceId is null)
+    @if (_errorMessage is not null && _modalMode is null)
     {
         <div class="alert alert-danger mt-3">@_errorMessage</div>
     }
 </div>
 
-@if (EditingExperienceId != null && CurrentEditModel != null)
+@if (_modalMode is not null && CurrentEditModel != null)
 {
     <ExperienceEditModal @ref="_editModal"
         Model="CurrentEditModel"
+        Mode="_modalMode.Value"
+        Companies="_companies"
         OnSave="HandleSave"
         OnCancel="HandleCancel"
         IsSaving="IsSaving"

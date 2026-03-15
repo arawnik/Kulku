@@ -63,6 +63,13 @@ public static class ApplicationDependencyInjection
 
         services.AddScoped<ICommandHandler<UpdateExperience.Command>, UpdateExperience.Handler>();
 
+        services.AddScoped<ICommandHandler<DeleteExperience.Command>, DeleteExperience.Handler>();
+
+        services.AddScoped<
+            ICommandHandler<CreateExperience.Command, Guid>,
+            CreateExperience.Handler
+        >();
+
         services.AddScoped<
             IQueryHandler<GetExperienceDetail.Query, ExperienceTranslationsModel?>,
             GetExperienceDetail.Handler

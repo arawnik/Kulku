@@ -50,7 +50,8 @@ partial class Education(
                 [
                     .. result
                         .Value.OrderBy(m => m.EndDate.HasValue)
-                        .ThenByDescending(m => m.EndDate),
+                        .ThenByDescending(m => m.EndDate)
+                        .ThenByDescending(m => m.StartDate),
                 ]
                 : [];
 

@@ -67,6 +67,10 @@
                             @onclick="HandleEditClick">
                         <Icon Kind="IconKind.Pencil" Size="14" CssClass="me-1" />Edit
                     </button>
+                    <button type="button" class="btn btn-sm btn-outline-danger"
+                            @onclick="() => _confirmingDelete = true">
+                        <Icon Kind="IconKind.Trash" Size="14" CssClass="me-1" />Delete
+                    </button>
                 </div>
                 <small class="text-muted">
                     @translations.Count translation(s)
@@ -76,6 +80,15 @@
     </div>
 </div>
 
+<ConfirmDialog Visible="_confirmingDelete"
+               Title="Delete Experience"
+               Message="Are you sure you want to delete this experience entry? This action cannot be undone."
+               ButtonText="Delete"
+               ButtonStyle="danger"
+               ButtonIcon="IconKind.Trash"
+               OnConfirm="HandleConfirmDelete"
+               OnCancel="() => _confirmingDelete = false" />
+
 @code {
     [Parameter, EditorRequired]
     public ExperienceTranslationsModel? Experience { get; set; }
@@ -83,11 +96,25 @@
     [Parameter]
     public EventCallback<Guid> OnEdit { get; set; }
 
+    [Parameter]
+    public EventCallback<Guid> OnDelete { get; set; }
+
+    private bool _confirmingDelete;
+
     private async Task HandleEditClick()
     {
         if (Experience is not null)
         {
             await OnEdit.InvokeAsync(Experience.ExperienceId);
+        }
+    }
+
+    private async Task HandleConfirmDelete()
+    {
+        if (Experience is not null)
+        {
+            _confirmingDelete = false;
+            await OnDelete.InvokeAsync(Experience.ExperienceId);
         }
     }
 }
