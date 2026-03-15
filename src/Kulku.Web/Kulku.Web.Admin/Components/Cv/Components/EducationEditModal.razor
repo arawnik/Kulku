@@ -2,11 +2,10 @@
 @using Kulku.Application.Cover.Education.Models
 @using Kulku.Application.Cover.Models
 @using Kulku.Domain
-@using Kulku.Web.Admin.Components.Shared
 @using SoulNETLib.Clean.Domain
 
-<ModalDialog Visible="@(Model != null && _form != null)"
-             Title="Edit Education"
+<ModalDialog Visible="@(_form != null)"
+             Title="@(Mode == ModalMode.Create ? "Create Education" : "Edit Education")"
              OnClose="OnCancel">
     <ChildContent>
         @if (ErrorMessage is not null)
@@ -18,6 +17,23 @@
             <EditForm EditContext="@_editContext">
                 <DataAnnotationsValidator />
                 <ServerValidation @ref="_serverValidation" />
+
+                @if (Mode == ModalMode.Create && Institutions is not null)
+                {
+                    <div class="mb-4">
+                        <label class="form-label">Institution</label>
+                        <InputSelect @bind-Value="_form.InstitutionId" class="form-select"
+                                     disabled="@IsSaving">
+                            <option value="">— Select institution —</option>
+                            @foreach (var inst in Institutions)
+                            {
+                                var name = inst.Translations.FirstOrDefault()?.Name ?? "Unnamed";
+                                <option value="@inst.InstitutionId">@name</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => _form.InstitutionId)" />
+                    </div>
+                }
 
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
@@ -77,7 +93,7 @@
             }
             else
             {
-                <span>Save Changes</span>
+                <span>@(Mode == ModalMode.Create ? "Create" : "Save Changes")</span>
             }
         </button>
     </FooterContent>
@@ -86,6 +102,15 @@
 @code {
     [Parameter, EditorRequired]
     public EducationTranslationsModel? Model { get; set; }
+
+    [Parameter]
+    public ModalMode Mode { get; set; } = ModalMode.Edit;
+
+    /// <summary>
+    /// Available institutions for the dropdown. Only used in <see cref="ModalMode.Create"/> mode.
+    /// </summary>
+    [Parameter]
+    public IReadOnlyList<InstitutionTranslationsModel>? Institutions { get; set; }
 
     [Parameter]
     public EventCallback<EducationTranslationsModel> OnSave { get; set; }
@@ -136,7 +161,7 @@
             _lastModelId = Model.EducationId;
             _form = new EducationEditFormModel
             {
-                EducationId = Model.EducationId,
+                InstitutionId = Model.InstitutionId,
                 StartDate = Model.StartDate,
                 EndDate = Model.EndDate,
                 Translations = Model.Translations
@@ -158,12 +183,22 @@
         if (_form is null || Model is null || _editContext is null) return;
         if (!_editContext.Validate()) return;
 
+        if (Mode == ModalMode.Create && _form.InstitutionId == Guid.Empty)
+        {
+            _serverValidation?.DisplayErrors(
+            [
+                new Error("InstitutionId.Required", "Please select an institution.", "InstitutionId"),
+            ]);
+            return;
+        }
+
         var updatedTranslations = _form.Translations
             .Select(t => new EducationTranslationItem(t.Language, t.Title, t.Description))
             .ToList();
 
         var updated = Model with
         {
+            InstitutionId = _form.InstitutionId,
             StartDate = _form.StartDate,
             EndDate = _form.EndDate,
             Translations = updatedTranslations,
@@ -174,7 +209,7 @@
 
     private sealed class EducationEditFormModel
     {
-        public Guid EducationId { get; init; }
+        public Guid InstitutionId { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly? EndDate { get; set; }
         public List<TranslationEditModel> Translations { get; set; } = [];

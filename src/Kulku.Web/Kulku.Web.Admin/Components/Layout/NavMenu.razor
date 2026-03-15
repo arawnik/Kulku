@@ -9,7 +9,7 @@
     </NavLink>
 
     <button type="button" class="btn btn-sm btn-outline-light kulku-sidebar-toggle" title="Toggle sidebar" @onclick="ToggleCollapsed">
-      <span class="bi bi-arrow-bar-left-nav-menu kulku-toggle-icon" aria-hidden="true"></span>
+      <Icon Kind="IconKind.ArrowBarLeft" Size="20" CssClass="kulku-toggle-icon" />
       <span class="visually-hidden">Toggle sidebar</span>
     </button>
   </div>
@@ -19,35 +19,35 @@
   <ul class="nav nav-pills flex-column mb-auto">
     <li class="nav-item">
       <NavLink class="nav-link text-white kulku-navlink" href="" Match="NavLinkMatch.All">
-        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span>
+        <Icon Kind="IconKind.House" Size="20" />
         <span class="kulku-link-text">Home</span>
       </NavLink>
     </li>
 
     <li class="nav-item">
       <NavLink class="nav-link text-white kulku-navlink" href="developer">
-        <span class="bi bi-lightbulb-nav-menu" aria-hidden="true"></span>
+        <Icon Kind="IconKind.Lightbulb" Size="20" />
         <span class="kulku-link-text">Developer</span>
       </NavLink>
     </li>
 
     <li class="nav-item">
       <NavLink class="nav-link text-white kulku-navlink" href="cv">
-        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>
+        <Icon Kind="IconKind.PlusSquare" Size="20" />
         <span class="kulku-link-text">Cv</span>
       </NavLink>
     </li>
 
     <li class="nav-item">
       <NavLink class="nav-link text-white kulku-navlink" href="weather">
-        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>
+        <Icon Kind="IconKind.ListNested" Size="20" />
         <span class="kulku-link-text">Weather</span>
       </NavLink>
     </li>
 
     <li class="nav-item">
       <NavLink class="nav-link text-white kulku-navlink" href="auth">
-        <span class="bi bi-lock-nav-menu" aria-hidden="true"></span>
+        <Icon Kind="IconKind.Lock" Size="20" />
         <span class="kulku-link-text">Auth Required</span>
       </NavLink>
     </li>
@@ -62,8 +62,8 @@
            href="#"
            data-bs-toggle="dropdown"
            aria-expanded="false">
-          <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span>
-          <strong class="kulku-link-text">@context.User.Identity?.Name</strong>
+           <Icon Kind="IconKind.PersonFill" Size="20" />
+           <strong class="kulku-link-text">@context.User.Identity?.Name</strong>
         </a>
 
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
@@ -86,13 +86,13 @@
       <ul class="nav nav-pills flex-column">
         <li class="nav-item">
           <NavLink class="nav-link text-white kulku-navlink" href="Account/Login">
-            <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span>
+            <Icon Kind="IconKind.PersonBadge" Size="20" />
             <span class="kulku-link-text">Login</span>
           </NavLink>
         </li>
         <li class="nav-item">
           <NavLink class="nav-link text-white kulku-navlink" href="Account/Register">
-            <span class="bi bi-person-nav-menu" aria-hidden="true"></span>
+            <Icon Kind="IconKind.Person" Size="20" />
             <span class="kulku-link-text">Register</span>
           </NavLink>
         </li>

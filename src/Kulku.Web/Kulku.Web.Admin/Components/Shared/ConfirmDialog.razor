@@ -1,0 +1,79 @@
+@namespace Kulku.Web.Admin.Components.Shared
+
+@if (Visible)
+{
+    <div class="modal d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h6 class="modal-title">@Title</h6>
+                    <button type="button" class="btn-close" @onclick="HandleCancel"></button>
+                </div>
+                <div class="modal-body py-3">
+                    <p class="mb-0">@Message</p>
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-sm btn-secondary" @onclick="HandleCancel">
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-sm btn-@ButtonStyle" @onclick="HandleConfirm">
+                        <Icon Kind="ButtonIcon" Size="14" CssClass="me-1" />@ButtonText
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    /// <summary>
+    /// Controls whether the dialog is visible.
+    /// </summary>
+    [Parameter]
+    public bool Visible { get; set; }
+
+    /// <summary>
+    /// Title shown in the dialog header.
+    /// </summary>
+    [Parameter]
+    public string Title { get; set; } = "Confirm";
+
+    /// <summary>
+    /// Message body displayed in the dialog.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public string Message { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Text on the confirm button.
+    /// </summary>
+    [Parameter]
+    public string ButtonText { get; set; } = "Confirm";
+
+    /// <summary>
+    /// Bootstrap color class for the confirm button (e.g. "danger", "primary").
+    /// </summary>
+    [Parameter]
+    public string ButtonStyle { get; set; } = "danger";
+
+    /// <summary>
+    /// Icon displayed on the confirm button.
+    /// </summary>
+    [Parameter]
+    public IconKind ButtonIcon { get; set; } = IconKind.Check;
+
+    /// <summary>
+    /// Fired when the user confirms the action.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnConfirm { get; set; }
+
+    /// <summary>
+    /// Fired when the user cancels or closes the dialog.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    private async Task HandleConfirm() => await OnConfirm.InvokeAsync();
+    private async Task HandleCancel() => await OnCancel.InvokeAsync();
+}
