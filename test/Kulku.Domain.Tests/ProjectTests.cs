@@ -12,7 +12,7 @@ public class ProjectTests
         {
             Id = Guid.NewGuid(),
             Url = new Uri("https://example.com"),
-            ImageUrl = new Uri("https://example.com/image.png"),
+            ImageUrl = "image.png",
         };
 
         // Assert
@@ -33,7 +33,7 @@ public class ProjectTests
         {
             Id = Guid.NewGuid(),
             Url = new Uri("https://example.com"),
-            ImageUrl = new Uri("https://example.com/image.png"),
+            ImageUrl = "image.png",
         };
 
         // Assert

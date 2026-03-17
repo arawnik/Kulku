@@ -44,6 +44,22 @@ public static class ApplicationDependencyInjection
         >();
 
         services.AddScoped<
+            IQueryHandler<GetProjectTranslations.Query, IReadOnlyList<ProjectTranslationsModel>>,
+            GetProjectTranslations.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetProjectDetail.Query, ProjectTranslationsModel?>,
+            GetProjectDetail.Handler
+        >();
+
+        services.AddScoped<ICommandHandler<UpdateProject.Command>, UpdateProject.Handler>();
+
+        services.AddScoped<ICommandHandler<DeleteProject.Command>, DeleteProject.Handler>();
+
+        services.AddScoped<ICommandHandler<CreateProject.Command, Guid>, CreateProject.Handler>();
+
+        services.AddScoped<
             IQueryHandler<GetIntroduction.Query, IntroductionModel?>,
             GetIntroduction.Handler
         >();

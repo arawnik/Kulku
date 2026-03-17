@@ -1,0 +1,295 @@
+@using System.ComponentModel.DataAnnotations
+@using Kulku.Application.Projects.Models
+@using Kulku.Domain
+@using Kulku.Domain.Projects
+@using SoulNETLib.Clean.Domain
+
+<ModalDialog Visible="@(_form != null)"
+			 Title="@(Mode == ModalMode.Create ? "Create Project" : "Edit Project")"
+			 Size="ModalSize.Large"
+			 OnClose="OnCancel">
+	<ChildContent>
+		@if (ErrorMessage is not null)
+		{
+			<div class="alert alert-danger py-2 mb-3">@ErrorMessage</div>
+		}
+		@if (_form != null)
+		{
+			<EditForm EditContext="@_editContext">
+				<DataAnnotationsValidator />
+				<ServerValidation @ref="_serverValidation" />
+
+				<div class="row g-3 mb-4">
+					<div class="col-md-5">
+						<label class="form-label">Project URL</label>
+						<InputText @bind-Value="_form.Url" class="form-control"
+								   placeholder="https://..." disabled="@IsSaving" />
+						<ValidationMessage For="@(() => _form.Url)" />
+					</div>
+					<div class="col-md-5">
+						<label class="form-label">Image filename</label>
+						<InputText @bind-Value="_form.ImageUrl" class="form-control"
+								   placeholder="Project.webp" disabled="@IsSaving" />
+						<ValidationMessage For="@(() => _form.ImageUrl)" />
+					</div>
+					<div class="col-md-2">
+						<label class="form-label">Order</label>
+						<InputNumber @bind-Value="_form.Order" class="form-control"
+									 disabled="@IsSaving" />
+					</div>
+				</div>
+
+				<h6 class="mb-3">Translations</h6>
+
+				@for (var i = 0; i < _form.Translations.Count; i++)
+				{
+					var index = i;
+					var trans = _form.Translations[index];
+
+					<div class="card mb-3">
+						<div class="card-header py-2">
+							<strong>@LanguageDisplayHelper.DisplayName(trans.Language)</strong>
+						</div>
+						<div class="card-body">
+							<div class="mb-3">
+								<label class="form-label">Name</label>
+								<InputText @bind-Value="_form.Translations[index].Name"
+										   class="form-control" disabled="@IsSaving" />
+								<ValidationMessage For="@(() => _form.Translations[index].Name)" />
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Info <span class="text-muted fw-normal">(short tagline)</span></label>
+								<InputText @bind-Value="_form.Translations[index].Info"
+										   class="form-control" disabled="@IsSaving" />
+							</div>
+							<div>
+								<div class="d-flex align-items-center gap-2 mb-1">
+									<label class="form-label mb-0">Description</label>
+									<div class="btn-group btn-group-sm" role="group">
+										<button type="button"
+												class="btn @(_previewLanguage == trans.Language ? "btn-outline-secondary" : "btn-secondary") btn-sm py-0 px-2"
+												@onclick="() => _previewLanguage = null"
+												@onclick:preventDefault>
+											Write
+										</button>
+										<button type="button"
+												class="btn @(_previewLanguage == trans.Language ? "btn-secondary" : "btn-outline-secondary") btn-sm py-0 px-2"
+												@onclick="() => _previewLanguage = trans.Language"
+												@onclick:preventDefault>
+											Preview
+										</button>
+									</div>
+								</div>
+								@if (_previewLanguage == trans.Language)
+								{
+									<div class="form-control bg-body-secondary overflow-auto" style="min-height:6rem;max-height:16rem;">
+										<MarkdownView Content="@_form.Translations[index].Description" />
+									</div>
+								}
+								else
+								{
+									<InputTextArea @bind-Value="_form.Translations[index].Description"
+												   class="form-control" rows="4"
+												   disabled="@IsSaving" />
+								}
+								<div class="form-text">Supports Markdown syntax. HTML tags are stripped for safety.</div>
+							</div>
+						</div>
+					</div>
+				}
+
+				@if (Keywords is not null && Keywords.Count > 0)
+				{
+					<h6 class="mb-3">Keywords</h6>
+
+					@foreach (var group in Keywords.GroupBy(k => k.Type).OrderBy(g => g.Key))
+					{
+						<div class="mb-3">
+							<strong class="small text-muted">@group.Key</strong>
+							<div class="row mt-1">
+								@foreach (var kw in group)
+								{
+									var kwId = kw.Id;
+									var checkboxId = $"kw-{kwId}";
+									var isChecked = _form.SelectedKeywordIds.Contains(kwId);
+
+									<div class="col-md-4 col-lg-3">
+										<div class="form-check">
+											<input type="checkbox" id="@checkboxId"
+												   class="form-check-input"
+												   checked="@isChecked"
+												   disabled="@IsSaving"
+												   @onchange="(e) => ToggleKeyword(kwId, (bool)(e.Value ?? false))" />
+											<label for="@checkboxId" class="form-check-label small">@kw.Name</label>
+										</div>
+									</div>
+								}
+							</div>
+						</div>
+					}
+				}
+			</EditForm>
+		}
+	</ChildContent>
+	<FooterContent>
+		<button type="button" class="btn btn-secondary"
+				@onclick="OnCancel" disabled="@IsSaving">
+			Cancel
+		</button>
+		<button type="button" class="btn btn-primary"
+				@onclick="HandleSubmit" disabled="@IsSaving">
+			@if (IsSaving)
+			{
+				<span class="spinner-border spinner-border-sm me-1"></span>
+				<span>Saving…</span>
+			}
+			else
+			{
+				<span>@(Mode == ModalMode.Create ? "Create" : "Save Changes")</span>
+			}
+		</button>
+	</FooterContent>
+</ModalDialog>
+
+@code {
+	[Parameter, EditorRequired]
+	public ProjectTranslationsModel? Model { get; set; }
+
+	[Parameter]
+	public ModalMode Mode { get; set; } = ModalMode.Edit;
+
+	/// <summary>
+	/// All available keywords for the checkbox picker.
+	/// </summary>
+	[Parameter]
+	public IReadOnlyList<KeywordPickerModel>? Keywords { get; set; }
+
+	[Parameter]
+	public EventCallback<ProjectTranslationsModel> OnSave { get; set; }
+
+	[Parameter]
+	public EventCallback OnCancel { get; set; }
+
+	[Parameter]
+	public bool IsSaving { get; set; }
+
+	[Parameter]
+	public string? ErrorMessage { get; set; }
+
+	private ProjectEditFormModel? _form;
+	private EditContext? _editContext;
+	private ServerValidation? _serverValidation;
+	private Guid? _lastModelId;
+	private LanguageCode? _previewLanguage;
+
+	public void SetServerErrors(IEnumerable<Error> errors)
+	{
+		_serverValidation?.DisplayErrors(errors);
+	}
+
+	protected override void OnParametersSet()
+	{
+		if (Model is null)
+		{
+			_form = null;
+			_editContext = null;
+			_lastModelId = null;
+			_previewLanguage = null;
+			return;
+		}
+
+		if (_lastModelId != Model.ProjectId)
+		{
+			_lastModelId = Model.ProjectId;
+			_previewLanguage = null;
+			_form = new ProjectEditFormModel
+			{
+				ProjectId = Model.ProjectId,
+				Url = Model.Url.ToString(),
+				ImageUrl = Model.ImageUrl,
+				Order = Model.Order,
+				SelectedKeywordIds = [.. Model.KeywordIds],
+				Translations = Model.Translations
+					.Select(t => new TranslationEditModel
+					{
+						Language = t.Language,
+						Name = t.Name,
+						Info = t.Info,
+						Description = t.Description,
+					})
+					.ToList(),
+			};
+			_editContext = new EditContext(_form);
+			_editContext.SetFieldCssClassProvider(new BootstrapFieldCssClassProvider());
+		}
+	}
+
+	private void ToggleKeyword(Guid keywordId, bool isChecked)
+	{
+		if (_form is null) return;
+
+		if (isChecked && !_form.SelectedKeywordIds.Contains(keywordId))
+			_form.SelectedKeywordIds.Add(keywordId);
+		else if (!isChecked)
+			_form.SelectedKeywordIds.Remove(keywordId);
+	}
+
+	private async Task HandleSubmit()
+	{
+		if (_form is null || Model is null || _editContext is null) return;
+		if (!_editContext.Validate()) return;
+
+		if (!Uri.TryCreate(_form.Url, UriKind.Absolute, out var parsedUrl))
+		{
+			_serverValidation?.DisplayErrors(
+			[
+				new Error("Url.Invalid", "Please enter a valid URL.", "Url"),
+			]);
+			return;
+		}
+
+		var updatedTranslations = _form.Translations
+			.Select(t => new ProjectTranslationItem(t.Language, t.Name, t.Info, t.Description))
+			.ToList();
+
+		var updated = Model with
+		{
+			Url = parsedUrl,
+			ImageUrl = _form.ImageUrl.Trim(),
+			Order = _form.Order,
+			Translations = updatedTranslations,
+			KeywordIds = [.. _form.SelectedKeywordIds],
+		};
+
+		await OnSave.InvokeAsync(updated);
+	}
+
+	private sealed class ProjectEditFormModel
+	{
+		public Guid ProjectId { get; init; }
+
+		[Required(ErrorMessage = "Project URL is required.")]
+		public string Url { get; set; } = string.Empty;
+
+		[Required(ErrorMessage = "Image filename is required.")]
+		public string ImageUrl { get; set; } = string.Empty;
+
+		public int Order { get; set; } = 1;
+
+		public HashSet<Guid> SelectedKeywordIds { get; set; } = [];
+
+		public List<TranslationEditModel> Translations { get; set; } = [];
+	}
+
+	private sealed class TranslationEditModel
+	{
+		public LanguageCode Language { get; init; }
+
+		[Required(ErrorMessage = "Name is required.")]
+		public string Name { get; set; } = string.Empty;
+
+		public string Info { get; set; } = string.Empty;
+
+		public string Description { get; set; } = string.Empty;
+	}
+}

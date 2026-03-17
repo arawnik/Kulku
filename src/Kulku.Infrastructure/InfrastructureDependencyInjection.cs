@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Kulku.Application.Abstractions.Rendering;
 using Kulku.Application.Abstractions.Security;
 using Kulku.Application.Cover.Education.Ports;
 using Kulku.Application.Cover.Experience.Ports;
@@ -7,6 +8,7 @@ using Kulku.Application.Cover.Ports;
 using Kulku.Application.Projects.Ports;
 using Kulku.Domain.Repositories;
 using Kulku.Infrastructure.Queries;
+using Kulku.Infrastructure.Rendering;
 using Kulku.Infrastructure.Repositories;
 using Kulku.Infrastructure.Security;
 using Kulku.Persistence;
@@ -53,6 +55,7 @@ public static class InfrastructureDependencyInjection
         services.AddHttpClient<IRecaptchaValidator, RecaptchaValidator>();
 
         // Providers
+        services.AddSingleton<IMarkdownRenderer, MarkdownRenderer>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Repositories

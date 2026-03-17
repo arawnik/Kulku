@@ -6,6 +6,6 @@ public sealed record ProjectModel(
     string? Description,
     Uri Url,
     int Order,
-    Uri ImageUrl,
+    string ImageUrl,
     IReadOnlyList<KeywordModel> Keywords
 );

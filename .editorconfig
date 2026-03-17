@@ -176,3 +176,8 @@ dotnet_diagnostic.CA1034.severity = none
 
 # CA1308: Normalize strings to uppercase
 dotnet_diagnostic.CA1308.severity = none
+
+# CA1054/CA1056: URI-like properties/parameters should not be strings
+# ImageUrl is intentionally stored as a filename string, not a System.Uri.
+dotnet_diagnostic.CA1054.severity = none
+dotnet_diagnostic.CA1056.severity = none

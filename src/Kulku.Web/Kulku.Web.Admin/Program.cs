@@ -96,6 +96,31 @@ app.UseHttpsRedirection();
 
 app.UseAntiforgery();
 
+// Serve project images from the client's public directory when available (dev convenience).
+// In production containers this directory won't exist, and the card falls back gracefully.
+var clientProjectImages = Path.GetFullPath(
+    Path.Combine(
+        app.Environment.ContentRootPath,
+        "..",
+        "kulku.web.client",
+        "public",
+        "static",
+        "projects"
+    )
+);
+if (Directory.Exists(clientProjectImages))
+{
+    app.UseStaticFiles(
+        new StaticFileOptions
+        {
+            FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+                clientProjectImages
+            ),
+            RequestPath = "/static/projects",
+        }
+    );
+}
+
 app.MapStaticAssets();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 

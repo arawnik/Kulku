@@ -40,6 +40,24 @@ public class KeywordQueries(AppDbContext context) : IKeywordQueries
         return result;
     }
 
+    public async Task<IReadOnlyList<KeywordPickerModel>> ListAllForPickerAsync(
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await _context
+            .Keywords.AsNoTracking()
+            .OrderBy(k => k.Type)
+            .ThenBy(k => k.Order)
+            .Select(k => new KeywordPickerModel(
+                k.Id,
+                k.Translations.Select(t => t.Name).FirstOrDefault() ?? string.Empty,
+                k.Type
+            ))
+            .ToListAsync(cancellationToken);
+
+        return result;
+    }
+
     private IQueryable<KeywordModel> BuildKeywordQuery(
         LanguageCode language,
         IQueryable<Keyword> baseQuery

@@ -1,3 +1,4 @@
+using Kulku.Application.Abstractions.Rendering;
 using Kulku.Application.Projects.Models;
 using Kulku.Application.Projects.Ports;
 using Kulku.Domain;
@@ -6,9 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kulku.Infrastructure.Queries;
 
-public class ProjectQueries(AppDbContext context) : IProjectQueries
+public class ProjectQueries(AppDbContext context, IMarkdownRenderer markdownRenderer)
+    : IProjectQueries
 {
     private readonly AppDbContext _context = context;
+    private readonly IMarkdownRenderer _markdownRenderer = markdownRenderer;
 
     public async Task<IReadOnlyList<ProjectModel>> ListAllAsync(
         LanguageCode language,
@@ -64,6 +67,66 @@ public class ProjectQueries(AppDbContext context) : IProjectQueries
                     .ToList()
             ))
             .ToListAsync(cancellationToken);
+
+        // Convert markdown descriptions to rendered HTML for the public API.
+        return
+        [
+            .. result.Select(p => p with { Description = _markdownRenderer.ToHtml(p.Description) }),
+        ];
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<ProjectTranslationsModel>> ListAllWithTranslationsAsync(
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await _context
+            .Projects.AsNoTracking()
+            .OrderBy(p => p.Order)
+            .Select(p => new ProjectTranslationsModel(
+                ProjectId: p.Id,
+                Url: p.Url,
+                ImageUrl: p.ImageUrl,
+                Order: p.Order,
+                Translations: p.Translations.Select(t => new ProjectTranslationItem(
+                        t.Language,
+                        t.Name,
+                        t.Info,
+                        t.Description ?? string.Empty
+                    ))
+                    .ToList(),
+                KeywordIds: p.ProjectKeywords.Select(pk => pk.KeywordId).ToList()
+            ))
+            .ToListAsync(cancellationToken);
+
+        return result;
+    }
+
+    /// <inheritdoc />
+    public async Task<ProjectTranslationsModel?> FindByIdWithTranslationsAsync(
+        Guid projectId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await _context
+            .Projects.AsNoTracking()
+            .Where(p => p.Id == projectId)
+            .Select(p => new ProjectTranslationsModel(
+                ProjectId: p.Id,
+                Url: p.Url,
+                ImageUrl: p.ImageUrl,
+                Order: p.Order,
+                Translations: p.Translations.Select(t => new ProjectTranslationItem(
+                        t.Language,
+                        t.Name,
+                        t.Info,
+                        t.Description ?? string.Empty
+                    ))
+                    .ToList(),
+                KeywordIds: p.ProjectKeywords.Select(pk => pk.KeywordId).ToList()
+            ))
+            .FirstOrDefaultAsync(cancellationToken);
+
         return result;
     }
 }

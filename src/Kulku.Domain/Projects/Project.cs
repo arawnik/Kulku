@@ -27,9 +27,10 @@ public class Project : ITranslatableEntity<ProjectTranslation>
     public int Order { get; set; } = 1;
 
     /// <summary>
-    /// URL to an image representing the project, such as a screenshot or logo.
+    /// Image filename or path representing the project (e.g. "Mietekallio.webp").
+    /// Presentation layers resolve this to a full URL using their own conventions.
     /// </summary>
-    public required Uri ImageUrl { get; set; }
+    public required string ImageUrl { get; set; }
 
     /// <summary>
     /// A collection of localized translations for this project record.

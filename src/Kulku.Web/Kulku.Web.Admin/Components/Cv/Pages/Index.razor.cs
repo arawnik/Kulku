@@ -18,26 +18,6 @@ partial class Index(
     ILanguageContext languageContext
 )
 {
-    private readonly IQueryHandler<GetIntroduction.Query, IntroductionModel?> _introHandler =
-        introHandler;
-    private readonly IQueryHandler<
-        GetKeywords.Query,
-        IReadOnlyList<KeywordModel>
-    > _keywordsHandler = keywordsHandler;
-    private readonly IQueryHandler<
-        GetExperiences.Query,
-        IReadOnlyList<ExperienceModel>
-    > _experienceHandler = experienceHandler;
-    private readonly IQueryHandler<
-        GetEducations.Query,
-        IReadOnlyList<EducationModel>
-    > _educationHandler = educationHandler;
-    private readonly IQueryHandler<
-        GetProjects.Query,
-        IReadOnlyList<ProjectModel>
-    > _projectsHandler = projectsHandler;
-    private readonly ILanguageContext _languageContext = languageContext;
-
     private IntroductionModel? IntroductionPreview { get; set; }
     private IReadOnlyList<KeywordModel> LanguageKeywords { get; set; } = [];
     private IReadOnlyList<KeywordModel> SkillKeywords { get; set; } = [];
@@ -50,36 +30,34 @@ partial class Index(
 
     protected override async Task OnInitializedAsync()
     {
-        var lang = _languageContext.Current;
+        var lang = languageContext.Current;
 
-        var ires = await _introHandler.Handle(new GetIntroduction.Query(lang), CancellationToken);
+        var ires = await introHandler.Handle(new GetIntroduction.Query(lang), CancellationToken);
         if (ires.IsSuccess)
-        {
             IntroductionPreview = ires.Value;
-        }
 
-        var lres = await _keywordsHandler.Handle(
+        var lres = await keywordsHandler.Handle(
             new GetKeywords.Query(Domain.Projects.KeywordType.Language, lang),
             CancellationToken
         );
         if (lres.IsSuccess)
             LanguageKeywords = lres.Value ?? [];
 
-        var sres = await _keywordsHandler.Handle(
+        var sres = await keywordsHandler.Handle(
             new GetKeywords.Query(Domain.Projects.KeywordType.Skill, lang),
             CancellationToken
         );
         if (sres.IsSuccess)
             SkillKeywords = sres.Value ?? [];
 
-        var tres = await _keywordsHandler.Handle(
+        var tres = await keywordsHandler.Handle(
             new GetKeywords.Query(Domain.Projects.KeywordType.Technology, lang),
             CancellationToken
         );
         if (tres.IsSuccess)
             TechnologyKeywords = tres.Value ?? [];
 
-        var eres = await _experienceHandler.Handle(
+        var eres = await experienceHandler.Handle(
             new GetExperiences.Query(lang),
             CancellationToken
         );
@@ -92,10 +70,7 @@ partial class Index(
                     .ThenByDescending(m => m.StartDate),
             ];
 
-        var edres = await _educationHandler.Handle(
-            new GetEducations.Query(lang),
-            CancellationToken
-        );
+        var edres = await educationHandler.Handle(new GetEducations.Query(lang), CancellationToken);
         if (edres.IsSuccess)
             Educations =
             [
@@ -105,10 +80,15 @@ partial class Index(
                     .ThenByDescending(m => m.StartDate),
             ];
 
-        var pres = await _projectsHandler.Handle(new GetProjects.Query(lang), CancellationToken);
+        var pres = await projectsHandler.Handle(new GetProjects.Query(lang), CancellationToken);
         if (pres.IsSuccess)
             Projects = pres.Value ?? [];
 
         _loaded = true;
     }
+
+    private static string ResolveProjectImage(string imageUrl) =>
+        Uri.TryCreate(imageUrl, UriKind.Absolute, out _)
+            ? imageUrl
+            : $"/static/projects/{imageUrl}";
 }

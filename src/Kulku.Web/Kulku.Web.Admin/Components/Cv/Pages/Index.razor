@@ -1,189 +1,238 @@
 @page "/cv"
 @inject NavigationManager Nav
 
-<PageTitle>CV</PageTitle>
+<PageTitle>CV Overview</PageTitle>
 
 <div class="container-fluid py-4">
-    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-4">
-        <div>
-            <h1 class="h3 mb-1">CV Overview</h1>
-            <div class="text-muted">Read-only views. Editing happens in the admin area.</div>
-        </div>
+	<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-4">
+		<div>
+			<h1 class="h3 mb-1">CV Overview</h1>
+			<div class="text-muted">Quick preview of all CV sections.</div>
+		</div>
+	</div>
 
-        <div class="d-flex gap-2">
-            <NavLink class="btn btn-sm btn-outline-secondary" href="/admin/cv">Admin CV</NavLink>
-        </div>
-    </div>
+	@if (!_loaded)
+	{
+		<div class="text-muted">Loading…</div>
+	}
+	else
+	{
+		<div class="row g-3">
+			@* ── Introduction ── *@
+			<div class="col-12 col-lg-6">
+				<div class="card shadow-sm h-100">
+					<div class="card-header d-flex justify-content-between align-items-center">
+						<strong>Introduction</strong>
+						<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/introduction">Open</NavLink>
+					</div>
+					<div class="card-body">
+						@if (IntroductionPreview is null)
+						{
+							<div class="text-muted">No active introduction.</div>
+						}
+						else
+						{
+							<div class="d-flex gap-3 align-items-start">
+								<img src="@IntroductionPreview.SmallAvatarUrl"
+									 alt="Avatar" class="rounded-circle flex-shrink-0"
+									 style="width:48px;height:48px;object-fit:cover;"
+									 onerror="this.style.display='none'" />
+								<div class="min-w-0">
+									<h6 class="mb-0">@IntroductionPreview.Title</h6>
+									<div class="text-muted small">@IntroductionPreview.Tagline</div>
+									<div class="mt-2">@((new MarkupString(IntroductionPreview.Content)))</div>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+			</div>
 
-    <div class="row g-3">
-        <div class="col-12 col-lg-6">
-            <div class="card shadow-sm h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <strong>Introduction</strong>
-                    <NavLink class="btn btn-sm btn-outline-secondary" href="/cv/introduction">Open</NavLink>
-                </div>
-                <div class="card-body text-muted">
-                    @if (!_loaded)
-                    {
-                        <div class="text-muted">Loading…</div>
-                    }
-                    else if (IntroductionPreview is null)
-                    {
-                        <div class="text-muted">No active introduction.</div>
-                    }
-                    else
-                    {
-                        <h5 class="mb-1">@IntroductionPreview.Title</h5>
-                        <div class="text-muted">@IntroductionPreview.Tagline</div>
-                        <div class="mt-2">@((new MarkupString(IntroductionPreview.Content)))</div>
-                    }
-                </div>
-            </div>
-        </div>
+			@* ── Keywords ── *@
+			<div class="col-12 col-lg-6">
+				<div class="card shadow-sm h-100">
+					<div class="card-header d-flex justify-content-between align-items-center">
+						<strong>Keywords</strong>
+						<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/keywords">Open</NavLink>
+					</div>
+					<div class="card-body">
+						@if (!LanguageKeywords.Any() && !SkillKeywords.Any() && !TechnologyKeywords.Any())
+						{
+							<div class="text-muted">No keywords available.</div>
+						}
+						else
+						{
+							@if (LanguageKeywords.Any())
+							{
+								<div class="mb-2">
+									<strong class="small text-muted">Languages</strong>
+									<div class="d-flex flex-wrap gap-1 mt-1">
+										@foreach (var kw in LanguageKeywords)
+										{
+											<span class="badge bg-secondary bg-opacity-25 text-body-emphasis">@kw.Name</span>
+										}
+									</div>
+								</div>
+							}
+							@if (SkillKeywords.Any())
+							{
+								<div class="mb-2">
+									<strong class="small text-muted">Skills</strong>
+									<div class="d-flex flex-wrap gap-1 mt-1">
+										@foreach (var kw in SkillKeywords)
+										{
+											<span class="badge bg-secondary bg-opacity-25 text-body-emphasis">@kw.Name</span>
+										}
+									</div>
+								</div>
+							}
+							@if (TechnologyKeywords.Any())
+							{
+								<div>
+									<strong class="small text-muted">Technologies</strong>
+									<div class="d-flex flex-wrap gap-1 mt-1">
+										@foreach (var kw in TechnologyKeywords)
+										{
+											<span class="badge bg-secondary bg-opacity-25 text-body-emphasis">@kw.Name</span>
+										}
+									</div>
+								</div>
+							}
+						}
+					</div>
+				</div>
+			</div>
 
-        <div class="col-12 col-lg-6">
-            <div class="card shadow-sm h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <strong>Keywords</strong>
-                    <NavLink class="btn btn-sm btn-outline-secondary" href="/cv/keywords">Open</NavLink>
-                </div>
-                <div class="card-body text-muted">
-                @if (!_loaded)
-                {
-                    <div class="text-muted">Loading…</div>
-                }
-                else
-                {
-                    @if (!LanguageKeywords.Any() && !SkillKeywords.Any() && !TechnologyKeywords.Any())
-                    {
-                        <div class="text-muted">No keywords available.</div>
-                    }
-                    else
-                    {
-                        <div class="d-flex gap-3">
-                            <div>
-                                <strong>Languages</strong>
-                                <div class="text-muted">@LanguageKeywords.Count()</div>
-                            </div>
-                            <div>
-                                <strong>Skills</strong>
-                                <div class="text-muted">@SkillKeywords.Count()</div>
-                            </div>
-                            <div>
-                                <strong>Technologies</strong>
-                                <div class="text-muted">@TechnologyKeywords.Count()</div>
-                            </div>
-                        </div>
-                    }
-                }
-                </div>
-            </div>
-        </div>
+			@* ── Experience ── *@
+			<div class="col-12 col-lg-6">
+				<div class="card shadow-sm h-100">
+					<div class="card-header d-flex justify-content-between align-items-center">
+						<strong>Experience</strong>
+						<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/experience">Open</NavLink>
+					</div>
+					<div class="card-body">
+						@if (!Experiences.Any())
+						{
+							<div class="text-muted">No experiences available.</div>
+						}
+						else
+						{
+							<div class="list-group list-group-flush">
+								@foreach (var exp in Experiences)
+								{
+									<div class="list-group-item px-0">
+										<div class="d-flex justify-content-between align-items-start">
+											<div class="fw-semibold small">@exp.Title</div>
+											<span class="text-muted small text-nowrap ms-2">
+												@exp.StartDate.ToString("yyyy")–@(exp.EndDate?.ToString("yyyy") ?? "Present")
+											</span>
+										</div>
+										<div class="text-muted small">@exp.Company.Name</div>
+										@if (!string.IsNullOrWhiteSpace(exp.Description))
+										{
+											<div class="text-muted small text-truncate mt-1" style="max-width:100%;">
+												@exp.Description
+											</div>
+										}
+									</div>
+								}
+							</div>
+						}
+					</div>
+				</div>
+			</div>
 
-        <div class="col-12 col-lg-6">
-            <div class="card shadow-sm h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <strong>Experience</strong>
-                    <NavLink class="btn btn-sm btn-outline-secondary" href="/cv/experience">Open</NavLink>
-                </div>
-                <div class="card-body">
-            @if (!_loaded)
-            {
-                <div class="text-muted">Loading…</div>
-            }
-            else if (!Experiences.Any())
-            {
-                <div class="text-muted">No experiences available.</div>
-            }
-            else
-            {
-                <div class="list-group list-group-flush">
-                    @foreach (var exp in Experiences)
-                    {
-                        <div class="list-group-item px-0">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="fw-semibold small">@exp.Title</div>
-                                <span class="text-muted small text-nowrap ms-2">
-                                    @exp.StartDate.ToString("yyyy")–@(exp.EndDate?.ToString("yyyy") ?? "Present")
-                                </span>
-                            </div>
-                            <div class="text-muted small">@exp.Company.Name</div>
-                        </div>
-                    }
-                </div>
-            }
-                </div>
-            </div>
-        </div>
+			@* ── Education ── *@
+			<div class="col-12 col-lg-6">
+				<div class="card shadow-sm h-100">
+					<div class="card-header d-flex justify-content-between align-items-center">
+						<strong>Education</strong>
+						<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/education">Open</NavLink>
+					</div>
+					<div class="card-body">
+						@if (!Educations.Any())
+						{
+							<div class="text-muted">No education entries available.</div>
+						}
+						else
+						{
+							<div class="list-group list-group-flush">
+								@foreach (var edu in Educations)
+								{
+									<div class="list-group-item px-0">
+										<div class="d-flex justify-content-between align-items-start">
+											<div class="fw-semibold small">@edu.Title</div>
+											<span class="text-muted small text-nowrap ms-2">
+												@edu.StartDate.ToString("yyyy")–@(edu.EndDate?.ToString("yyyy") ?? "Present")
+											</span>
+										</div>
+										<div class="text-muted small">@edu.Institution.Name</div>
+										@if (!string.IsNullOrWhiteSpace(edu.Description))
+										{
+											<div class="text-muted small text-truncate mt-1" style="max-width:100%;">
+												@edu.Description
+											</div>
+										}
+									</div>
+								}
+							</div>
+						}
+					</div>
+				</div>
+			</div>
 
-        <div class="col-12 col-lg-6">
-            <div class="card shadow-sm h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <strong>Education</strong>
-                    <NavLink class="btn btn-sm btn-outline-secondary" href="/cv/education">Open</NavLink>
-                </div>
-                <div class="card-body">
-            @if (!_loaded)
-            {
-                <div class="text-muted">Loading…</div>
-            }
-            else if (!Educations.Any())
-            {
-                <div class="text-muted">No education entries available.</div>
-            }
-            else
-            {
-                <div class="list-group list-group-flush">
-                    @foreach (var edu in Educations)
-                    {
-                        <div class="list-group-item px-0">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="fw-semibold small">@edu.Title</div>
-                                <span class="text-muted small text-nowrap ms-2">
-                                    @edu.StartDate.ToString("yyyy")–@(edu.EndDate?.ToString("yyyy") ?? "Present")
-                                </span>
-                            </div>
-                            <div class="text-muted small">@edu.Institution.Name</div>
-                        </div>
-                    }
-                </div>
-            }
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12">
-            <div class="card shadow-sm">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <strong>Projects</strong>
-                    <NavLink class="btn btn-sm btn-outline-secondary" href="/cv/projects">Open</NavLink>
-                </div>
-                <div class="card-body">
-            @if (!_loaded)
-            {
-                <div class="text-muted">Loading…</div>
-            }
-            else if (!Projects.Any())
-            {
-                <div class="text-muted">No projects available.</div>
-            }
-            else
-            {
-                <div class="list-group list-group-flush">
-                    @foreach (var project in Projects)
-                    {
-                        <div class="list-group-item px-0">
-                            <div class="fw-semibold small">@project.Name</div>
-                            @if (!string.IsNullOrEmpty(project.Description))
-                            {
-                                <div class="text-muted small text-truncate">@project.Description</div>
-                            }
-                        </div>
-                    }
-                </div>
-            }
-                </div>
-            </div>
-        </div>
-    </div>
+			@* ── Projects ── *@
+			<div class="col-12">
+				<div class="card shadow-sm">
+					<div class="card-header d-flex justify-content-between align-items-center">
+						<strong>Projects</strong>
+						<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/projects">Open</NavLink>
+					</div>
+					<div class="card-body">
+						@if (!Projects.Any())
+						{
+							<div class="text-muted">No projects available.</div>
+						}
+						else
+						{
+							<div class="list-group list-group-flush">
+								@foreach (var project in Projects)
+								{
+									<div class="list-group-item px-0">
+										<div class="d-flex gap-3 align-items-start">
+											<img src="@ResolveProjectImage(project.ImageUrl)"
+												 alt="" class="rounded flex-shrink-0"
+												 style="width:48px;height:32px;object-fit:cover;"
+												 onerror="this.style.display='none'" />
+											<div class="min-w-0 flex-grow-1">
+												<div class="d-flex justify-content-between align-items-start">
+													<div class="fw-semibold small">@project.Name</div>
+													@if (project.Keywords.Any())
+													{
+														<span class="text-muted small text-nowrap ms-2">
+															@project.Keywords.Count keyword@(project.Keywords.Count != 1 ? "s" : "")
+														</span>
+													}
+												</div>
+												@if (!string.IsNullOrWhiteSpace(project.Info))
+												{
+													<div class="text-muted small">@project.Info</div>
+												}
+												@if (!string.IsNullOrWhiteSpace(project.Description))
+												{
+													<div class="text-muted small overview-description mt-1">
+														@((MarkupString)project.Description)
+													</div>
+												}
+											</div>
+										</div>
+									</div>
+								}
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
 </div>
