@@ -34,4 +34,19 @@ public interface IKeywordQueries
     Task<IReadOnlyList<KeywordPickerModel>> ListAllForPickerAsync(
         CancellationToken cancellationToken = default
     );
+
+    /// <summary>
+    /// Returns all keywords with all translations and proficiency info for admin CRUD.
+    /// </summary>
+    Task<IReadOnlyList<KeywordTranslationsModel>> ListAllWithTranslationsAsync(
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// Finds a single keyword by ID with all translations and proficiency info.
+    /// </summary>
+    Task<KeywordTranslationsModel?> FindByIdWithTranslationsAsync(
+        Guid keywordId,
+        CancellationToken cancellationToken = default
+    );
 }

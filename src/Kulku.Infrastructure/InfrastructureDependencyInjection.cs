@@ -61,6 +61,7 @@ public static class InfrastructureDependencyInjection
         // Repositories
         services.AddScoped<IProjectRepository, ProjectRepository>();
         services.AddScoped<IKeywordRepository, KeywordRepository>();
+        services.AddScoped<IProficiencyRepository, ProficiencyRepository>();
 
         services.AddScoped<IIntroductionRepository, IntroductionRepository>();
         services.AddScoped<IExperienceRepository, ExperienceRepository>();
@@ -71,6 +72,7 @@ public static class InfrastructureDependencyInjection
         // Queries
         services.AddScoped<IProjectQueries, ProjectQueries>();
         services.AddScoped<IKeywordQueries, KeywordQueries>();
+        services.AddScoped<IProficiencyQueries, ProficiencyQueries>();
 
         services.AddScoped<IIntroductionQueries, IntroductionQueries>();
         services.AddScoped<IExperienceQueries, ExperienceQueries>();

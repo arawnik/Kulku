@@ -89,4 +89,62 @@ public class KeywordQueries(AppDbContext context) : IKeywordQueries
                     )
             );
     }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<KeywordTranslationsModel>> ListAllWithTranslationsAsync(
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await _context
+            .Keywords.AsNoTracking()
+            .OrderBy(k => k.Type)
+            .ThenBy(k => k.Order)
+            .Select(k => new KeywordTranslationsModel(
+                KeywordId: k.Id,
+                Type: k.Type,
+                Order: k.Order,
+                Display: k.Display,
+                ProficiencyId: k.ProficiencyId,
+                ProficiencyName: k.Proficiency.Translations.Select(t => t.Name).FirstOrDefault()
+                    ?? string.Empty,
+                ProficiencyScale: k.Proficiency.Scale,
+                Translations: k.Translations.Select(t => new KeywordTranslationItem(
+                        t.Language,
+                        t.Name
+                    ))
+                    .ToList()
+            ))
+            .ToListAsync(cancellationToken);
+
+        return result;
+    }
+
+    /// <inheritdoc />
+    public async Task<KeywordTranslationsModel?> FindByIdWithTranslationsAsync(
+        Guid keywordId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await _context
+            .Keywords.AsNoTracking()
+            .Where(k => k.Id == keywordId)
+            .Select(k => new KeywordTranslationsModel(
+                KeywordId: k.Id,
+                Type: k.Type,
+                Order: k.Order,
+                Display: k.Display,
+                ProficiencyId: k.ProficiencyId,
+                ProficiencyName: k.Proficiency.Translations.Select(t => t.Name).FirstOrDefault()
+                    ?? string.Empty,
+                ProficiencyScale: k.Proficiency.Scale,
+                Translations: k.Translations.Select(t => new KeywordTranslationItem(
+                        t.Language,
+                        t.Name
+                    ))
+                    .ToList()
+            ))
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return result;
+    }
 }

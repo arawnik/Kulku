@@ -1,0 +1,82 @@
+using Kulku.Domain.Projects;
+using Kulku.Domain.Repositories;
+using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Domain;
+using SoulNETLib.Clean.Domain.Repositories;
+
+namespace Kulku.Application.Projects;
+
+/// <summary>
+/// Updates an existing proficiency level and merges its translations.
+/// </summary>
+public static class UpdateProficiency
+{
+    public sealed record Command(
+        Guid ProficiencyId,
+        int Scale,
+        int Order,
+        IReadOnlyList<ProficiencyTranslationDto> Translations
+    ) : ICommand;
+
+    internal sealed class Handler(
+        IProficiencyRepository proficiencyRepository,
+        IUnitOfWork unitOfWork
+    ) : ICommandHandler<Command>
+    {
+        private readonly IProficiencyRepository _proficiencyRepository = proficiencyRepository;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+
+        public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
+        {
+            var errors = ProficiencyCommandValidator.Validate(command.Scale, command.Translations);
+            if (errors.Length > 0)
+                return ValidationResult.WithErrors(errors);
+
+            var proficiency = await _proficiencyRepository.GetByIdAsync(
+                command.ProficiencyId,
+                cancellationToken
+            );
+
+            if (proficiency is null)
+                return Error.NotFound("Proficiency level not found.");
+
+            proficiency.Scale = command.Scale;
+            proficiency.Order = command.Order;
+
+            MergeTranslations(proficiency, command.Translations);
+
+            await _unitOfWork.CompleteAsync(cancellationToken);
+            return Result.Success();
+        }
+
+        private static void MergeTranslations(
+            Proficiency proficiency,
+            IReadOnlyList<ProficiencyTranslationDto> incoming
+        )
+        {
+            var existing = proficiency.Translations.ToDictionary(t => t.Language);
+            proficiency.Translations.Clear();
+
+            foreach (var dto in incoming)
+            {
+                if (existing.TryGetValue(dto.Language, out var translation))
+                {
+                    translation.Name = dto.Name;
+                    translation.Description = dto.Description;
+                    proficiency.Translations.Add(translation);
+                }
+                else
+                {
+                    proficiency.Translations.Add(
+                        new ProficiencyTranslation
+                        {
+                            Language = dto.Language,
+                            Name = dto.Name,
+                            Description = dto.Description,
+                        }
+                    );
+                }
+            }
+        }
+    }
+}

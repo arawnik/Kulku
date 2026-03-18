@@ -1,0 +1,217 @@
+@using System.ComponentModel.DataAnnotations
+@using Kulku.Application.Projects.Models
+@using Kulku.Domain
+@using Kulku.Domain.Projects
+@using SoulNETLib.Clean.Domain
+
+<ModalDialog Visible="@(_form != null)"
+			 Title="@(Mode == ModalMode.Create ? "Create Keyword" : "Edit Keyword")"
+			 Size="ModalSize.Default"
+			 OnClose="OnCancel">
+	<ChildContent>
+		@if (ErrorMessage is not null)
+		{
+			<div class="alert alert-danger py-2 mb-3">@ErrorMessage</div>
+		}
+		@if (_form != null)
+		{
+			<EditForm EditContext="@_editContext">
+				<DataAnnotationsValidator />
+				<ServerValidation @ref="_serverValidation" />
+
+				<div class="row g-3 mb-3">
+					<div class="col-md-4">
+						<label class="form-label">Type</label>
+						<InputSelect @bind-Value="_form.Type" class="form-select" disabled="@IsSaving">
+							@foreach (var t in Enum.GetValues<KeywordType>())
+							{
+								<option value="@t">@t</option>
+							}
+						</InputSelect>
+					</div>
+					<div class="col-md-4">
+						<label class="form-label">Proficiency</label>
+						<InputSelect @bind-Value="_form.ProficiencyId" class="form-select" disabled="@IsSaving">
+							<option value="@Guid.Empty">— Select —</option>
+							@foreach (var p in Proficiencies)
+							{
+								<option value="@p.ProficiencyId">
+									@(p.Translations.FirstOrDefault()?.Name ?? "Unnamed") (@(p.Scale)%)
+								</option>
+							}
+						</InputSelect>
+						<ValidationMessage For="@(() => _form.ProficiencyId)" />
+					</div>
+					<div class="col-md-2">
+						<label class="form-label">Order</label>
+						<InputNumber @bind-Value="_form.Order" class="form-control" disabled="@IsSaving" />
+					</div>
+					<div class="col-md-2 d-flex align-items-end">
+						<div class="form-check mb-2">
+							<InputCheckbox @bind-Value="_form.Display" class="form-check-input"
+										   disabled="@IsSaving" id="kw-display" />
+							<label class="form-check-label" for="kw-display">Visible</label>
+						</div>
+					</div>
+				</div>
+
+				<h6 class="mb-3">Translations</h6>
+
+				@for (var i = 0; i < _form.Translations.Count; i++)
+				{
+					var index = i;
+					var trans = _form.Translations[index];
+
+					<div class="card mb-3">
+						<div class="card-header py-2">
+							<strong>@LanguageDisplayHelper.DisplayName(trans.Language)</strong>
+						</div>
+						<div class="card-body">
+							<label class="form-label">Name</label>
+							<InputText @bind-Value="_form.Translations[index].Name"
+									   class="form-control" disabled="@IsSaving" />
+							<ValidationMessage For="@(() => _form.Translations[index].Name)" />
+						</div>
+					</div>
+				}
+			</EditForm>
+		}
+	</ChildContent>
+	<FooterContent>
+		<button type="button" class="btn btn-secondary"
+				@onclick="OnCancel" disabled="@IsSaving">
+			Cancel
+		</button>
+		<button type="button" class="btn btn-primary"
+				@onclick="HandleSubmit" disabled="@IsSaving">
+			@if (IsSaving)
+			{
+				<span class="spinner-border spinner-border-sm me-1"></span>
+				<span>Saving…</span>
+			}
+			else
+			{
+				<span>@(Mode == ModalMode.Create ? "Create" : "Save Changes")</span>
+			}
+		</button>
+	</FooterContent>
+</ModalDialog>
+
+@code {
+	[Parameter, EditorRequired]
+	public KeywordTranslationsModel? Model { get; set; }
+
+	[Parameter]
+	public ModalMode Mode { get; set; } = ModalMode.Edit;
+
+	[Parameter]
+	public IReadOnlyList<ProficiencyTranslationsModel> Proficiencies { get; set; } = [];
+
+	[Parameter]
+	public EventCallback<KeywordTranslationsModel> OnSave { get; set; }
+
+	[Parameter]
+	public EventCallback OnCancel { get; set; }
+
+	[Parameter]
+	public bool IsSaving { get; set; }
+
+	[Parameter]
+	public string? ErrorMessage { get; set; }
+
+	private KeywordEditFormModel? _form;
+	private EditContext? _editContext;
+	private ServerValidation? _serverValidation;
+	private Guid? _lastModelId;
+
+	public void SetServerErrors(IEnumerable<Error> errors)
+	{
+		_serverValidation?.DisplayErrors(errors);
+	}
+
+	protected override void OnParametersSet()
+	{
+		if (Model is null)
+		{
+			_form = null;
+			_editContext = null;
+			_lastModelId = null;
+			return;
+		}
+
+		if (_lastModelId != Model.KeywordId)
+		{
+			_lastModelId = Model.KeywordId;
+			_form = new KeywordEditFormModel
+			{
+				KeywordId = Model.KeywordId,
+				Type = Model.Type,
+				ProficiencyId = Model.ProficiencyId,
+				Order = Model.Order,
+				Display = Model.Display,
+				Translations = Model.Translations
+					.Select(t => new KwTranslationEditModel
+					{
+						Language = t.Language,
+						Name = t.Name,
+					})
+					.ToList(),
+			};
+			_editContext = new EditContext(_form);
+			_editContext.SetFieldCssClassProvider(new BootstrapFieldCssClassProvider());
+		}
+	}
+
+	private async Task HandleSubmit()
+	{
+		if (_form is null || Model is null || _editContext is null) return;
+		if (!_editContext.Validate()) return;
+
+		var updatedTranslations = _form.Translations
+			.Select(t => new KeywordTranslationItem(t.Language, t.Name))
+			.ToList();
+
+		var profName = Proficiencies
+			.FirstOrDefault(p => p.ProficiencyId == _form.ProficiencyId)
+			?.Translations.FirstOrDefault()?.Name ?? string.Empty;
+		var profScale = Proficiencies
+			.FirstOrDefault(p => p.ProficiencyId == _form.ProficiencyId)
+			?.Scale ?? 0;
+
+		var updated = Model with
+		{
+			Type = _form.Type,
+			ProficiencyId = _form.ProficiencyId,
+			Order = _form.Order,
+			Display = _form.Display,
+			ProficiencyName = profName,
+			ProficiencyScale = profScale,
+			Translations = updatedTranslations,
+		};
+
+		await OnSave.InvokeAsync(updated);
+	}
+
+	private sealed class KeywordEditFormModel
+	{
+		public Guid KeywordId { get; init; }
+
+		public KeywordType Type { get; set; } = KeywordType.Skill;
+
+		public Guid ProficiencyId { get; set; }
+
+		public int Order { get; set; } = 1;
+
+		public bool Display { get; set; } = true;
+
+		public List<KwTranslationEditModel> Translations { get; set; } = [];
+	}
+
+	private sealed class KwTranslationEditModel
+	{
+		public LanguageCode Language { get; init; }
+
+		[Required(ErrorMessage = "Name is required.")]
+		public string Name { get; set; } = string.Empty;
+	}
+}

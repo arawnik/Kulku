@@ -40,6 +40,41 @@ public static class ApplicationDependencyInjection
         >();
 
         services.AddScoped<
+            IQueryHandler<GetKeywordTranslations.Query, IReadOnlyList<KeywordTranslationsModel>>,
+            GetKeywordTranslations.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetKeywordDetail.Query, KeywordTranslationsModel?>,
+            GetKeywordDetail.Handler
+        >();
+
+        services.AddScoped<ICommandHandler<CreateKeyword.Command, Guid>, CreateKeyword.Handler>();
+
+        services.AddScoped<ICommandHandler<UpdateKeyword.Command>, UpdateKeyword.Handler>();
+
+        services.AddScoped<ICommandHandler<DeleteKeyword.Command>, DeleteKeyword.Handler>();
+
+        services.AddScoped<
+            IQueryHandler<GetProficiencies.Query, IReadOnlyList<ProficiencyTranslationsModel>>,
+            GetProficiencies.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetProficiencyDetail.Query, ProficiencyTranslationsModel?>,
+            GetProficiencyDetail.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<CreateProficiency.Command, Guid>,
+            CreateProficiency.Handler
+        >();
+
+        services.AddScoped<ICommandHandler<UpdateProficiency.Command>, UpdateProficiency.Handler>();
+
+        services.AddScoped<ICommandHandler<DeleteProficiency.Command>, DeleteProficiency.Handler>();
+
+        services.AddScoped<
             IQueryHandler<GetProjects.Query, IReadOnlyList<ProjectModel>>,
             GetProjects.Handler
         >();

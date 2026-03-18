@@ -56,4 +56,10 @@ public enum IconKind
 
     /// <summary>Chevron pointing right — collapsed / closed.</summary>
     ChevronRight,
+
+    /// <summary>Eye — visible / displayed.</summary>
+    Eye,
+
+    /// <summary>Eye with slash — hidden / not displayed.</summary>
+    EyeSlash,
 }
