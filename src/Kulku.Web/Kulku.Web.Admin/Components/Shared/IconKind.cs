@@ -48,4 +48,12 @@ public enum IconKind
 
     /// <summary>Left arrow bar — collapse / toggle sidebar.</summary>
     ArrowBarLeft,
+
+    // ── Indicators ──
+
+    /// <summary>Chevron pointing down — expand / open.</summary>
+    ChevronDown,
+
+    /// <summary>Chevron pointing right — collapsed / closed.</summary>
+    ChevronRight,
 }

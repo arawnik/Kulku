@@ -12,6 +12,7 @@ public sealed class MarkdownRenderer : IMarkdownRenderer
 {
     private static readonly MarkdownPipeline Pipeline = new MarkdownPipelineBuilder()
         .UseAdvancedExtensions()
+        .UseSoftlineBreakAsHardlineBreak()
         .DisableHtml()
         .Build();
 

@@ -5,6 +5,7 @@ using Kulku.Application.Cover.Education.Models;
 using Kulku.Application.Cover.Experience;
 using Kulku.Application.Cover.Experience.Models;
 using Kulku.Application.Cover.Introduction;
+using Kulku.Application.Cover.Introduction.Models;
 using Kulku.Application.Cover.Models;
 using Kulku.Application.Projects;
 using Kulku.Application.Projects.Models;
@@ -62,6 +63,34 @@ public static class ApplicationDependencyInjection
         services.AddScoped<
             IQueryHandler<GetIntroduction.Query, IntroductionModel?>,
             GetIntroduction.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<
+                GetIntroductionTranslations.Query,
+                IReadOnlyList<IntroductionTranslationsModel>
+            >,
+            GetIntroductionTranslations.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetIntroductionDetail.Query, IntroductionTranslationsModel?>,
+            GetIntroductionDetail.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<CreateIntroduction.Command, Guid>,
+            CreateIntroduction.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<UpdateIntroduction.Command>,
+            UpdateIntroduction.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<DeleteIntroduction.Command>,
+            DeleteIntroduction.Handler
         >();
 
         services.AddScoped<

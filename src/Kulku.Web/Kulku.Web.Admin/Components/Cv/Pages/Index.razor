@@ -33,14 +33,14 @@
 						else
 						{
 							<div class="d-flex gap-3 align-items-start">
-								<img src="@IntroductionPreview.SmallAvatarUrl"
+								<img src="@ResolveIntroductionImage(IntroductionPreview.SmallAvatarUrl)"
 									 alt="Avatar" class="rounded-circle flex-shrink-0"
 									 style="width:48px;height:48px;object-fit:cover;"
 									 onerror="this.style.display='none'" />
 								<div class="min-w-0">
 									<h6 class="mb-0">@IntroductionPreview.Title</h6>
 									<div class="text-muted small">@IntroductionPreview.Tagline</div>
-									<div class="mt-2">@((new MarkupString(IntroductionPreview.Content)))</div>
+									<div class="mt-2 overview-description"><MarkdownView Content="@IntroductionPreview.Content" /></div>
 								</div>
 							</div>
 						}
@@ -221,7 +221,7 @@
 												@if (!string.IsNullOrWhiteSpace(project.Description))
 												{
 													<div class="text-muted small overview-description mt-1">
-														@((MarkupString)project.Description)
+														<MarkdownView Content="@project.Description" />
 													</div>
 												}
 											</div>

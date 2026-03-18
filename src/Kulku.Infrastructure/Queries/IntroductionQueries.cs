@@ -1,3 +1,4 @@
+using Kulku.Application.Cover.Introduction.Models;
 using Kulku.Application.Cover.Introduction.Ports;
 using Kulku.Application.Cover.Models;
 using Kulku.Domain;
@@ -17,7 +18,7 @@ public class IntroductionQueries(AppDbContext context) : IIntroductionQueries
     {
         var result = await _context
             .Introductions.Where(i => i.PubDate <= DateTime.UtcNow)
-            .OrderBy(i => i.PubDate)
+            .OrderByDescending(i => i.PubDate)
             .LeftJoin(
                 _context.IntroductionTranslations.Where(t => t.Language == language),
                 i => i.Id,
@@ -31,6 +32,59 @@ public class IntroductionQueries(AppDbContext context) : IIntroductionQueries
                         SmallAvatarUrl: i.SmallAvatarUrl
                     )
             )
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return result;
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<IntroductionTranslationsModel>> ListAllWithTranslationsAsync(
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await _context
+            .Introductions.AsNoTracking()
+            .OrderByDescending(i => i.PubDate)
+            .Select(i => new IntroductionTranslationsModel(
+                IntroductionId: i.Id,
+                AvatarUrl: i.AvatarUrl,
+                SmallAvatarUrl: i.SmallAvatarUrl,
+                PubDate: i.PubDate,
+                Translations: i.Translations.Select(t => new IntroductionTranslationItem(
+                        t.Language,
+                        t.Title,
+                        t.Tagline,
+                        t.Content
+                    ))
+                    .ToList()
+            ))
+            .ToListAsync(cancellationToken);
+
+        return result;
+    }
+
+    /// <inheritdoc />
+    public async Task<IntroductionTranslationsModel?> FindByIdWithTranslationsAsync(
+        Guid introductionId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await _context
+            .Introductions.AsNoTracking()
+            .Where(i => i.Id == introductionId)
+            .Select(i => new IntroductionTranslationsModel(
+                IntroductionId: i.Id,
+                AvatarUrl: i.AvatarUrl,
+                SmallAvatarUrl: i.SmallAvatarUrl,
+                PubDate: i.PubDate,
+                Translations: i.Translations.Select(t => new IntroductionTranslationItem(
+                        t.Language,
+                        t.Title,
+                        t.Tagline,
+                        t.Content
+                    ))
+                    .ToList()
+            ))
             .FirstOrDefaultAsync(cancellationToken);
 
         return result;

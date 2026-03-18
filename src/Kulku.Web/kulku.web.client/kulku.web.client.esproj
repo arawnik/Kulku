@@ -11,7 +11,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="public\static\downloads\" />
-    <Folder Include="public\static\profile\" />
+    <Folder Include="public\static\introductions\" />
     <Folder Include="public\static\projects\" />
   </ItemGroup>
 </Project>

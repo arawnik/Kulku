@@ -1,4 +1,3 @@
-using Kulku.Application.Abstractions.Rendering;
 using Kulku.Application.Projects.Models;
 using Kulku.Application.Projects.Ports;
 using Kulku.Domain;
@@ -7,11 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kulku.Infrastructure.Queries;
 
-public class ProjectQueries(AppDbContext context, IMarkdownRenderer markdownRenderer)
-    : IProjectQueries
+public class ProjectQueries(AppDbContext context) : IProjectQueries
 {
     private readonly AppDbContext _context = context;
-    private readonly IMarkdownRenderer _markdownRenderer = markdownRenderer;
 
     public async Task<IReadOnlyList<ProjectModel>> ListAllAsync(
         LanguageCode language,
@@ -68,11 +65,7 @@ public class ProjectQueries(AppDbContext context, IMarkdownRenderer markdownRend
             ))
             .ToListAsync(cancellationToken);
 
-        // Convert markdown descriptions to rendered HTML for the public API.
-        return
-        [
-            .. result.Select(p => p with { Description = _markdownRenderer.ToHtml(p.Description) }),
-        ];
+        return result;
     }
 
     /// <inheritdoc />

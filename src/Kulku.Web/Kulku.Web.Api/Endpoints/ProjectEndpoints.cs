@@ -1,5 +1,6 @@
 using Carter;
 using Kulku.Application.Abstractions.Localization;
+using Kulku.Application.Abstractions.Rendering;
 using Kulku.Application.Projects;
 using Kulku.Application.Projects.Models;
 using Kulku.Domain.Projects;
@@ -7,7 +8,6 @@ using Kulku.Web.Api.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
-using SoulNETLib.Common.Extension;
 
 namespace Kulku.Web.Api.Endpoints;
 
@@ -26,6 +26,7 @@ public class ProjectEndpoints : ICarterModule
     > GetProjectsAsync(
         [FromServices] IQueryHandler<GetProjects.Query, IReadOnlyList<ProjectModel>> handler,
         [FromServices] ILanguageContext languageContext,
+        [FromServices] IMarkdownRenderer markdownRenderer,
         CancellationToken cancellationToken
     )
     {
@@ -33,9 +34,18 @@ public class ProjectEndpoints : ICarterModule
             new GetProjects.Query(languageContext.Current),
             cancellationToken
         );
-        if (result.IsSuccess)
+        if (result.IsSuccess && result.Value is not null)
         {
-            return TypedResults.Ok(result.Value);
+            IReadOnlyList<ProjectModel> rendered =
+            [
+                .. result.Value.Select(p =>
+                    p with
+                    {
+                        Description = markdownRenderer.ToHtml(p.Description),
+                    }
+                ),
+            ];
+            return TypedResults.Ok(rendered);
         }
         return result.HandleFailure();
     }

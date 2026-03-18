@@ -121,6 +121,29 @@ if (Directory.Exists(clientProjectImages))
     );
 }
 
+var clientIntroductionImages = Path.GetFullPath(
+    Path.Combine(
+        app.Environment.ContentRootPath,
+        "..",
+        "kulku.web.client",
+        "public",
+        "static",
+        "introductions"
+    )
+);
+if (Directory.Exists(clientIntroductionImages))
+{
+    app.UseStaticFiles(
+        new StaticFileOptions
+        {
+            FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+                clientIntroductionImages
+            ),
+            RequestPath = "/static/introductions",
+        }
+    );
+}
+
 app.MapStaticAssets();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 

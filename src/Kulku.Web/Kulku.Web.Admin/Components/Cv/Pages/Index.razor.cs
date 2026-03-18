@@ -91,4 +91,9 @@ partial class Index(
         Uri.TryCreate(imageUrl, UriKind.Absolute, out _)
             ? imageUrl
             : $"/static/projects/{imageUrl}";
+
+    private static string ResolveIntroductionImage(string imageUrl) =>
+        Uri.TryCreate(imageUrl, UriKind.Absolute, out _)
+            ? imageUrl
+            : $"/static/introductions/{imageUrl}";
 }
