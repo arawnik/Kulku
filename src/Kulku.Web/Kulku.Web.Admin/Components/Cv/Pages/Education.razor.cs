@@ -1,7 +1,7 @@
 using Kulku.Application.Cover.Education;
 using Kulku.Application.Cover.Education.Models;
+using Kulku.Application.Cover.Institution;
 using Kulku.Application.Cover.Models;
-using Kulku.Application.Cover.Ports;
 using Kulku.Domain;
 using Kulku.Web.Admin.Components.Cv.Components;
 using Kulku.Web.Admin.Components.Shared;
@@ -20,7 +20,17 @@ partial class Education(
     ICommandHandler<UpdateEducation.Command> updateHandler,
     ICommandHandler<CreateEducation.Command, Guid> createHandler,
     ICommandHandler<DeleteEducation.Command> deleteHandler,
-    IInstitutionQueries institutionQueries
+    IQueryHandler<
+        GetInstitutions.Query,
+        IReadOnlyList<InstitutionTranslationsModel>
+    > institutionsHandler,
+    IQueryHandler<
+        GetInstitutionDetail.Query,
+        InstitutionTranslationsModel?
+    > institutionDetailHandler,
+    ICommandHandler<CreateInstitution.Command, Guid> createInstitutionHandler,
+    ICommandHandler<UpdateInstitution.Command> updateInstitutionHandler,
+    ICommandHandler<DeleteInstitution.Command> deleteInstitutionHandler
 )
 {
     private IReadOnlyList<EducationTranslationsModel> Educations { get; set; } = [];
@@ -32,38 +42,54 @@ partial class Education(
     private EducationEditModal? _editModal;
     private IReadOnlyList<InstitutionTranslationsModel>? _institutions;
 
+    // Institution inline CRUD state
+    private IReadOnlyList<InstitutionTranslationsModel> _allInstitutions = [];
+    private bool _institutionsExpanded;
+    private ModalMode? _institutionModalMode;
+    private InstitutionTranslationsModel? _currentInstitution;
+    private InstitutionEditModal? _institutionModal;
+    private bool _isSavingInstitution;
+    private string? _institutionErrorMessage;
+
     protected override async Task OnInitializedAsync()
     {
-        await LoadEducationsAsync();
+        await LoadAllAsync();
     }
 
-    private async Task LoadEducationsAsync()
+    private async Task LoadAllAsync()
     {
-        var result = await translationsHandler.Handle(
+        var eduResult = await translationsHandler.Handle(
             new GetEducationTranslations.Query(),
             CancellationToken
         );
 
         Educations =
-            result.IsSuccess && result.Value is not null
+            eduResult.IsSuccess && eduResult.Value is not null
                 ?
                 [
-                    .. result
+                    .. eduResult
                         .Value.OrderBy(m => m.EndDate.HasValue)
                         .ThenByDescending(m => m.EndDate)
                         .ThenByDescending(m => m.StartDate),
                 ]
                 : [];
 
+        var instResult = await institutionsHandler.Handle(
+            new GetInstitutions.Query(),
+            CancellationToken
+        );
+        _allInstitutions = instResult.IsSuccess ? instResult.Value ?? [] : [];
+        _institutions = _allInstitutions;
+
         _loaded = true;
     }
 
-    private async Task HandleCreate()
+    // ── Education CRUD ───────────────────────────────
+
+    private void HandleCreate()
     {
         _errorMessage = null;
-        _institutions ??= await institutionQueries.ListAllWithTranslationsAsync(CancellationToken);
 
-        // Build a blank model with translations for all supported languages
         var blankTranslations = Defaults
             .SupportedCultures.Select(LanguageCodeFromCulture)
             .Where(lc => lc.HasValue)
@@ -132,7 +158,7 @@ partial class Education(
                 if (createResult.IsSuccess)
                 {
                     CloseEditor();
-                    await LoadEducationsAsync();
+                    await LoadAllAsync();
                     return;
                 }
 
@@ -160,7 +186,7 @@ partial class Education(
             if (result.IsSuccess)
             {
                 CloseEditor();
-                await LoadEducationsAsync();
+                await LoadAllAsync();
             }
             else if (result is IValidationResult validation)
             {
@@ -189,7 +215,7 @@ partial class Education(
 
         if (result.IsSuccess)
         {
-            await LoadEducationsAsync();
+            await LoadAllAsync();
         }
         else
         {
@@ -208,6 +234,145 @@ partial class Education(
         CurrentEditModel = null;
         _errorMessage = null;
     }
+
+    // ── Institution CRUD ─────────────────────────────
+
+    private void HandleCreateInstitution()
+    {
+        _institutionErrorMessage = null;
+        _institutionsExpanded = true;
+
+        var blankTranslations = Defaults
+            .SupportedCultures.Select(LanguageCodeFromCulture)
+            .Where(lc => lc.HasValue)
+            .Select(lc => new InstitutionTranslationItem(
+                lc!.Value,
+                string.Empty,
+                null,
+                string.Empty
+            ))
+            .ToList();
+
+        _currentInstitution = new InstitutionTranslationsModel(
+            InstitutionId: Guid.NewGuid(),
+            EducationCount: 0,
+            Translations: blankTranslations
+        );
+
+        _institutionModalMode = ModalMode.Create;
+    }
+
+    private async Task HandleEditInstitution(Guid id)
+    {
+        _institutionErrorMessage = null;
+        var result = await institutionDetailHandler.Handle(
+            new GetInstitutionDetail.Query(id),
+            CancellationToken
+        );
+
+        if (result.IsSuccess && result.Value is not null)
+        {
+            _currentInstitution = result.Value;
+            _institutionModalMode = ModalMode.Edit;
+        }
+        else
+        {
+            _errorMessage = "Failed to load institution details.";
+        }
+    }
+
+    private async Task HandleSaveInstitution(InstitutionTranslationsModel model)
+    {
+        _institutionErrorMessage = null;
+        _isSavingInstitution = true;
+
+        try
+        {
+            var translations = model
+                .Translations.Select(t => new InstitutionTranslationDto(
+                    t.Language,
+                    t.Name,
+                    t.Department,
+                    t.Description
+                ))
+                .ToList();
+
+            if (_institutionModalMode == ModalMode.Create)
+            {
+                var result = await createInstitutionHandler.Handle(
+                    new CreateInstitution.Command(translations),
+                    CancellationToken
+                );
+
+                if (result.IsSuccess)
+                {
+                    CloseInstitutionEditor();
+                    await LoadAllAsync();
+                    return;
+                }
+
+                if (result is IValidationResult v)
+                {
+                    _institutionModal?.SetServerErrors(v.Errors);
+                    return;
+                }
+
+                _institutionErrorMessage = result.Error?.Message ?? "Failed to create institution.";
+                return;
+            }
+
+            var updateResult = await updateInstitutionHandler.Handle(
+                new UpdateInstitution.Command(model.InstitutionId, translations),
+                CancellationToken
+            );
+
+            if (updateResult.IsSuccess)
+            {
+                CloseInstitutionEditor();
+                await LoadAllAsync();
+            }
+            else if (updateResult is IValidationResult validation)
+            {
+                _institutionModal?.SetServerErrors(validation.Errors);
+            }
+            else
+            {
+                _institutionErrorMessage =
+                    updateResult.Error?.Message ?? "Failed to save institution.";
+            }
+        }
+        finally
+        {
+            _isSavingInstitution = false;
+        }
+    }
+
+    private async Task HandleDeleteInstitution(Guid id)
+    {
+        _errorMessage = null;
+        var result = await deleteInstitutionHandler.Handle(
+            new DeleteInstitution.Command(id),
+            CancellationToken
+        );
+
+        if (result.IsSuccess)
+        {
+            await LoadAllAsync();
+        }
+        else
+        {
+            _errorMessage = result.Error?.Message ?? "Failed to delete institution.";
+        }
+    }
+
+    private void CloseInstitutionEditor()
+    {
+        _institutionModalMode = null;
+        _currentInstitution = null;
+        _institutionErrorMessage = null;
+    }
+
+    // ── Helpers ──────────────────────────────────────
 
     private static LanguageCode? LanguageCodeFromCulture(string culture) =>
         culture switch

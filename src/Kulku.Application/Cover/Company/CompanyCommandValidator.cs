@@ -1,0 +1,32 @@
+using SoulNETLib.Clean.Domain;
+
+namespace Kulku.Application.Cover.Company;
+
+/// <summary>
+/// Shared validation logic for company create and update commands.
+/// </summary>
+internal static class CompanyCommandValidator
+{
+    public static Error[] Validate(IReadOnlyList<CompanyTranslationDto> translations)
+    {
+        List<Error> errors = [];
+
+        if (translations.Count == 0)
+            errors.Add(
+                Error.Validation(nameof(translations), "At least one translation is required.")
+            );
+
+        for (var i = 0; i < translations.Count; i++)
+        {
+            if (string.IsNullOrWhiteSpace(translations[i].Name))
+                errors.Add(
+                    Error.Validation(
+                        $"{nameof(translations)}[{i}].Name",
+                        $"Name is required for the {translations[i].Language} translation."
+                    )
+                );
+        }
+
+        return [.. errors];
+    }
+}

@@ -23,7 +23,8 @@
 }
 
 .kulku-sidebar--collapsed .kulku-link-text,
-.kulku-sidebar--collapsed .kulku-brand-text {
+.kulku-sidebar--collapsed .kulku-brand-text,
+.kulku-sidebar--collapsed .kulku-subnav {
   display: none;
 }
 
@@ -49,3 +50,8 @@
   .kulku-navlink:hover {
     background-color: rgba(255, 255, 255, 0.12);
   }
+
+.kulku-subnav {
+  padding-left: 1.85rem;
+  margin: 0;
+}

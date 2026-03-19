@@ -1,0 +1,78 @@
+@using Kulku.Application.Cover.Models
+
+<div class="card shadow-sm mb-2">
+	<div class="card-body py-2">
+		<div class="d-flex justify-content-between align-items-start">
+			<div class="flex-grow-1">
+				@{
+					var translations = Company.Translations.OrderBy(t => t.Language.ToString()).ToList();
+					var allNamesMatch = translations.Count > 1 && translations.All(t => t.Name == translations[0].Name);
+				}
+				<div class="mb-1">
+					@if (allNamesMatch)
+					{
+						<span class="fw-semibold" title="Same in all languages: @string.Join(", ", translations.Select(t => LanguageDisplayHelper.DisplayName(t.Language)))">
+							@translations[0].Name
+						</span>
+					}
+					else
+					{
+						@foreach (var trans in translations)
+						{
+							<span class="me-3">
+								<span class="text-muted small me-1">@LanguageDisplayHelper.DisplayName(trans.Language)</span>
+								<span class="fw-semibold">@trans.Name</span>
+							</span>
+						}
+					}
+				</div>
+
+				<div class="d-flex flex-wrap gap-2 align-items-center">
+					<span class="badge bg-secondary bg-opacity-25 text-body-emphasis">
+						@Company.ExperienceCount experience(s)
+					</span>
+				</div>
+			</div>
+
+			<div class="d-flex gap-1 ms-3">
+				<button type="button" class="btn btn-sm btn-outline-primary"
+						@onclick="() => OnEdit.InvokeAsync(Company.CompanyId)">
+					<Icon Kind="IconKind.Pencil" Size="14" />
+				</button>
+				<button type="button" class="btn btn-sm btn-outline-danger"
+						@onclick="() => _confirmingDelete = true"
+						disabled="@(Company.ExperienceCount > 0)">
+					<Icon Kind="IconKind.Trash" Size="14" />
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<ConfirmDialog Visible="_confirmingDelete"
+			   Title="Delete Company"
+			   Message="Are you sure you want to delete this company?"
+			   ButtonText="Delete"
+			   ButtonStyle="danger"
+			   ButtonIcon="IconKind.Trash"
+			   OnConfirm="HandleConfirmDelete"
+			   OnCancel="() => _confirmingDelete = false" />
+
+@code {
+	[Parameter, EditorRequired]
+	public CompanyTranslationsModel Company { get; set; } = null!;
+
+	[Parameter]
+	public EventCallback<Guid> OnEdit { get; set; }
+
+	[Parameter]
+	public EventCallback<Guid> OnDelete { get; set; }
+
+	private bool _confirmingDelete;
+
+	private async Task HandleConfirmDelete()
+	{
+		_confirmingDelete = false;
+		await OnDelete.InvokeAsync(Company.CompanyId);
+	}
+}

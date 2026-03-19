@@ -17,10 +17,17 @@ public interface IInstitutionQueries
     );
 
     /// <summary>
-    /// Returns all institutions with every available translation.
-    /// Useful for admin views that need to show/edit all languages.
+    /// Returns all institutions with every available translation and education count.
     /// </summary>
     Task<IReadOnlyList<InstitutionTranslationsModel>> ListAllWithTranslationsAsync(
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// Returns a single institution with all translations for editing.
+    /// </summary>
+    Task<InstitutionTranslationsModel?> FindByIdWithTranslationsAsync(
+        Guid institutionId,
         CancellationToken cancellationToken = default
     );
 }

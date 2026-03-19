@@ -32,6 +32,7 @@ public class InstitutionQueries(AppDbContext context) : IInstitutionQueries
             .Institutions.AsNoTracking()
             .Select(i => new InstitutionTranslationsModel(
                 InstitutionId: i.Id,
+                EducationCount: _context.Educations.Count(e => e.InstitutionId == i.Id),
                 Translations: i.Translations.Select(t => new InstitutionTranslationItem(
                         t.Language,
                         t.Name,
@@ -43,5 +44,27 @@ public class InstitutionQueries(AppDbContext context) : IInstitutionQueries
             .ToListAsync(cancellationToken);
 
         return result;
+    }
+
+    public async Task<InstitutionTranslationsModel?> FindByIdWithTranslationsAsync(
+        Guid institutionId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await _context
+            .Institutions.AsNoTracking()
+            .Where(i => i.Id == institutionId)
+            .Select(i => new InstitutionTranslationsModel(
+                InstitutionId: i.Id,
+                EducationCount: _context.Educations.Count(e => e.InstitutionId == i.Id),
+                Translations: i.Translations.Select(t => new InstitutionTranslationItem(
+                        t.Language,
+                        t.Name,
+                        t.Department,
+                        t.Description
+                    ))
+                    .ToList()
+            ))
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }

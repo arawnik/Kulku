@@ -7,6 +7,7 @@ namespace Kulku.Application.Cover.Models;
 /// </summary>
 public sealed record InstitutionTranslationsModel(
     Guid InstitutionId,
+    int EducationCount,
     IReadOnlyList<InstitutionTranslationItem> Translations
 );
 

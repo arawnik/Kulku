@@ -49,6 +49,21 @@ public enum IconKind
     /// <summary>Left arrow bar — collapse / toggle sidebar.</summary>
     ArrowBarLeft,
 
+    /// <summary>File text — introduction / document.</summary>
+    FileText,
+
+    /// <summary>Mortarboard — education.</summary>
+    Mortarboard,
+
+    /// <summary>Briefcase — work experience.</summary>
+    Briefcase,
+
+    /// <summary>Folder — projects.</summary>
+    Folder,
+
+    /// <summary>Tags — keywords / categories.</summary>
+    Tags,
+
     // ── Indicators ──
 
     /// <summary>Chevron pointing down — expand / open.</summary>

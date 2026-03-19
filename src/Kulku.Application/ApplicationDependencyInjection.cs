@@ -1,9 +1,11 @@
 using System.Diagnostics.CodeAnalysis;
 using Kulku.Application.Contacts;
+using Kulku.Application.Cover.Company;
 using Kulku.Application.Cover.Education;
 using Kulku.Application.Cover.Education.Models;
 using Kulku.Application.Cover.Experience;
 using Kulku.Application.Cover.Experience.Models;
+using Kulku.Application.Cover.Institution;
 using Kulku.Application.Cover.Introduction;
 using Kulku.Application.Cover.Introduction.Models;
 using Kulku.Application.Cover.Models;
@@ -186,6 +188,43 @@ public static class ApplicationDependencyInjection
             ICommandHandler<SubmitContactRequest.Command>,
             SubmitContactRequest.Handler
         >();
+
+        // Company CRUD
+        services.AddScoped<
+            IQueryHandler<GetCompanies.Query, IReadOnlyList<CompanyTranslationsModel>>,
+            GetCompanies.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetCompanyDetail.Query, CompanyTranslationsModel?>,
+            GetCompanyDetail.Handler
+        >();
+
+        services.AddScoped<ICommandHandler<CreateCompany.Command, Guid>, CreateCompany.Handler>();
+
+        services.AddScoped<ICommandHandler<UpdateCompany.Command>, UpdateCompany.Handler>();
+
+        services.AddScoped<ICommandHandler<DeleteCompany.Command>, DeleteCompany.Handler>();
+
+        // Institution CRUD
+        services.AddScoped<
+            IQueryHandler<GetInstitutions.Query, IReadOnlyList<InstitutionTranslationsModel>>,
+            GetInstitutions.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetInstitutionDetail.Query, InstitutionTranslationsModel?>,
+            GetInstitutionDetail.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<CreateInstitution.Command, Guid>,
+            CreateInstitution.Handler
+        >();
+
+        services.AddScoped<ICommandHandler<UpdateInstitution.Command>, UpdateInstitution.Handler>();
+
+        services.AddScoped<ICommandHandler<DeleteInstitution.Command>, DeleteInstitution.Handler>();
 
         return services;
     }

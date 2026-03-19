@@ -17,6 +17,7 @@ public class CompanyQueries(AppDbContext context) : ICompanyQueries
             .Companies.AsNoTracking()
             .Select(c => new CompanyTranslationsModel(
                 CompanyId: c.Id,
+                ExperienceCount: _context.Experiences.Count(e => e.CompanyId == c.Id),
                 Translations: c.Translations.Select(t => new CompanyTranslationItem(
                         t.Language,
                         t.Name,
@@ -27,5 +28,26 @@ public class CompanyQueries(AppDbContext context) : ICompanyQueries
             .ToListAsync(cancellationToken);
 
         return result;
+    }
+
+    public async Task<CompanyTranslationsModel?> FindByIdWithTranslationsAsync(
+        Guid companyId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await _context
+            .Companies.AsNoTracking()
+            .Where(c => c.Id == companyId)
+            .Select(c => new CompanyTranslationsModel(
+                CompanyId: c.Id,
+                ExperienceCount: _context.Experiences.Count(e => e.CompanyId == c.Id),
+                Translations: c.Translations.Select(t => new CompanyTranslationItem(
+                        t.Language,
+                        t.Name,
+                        t.Description
+                    ))
+                    .ToList()
+            ))
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }

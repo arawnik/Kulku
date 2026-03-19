@@ -7,6 +7,7 @@ namespace Kulku.Application.Cover.Models;
 /// </summary>
 public sealed record CompanyTranslationsModel(
     Guid CompanyId,
+    int ExperienceCount,
     IReadOnlyList<CompanyTranslationItem> Translations
 );
 

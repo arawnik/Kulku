@@ -66,6 +66,8 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IIntroductionRepository, IntroductionRepository>();
         services.AddScoped<IExperienceRepository, ExperienceRepository>();
         services.AddScoped<IEducationRepository, EducationRepository>();
+        services.AddScoped<ICompanyRepository, CompanyRepository>();
+        services.AddScoped<IInstitutionRepository, InstitutionRepository>();
 
         services.AddScoped<IContactRequestRepository, ContactRequestRepository>();
 

@@ -1,7 +1,7 @@
+using Kulku.Application.Cover.Company;
 using Kulku.Application.Cover.Experience;
 using Kulku.Application.Cover.Experience.Models;
 using Kulku.Application.Cover.Models;
-using Kulku.Application.Cover.Ports;
 using Kulku.Domain;
 using Kulku.Web.Admin.Components.Cv.Components;
 using Kulku.Web.Admin.Components.Shared;
@@ -20,7 +20,11 @@ partial class Experience(
     ICommandHandler<UpdateExperience.Command> updateHandler,
     ICommandHandler<CreateExperience.Command, Guid> createHandler,
     ICommandHandler<DeleteExperience.Command> deleteHandler,
-    ICompanyQueries companyQueries
+    IQueryHandler<GetCompanies.Query, IReadOnlyList<CompanyTranslationsModel>> companiesHandler,
+    IQueryHandler<GetCompanyDetail.Query, CompanyTranslationsModel?> companyDetailHandler,
+    ICommandHandler<CreateCompany.Command, Guid> createCompanyHandler,
+    ICommandHandler<UpdateCompany.Command> updateCompanyHandler,
+    ICommandHandler<DeleteCompany.Command> deleteCompanyHandler
 )
 {
     private IReadOnlyList<ExperienceTranslationsModel> Experiences { get; set; } = [];
@@ -32,36 +36,50 @@ partial class Experience(
     private ExperienceEditModal? _editModal;
     private IReadOnlyList<CompanyTranslationsModel>? _companies;
 
+    // Company inline CRUD state
+    private IReadOnlyList<CompanyTranslationsModel> _allCompanies = [];
+    private bool _companiesExpanded;
+    private ModalMode? _companyModalMode;
+    private CompanyTranslationsModel? _currentCompany;
+    private CompanyEditModal? _companyModal;
+    private bool _isSavingCompany;
+    private string? _companyErrorMessage;
+
     protected override async Task OnInitializedAsync()
     {
-        await LoadExperiencesAsync();
+        await LoadAllAsync();
     }
 
-    private async Task LoadExperiencesAsync()
+    private async Task LoadAllAsync()
     {
-        var result = await translationsHandler.Handle(
+        var expResult = await translationsHandler.Handle(
             new GetExperienceTranslations.Query(),
             CancellationToken
         );
 
         Experiences =
-            result.IsSuccess && result.Value is not null
+            expResult.IsSuccess && expResult.Value is not null
                 ?
                 [
-                    .. result
+                    .. expResult
                         .Value.OrderBy(m => m.EndDate.HasValue)
                         .ThenByDescending(m => m.EndDate)
                         .ThenByDescending(m => m.StartDate),
                 ]
                 : [];
 
+        var coResult = await companiesHandler.Handle(new GetCompanies.Query(), CancellationToken);
+        _allCompanies = coResult.IsSuccess ? coResult.Value ?? [] : [];
+        _companies = _allCompanies;
+
         _loaded = true;
     }
+
+    // ── Experience CRUD ──────────────────────────────
 
     private async Task HandleCreate()
     {
         _errorMessage = null;
-        _companies ??= await companyQueries.ListAllWithTranslationsAsync(CancellationToken);
 
         var blankTranslations = Defaults
             .SupportedCultures.Select(LanguageCodeFromCulture)
@@ -132,7 +150,7 @@ partial class Experience(
                 if (createResult.IsSuccess)
                 {
                     CloseEditor();
-                    await LoadExperiencesAsync();
+                    await LoadAllAsync();
                     return;
                 }
 
@@ -160,7 +178,7 @@ partial class Experience(
             if (result.IsSuccess)
             {
                 CloseEditor();
-                await LoadExperiencesAsync();
+                await LoadAllAsync();
             }
             else if (result is IValidationResult validation)
             {
@@ -189,7 +207,7 @@ partial class Experience(
 
         if (result.IsSuccess)
         {
-            await LoadExperiencesAsync();
+            await LoadAllAsync();
         }
         else
         {
@@ -208,6 +226,138 @@ partial class Experience(
         CurrentEditModel = null;
         _errorMessage = null;
     }
+
+    // ── Company CRUD ─────────────────────────────────
+
+    private void HandleCreateCompany()
+    {
+        _companyErrorMessage = null;
+        _companiesExpanded = true;
+
+        var blankTranslations = Defaults
+            .SupportedCultures.Select(LanguageCodeFromCulture)
+            .Where(lc => lc.HasValue)
+            .Select(lc => new CompanyTranslationItem(lc!.Value, string.Empty, string.Empty))
+            .ToList();
+
+        _currentCompany = new CompanyTranslationsModel(
+            CompanyId: Guid.NewGuid(),
+            ExperienceCount: 0,
+            Translations: blankTranslations
+        );
+
+        _companyModalMode = ModalMode.Create;
+    }
+
+    private async Task HandleEditCompany(Guid id)
+    {
+        _companyErrorMessage = null;
+        var result = await companyDetailHandler.Handle(
+            new GetCompanyDetail.Query(id),
+            CancellationToken
+        );
+
+        if (result.IsSuccess && result.Value is not null)
+        {
+            _currentCompany = result.Value;
+            _companyModalMode = ModalMode.Edit;
+        }
+        else
+        {
+            _errorMessage = "Failed to load company details.";
+        }
+    }
+
+    private async Task HandleSaveCompany(CompanyTranslationsModel model)
+    {
+        _companyErrorMessage = null;
+        _isSavingCompany = true;
+
+        try
+        {
+            var translations = model
+                .Translations.Select(t => new CompanyTranslationDto(
+                    t.Language,
+                    t.Name,
+                    t.Description
+                ))
+                .ToList();
+
+            if (_companyModalMode == ModalMode.Create)
+            {
+                var result = await createCompanyHandler.Handle(
+                    new CreateCompany.Command(translations),
+                    CancellationToken
+                );
+
+                if (result.IsSuccess)
+                {
+                    CloseCompanyEditor();
+                    await LoadAllAsync();
+                    return;
+                }
+
+                if (result is IValidationResult v)
+                {
+                    _companyModal?.SetServerErrors(v.Errors);
+                    return;
+                }
+
+                _companyErrorMessage = result.Error?.Message ?? "Failed to create company.";
+                return;
+            }
+
+            var updateResult = await updateCompanyHandler.Handle(
+                new UpdateCompany.Command(model.CompanyId, translations),
+                CancellationToken
+            );
+
+            if (updateResult.IsSuccess)
+            {
+                CloseCompanyEditor();
+                await LoadAllAsync();
+            }
+            else if (updateResult is IValidationResult validation)
+            {
+                _companyModal?.SetServerErrors(validation.Errors);
+            }
+            else
+            {
+                _companyErrorMessage = updateResult.Error?.Message ?? "Failed to save company.";
+            }
+        }
+        finally
+        {
+            _isSavingCompany = false;
+        }
+    }
+
+    private async Task HandleDeleteCompany(Guid id)
+    {
+        _errorMessage = null;
+        var result = await deleteCompanyHandler.Handle(
+            new DeleteCompany.Command(id),
+            CancellationToken
+        );
+
+        if (result.IsSuccess)
+        {
+            await LoadAllAsync();
+        }
+        else
+        {
+            _errorMessage = result.Error?.Message ?? "Failed to delete company.";
+        }
+    }
+
+    private void CloseCompanyEditor()
+    {
+        _companyModalMode = null;
+        _currentCompany = null;
+        _companyErrorMessage = null;
+    }
+
+    // ── Helpers ──────────────────────────────────────
 
     private static LanguageCode? LanguageCodeFromCulture(string culture) =>
         culture switch
