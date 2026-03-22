@@ -1,3 +1,4 @@
+using Kulku.Domain.Abstractions;
 using Kulku.Domain.Projects;
 
 namespace Kulku.Domain.Tests;
@@ -37,6 +38,6 @@ public class ProjectTests
         };
 
         // Assert
-        Assert.True(project is Kulku.Domain.Abstractions.ITranslatableEntity<ProjectTranslation>);
+        Assert.True(project is ITranslatableEntity<ProjectTranslation>);
     }
 }
