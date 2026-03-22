@@ -15,9 +15,4 @@ partial class Home
         Store.Interactions.Count(i =>
             i.Direction == InteractionDirection.Outbound && i.Date >= MixCutoff
         );
-
-    private int ActiveIdeasCount =>
-        Store.Ideas.Count(i =>
-            i.Status is IdeaStatus.Seed or IdeaStatus.Exploring or IdeaStatus.Validating
-        );
 }

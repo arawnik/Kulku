@@ -1,0 +1,53 @@
+@using Kulku.Application.IdeaBank.Models
+
+<div class="card mb-2">
+	<div class="card-body py-2 px-3">
+		<div class="d-flex justify-content-between align-items-center">
+			<div class="d-flex align-items-center gap-2">
+				@if (!string.IsNullOrWhiteSpace(Tag.ColorHex))
+				{
+					<span class="rounded-circle d-inline-block" style="width:12px;height:12px;background:@Tag.ColorHex"></span>
+				}
+				<span class="fw-semibold">@Tag.Name</span>
+				<span class="badge bg-secondary bg-opacity-50">@Tag.IdeaCount idea(s)</span>
+			</div>
+
+			<div class="d-flex gap-1">
+				<button class="btn btn-sm btn-outline-primary" title="Edit" @onclick="() => OnEdit.InvokeAsync(Tag)">
+					<Icon Kind="IconKind.Pencil" Size="14" />
+				</button>
+				@if (!_confirmDelete)
+				{
+					<button class="btn btn-sm btn-outline-danger" title="Delete"
+							@onclick="() => _confirmDelete = true">
+						<Icon Kind="IconKind.Trash" Size="14" />
+					</button>
+				}
+				else
+				{
+					<button class="btn btn-sm btn-danger" title="Confirm delete"
+							@onclick="() => OnDelete.InvokeAsync(Tag.Id)">
+						<Icon Kind="IconKind.Check" Size="14" />
+					</button>
+					<button class="btn btn-sm btn-outline-secondary" title="Cancel"
+							@onclick="() => _confirmDelete = false">
+						✕
+					</button>
+				}
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter, EditorRequired]
+	public IdeaTagModel Tag { get; set; } = null!;
+
+	[Parameter]
+	public EventCallback<IdeaTagModel> OnEdit { get; set; }
+
+	[Parameter]
+	public EventCallback<Guid> OnDelete { get; set; }
+
+	private bool _confirmDelete;
+}

@@ -1,0 +1,132 @@
+@page "/ideas"
+
+@using Kulku.Application.IdeaBank.Models
+@using Kulku.Web.Admin.Components.Ideas.Components
+
+@attribute [Authorize]
+
+<PageTitle>Idea Bank</PageTitle>
+
+<div class="container-fluid py-4 px-4">
+	<div class="d-flex justify-content-between align-items-center mb-3">
+		<h3 class="mb-0">💡 Idea Bank</h3>
+		<button class="btn btn-primary btn-sm" @onclick="HandleCreateIdea">
+			<Icon Kind="IconKind.Plus" Size="16" /> New Idea
+		</button>
+	</div>
+
+	@* ── Filters ── *@
+	<div class="row g-2 mb-3">
+		<div class="col-md-3">
+			<input type="text" class="form-control form-control-sm" placeholder="Search…"
+				   @bind="_searchText" @bind:event="oninput" />
+		</div>
+		<div class="col-md-2">
+			<select class="form-select form-select-sm" @bind="_filterDomainId">
+				<option value="@Guid.Empty">All Domains</option>
+				@foreach (var d in _domains)
+				{
+					<option value="@d.Id">@d.Name</option>
+				}
+			</select>
+		</div>
+		<div class="col-md-2">
+			<select class="form-select form-select-sm" @bind="_filterStatusId">
+				<option value="@Guid.Empty">All Statuses</option>
+				@foreach (var s in _statuses)
+				{
+					<option value="@s.Id">@s.Name</option>
+				}
+			</select>
+		</div>
+		<div class="col-md-2">
+			<select class="form-select form-select-sm" @bind="_filterPriorityId">
+				<option value="@Guid.Empty">All Priorities</option>
+				@foreach (var p in _priorities)
+				{
+					<option value="@p.Id">@p.Name</option>
+				}
+			</select>
+		</div>
+		<div class="col-md-2">
+			<select class="form-select form-select-sm" @bind="_filterTagId">
+				<option value="@Guid.Empty">All Tags</option>
+				@foreach (var t in _tags)
+				{
+					<option value="@t.Id">@t.Name</option>
+				}
+			</select>
+		</div>
+	</div>
+
+	@* ── Ideas List ── *@
+	@{
+		var filtered = FilteredIdeas;
+	}
+
+	@if (filtered.Count == 0)
+	{
+		<div class="text-muted text-center py-4">
+			@(_ideas.Count == 0 ? "No ideas yet. Capture your first spark!" : "No ideas match the current filters.")
+		</div>
+	}
+	else
+	{
+		@foreach (var idea in filtered)
+		{
+			<IdeaCard Idea="@idea" OnEdit="HandleEditIdea" OnDelete="HandleDeleteIdea" />
+		}
+	}
+
+	@* ── Tags Section (collapsible) ── *@
+	<div class="mt-4">
+		<div class="d-flex align-items-center gap-2 mb-2 cursor-pointer" @onclick="() => _tagsExpanded = !_tagsExpanded">
+			<Icon Kind="@(_tagsExpanded? IconKind.ChevronDown: IconKind.ChevronRight)" Size="16" />
+			<h5 class="mb-0">Tags</h5>
+			<span class="badge bg-secondary">@_tags.Count</span>
+		</div>
+
+		@if (_tagsExpanded)
+		{
+			<div class="mb-2">
+				<button class="btn btn-outline-primary btn-sm" @onclick="HandleCreateTag">
+					<Icon Kind="IconKind.Plus" Size="14" /> New Tag
+				</button>
+			</div>
+
+			@if (_tags.Count == 0)
+			{
+				<p class="text-muted">No tags yet.</p>
+			}
+			else
+			{
+				@foreach (var tag in _tags)
+				{
+					<IdeaTagCard Tag="@tag" OnEdit="HandleEditTag" OnDelete="HandleDeleteTag" />
+				}
+			}
+		}
+	</div>
+</div>
+
+@* ── Modals ── *@
+<IdeaEditModal @ref="_ideaModal"
+			   Model="@_editingIdea"
+			   Mode="@_ideaMode"
+			   Domains="@_domains"
+			   Statuses="@_statuses"
+			   Priorities="@_priorities"
+			   Tags="@_tags"
+			   Keywords="@_keywords"
+			   OnSave="HandleSaveIdea"
+			   OnCancel="CloseIdeaEditor"
+			   IsSaving="@_ideaSaving"
+			   ErrorMessage="@_ideaError" />
+
+<IdeaTagEditModal @ref="_tagModal"
+				  Model="@_editingTag"
+				  Mode="@_tagMode"
+				  OnSave="HandleSaveTag"
+				  OnCancel="CloseTagEditor"
+				  IsSaving="@_tagSaving"
+				  ErrorMessage="@_tagError" />

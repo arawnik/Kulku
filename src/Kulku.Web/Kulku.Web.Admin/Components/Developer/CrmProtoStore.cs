@@ -27,17 +27,8 @@ public enum CompanyStage
     Parked,
 }
 
-public enum IdeaStatus
-{
-    Seed,
-    Exploring,
-    Validating,
-    Parked,
-    PromotedToBacklog,
-}
-
 /// <summary>
-/// One configurable category set used across CRM + IdeaBank.
+/// One configurable category set used across CRM.
 /// Example: HealthTech, Gaming, FinTech, Public Sector...
 /// </summary>
 public sealed record CategoryLite(Guid Id, string Name, string? ColorToken = null);
@@ -85,31 +76,14 @@ public sealed record InteractionLite(
     DateTime? NextActionDue
 );
 
-public sealed record IdeaLite(
-    Guid Id,
-    string Title,
-    string? OneLiner,
-    string Description,
-    IdeaStatus Status,
-    int ValueScore, // 1–10
-    int FeasibilityScore, // 1–10
-    DateTime CreatedAt,
-    DateTime UpdatedAt,
-    IReadOnlyList<Guid> CategoryIds,
-    IReadOnlyList<Guid> LinkedCompanyIds
-);
-
 public sealed class CrmProtoStore
 {
     private readonly List<CategoryLite> _categories = new();
     private readonly List<CompanyLite> _companies = new();
     private readonly List<InteractionLite> _interactions = new();
-    private readonly List<IdeaLite> _ideas = new();
-
     public IReadOnlyList<CategoryLite> Categories => _categories;
     public IReadOnlyList<CompanyLite> Companies => _companies;
     public IReadOnlyList<InteractionLite> Interactions => _interactions;
-    public IReadOnlyList<IdeaLite> Ideas => _ideas;
 
     public CrmProtoStore()
     {
@@ -283,55 +257,6 @@ public sealed class CrmProtoStore
                 NextActionDue: DateTime.Today.AddDays(45)
             )
         );
-
-        // Ideas (linkable to companies + categorized)
-        AddOrUpdateIdea(
-            new IdeaLite(
-                Id: Guid.NewGuid(),
-                Title: "Secure inbound funnel → CRM pipeline",
-                OneLiner: "Make CV contact + email capture into unified interaction logging.",
-                Description: "Unify contact form submissions, email, and LinkedIn into one Interaction model. Add basic spam protection and a review queue. Promote validated opportunities into CRM focus list.",
-                Status: IdeaStatus.Validating,
-                ValueScore: 9,
-                FeasibilityScore: 8,
-                CreatedAt: DateTime.Today.AddDays(-30),
-                UpdatedAt: DateTime.Today.AddDays(-6),
-                CategoryIds: [b2b.Id, fintech.Id],
-                LinkedCompanyIds: [c1.Id, c2.Id]
-            )
-        );
-
-        AddOrUpdateIdea(
-            new IdeaLite(
-                Id: Guid.NewGuid(),
-                Title: "Long-horizon relationship timeline view",
-                OneLiner: "Timeline grouped by quarter with 'staleness' decisions.",
-                Description: "Company page shows touchpoints grouped by quarter; prompts to decide: rekindle / park / archive. Prevents 'inbox CRM' behavior.",
-                Status: IdeaStatus.Exploring,
-                ValueScore: 8,
-                FeasibilityScore: 7,
-                CreatedAt: DateTime.Today.AddDays(-18),
-                UpdatedAt: DateTime.Today.AddDays(-18),
-                CategoryIds: [publicSector.Id],
-                LinkedCompanyIds: [c4.Id]
-            )
-        );
-
-        AddOrUpdateIdea(
-            new IdeaLite(
-                Id: Guid.NewGuid(),
-                Title: "Domain-driven 'case study generator'",
-                OneLiner: "Convert internal notes into polished CV/portfolio artifacts.",
-                Description: "Take CRM interactions + delivery notes and generate anonymized case studies to publish. Drives inbound quality long-term.",
-                Status: IdeaStatus.Seed,
-                ValueScore: 7,
-                FeasibilityScore: 5,
-                CreatedAt: DateTime.Today.AddDays(-5),
-                UpdatedAt: DateTime.Today.AddDays(-5),
-                CategoryIds: [health.Id, gaming.Id],
-                LinkedCompanyIds: [c3.Id]
-            )
-        );
     }
 
     // ===== Categories =====
@@ -395,28 +320,4 @@ public sealed class CrmProtoStore
 
     public IReadOnlyList<InteractionLite> GetCompanyInteractions(Guid companyId) =>
         _interactions.Where(i => i.CompanyId == companyId).OrderByDescending(i => i.Date).ToList();
-
-    // ===== Ideas =====
-    public IdeaLite? GetIdea(Guid id) => _ideas.FirstOrDefault(i => i.Id == id);
-
-    public void AddOrUpdateIdea(IdeaLite idea)
-    {
-        var existing = _ideas.FirstOrDefault(i => i.Id == idea.Id);
-        if (existing is null)
-        {
-            _ideas.Add(idea);
-            return;
-        }
-
-        _ideas[_ideas.IndexOf(existing)] = idea;
-    }
-
-    public void DeleteIdea(Guid id)
-    {
-        var existing = _ideas.FirstOrDefault(i => i.Id == id);
-        if (existing is not null)
-        {
-            _ideas.Remove(existing);
-        }
-    }
 }

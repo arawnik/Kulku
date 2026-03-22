@@ -31,6 +31,9 @@ public enum IconKind
     /// <summary>Plus square (filled) — CV / content section.</summary>
     PlusSquare,
 
+    /// <summary>File earmark person — CV / résumé.</summary>
+    FileEarmarkPerson,
+
     /// <summary>Nested list — list / catalogue section.</summary>
     ListNested,
 
@@ -49,6 +52,9 @@ public enum IconKind
     /// <summary>Left arrow bar — collapse / toggle sidebar.</summary>
     ArrowBarLeft,
 
+    /// <summary>Right arrow bar — expand sidebar.</summary>
+    ArrowBarRight,
+
     /// <summary>File text — introduction / document.</summary>
     FileText,
 
@@ -63,6 +69,9 @@ public enum IconKind
 
     /// <summary>Tags — keywords / categories.</summary>
     Tags,
+
+    /// <summary>Journal/notebook — idea bank.</summary>
+    Journal,
 
     // ── Indicators ──
 

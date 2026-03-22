@@ -360,6 +360,283 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
                     b.ToTable("IntroductionTranslations");
                 });
 
+            modelBuilder.Entity("Kulku.Domain.Ideas.Idea", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<Guid>("DomainId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PriorityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("StatusId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Summary")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DomainId");
+
+                    b.HasIndex("PriorityId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("Ideas");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaDomain", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("Icon")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IdeaDomains");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaDomainTranslation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<Guid>("IdeaDomainId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .IsUnicode(false)
+                        .HasColumnType("character varying(2)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdeaDomainId", "Language")
+                        .IsUnique();
+
+                    b.ToTable("IdeaDomainTranslations");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaIdeaTag", b =>
+                {
+                    b.Property<Guid>("IdeaId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("IdeaTagId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("IdeaId", "IdeaTagId");
+
+                    b.HasIndex("IdeaTagId");
+
+                    b.ToTable("IdeaIdeaTag");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaKeyword", b =>
+                {
+                    b.Property<Guid>("IdeaId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("KeywordId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("IdeaId", "KeywordId");
+
+                    b.HasIndex("KeywordId");
+
+                    b.ToTable("IdeaKeyword");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaNote", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("IdeaId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdeaId");
+
+                    b.ToTable("IdeaNotes");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaPriority", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Style")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IdeaPriorities");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaPriorityTranslation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<Guid>("IdeaPriorityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .IsUnicode(false)
+                        .HasColumnType("character varying(2)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdeaPriorityId", "Language")
+                        .IsUnique();
+
+                    b.ToTable("IdeaPriorityTranslations");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaStatus", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Style")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IdeaStatuses");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaStatusTranslation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<Guid>("IdeaStatusId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .IsUnicode(false)
+                        .HasColumnType("character varying(2)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdeaStatusId", "Language")
+                        .IsUnique();
+
+                    b.ToTable("IdeaStatusTranslations");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaTag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("ColorHex")
+                        .HasMaxLength(9)
+                        .HasColumnType("character varying(9)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IdeaTags");
+                });
+
             modelBuilder.Entity("Kulku.Domain.Projects.Keyword", b =>
                 {
                     b.Property<Guid>("Id")
@@ -635,6 +912,115 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
                     b.Navigation("Introduction");
                 });
 
+            modelBuilder.Entity("Kulku.Domain.Ideas.Idea", b =>
+                {
+                    b.HasOne("Kulku.Domain.Ideas.IdeaDomain", "Domain")
+                        .WithMany("Ideas")
+                        .HasForeignKey("DomainId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Kulku.Domain.Ideas.IdeaPriority", "Priority")
+                        .WithMany("Ideas")
+                        .HasForeignKey("PriorityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Kulku.Domain.Ideas.IdeaStatus", "Status")
+                        .WithMany("Ideas")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Domain");
+
+                    b.Navigation("Priority");
+
+                    b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaDomainTranslation", b =>
+                {
+                    b.HasOne("Kulku.Domain.Ideas.IdeaDomain", "IdeaDomain")
+                        .WithMany("Translations")
+                        .HasForeignKey("IdeaDomainId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("IdeaDomain");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaIdeaTag", b =>
+                {
+                    b.HasOne("Kulku.Domain.Ideas.Idea", "Idea")
+                        .WithMany("IdeaIdeaTags")
+                        .HasForeignKey("IdeaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Kulku.Domain.Ideas.IdeaTag", "IdeaTag")
+                        .WithMany("IdeaIdeaTags")
+                        .HasForeignKey("IdeaTagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Idea");
+
+                    b.Navigation("IdeaTag");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaKeyword", b =>
+                {
+                    b.HasOne("Kulku.Domain.Ideas.Idea", "Idea")
+                        .WithMany("IdeaKeywords")
+                        .HasForeignKey("IdeaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Kulku.Domain.Projects.Keyword", "Keyword")
+                        .WithMany("IdeaKeywords")
+                        .HasForeignKey("KeywordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Idea");
+
+                    b.Navigation("Keyword");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaNote", b =>
+                {
+                    b.HasOne("Kulku.Domain.Ideas.Idea", "Idea")
+                        .WithMany("Notes")
+                        .HasForeignKey("IdeaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Idea");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaPriorityTranslation", b =>
+                {
+                    b.HasOne("Kulku.Domain.Ideas.IdeaPriority", "IdeaPriority")
+                        .WithMany("Translations")
+                        .HasForeignKey("IdeaPriorityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("IdeaPriority");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaStatusTranslation", b =>
+                {
+                    b.HasOne("Kulku.Domain.Ideas.IdeaStatus", "IdeaStatus")
+                        .WithMany("Translations")
+                        .HasForeignKey("IdeaStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("IdeaStatus");
+                });
+
             modelBuilder.Entity("Kulku.Domain.Projects.Keyword", b =>
                 {
                     b.HasOne("Kulku.Domain.Projects.Proficiency", "Proficiency")
@@ -723,8 +1109,45 @@ namespace Kulku.Persistence.Pgsql.Migrations.AppDb
                     b.Navigation("Translations");
                 });
 
+            modelBuilder.Entity("Kulku.Domain.Ideas.Idea", b =>
+                {
+                    b.Navigation("IdeaIdeaTags");
+
+                    b.Navigation("IdeaKeywords");
+
+                    b.Navigation("Notes");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaDomain", b =>
+                {
+                    b.Navigation("Ideas");
+
+                    b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaPriority", b =>
+                {
+                    b.Navigation("Ideas");
+
+                    b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaStatus", b =>
+                {
+                    b.Navigation("Ideas");
+
+                    b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("Kulku.Domain.Ideas.IdeaTag", b =>
+                {
+                    b.Navigation("IdeaIdeaTags");
+                });
+
             modelBuilder.Entity("Kulku.Domain.Projects.Keyword", b =>
                 {
+                    b.Navigation("IdeaKeywords");
+
                     b.Navigation("ProjectKeywords");
 
                     b.Navigation("Translations");

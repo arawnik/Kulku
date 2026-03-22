@@ -1,6 +1,8 @@
 @page "/developer/"
 @inject CrmProtoStore Store
 
+@attribute [Authorize]
+
 <PageTitle>CRM Dashboard</PageTitle>
 
 <div class="container-fluid py-4">
@@ -15,7 +17,6 @@
 
 		<div class="d-flex flex-wrap gap-2">
 			<NavLink class="btn btn-sm btn-primary" href="developer/loginteraction">+ Log interaction</NavLink>
-			<NavLink class="btn btn-sm btn-outline-secondary" href="developer/ideas">Idea Bank</NavLink>
 		</div>
 	</div>
 
@@ -60,18 +61,6 @@
 			</div>
 		</div>
 
-		<div class="col-6 col-md-3">
-			<div class="card shadow-sm h-100">
-				<div class="card-body">
-					<div class="text-uppercase text-muted small mb-1">Ideas (active)</div>
-					<div class="d-flex align-items-baseline gap-2">
-						<div class="h2 mb-0">@ActiveIdeasCount</div>
-						<span class="badge text-bg-dark">developer zone</span>
-					</div>
-					<div class="text-muted small mt-2">Seeds to validate, not tickets yet.</div>
-				</div>
-			</div>
-		</div>
 	</div>
 
 	<!-- Top row: channel mix + next actions -->
@@ -189,9 +178,9 @@
 		</div>
 	</div>
 
-	<!-- Bottom row: interaction stream + idea bank preview -->
+	<!-- Bottom row: interaction stream -->
 	<div class="row g-3">
-		<div class="col-12 col-xl-8">
+		<div class="col-12">
 			<div class="card shadow-sm">
 				<div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
 					<div>
@@ -272,58 +261,6 @@
 				</div>
 			</div>
 		</div>
-
-		<div class="col-12 col-xl-4">
-			<div class="card shadow-sm">
-				<div class="card-header d-flex justify-content-between align-items-center">
-					<div>
-						<strong>Idea Bank</strong>
-						<div class="text-muted small">Ideas to validate; optionally linked to prospects.</div>
-					</div>
-					<NavLink class="btn btn-sm btn-outline-secondary" href="developer/ideas">Open</NavLink>
-				</div>
-
-				<div class="card-body">
-					@if (IdeaPreview.Count == 0)
-					{
-						<div class="text-muted">No active ideas. Capture seeds before they become tickets.</div>
-					}
-					else
-					{
-						<div class="list-group list-group-flush">
-							@foreach (var idea in IdeaPreview)
-							{
-								<div class="list-group-item px-0">
-									<div class="d-flex justify-content-between align-items-start">
-										<div class="fw-semibold">@idea.Title</div>
-										<span class="badge @IdeaStatusBadge(idea.Status)">@idea.Status</span>
-									</div>
-
-									@if (!string.IsNullOrWhiteSpace(idea.OneLiner))
-									{
-										<div class="text-muted small">@idea.OneLiner</div>
-									}
-
-									<div class="mt-2 d-flex flex-wrap gap-2">
-										<span class="badge text-bg-dark">V @idea.ValueScore</span>
-										<span class="badge text-bg-secondary">F @idea.FeasibilityScore</span>
-
-										@if (idea.LinkedCompanyIds.Count > 0)
-										{
-											<span class="badge text-bg-success">@idea.LinkedCompanyIds.Count linked</span>
-										}
-									</div>
-								</div>
-							}
-						</div>
-					}
-				</div>
-
-				<div class="card-footer text-muted small">
-					Link ideas to companies when it helps validation (who to ask, who benefits).
-				</div>
-			</div>
-		</div>
 	</div>
 </div>
 
@@ -336,9 +273,6 @@
 
 	private int OutboundTotal =>
 		Store.Interactions.Count(i => i.Direction == InteractionDirection.Outbound && i.Date >= MixCutoff);
-
-	private int ActiveIdeasCount =>
-		Store.Ideas.Count(i => i.Status is IdeaStatus.Seed or IdeaStatus.Exploring or IdeaStatus.Validating);
 
 	// Channel mix
 	private sealed record ChannelMixRow(
@@ -422,15 +356,6 @@
 		return names.Count == 0 ? null : string.Join(" • ", names);
 	}
 
-	// Ideas preview
-	private List<IdeaLite> IdeaPreview =>
-		Store.Ideas
-			.Where(i => i.Status is IdeaStatus.Validating or IdeaStatus.Exploring or IdeaStatus.Seed)
-			.OrderByDescending(i => (i.ValueScore * 10) + i.FeasibilityScore)
-			.ThenByDescending(i => i.UpdatedAt)
-			.Take(6)
-			.ToList();
-
 	// UI helpers
 	private static string ChannelLabel(InteractionChannel ch) => ch switch
 	{
@@ -465,14 +390,4 @@
 		if (days <= 7) return "text-bg-warning";
 		return "text-bg-secondary";
 	}
-
-	private static string IdeaStatusBadge(IdeaStatus status) => status switch
-	{
-		IdeaStatus.Seed => "text-bg-secondary",
-		IdeaStatus.Exploring => "text-bg-info",
-		IdeaStatus.Validating => "text-bg-warning",
-		IdeaStatus.Parked => "text-bg-dark",
-		IdeaStatus.PromotedToBacklog => "text-bg-success",
-		_ => "text-bg-light"
-	};
 }

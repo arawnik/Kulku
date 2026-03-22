@@ -9,6 +9,8 @@ using Kulku.Application.Cover.Institution;
 using Kulku.Application.Cover.Introduction;
 using Kulku.Application.Cover.Introduction.Models;
 using Kulku.Application.Cover.Models;
+using Kulku.Application.IdeaBank;
+using Kulku.Application.IdeaBank.Models;
 using Kulku.Application.Projects;
 using Kulku.Application.Projects.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,6 +41,11 @@ public static class ApplicationDependencyInjection
         services.AddScoped<
             IQueryHandler<GetKeywords.Query, IReadOnlyList<KeywordModel>>,
             GetKeywords.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetKeywordsForPicker.Query, IReadOnlyList<KeywordPickerModel>>,
+            GetKeywordsForPicker.Handler
         >();
 
         services.AddScoped<
@@ -225,6 +232,46 @@ public static class ApplicationDependencyInjection
         services.AddScoped<ICommandHandler<UpdateInstitution.Command>, UpdateInstitution.Handler>();
 
         services.AddScoped<ICommandHandler<DeleteInstitution.Command>, DeleteInstitution.Handler>();
+
+        // Idea Bank
+        services.AddScoped<
+            IQueryHandler<GetIdeas.Query, IReadOnlyList<IdeaListModel>>,
+            GetIdeas.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetIdeaDetail.Query, IdeaDetailModel?>,
+            GetIdeaDetail.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetIdeaDomains.Query, IReadOnlyList<IdeaDomainModel>>,
+            GetIdeaDomains.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetIdeaStatuses.Query, IReadOnlyList<IdeaStatusModel>>,
+            GetIdeaStatuses.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetIdeaPriorities.Query, IReadOnlyList<IdeaPriorityModel>>,
+            GetIdeaPriorities.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetIdeaTags.Query, IReadOnlyList<IdeaTagModel>>,
+            GetIdeaTags.Handler
+        >();
+
+        services.AddScoped<ICommandHandler<CreateIdea.Command, Guid>, CreateIdea.Handler>();
+        services.AddScoped<ICommandHandler<UpdateIdea.Command>, UpdateIdea.Handler>();
+        services.AddScoped<ICommandHandler<DeleteIdea.Command>, DeleteIdea.Handler>();
+        services.AddScoped<ICommandHandler<AddIdeaNote.Command, Guid>, AddIdeaNote.Handler>();
+        services.AddScoped<ICommandHandler<DeleteIdeaNote.Command>, DeleteIdeaNote.Handler>();
+        services.AddScoped<ICommandHandler<CreateIdeaTag.Command, Guid>, CreateIdeaTag.Handler>();
+        services.AddScoped<ICommandHandler<UpdateIdeaTag.Command>, UpdateIdeaTag.Handler>();
+        services.AddScoped<ICommandHandler<DeleteIdeaTag.Command>, DeleteIdeaTag.Handler>();
 
         return services;
     }

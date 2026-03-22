@@ -5,9 +5,11 @@ using Kulku.Application.Cover.Education.Ports;
 using Kulku.Application.Cover.Experience.Ports;
 using Kulku.Application.Cover.Introduction.Ports;
 using Kulku.Application.Cover.Ports;
+using Kulku.Application.IdeaBank.Ports;
 using Kulku.Application.Projects.Ports;
 using Kulku.Domain.Repositories;
 using Kulku.Infrastructure.Queries;
+using Kulku.Infrastructure.Queries.Ideas;
 using Kulku.Infrastructure.Rendering;
 using Kulku.Infrastructure.Repositories;
 using Kulku.Infrastructure.Security;
@@ -71,6 +73,9 @@ public static class InfrastructureDependencyInjection
 
         services.AddScoped<IContactRequestRepository, ContactRequestRepository>();
 
+        services.AddScoped<IIdeaRepository, IdeaRepository>();
+        services.AddScoped<IIdeaTagRepository, IdeaTagRepository>();
+
         // Queries
         services.AddScoped<IProjectQueries, ProjectQueries>();
         services.AddScoped<IKeywordQueries, KeywordQueries>();
@@ -81,6 +86,12 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IEducationQueries, EducationQueries>();
         services.AddScoped<IInstitutionQueries, InstitutionQueries>();
         services.AddScoped<ICompanyQueries, CompanyQueries>();
+
+        services.AddScoped<IIdeaQueries, IdeaQueries>();
+        services.AddScoped<IIdeaDomainQueries, IdeaDomainQueries>();
+        services.AddScoped<IIdeaStatusQueries, IdeaStatusQueries>();
+        services.AddScoped<IIdeaPriorityQueries, IdeaPriorityQueries>();
+        services.AddScoped<IIdeaTagQueries, IdeaTagQueries>();
 
         return services;
     }

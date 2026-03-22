@@ -1,0 +1,88 @@
+<div>
+	<div class="d-flex align-items-center gap-2 mb-1">
+		@if (!string.IsNullOrWhiteSpace(Label))
+		{
+			<label class="form-label mb-0">@Label</label>
+		}
+		<div class="btn-group btn-group-sm" role="group">
+			<button type="button"
+					class="btn @(_previewing ? "btn-outline-secondary" : "btn-secondary") btn-sm py-0 px-2"
+					@onclick="() => _previewing = false"
+					@onclick:preventDefault>
+				Write
+			</button>
+			<button type="button"
+					class="btn @(_previewing ? "btn-secondary" : "btn-outline-secondary") btn-sm py-0 px-2"
+					@onclick="() => _previewing = true"
+					@onclick:preventDefault>
+				Preview
+			</button>
+		</div>
+	</div>
+	@if (_previewing)
+	{
+		<div class="form-control bg-body-secondary overflow-auto" style="min-height:@(MinHeight)rem;max-height:16rem;">
+			@if (!string.IsNullOrWhiteSpace(Value))
+			{
+				<MarkdownView Content="@Value" />
+			}
+			else
+			{
+				<span class="text-muted fst-italic">Nothing to preview.</span>
+			}
+		</div>
+	}
+	else
+	{
+		<InputTextArea Value="@Value"
+					   ValueChanged="@ValueChanged"
+					   ValueExpression="@(() => Value)"
+					   class="form-control" rows="@Rows"
+					   disabled="@Disabled"
+					   placeholder="@Placeholder" />
+	}
+	<div class="form-text">Supports Markdown syntax. HTML tags are stripped for safety.</div>
+</div>
+
+@code {
+	/// <summary>
+	/// The markdown text value (two-way bindable).
+	/// </summary>
+	[Parameter]
+	public string Value { get; set; } = string.Empty;
+
+	[Parameter]
+	public EventCallback<string> ValueChanged { get; set; }
+
+	/// <summary>
+	/// Optional label shown above the toggle buttons.
+	/// </summary>
+	[Parameter]
+	public string? Label { get; set; }
+
+	/// <summary>
+	/// Number of rows for the textarea.
+	/// </summary>
+	[Parameter]
+	public int Rows { get; set; } = 6;
+
+	/// <summary>
+	/// Minimum height (in rem) for the preview pane.
+	/// </summary>
+	[Parameter]
+	public int MinHeight { get; set; } = 6;
+
+	/// <summary>
+	/// Whether the textarea is disabled.
+	/// </summary>
+	[Parameter]
+	public bool Disabled { get; set; }
+
+	/// <summary>
+	/// Placeholder text for the textarea.
+	/// </summary>
+	[Parameter]
+	public string? Placeholder { get; set; }
+
+	private bool _previewing;
+}

@@ -15,6 +15,7 @@ This repository is a public-facing showcase. Optimize for coherence, readability
   - Reads (queries) are implemented via query ports (e.g., `IProjectQueries`) and query handlers.
   - Writes (commands) are implemented via command handlers and domain repositories/stores.
   - Avoid “repository returns DTO” patterns. Prefer read ports for read models.
+  - **Presentation layers (`Web.Api`, `Web.Admin`) must never inject query port interfaces directly.** Always route reads through `IQueryHandler<TQuery, TResult>`. Query ports are internal implementation details consumed only by `Application` handlers and implemented by `Infrastructure`.
 
 - **Vertical slice pragmatism**
   - Keep use cases compact and feature-scoped.
@@ -72,13 +73,25 @@ This repository is a public-facing showcase. Optimize for coherence, readability
 - Prefer `ConfigureConventions` for global rules (enum storage, LanguageCode converter).
 - Use `.AsNoTracking()` for query/read-side EF queries unless tracking is required.
 
-## Ports and implementations
+## Read/write data access (CQRS ports)
 
-- Place ports in `Application`:
-  - Read ports: `IProjectQueries`, `IKeywordQueries`, etc.
-  - External boundary ports: `IRecaptchaValidator` under `Application.Abstractions.Security`.
-- Implement ports in `Infrastructure` (EF query services) or `Web.Api` (request context adapters).
-- Do not leak EF Core entities to `Application` models. Project to `*Model` in query implementations.
+The architecture uses two parallel port families for data access, one for each side of CQRS. Both follow the same enforcement rule: **presentation layers must never inject them directly** — always go through `IQueryHandler<>` or `ICommandHandler<>`.
+
+- **Query ports (read-side)**
+  - Defined in `Application/*/Ports/` (e.g. `IProjectQueries`, `IIdeaQueries`).
+  - Consumed by query handlers (`GetProjects.Handler`, `GetIdeas.Handler`, etc.) inside `Application`.
+  - Implemented in `Infrastructure/Queries/` using EF Core with `.AsNoTracking()` and `LeftJoin` for translations.
+  - Return `*Model` records — never leak EF Core entities to `Application`.
+
+- **Repositories (write-side)**
+  - Defined in `Domain/Repositories/` (e.g. `IProjectRepository`, `IIdeaRepository`).
+  - All inherit from `IEntityRepository<T>` which provides `GetByIdAsync`, `Add`, and `Remove`.
+  - Consumed by command handlers (`CreateProject.Handler`, `UpdateIdea.Handler`, etc.) inside `Application`, always paired with `IUnitOfWork`.
+  - Implemented in `Infrastructure/Repositories/` using EF Core tracked entities.
+
+- **External boundary ports**
+  - Non-data ports like `IRecaptchaValidator` live under `Application.Abstractions.Security`.
+  - Implemented in `Infrastructure` (HTTP clients, etc.) or `Web.Api` (request context adapters like `ILanguageContext`).
 
 ## Web.Api conventions (Carter/minimal APIs)
 
@@ -119,7 +132,7 @@ This repository is a public-facing showcase. Optimize for coherence, readability
 Each admin section for a translatable entity follows a consistent vertical slice:
 
 - **Page code-behind** (`*.razor.cs`):
-  - Primary constructor DI for query/command handlers and read-side ports.
+  - Primary constructor DI for query and command handlers.
   - `ModalMode? _modalMode` tracks whether the modal is in Create or Edit mode (null = closed).
   - `HandleCreate()` — loads parent entities (e.g. companies, institutions) once, builds a blank model with translations for all `Defaults.SupportedCultures`, sets `_modalMode = ModalMode.Create`.
   - `HandleEdit(Guid)` — fetches detail via query handler, sets `_modalMode = ModalMode.Edit`.

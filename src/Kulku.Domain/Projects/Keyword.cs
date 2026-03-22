@@ -1,4 +1,5 @@
 using Kulku.Domain.Abstractions;
+using Kulku.Domain.Ideas;
 
 namespace Kulku.Domain.Projects;
 
@@ -45,6 +46,11 @@ public class Keyword : ITranslatableEntity<KeywordTranslation>
     /// Collection of associations between this keyword and projects.
     /// </summary>
     public ICollection<ProjectKeyword> ProjectKeywords { get; init; } = [];
+
+    /// <summary>
+    /// Collection of associations between this keyword and ideas.
+    /// </summary>
+    public ICollection<IdeaKeyword> IdeaKeywords { get; init; } = [];
 
     /// <summary>
     /// Navigation property for the proficiency level associated with this keyword.

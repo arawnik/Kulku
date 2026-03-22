@@ -1,6 +1,5 @@
 using Kulku.Application.Projects;
 using Kulku.Application.Projects.Models;
-using Kulku.Application.Projects.Ports;
 using Kulku.Domain;
 using Kulku.Web.Admin.Components.Cv.Components;
 using Kulku.Web.Admin.Components.Shared;
@@ -15,10 +14,10 @@ partial class ProjectsPage(
         IReadOnlyList<ProjectTranslationsModel>
     > translationsHandler,
     IQueryHandler<GetProjectDetail.Query, ProjectTranslationsModel?> detailHandler,
+    IQueryHandler<GetKeywordsForPicker.Query, IReadOnlyList<KeywordPickerModel>> getKeywordsHandler,
     ICommandHandler<UpdateProject.Command> updateHandler,
     ICommandHandler<CreateProject.Command, Guid> createHandler,
-    ICommandHandler<DeleteProject.Command> deleteHandler,
-    IKeywordQueries keywordQueries
+    ICommandHandler<DeleteProject.Command> deleteHandler
 )
 {
     private IReadOnlyList<ProjectTranslationsModel> Projects { get; set; } = [];
@@ -53,7 +52,7 @@ partial class ProjectsPage(
     private async Task HandleCreate()
     {
         _errorMessage = null;
-        _keywords ??= await keywordQueries.ListAllForPickerAsync(CancellationToken);
+        _keywords ??= await LoadKeywordsAsync();
 
         var blankTranslations = Defaults
             .SupportedCultures.Select(LanguageCodeFromCulture)
@@ -80,7 +79,7 @@ partial class ProjectsPage(
     private async Task HandleEdit(Guid projectId)
     {
         _errorMessage = null;
-        _keywords ??= await keywordQueries.ListAllForPickerAsync(CancellationToken);
+        _keywords ??= await LoadKeywordsAsync();
 
         var result = await detailHandler.Handle(
             new GetProjectDetail.Query(projectId),
@@ -208,6 +207,20 @@ partial class ProjectsPage(
         _modalMode = null;
         CurrentEditModel = null;
         _errorMessage = null;
+    }
+
+    private async Task<IReadOnlyList<KeywordPickerModel>> LoadKeywordsAsync()
+    {
+        var result = await getKeywordsHandler.Handle(
+            new GetKeywordsForPicker.Query(),
+            CancellationToken
+        );
+
+        if (result.IsSuccess)
+            return result.Value ?? [];
+
+        _errorMessage = result.Error?.Message ?? "Failed to load keywords.";
+        return [];
     }
 
     /// <summary>

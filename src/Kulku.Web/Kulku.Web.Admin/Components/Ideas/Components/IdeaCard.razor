@@ -1,0 +1,87 @@
+@using Kulku.Application.IdeaBank.Models
+
+<div class="card mb-2">
+	<div class="card-body py-2 px-3">
+		<div class="d-flex justify-content-between align-items-start">
+			<div class="flex-grow-1 me-2">
+				<div class="d-flex align-items-center gap-2 mb-1">
+					<span class="badge @Idea.StatusStyle">@Idea.StatusName</span>
+					<span class="badge @Idea.PriorityStyle">@Idea.PriorityName</span>
+					<small class="text-muted" title="Domain">
+						<i class="bi bi-@Idea.DomainIcon"></i> @Idea.DomainName
+					</small>
+				</div>
+
+				<h6 class="mb-1">
+					<a href="/ideas/@Idea.Id" class="text-decoration-none">@Idea.Title</a>
+				</h6>
+
+				@if (!string.IsNullOrWhiteSpace(Idea.Summary))
+				{
+					<small class="text-muted">@Idea.Summary</small>
+				}
+
+				<div class="d-flex align-items-center gap-2 mt-1">
+					@foreach (var tag in Idea.TagNames)
+					{
+						<span class="badge bg-secondary bg-opacity-50 fw-normal">@tag</span>
+					}
+					@foreach (var kw in Idea.KeywordNames)
+					{
+						<span class="badge bg-success bg-opacity-50 fw-normal">@kw</span>
+					}
+
+					@if (Idea.NoteCount > 0)
+					{
+						<small class="text-muted" title="@Idea.NoteCount note(s)">
+							📝 @Idea.NoteCount
+						</small>
+					}
+				</div>
+			</div>
+
+			<div class="d-flex gap-1 flex-shrink-0">
+				<button class="btn btn-sm btn-outline-primary" title="Edit" @onclick="() => OnEdit.InvokeAsync(Idea)">
+					<Icon Kind="IconKind.Pencil" Size="14" />
+				</button>
+				@if (!_confirmDelete)
+				{
+					<button class="btn btn-sm btn-outline-danger" title="Delete"
+							@onclick="() => _confirmDelete = true">
+						<Icon Kind="IconKind.Trash" Size="14" />
+					</button>
+				}
+				else
+				{
+					<button class="btn btn-sm btn-danger" title="Confirm delete"
+							@onclick="() => OnDelete.InvokeAsync(Idea.Id)">
+						<Icon Kind="IconKind.Check" Size="14" />
+					</button>
+					<button class="btn btn-sm btn-outline-secondary" title="Cancel"
+							@onclick="() => _confirmDelete = false">
+						✕
+					</button>
+				}
+			</div>
+		</div>
+
+		<div class="d-flex justify-content-end mt-1">
+			<small class="text-muted">
+				Updated @Idea.UpdatedAt.ToString("yyyy-MM-dd")
+			</small>
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter, EditorRequired]
+	public IdeaListModel Idea { get; set; } = null!;
+
+	[Parameter]
+	public EventCallback<IdeaListModel> OnEdit { get; set; }
+
+	[Parameter]
+	public EventCallback<Guid> OnDelete { get; set; }
+
+	private bool _confirmDelete;
+}
