@@ -1,6 +1,6 @@
 using Kulku.Domain;
 
-namespace Kulku.Application.Cover.Introduction;
+namespace Kulku.Application.Cover.Introduction.Models;
 
 /// <summary>
 /// Input DTO for introduction translation data in create/update commands.

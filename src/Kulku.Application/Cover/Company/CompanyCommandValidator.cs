@@ -1,3 +1,4 @@
+using Kulku.Application.Cover.Company.Models;
 using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Application.Cover.Company;

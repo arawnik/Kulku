@@ -1,5 +1,3 @@
-using Kulku.Domain;
-
 namespace Kulku.Application.Cover.Models;
 
 /// <summary>
@@ -9,11 +7,4 @@ public sealed record InstitutionTranslationsModel(
     Guid InstitutionId,
     int EducationCount,
     IReadOnlyList<InstitutionTranslationItem> Translations
-);
-
-public sealed record InstitutionTranslationItem(
-    LanguageCode Language,
-    string Name,
-    string? Department,
-    string Description
 );

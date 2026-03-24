@@ -1,6 +1,6 @@
 using Kulku.Domain;
 
-namespace Kulku.Application.Cover.Education;
+namespace Kulku.Application.Cover.Education.Models;
 
 /// <summary>
 /// Represents translated content for an education entry in a specific language.

@@ -1,6 +1,6 @@
 using Kulku.Domain;
 
-namespace Kulku.Application.Cover.Experience;
+namespace Kulku.Application.Cover.Experience.Models;
 
 /// <summary>
 /// Represents translated content for an experience entry in a specific language.

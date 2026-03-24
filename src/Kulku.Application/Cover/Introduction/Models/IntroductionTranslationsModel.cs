@@ -1,5 +1,3 @@
-using Kulku.Domain;
-
 namespace Kulku.Application.Cover.Introduction.Models;
 
 /// <summary>
@@ -12,11 +10,4 @@ public sealed record IntroductionTranslationsModel(
     string SmallAvatarUrl,
     DateTime PubDate,
     IReadOnlyList<IntroductionTranslationItem> Translations
-);
-
-public sealed record IntroductionTranslationItem(
-    LanguageCode Language,
-    string Title,
-    string Tagline,
-    string Content
 );

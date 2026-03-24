@@ -1,3 +1,4 @@
+using Kulku.Application.Cover.Education.Models;
 using Kulku.Domain;
 using Kulku.Domain.Cover;
 using Kulku.Domain.Repositories;

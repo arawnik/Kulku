@@ -1,14 +1,11 @@
 using Kulku.Application.Cover.Models;
-using Kulku.Domain;
 
 namespace Kulku.Application.Cover.Experience.Models;
 
-public sealed record ExperienceTranslationItem(
-    LanguageCode Language,
-    string Title,
-    string Description
-);
-
+/// <summary>
+/// Read model for an experience entry with all its translations and related company translations.
+/// Used by admin views that display and edit content across all languages.
+/// </summary>
 public sealed record ExperienceTranslationsModel(
     Guid ExperienceId,
     Guid CompanyId,
