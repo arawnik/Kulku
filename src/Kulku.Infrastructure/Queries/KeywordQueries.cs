@@ -7,10 +7,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kulku.Infrastructure.Queries;
 
+/// <summary>
+/// EF Core implementation of keyword read-side queries.
+/// </summary>
 public class KeywordQueries(AppDbContext context) : IKeywordQueries
 {
     private readonly AppDbContext _context = context;
 
+    /// <inheritdoc />
     public async Task<KeywordModel?> FindByIdAsync(
         Guid id,
         LanguageCode language,
@@ -25,6 +29,7 @@ public class KeywordQueries(AppDbContext context) : IKeywordQueries
         return result;
     }
 
+    /// <inheritdoc />
     public async Task<IReadOnlyList<KeywordModel>> ListByTypeAsync(
         KeywordType type,
         LanguageCode language,
@@ -40,6 +45,7 @@ public class KeywordQueries(AppDbContext context) : IKeywordQueries
         return result;
     }
 
+    /// <inheritdoc />
     public async Task<IReadOnlyList<KeywordPickerModel>> ListAllForPickerAsync(
         CancellationToken cancellationToken = default
     )
@@ -58,6 +64,7 @@ public class KeywordQueries(AppDbContext context) : IKeywordQueries
         return result;
     }
 
+    /// <inheritdoc />
     private IQueryable<KeywordModel> BuildKeywordQuery(
         LanguageCode language,
         IQueryable<Keyword> baseQuery

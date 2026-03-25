@@ -6,10 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kulku.Infrastructure.Queries;
 
+/// <summary>
+/// EF Core implementation of institution read-side queries.
+/// </summary>
 public class InstitutionQueries(AppDbContext context) : IInstitutionQueries
 {
     private readonly AppDbContext _context = context;
 
+    /// <inheritdoc />
     public async Task<IReadOnlyList<InstitutionModel>> ListAllAsync(
         LanguageCode language,
         CancellationToken cancellationToken = default
@@ -24,6 +28,7 @@ public class InstitutionQueries(AppDbContext context) : IInstitutionQueries
         return result;
     }
 
+    /// <inheritdoc />
     public async Task<IReadOnlyList<InstitutionTranslationsModel>> ListAllWithTranslationsAsync(
         CancellationToken cancellationToken = default
     )
@@ -46,6 +51,7 @@ public class InstitutionQueries(AppDbContext context) : IInstitutionQueries
         return result;
     }
 
+    /// <inheritdoc />
     public async Task<InstitutionTranslationsModel?> FindByIdWithTranslationsAsync(
         Guid institutionId,
         CancellationToken cancellationToken = default

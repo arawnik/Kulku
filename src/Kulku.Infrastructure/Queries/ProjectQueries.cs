@@ -6,10 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kulku.Infrastructure.Queries;
 
+/// <summary>
+/// EF Core implementation of project read-side queries.
+/// </summary>
 public class ProjectQueries(AppDbContext context) : IProjectQueries
 {
     private readonly AppDbContext _context = context;
 
+    /// <inheritdoc />
     public async Task<IReadOnlyList<ProjectModel>> ListAllAsync(
         LanguageCode language,
         CancellationToken cancellationToken = default

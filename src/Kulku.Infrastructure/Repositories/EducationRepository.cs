@@ -12,16 +12,19 @@ public class EducationRepository(AppDbContext context) : IEducationRepository
 {
     private readonly AppDbContext _context = context;
 
+    /// <inheritdoc />
     public void Add(Education education)
     {
         _context.Educations.Add(education);
     }
 
+    /// <inheritdoc />
     public void Remove(Education education)
     {
         _context.Remove(education);
     }
 
+    /// <inheritdoc />
     public async Task<Education?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default

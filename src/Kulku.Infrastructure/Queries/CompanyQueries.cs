@@ -5,10 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kulku.Infrastructure.Queries;
 
+/// <summary>
+/// EF Core implementation of company read-side queries.
+/// </summary>
 public class CompanyQueries(AppDbContext context) : ICompanyQueries
 {
     private readonly AppDbContext _context = context;
 
+    /// <inheritdoc />
     public async Task<IReadOnlyList<CompanyTranslationsModel>> ListAllWithTranslationsAsync(
         CancellationToken cancellationToken = default
     )
@@ -30,6 +34,7 @@ public class CompanyQueries(AppDbContext context) : ICompanyQueries
         return result;
     }
 
+    /// <inheritdoc />
     public async Task<CompanyTranslationsModel?> FindByIdWithTranslationsAsync(
         Guid companyId,
         CancellationToken cancellationToken = default

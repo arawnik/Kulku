@@ -12,17 +12,20 @@ public class ContactRequestRepository(AppDbContext context) : IContactRequestRep
 {
     private readonly AppDbContext _context = context;
 
+    /// <inheritdoc />
     public void Add(ContactRequest request)
     {
         request.Timestamp = DateTime.UtcNow;
         _context.ContactRequests.Add(request);
     }
 
+    /// <inheritdoc />
     public void Remove(ContactRequest request)
     {
         _context.Remove(request);
     }
 
+    /// <inheritdoc />
     public async Task<ContactRequest?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default

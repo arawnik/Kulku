@@ -12,16 +12,19 @@ public class ProficiencyRepository(AppDbContext context) : IProficiencyRepositor
 {
     private readonly AppDbContext _context = context;
 
+    /// <inheritdoc />
     public void Add(Proficiency proficiency)
     {
         _context.Proficiencies.Add(proficiency);
     }
 
+    /// <inheritdoc />
     public void Remove(Proficiency proficiency)
     {
         _context.Remove(proficiency);
     }
 
+    /// <inheritdoc />
     public async Task<Proficiency?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default

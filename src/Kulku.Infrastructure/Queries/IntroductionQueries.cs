@@ -7,10 +7,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kulku.Infrastructure.Queries;
 
+/// <summary>
+/// EF Core implementation of introduction read-side queries.
+/// </summary>
 public class IntroductionQueries(AppDbContext context) : IIntroductionQueries
 {
     private readonly AppDbContext _context = context;
 
+    /// <inheritdoc />
     public async Task<IntroductionModel?> FindCurrentAsync(
         LanguageCode language,
         CancellationToken cancellationToken = default

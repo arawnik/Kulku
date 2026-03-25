@@ -7,10 +7,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kulku.Infrastructure.Queries;
 
+/// <summary>
+/// EF Core implementation of education read-side queries.
+/// </summary>
 public class EducationQueries(AppDbContext context) : IEducationQueries
 {
     private readonly AppDbContext _context = context;
 
+    /// <inheritdoc />
     public async Task<IReadOnlyList<EducationModel>> ListAllAsync(
         LanguageCode language,
         CancellationToken cancellationToken = default
@@ -48,6 +52,7 @@ public class EducationQueries(AppDbContext context) : IEducationQueries
         return result;
     }
 
+    /// <inheritdoc />
     public async Task<IReadOnlyList<EducationTranslationsModel>> ListAllWithTranslationsAsync(
         CancellationToken cancellationToken = default
     )
@@ -82,6 +87,7 @@ public class EducationQueries(AppDbContext context) : IEducationQueries
         return result;
     }
 
+    /// <inheritdoc />
     public async Task<EducationTranslationsModel?> FindByIdWithTranslationsAsync(
         Guid educationId,
         CancellationToken cancellationToken = default

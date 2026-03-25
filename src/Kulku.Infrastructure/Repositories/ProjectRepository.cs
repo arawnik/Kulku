@@ -12,6 +12,19 @@ public class ProjectRepository(AppDbContext context) : IProjectRepository
 {
     private readonly AppDbContext _context = context;
 
+    /// <inheritdoc />
+    public void Add(Project project)
+    {
+        _context.Projects.Add(project);
+    }
+
+    /// <inheritdoc />
+    public void Remove(Project project)
+    {
+        _context.Projects.Remove(project);
+    }
+
+    /// <inheritdoc />
     public async Task<Project?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _context
@@ -21,15 +34,5 @@ public class ProjectRepository(AppDbContext context) : IProjectRepository
             .ThenInclude(pk => pk.Keyword)
             .ThenInclude(k => k.Translations)
             .FirstOrDefaultAsync(cancellationToken);
-    }
-
-    public void Add(Project project)
-    {
-        _context.Projects.Add(project);
-    }
-
-    public void Remove(Project project)
-    {
-        _context.Projects.Remove(project);
     }
 }

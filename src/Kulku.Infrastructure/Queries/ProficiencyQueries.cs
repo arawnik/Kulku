@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kulku.Infrastructure.Queries;
 
+/// <summary>
+/// EF Core implementation of proficiency read-side queries.
+/// </summary>
 public class ProficiencyQueries(AppDbContext context) : IProficiencyQueries
 {
     private readonly AppDbContext _context = context;

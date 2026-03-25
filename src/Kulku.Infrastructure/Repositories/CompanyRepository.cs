@@ -12,20 +12,20 @@ public class CompanyRepository(AppDbContext context) : ICompanyRepository
 {
     private readonly AppDbContext _context = context;
 
+    /// <inheritdoc />
     public void Add(Company company)
     {
         _context.Companies.Add(company);
     }
 
+    /// <inheritdoc />
     public void Remove(Company company)
     {
         _context.Remove(company);
     }
 
-    public async Task<Company?> GetByIdAsync(
-        Guid id,
-        CancellationToken cancellationToken = default
-    )
+    /// <inheritdoc />
+    public async Task<Company?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _context
             .Companies.Where(c => c.Id == id)
