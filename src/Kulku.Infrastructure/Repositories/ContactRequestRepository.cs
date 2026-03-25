@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Kulku.Infrastructure.Repositories;
 
 /// <summary>
-/// EF Core repository for accessing contact request entries.
+/// EF Core repository for managing contact request entries.
 /// </summary>
 public class ContactRequestRepository(AppDbContext context) : IContactRequestRepository
 {

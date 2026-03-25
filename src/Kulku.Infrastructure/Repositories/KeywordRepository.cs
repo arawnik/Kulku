@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Kulku.Infrastructure.Repositories;
 
 /// <summary>
-/// EF Core repository for accessing keywords and their full localization graph.
+/// EF Core repository for managing keywords and their full localization graph.
 /// </summary>
 public class KeywordRepository(AppDbContext context) : IKeywordRepository
 {

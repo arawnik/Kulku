@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Kulku.Infrastructure.Repositories;
 
 /// <summary>
-/// EF Core repository for accessing introduction and their full localization graph.
+/// EF Core repository for managing introduction and their full localization graph.
 /// </summary>
 public class IntroductionRepository(AppDbContext context) : IIntroductionRepository
 {

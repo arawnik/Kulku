@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Kulku.Infrastructure.Repositories;
 
 /// <summary>
-/// EF Core repository for accessing projects and their full localization graph.
+/// EF Core repository for managing projects and their full localization graph.
 /// </summary>
 public class ProjectRepository(AppDbContext context) : IProjectRepository
 {

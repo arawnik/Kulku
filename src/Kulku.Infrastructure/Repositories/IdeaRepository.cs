@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Kulku.Infrastructure.Repositories;
 
 /// <summary>
-/// EF Core repository for accessing ideas with their full object graph.
+/// EF Core repository for managing ideas with their full object graph.
 /// </summary>
 public class IdeaRepository(AppDbContext context) : IIdeaRepository
 {

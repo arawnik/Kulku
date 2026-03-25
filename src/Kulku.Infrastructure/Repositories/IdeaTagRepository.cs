@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Kulku.Infrastructure.Repositories;
 
 /// <summary>
-/// EF Core repository for accessing idea tags.
+/// EF Core repository for managing idea tags.
 /// </summary>
 public class IdeaTagRepository(AppDbContext context) : IIdeaTagRepository
 {

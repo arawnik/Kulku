@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Kulku.Infrastructure.Repositories;
 
 /// <summary>
-/// EF Core repository for accessing education entries and their full localization graph.
+/// EF Core repository for managing education entries and their full localization graph.
 /// </summary>
 public class EducationRepository(AppDbContext context) : IEducationRepository
 {
