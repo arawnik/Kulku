@@ -1,4 +1,5 @@
 using Kulku.Application.Cover.Company;
+using Kulku.Application.Cover.Company.Models;
 using Kulku.Application.Cover.Experience;
 using Kulku.Application.Cover.Experience.Models;
 using Kulku.Application.Cover.Models;

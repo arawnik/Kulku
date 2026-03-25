@@ -1,6 +1,7 @@
 using Kulku.Application.Cover.Education;
 using Kulku.Application.Cover.Education.Models;
 using Kulku.Application.Cover.Institution;
+using Kulku.Application.Cover.Institution.Models;
 using Kulku.Application.Cover.Models;
 using Kulku.Domain;
 using Kulku.Web.Admin.Components.Cv.Components;
