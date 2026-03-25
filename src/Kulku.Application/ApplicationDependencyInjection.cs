@@ -1,7 +1,16 @@
 using System.Diagnostics.CodeAnalysis;
 using Kulku.Application.Contacts;
-using Kulku.Application.Cover;
+using Kulku.Application.Cover.Company;
+using Kulku.Application.Cover.Education;
+using Kulku.Application.Cover.Education.Models;
+using Kulku.Application.Cover.Experience;
+using Kulku.Application.Cover.Experience.Models;
+using Kulku.Application.Cover.Institution;
+using Kulku.Application.Cover.Introduction;
+using Kulku.Application.Cover.Introduction.Models;
 using Kulku.Application.Cover.Models;
+using Kulku.Application.IdeaBank;
+using Kulku.Application.IdeaBank.Models;
 using Kulku.Application.Projects;
 using Kulku.Application.Projects.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,13 +44,97 @@ public static class ApplicationDependencyInjection
         >();
 
         services.AddScoped<
+            IQueryHandler<GetKeywordsForPicker.Query, IReadOnlyList<KeywordPickerModel>>,
+            GetKeywordsForPicker.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetKeywordTranslations.Query, IReadOnlyList<KeywordTranslationsModel>>,
+            GetKeywordTranslations.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetKeywordDetail.Query, KeywordTranslationsModel?>,
+            GetKeywordDetail.Handler
+        >();
+
+        services.AddScoped<ICommandHandler<CreateKeyword.Command, Guid>, CreateKeyword.Handler>();
+
+        services.AddScoped<ICommandHandler<UpdateKeyword.Command>, UpdateKeyword.Handler>();
+
+        services.AddScoped<ICommandHandler<DeleteKeyword.Command>, DeleteKeyword.Handler>();
+
+        services.AddScoped<
+            IQueryHandler<GetProficiencies.Query, IReadOnlyList<ProficiencyTranslationsModel>>,
+            GetProficiencies.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetProficiencyDetail.Query, ProficiencyTranslationsModel?>,
+            GetProficiencyDetail.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<CreateProficiency.Command, Guid>,
+            CreateProficiency.Handler
+        >();
+
+        services.AddScoped<ICommandHandler<UpdateProficiency.Command>, UpdateProficiency.Handler>();
+
+        services.AddScoped<ICommandHandler<DeleteProficiency.Command>, DeleteProficiency.Handler>();
+
+        services.AddScoped<
             IQueryHandler<GetProjects.Query, IReadOnlyList<ProjectModel>>,
             GetProjects.Handler
         >();
 
         services.AddScoped<
+            IQueryHandler<GetProjectTranslations.Query, IReadOnlyList<ProjectTranslationsModel>>,
+            GetProjectTranslations.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetProjectDetail.Query, ProjectTranslationsModel?>,
+            GetProjectDetail.Handler
+        >();
+
+        services.AddScoped<ICommandHandler<UpdateProject.Command>, UpdateProject.Handler>();
+
+        services.AddScoped<ICommandHandler<DeleteProject.Command>, DeleteProject.Handler>();
+
+        services.AddScoped<ICommandHandler<CreateProject.Command, Guid>, CreateProject.Handler>();
+
+        services.AddScoped<
             IQueryHandler<GetIntroduction.Query, IntroductionModel?>,
             GetIntroduction.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<
+                GetIntroductionTranslations.Query,
+                IReadOnlyList<IntroductionTranslationsModel>
+            >,
+            GetIntroductionTranslations.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetIntroductionDetail.Query, IntroductionTranslationsModel?>,
+            GetIntroductionDetail.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<CreateIntroduction.Command, Guid>,
+            CreateIntroduction.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<UpdateIntroduction.Command>,
+            UpdateIntroduction.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<DeleteIntroduction.Command>,
+            DeleteIntroduction.Handler
         >();
 
         services.AddScoped<
@@ -50,14 +143,135 @@ public static class ApplicationDependencyInjection
         >();
 
         services.AddScoped<
+            IQueryHandler<
+                GetExperienceTranslations.Query,
+                IReadOnlyList<ExperienceTranslationsModel>
+            >,
+            GetExperienceTranslations.Handler
+        >();
+
+        services.AddScoped<ICommandHandler<UpdateExperience.Command>, UpdateExperience.Handler>();
+
+        services.AddScoped<ICommandHandler<DeleteExperience.Command>, DeleteExperience.Handler>();
+
+        services.AddScoped<
+            ICommandHandler<CreateExperience.Command, Guid>,
+            CreateExperience.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetExperienceDetail.Query, ExperienceTranslationsModel?>,
+            GetExperienceDetail.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetEducationDetail.Query, EducationTranslationsModel?>,
+            GetEducationDetail.Handler
+        >();
+
+        services.AddScoped<
             IQueryHandler<GetEducations.Query, IReadOnlyList<EducationModel>>,
             GetEducations.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<
+                GetEducationTranslations.Query,
+                IReadOnlyList<EducationTranslationsModel>
+            >,
+            GetEducationTranslations.Handler
+        >();
+
+        services.AddScoped<ICommandHandler<UpdateEducation.Command>, UpdateEducation.Handler>();
+
+        services.AddScoped<ICommandHandler<DeleteEducation.Command>, DeleteEducation.Handler>();
+
+        services.AddScoped<
+            ICommandHandler<CreateEducation.Command, Guid>,
+            CreateEducation.Handler
         >();
 
         services.AddScoped<
             ICommandHandler<SubmitContactRequest.Command>,
             SubmitContactRequest.Handler
         >();
+
+        // Company CRUD
+        services.AddScoped<
+            IQueryHandler<GetCompanies.Query, IReadOnlyList<CompanyTranslationsModel>>,
+            GetCompanies.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetCompanyDetail.Query, CompanyTranslationsModel?>,
+            GetCompanyDetail.Handler
+        >();
+
+        services.AddScoped<ICommandHandler<CreateCompany.Command, Guid>, CreateCompany.Handler>();
+
+        services.AddScoped<ICommandHandler<UpdateCompany.Command>, UpdateCompany.Handler>();
+
+        services.AddScoped<ICommandHandler<DeleteCompany.Command>, DeleteCompany.Handler>();
+
+        // Institution CRUD
+        services.AddScoped<
+            IQueryHandler<GetInstitutions.Query, IReadOnlyList<InstitutionTranslationsModel>>,
+            GetInstitutions.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetInstitutionDetail.Query, InstitutionTranslationsModel?>,
+            GetInstitutionDetail.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<CreateInstitution.Command, Guid>,
+            CreateInstitution.Handler
+        >();
+
+        services.AddScoped<ICommandHandler<UpdateInstitution.Command>, UpdateInstitution.Handler>();
+
+        services.AddScoped<ICommandHandler<DeleteInstitution.Command>, DeleteInstitution.Handler>();
+
+        // Idea Bank
+        services.AddScoped<
+            IQueryHandler<GetIdeas.Query, IReadOnlyList<IdeaListModel>>,
+            GetIdeas.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetIdeaDetail.Query, IdeaDetailModel?>,
+            GetIdeaDetail.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetIdeaDomains.Query, IReadOnlyList<IdeaDomainModel>>,
+            GetIdeaDomains.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetIdeaStatuses.Query, IReadOnlyList<IdeaStatusModel>>,
+            GetIdeaStatuses.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetIdeaPriorities.Query, IReadOnlyList<IdeaPriorityModel>>,
+            GetIdeaPriorities.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetIdeaTags.Query, IReadOnlyList<IdeaTagModel>>,
+            GetIdeaTags.Handler
+        >();
+
+        services.AddScoped<ICommandHandler<CreateIdea.Command, Guid>, CreateIdea.Handler>();
+        services.AddScoped<ICommandHandler<UpdateIdea.Command>, UpdateIdea.Handler>();
+        services.AddScoped<ICommandHandler<DeleteIdea.Command>, DeleteIdea.Handler>();
+        services.AddScoped<ICommandHandler<AddIdeaNote.Command, Guid>, AddIdeaNote.Handler>();
+        services.AddScoped<ICommandHandler<DeleteIdeaNote.Command>, DeleteIdeaNote.Handler>();
+        services.AddScoped<ICommandHandler<CreateIdeaTag.Command, Guid>, CreateIdeaTag.Handler>();
+        services.AddScoped<ICommandHandler<UpdateIdeaTag.Command>, UpdateIdeaTag.Handler>();
+        services.AddScoped<ICommandHandler<DeleteIdeaTag.Command>, DeleteIdeaTag.Handler>();
 
         return services;
     }

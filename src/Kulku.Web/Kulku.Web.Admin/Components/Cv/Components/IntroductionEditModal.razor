@@ -1,0 +1,223 @@
+@using System.ComponentModel.DataAnnotations
+@using Kulku.Application.Cover.Introduction.Models
+@using Kulku.Domain
+@using SoulNETLib.Clean.Domain
+
+<ModalDialog Visible="@(_form != null)"
+			 Title="@(Mode == ModalMode.Create ? "Create Introduction" : "Edit Introduction")"
+			 Size="ModalSize.Large"
+			 OnClose="OnCancel">
+	<ChildContent>
+		@if (ErrorMessage is not null)
+		{
+			<div class="alert alert-danger py-2 mb-3">@ErrorMessage</div>
+		}
+		@if (_form != null)
+		{
+			<EditForm EditContext="@_editContext">
+				<DataAnnotationsValidator />
+				<ServerValidation @ref="_serverValidation" />
+
+				<div class="row g-3 mb-4">
+					<div class="col-md-5">
+						<label class="form-label">Avatar filename</label>
+						<InputText @bind-Value="_form.AvatarUrl" class="form-control"
+								   placeholder="avatar.webp" disabled="@IsSaving" />
+						<ValidationMessage For="@(() => _form.AvatarUrl)" />
+						@if (!string.IsNullOrWhiteSpace(_form.AvatarUrl))
+						{
+							<img src="@ResolveImageSrc(_form.AvatarUrl)" alt="Avatar preview"
+								 class="mt-2 rounded" style="max-height:80px;"
+								 onerror="this.style.display='none'" />
+						}
+					</div>
+					<div class="col-md-5">
+						<label class="form-label">Small avatar filename</label>
+						<InputText @bind-Value="_form.SmallAvatarUrl" class="form-control"
+								   placeholder="small_avatar.webp" disabled="@IsSaving" />
+						<ValidationMessage For="@(() => _form.SmallAvatarUrl)" />
+						@if (!string.IsNullOrWhiteSpace(_form.SmallAvatarUrl))
+						{
+							<img src="@ResolveImageSrc(_form.SmallAvatarUrl)" alt="Small avatar preview"
+								 class="mt-2 rounded-circle" style="width:48px;height:48px;object-fit:cover;"
+								 onerror="this.style.display='none'" />
+						}
+					</div>
+					<div class="col-md-2">
+						<label class="form-label">Pub Date</label>
+						<InputDate Type="InputDateType.DateTimeLocal"
+								   @bind-Value="_form.PubDate"
+								   class="form-control" disabled="@IsSaving" />
+					</div>
+				</div>
+
+				<h6 class="mb-3">Translations</h6>
+
+				@for (var i = 0; i < _form.Translations.Count; i++)
+				{
+					var index = i;
+					var trans = _form.Translations[index];
+
+					<div class="card mb-3">
+						<div class="card-header py-2">
+							<strong>@LanguageDisplayHelper.DisplayName(trans.Language)</strong>
+						</div>
+						<div class="card-body">
+							<div class="mb-3">
+								<label class="form-label">Title</label>
+								<InputText @bind-Value="_form.Translations[index].Title"
+										   class="form-control" disabled="@IsSaving" />
+								<ValidationMessage For="@(() => _form.Translations[index].Title)" />
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Tagline</label>
+								<InputText @bind-Value="_form.Translations[index].Tagline"
+										   class="form-control" disabled="@IsSaving" />
+							</div>
+							<div class="mb-3">
+								<MarkdownEditor @bind-Value="_form.Translations[index].Content"
+												Label="Content"
+												Rows="6"
+												Disabled="@IsSaving" />
+							</div>
+						</div>
+					</div>
+				}
+			</EditForm>
+		}
+	</ChildContent>
+	<FooterContent>
+		<button type="button" class="btn btn-secondary"
+				@onclick="OnCancel" disabled="@IsSaving">
+			Cancel
+		</button>
+		<button type="button" class="btn btn-primary"
+				@onclick="HandleSubmit" disabled="@IsSaving">
+			@if (IsSaving)
+			{
+				<span class="spinner-border spinner-border-sm me-1"></span>
+				<span>Saving…</span>
+			}
+			else
+			{
+				<span>@(Mode == ModalMode.Create ? "Create" : "Save Changes")</span>
+			}
+		</button>
+	</FooterContent>
+</ModalDialog>
+
+@code {
+	[Parameter, EditorRequired]
+	public IntroductionTranslationsModel? Model { get; set; }
+
+	[Parameter]
+	public ModalMode Mode { get; set; } = ModalMode.Edit;
+
+	[Parameter]
+	public EventCallback<IntroductionTranslationsModel> OnSave { get; set; }
+
+	[Parameter]
+	public EventCallback OnCancel { get; set; }
+
+	[Parameter]
+	public bool IsSaving { get; set; }
+
+	[Parameter]
+	public string? ErrorMessage { get; set; }
+
+	private IntroductionEditFormModel? _form;
+	private EditContext? _editContext;
+	private ServerValidation? _serverValidation;
+	private Guid? _lastModelId;
+
+	public void SetServerErrors(IEnumerable<Error> errors)
+	{
+		_serverValidation?.DisplayErrors(errors);
+	}
+
+	protected override void OnParametersSet()
+	{
+		if (Model is null)
+		{
+			_form = null;
+			_editContext = null;
+			_lastModelId = null;
+			return;
+		}
+
+		if (_lastModelId != Model.IntroductionId)
+		{
+			_lastModelId = Model.IntroductionId;
+			_form = new IntroductionEditFormModel
+			{
+				IntroductionId = Model.IntroductionId,
+				AvatarUrl = Model.AvatarUrl,
+				SmallAvatarUrl = Model.SmallAvatarUrl,
+				PubDate = Model.PubDate,
+				Translations = Model.Translations
+					.Select(t => new TranslationEditModel
+					{
+						Language = t.Language,
+						Title = t.Title,
+						Tagline = t.Tagline,
+						Content = t.Content,
+					})
+					.ToList(),
+			};
+			_editContext = new EditContext(_form);
+			_editContext.SetFieldCssClassProvider(new BootstrapFieldCssClassProvider());
+		}
+	}
+
+	private async Task HandleSubmit()
+	{
+		if (_form is null || Model is null || _editContext is null) return;
+		if (!_editContext.Validate()) return;
+
+		var updatedTranslations = _form.Translations
+			.Select(t => new IntroductionTranslationItem(t.Language, t.Title, t.Tagline, t.Content))
+			.ToList();
+
+		var updated = Model with
+		{
+			AvatarUrl = _form.AvatarUrl,
+			SmallAvatarUrl = _form.SmallAvatarUrl,
+			PubDate = _form.PubDate,
+			Translations = updatedTranslations,
+		};
+
+		await OnSave.InvokeAsync(updated);
+	}
+
+	private static string ResolveImageSrc(string imageUrl) =>
+		Uri.TryCreate(imageUrl, UriKind.Absolute, out _)
+			? imageUrl
+			: $"/static/introductions/{imageUrl}";
+
+	private sealed class IntroductionEditFormModel
+	{
+		public Guid IntroductionId { get; init; }
+
+		[Required(ErrorMessage = "Avatar filename is required.")]
+		public string AvatarUrl { get; set; } = string.Empty;
+
+		[Required(ErrorMessage = "Small avatar filename is required.")]
+		public string SmallAvatarUrl { get; set; } = string.Empty;
+
+		public DateTime PubDate { get; set; } = DateTime.UtcNow;
+
+		public List<TranslationEditModel> Translations { get; set; } = [];
+	}
+
+	private sealed class TranslationEditModel
+	{
+		public LanguageCode Language { get; init; }
+
+		[Required(ErrorMessage = "Title is required.")]
+		public string Title { get; set; } = string.Empty;
+
+		public string Tagline { get; set; } = string.Empty;
+
+		public string Content { get; set; } = string.Empty;
+	}
+}

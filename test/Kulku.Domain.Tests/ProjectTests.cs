@@ -1,3 +1,4 @@
+using Kulku.Domain.Abstractions;
 using Kulku.Domain.Projects;
 
 namespace Kulku.Domain.Tests;
@@ -12,7 +13,7 @@ public class ProjectTests
         {
             Id = Guid.NewGuid(),
             Url = new Uri("https://example.com"),
-            ImageUrl = new Uri("https://example.com/image.png"),
+            ImageUrl = "image.png",
         };
 
         // Assert
@@ -33,10 +34,10 @@ public class ProjectTests
         {
             Id = Guid.NewGuid(),
             Url = new Uri("https://example.com"),
-            ImageUrl = new Uri("https://example.com/image.png"),
+            ImageUrl = "image.png",
         };
 
         // Assert
-        Assert.True(project is Kulku.Domain.Abstractions.ITranslatableEntity<ProjectTranslation>);
+        Assert.True(project is ITranslatableEntity<ProjectTranslation>);
     }
 }

@@ -1,0 +1,141 @@
+@using System.ComponentModel.DataAnnotations
+@using Kulku.Application.IdeaBank.Models
+@using SoulNETLib.Clean.Domain
+
+<ModalDialog Visible="@(_form != null)"
+			 Title="@(Mode == ModalMode.Create ? "New Tag" : "Edit Tag")"
+			 Size="ModalSize.Default"
+			 OnClose="OnCancel">
+	<ChildContent>
+		@if (ErrorMessage is not null)
+		{
+			<div class="alert alert-danger py-2 mb-3">@ErrorMessage</div>
+		}
+		@if (_form != null)
+		{
+			<EditForm EditContext="@_editContext">
+				<DataAnnotationsValidator />
+				<ServerValidation @ref="_serverValidation" />
+
+				<div class="mb-3">
+					<label class="form-label">Name</label>
+					<InputText @bind-Value="_form.Name" class="form-control" disabled="@IsSaving"
+							   placeholder="e.g. AI/ML, Architecture, .NET" />
+					<ValidationMessage For="@(() => _form.Name)" />
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label">Color (optional)</label>
+					<div class="d-flex align-items-center gap-2">
+						<input type="color" class="form-control form-control-color"
+							   value="@(_form.ColorHex ?? "#6c757d")"
+							   @onchange="e => _form.ColorHex = e.Value?.ToString()"
+							   disabled="@IsSaving" />
+						<InputText @bind-Value="_form.ColorHex" class="form-control" disabled="@IsSaving"
+								   placeholder="#6610f2" style="max-width:8rem" />
+						@if (!string.IsNullOrWhiteSpace(_form.ColorHex))
+						{
+							<button type="button" class="btn btn-sm btn-outline-secondary"
+									@onclick="() => _form.ColorHex = null" disabled="@IsSaving">
+								Clear
+							</button>
+						}
+					</div>
+				</div>
+			</EditForm>
+		}
+	</ChildContent>
+	<FooterContent>
+		<button type="button" class="btn btn-secondary"
+				@onclick="OnCancel" disabled="@IsSaving">
+			Cancel
+		</button>
+		<button type="button" class="btn btn-primary"
+				@onclick="HandleSubmit" disabled="@IsSaving">
+			@if (IsSaving)
+			{
+				<span class="spinner-border spinner-border-sm me-1"></span>
+				<span>Saving…</span>
+			}
+			else
+			{
+				<span>@(Mode == ModalMode.Create ? "Create" : "Save Changes")</span>
+			}
+		</button>
+	</FooterContent>
+</ModalDialog>
+
+@code {
+	[Parameter, EditorRequired]
+	public IdeaTagModel? Model { get; set; }
+
+	[Parameter]
+	public ModalMode Mode { get; set; } = ModalMode.Edit;
+
+	[Parameter]
+	public EventCallback<IdeaTagModel> OnSave { get; set; }
+
+	[Parameter]
+	public EventCallback OnCancel { get; set; }
+
+	[Parameter]
+	public bool IsSaving { get; set; }
+
+	[Parameter]
+	public string? ErrorMessage { get; set; }
+
+	private TagEditFormModel? _form;
+	private EditContext? _editContext;
+	private ServerValidation? _serverValidation;
+	private Guid? _lastModelId;
+
+	public void SetServerErrors(IEnumerable<Error> errors)
+	{
+		_serverValidation?.DisplayErrors(errors);
+	}
+
+	protected override void OnParametersSet()
+	{
+		if (Model is null)
+		{
+			_form = null;
+			_editContext = null;
+			_lastModelId = null;
+			return;
+		}
+
+		if (_lastModelId != Model.Id)
+		{
+			_lastModelId = Model.Id;
+			_form = new TagEditFormModel
+			{
+				Name = Model.Name,
+				ColorHex = Model.ColorHex,
+			};
+			_editContext = new EditContext(_form);
+			_editContext.SetFieldCssClassProvider(new BootstrapFieldCssClassProvider());
+		}
+	}
+
+	private async Task HandleSubmit()
+	{
+		if (_form is null || Model is null || _editContext is null) return;
+		if (!_editContext.Validate()) return;
+
+		var updated = Model with
+		{
+			Name = _form.Name,
+			ColorHex = string.IsNullOrWhiteSpace(_form.ColorHex) ? null : _form.ColorHex,
+		};
+
+		await OnSave.InvokeAsync(updated);
+	}
+
+	private sealed class TagEditFormModel
+	{
+		[Required(ErrorMessage = "Name is required.")]
+		public string Name { get; set; } = string.Empty;
+
+		public string? ColorHex { get; set; }
+	}
+}

@@ -15,7 +15,7 @@ const IntroductionSection = ({ intro }: IntroductionSectionProps): JSX.Element |
           <div className="md:-my-4 md:ms-5 md:shrink-0">
             <img
               className="h-80 w-full object-cover object-[center_8%] transition-transform md:h-full md:w-90 md:scale-100 md:rounded md:object-center"
-              src={`/static/profile/${intro.avatarUrl}`}
+              src={`/static/introductions/${intro.avatarUrl}`}
               alt="Avatar"
             />
           </div>

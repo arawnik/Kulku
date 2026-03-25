@@ -47,6 +47,22 @@ npm run build
 npm run start
 ```
 
+### 5. Updating packages
+
+Minimal updates
+
+```bash
+npm update --save
+npm install
+```
+
+Full upgrade
+
+```bash
+npx npm-check-updates -u
+npm install
+```
+
 ## 🧩 Architecture Highlights
 
 - Server Components for nearly all data fetching (SEO-friendly, cached, tagged revalidation).

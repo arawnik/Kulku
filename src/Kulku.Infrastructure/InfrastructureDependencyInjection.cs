@@ -1,9 +1,16 @@
 using System.Diagnostics.CodeAnalysis;
+using Kulku.Application.Abstractions.Rendering;
 using Kulku.Application.Abstractions.Security;
+using Kulku.Application.Cover.Education.Ports;
+using Kulku.Application.Cover.Experience.Ports;
+using Kulku.Application.Cover.Introduction.Ports;
 using Kulku.Application.Cover.Ports;
+using Kulku.Application.IdeaBank.Ports;
 using Kulku.Application.Projects.Ports;
 using Kulku.Domain.Repositories;
 using Kulku.Infrastructure.Queries;
+using Kulku.Infrastructure.Queries.Ideas;
+using Kulku.Infrastructure.Rendering;
 using Kulku.Infrastructure.Repositories;
 using Kulku.Infrastructure.Security;
 using Kulku.Persistence;
@@ -50,25 +57,41 @@ public static class InfrastructureDependencyInjection
         services.AddHttpClient<IRecaptchaValidator, RecaptchaValidator>();
 
         // Providers
+        services.AddSingleton<IMarkdownRenderer, MarkdownRenderer>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Repositories
         services.AddScoped<IProjectRepository, ProjectRepository>();
         services.AddScoped<IKeywordRepository, KeywordRepository>();
+        services.AddScoped<IProficiencyRepository, ProficiencyRepository>();
 
         services.AddScoped<IIntroductionRepository, IntroductionRepository>();
         services.AddScoped<IExperienceRepository, ExperienceRepository>();
         services.AddScoped<IEducationRepository, EducationRepository>();
+        services.AddScoped<ICompanyRepository, CompanyRepository>();
+        services.AddScoped<IInstitutionRepository, InstitutionRepository>();
 
         services.AddScoped<IContactRequestRepository, ContactRequestRepository>();
+
+        services.AddScoped<IIdeaRepository, IdeaRepository>();
+        services.AddScoped<IIdeaTagRepository, IdeaTagRepository>();
 
         // Queries
         services.AddScoped<IProjectQueries, ProjectQueries>();
         services.AddScoped<IKeywordQueries, KeywordQueries>();
+        services.AddScoped<IProficiencyQueries, ProficiencyQueries>();
 
         services.AddScoped<IIntroductionQueries, IntroductionQueries>();
         services.AddScoped<IExperienceQueries, ExperienceQueries>();
         services.AddScoped<IEducationQueries, EducationQueries>();
+        services.AddScoped<IInstitutionQueries, InstitutionQueries>();
+        services.AddScoped<ICompanyQueries, CompanyQueries>();
+
+        services.AddScoped<IIdeaQueries, IdeaQueries>();
+        services.AddScoped<IIdeaDomainQueries, IdeaDomainQueries>();
+        services.AddScoped<IIdeaStatusQueries, IdeaStatusQueries>();
+        services.AddScoped<IIdeaPriorityQueries, IdeaPriorityQueries>();
+        services.AddScoped<IIdeaTagQueries, IdeaTagQueries>();
 
         return services;
     }

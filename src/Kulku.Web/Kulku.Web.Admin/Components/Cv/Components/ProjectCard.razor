@@ -1,0 +1,144 @@
+@using Kulku.Application.Projects.Models
+
+<div class="col-12">
+	<div class="card shadow-sm">
+		@if (Project is not null)
+		{
+			var translations = Project.Translations
+				.OrderBy(t => t.Language.ToString()).ToList();
+
+			<div class="card-header d-flex justify-content-between align-items-start gap-3">
+				<div class="d-flex align-items-center gap-3">
+					<img src="@ResolveImageSrc(Project.ImageUrl)" alt="Project thumbnail"
+						 class="project-thumbnail rounded"
+						 onerror="this.style.display='none'" />
+					<div>
+						<h5 class="mb-0 fw-semibold">
+							@(translations.FirstOrDefault()?.Name ?? "Untitled")
+						</h5>
+						<div class="text-muted small">
+							@(translations.FirstOrDefault()?.Info ?? string.Empty)
+						</div>
+					</div>
+				</div>
+				<div class="d-flex align-items-center gap-2">
+					<span class="badge bg-secondary">Order: @Project.Order</span>
+					<a href="@Project.Url" target="_blank" rel="noopener"
+						   class="btn btn-sm btn-outline-secondary">
+						Visit
+					</a>
+				</div>
+			</div>
+
+			<div class="card-body">
+				@if (translations.Count == 0)
+				{
+					<div class="text-muted small">No translations available.</div>
+				}
+				else
+				{
+					<div class="row g-3">
+						@foreach (var trans in translations)
+						{
+							<div class="@(translations.Count == 1 ? "col-12" : "col-12 col-md-6")">
+								<div class="d-flex align-items-center gap-2 mb-2">
+									<span class="badge bg-secondary">
+										@LanguageDisplayHelper.DisplayName(trans.Language)
+									</span>
+									<span class="fw-semibold small">@trans.Name</span>
+								</div>
+								<div class="text-muted small mb-1">@trans.Info</div>
+								@if (!string.IsNullOrEmpty(trans.Description))
+								{
+									<div class="text-muted small project-description">
+										<MarkdownView Content="@trans.Description" />
+									</div>
+								}
+							</div>
+						}
+					</div>
+				}
+
+				@if (KeywordNames.Count > 0)
+				{
+					<div class="mt-3 d-flex flex-wrap gap-1">
+						@foreach (var kw in KeywordNames)
+						{
+							<span class="badge bg-light text-dark border">@kw</span>
+						}
+					</div>
+				}
+			</div>
+
+			<div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
+				<div class="d-flex align-items-center gap-2">
+					<button type="button" class="btn btn-sm btn-outline-primary"
+							@onclick="HandleEditClick">
+						<Icon Kind="IconKind.Pencil" Size="14" CssClass="me-1" />Edit
+					</button>
+					<button type="button" class="btn btn-sm btn-outline-danger"
+							@onclick="() => _confirmingDelete = true">
+						<Icon Kind="IconKind.Trash" Size="14" CssClass="me-1" />Delete
+					</button>
+				</div>
+				<small class="text-muted">
+					@translations.Count translation(s)
+				</small>
+			</div>
+		}
+	</div>
+</div>
+
+<ConfirmDialog Visible="_confirmingDelete"
+			   Title="Delete Project"
+			   Message="Are you sure you want to delete this project? This action cannot be undone."
+			   ButtonText="Delete"
+			   ButtonStyle="danger"
+			   ButtonIcon="IconKind.Trash"
+			   OnConfirm="HandleConfirmDelete"
+			   OnCancel="() => _confirmingDelete = false" />
+
+@code {
+	[Parameter, EditorRequired]
+	public ProjectTranslationsModel? Project { get; set; }
+
+	/// <summary>
+	/// Keyword names resolved by the parent page for display as badges.
+	/// </summary>
+	[Parameter]
+	public IReadOnlyList<string> KeywordNames { get; set; } = [];
+
+	[Parameter]
+	public EventCallback<Guid> OnEdit { get; set; }
+
+	[Parameter]
+	public EventCallback<Guid> OnDelete { get; set; }
+
+	private bool _confirmingDelete;
+
+	/// <summary>
+	/// If the image value is already an absolute URL, use it directly.
+	/// Otherwise treat it as a filename under /static/projects/.
+	/// </summary>
+	private static string ResolveImageSrc(string imageUrl) =>
+		Uri.TryCreate(imageUrl, UriKind.Absolute, out _)
+			? imageUrl
+			: $"/static/projects/{imageUrl}";
+
+	private async Task HandleEditClick()
+	{
+		if (Project is not null)
+		{
+			await OnEdit.InvokeAsync(Project.ProjectId);
+		}
+	}
+
+	private async Task HandleConfirmDelete()
+	{
+		if (Project is not null)
+		{
+			_confirmingDelete = false;
+			await OnDelete.InvokeAsync(Project.ProjectId);
+		}
+	}
+}

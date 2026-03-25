@@ -7,10 +7,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kulku.Infrastructure.Queries;
 
+/// <summary>
+/// EF Core implementation of keyword read-side queries.
+/// </summary>
 public class KeywordQueries(AppDbContext context) : IKeywordQueries
 {
     private readonly AppDbContext _context = context;
 
+    /// <inheritdoc />
     public async Task<KeywordModel?> FindByIdAsync(
         Guid id,
         LanguageCode language,
@@ -25,6 +29,7 @@ public class KeywordQueries(AppDbContext context) : IKeywordQueries
         return result;
     }
 
+    /// <inheritdoc />
     public async Task<IReadOnlyList<KeywordModel>> ListByTypeAsync(
         KeywordType type,
         LanguageCode language,
@@ -40,6 +45,26 @@ public class KeywordQueries(AppDbContext context) : IKeywordQueries
         return result;
     }
 
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<KeywordPickerModel>> ListAllForPickerAsync(
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await _context
+            .Keywords.AsNoTracking()
+            .OrderBy(k => k.Type)
+            .ThenBy(k => k.Order)
+            .Select(k => new KeywordPickerModel(
+                k.Id,
+                k.Translations.Select(t => t.Name).FirstOrDefault() ?? string.Empty,
+                k.Type
+            ))
+            .ToListAsync(cancellationToken);
+
+        return result;
+    }
+
+    /// <inheritdoc />
     private IQueryable<KeywordModel> BuildKeywordQuery(
         LanguageCode language,
         IQueryable<Keyword> baseQuery
@@ -70,5 +95,63 @@ public class KeywordQueries(AppDbContext context) : IKeywordQueries
                         Display: x.k.Display
                     )
             );
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<KeywordTranslationsModel>> ListAllWithTranslationsAsync(
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await _context
+            .Keywords.AsNoTracking()
+            .OrderBy(k => k.Type)
+            .ThenBy(k => k.Order)
+            .Select(k => new KeywordTranslationsModel(
+                KeywordId: k.Id,
+                Type: k.Type,
+                Order: k.Order,
+                Display: k.Display,
+                ProficiencyId: k.ProficiencyId,
+                ProficiencyName: k.Proficiency.Translations.Select(t => t.Name).FirstOrDefault()
+                    ?? string.Empty,
+                ProficiencyScale: k.Proficiency.Scale,
+                Translations: k.Translations.Select(t => new KeywordTranslationItem(
+                        t.Language,
+                        t.Name
+                    ))
+                    .ToList()
+            ))
+            .ToListAsync(cancellationToken);
+
+        return result;
+    }
+
+    /// <inheritdoc />
+    public async Task<KeywordTranslationsModel?> FindByIdWithTranslationsAsync(
+        Guid keywordId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await _context
+            .Keywords.AsNoTracking()
+            .Where(k => k.Id == keywordId)
+            .Select(k => new KeywordTranslationsModel(
+                KeywordId: k.Id,
+                Type: k.Type,
+                Order: k.Order,
+                Display: k.Display,
+                ProficiencyId: k.ProficiencyId,
+                ProficiencyName: k.Proficiency.Translations.Select(t => t.Name).FirstOrDefault()
+                    ?? string.Empty,
+                ProficiencyScale: k.Proficiency.Scale,
+                Translations: k.Translations.Select(t => new KeywordTranslationItem(
+                        t.Language,
+                        t.Name
+                    ))
+                    .ToList()
+            ))
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return result;
     }
 }

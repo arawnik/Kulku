@@ -1,0 +1,141 @@
+@page "/cv/keywords"
+@using Kulku.Application.Projects.Models
+@using Kulku.Domain.Projects
+@attribute [Authorize]
+
+<PageTitle>Keywords — Admin</PageTitle>
+
+<div class="container-fluid py-4">
+	<div class="d-flex justify-content-between align-items-start mb-3">
+		<div>
+			<h1 class="h4 mb-1">Keywords</h1>
+			<div class="text-muted">Manage keywords and proficiency levels</div>
+		</div>
+		<div class="d-flex gap-2 align-items-center">
+			<div class="form-check form-switch mb-0">
+				<input class="form-check-input" type="checkbox" id="showVisibleOnly"
+					   checked="@_showVisibleOnly"
+					   @onchange="e => _showVisibleOnly = (bool)(e.Value ?? false)" />
+				<label class="form-check-label small" for="showVisibleOnly">
+					<Icon Kind="IconKind.Eye" Size="14" CssClass="me-1" />Visible only
+				</label>
+			</div>
+			<NavLink class="btn btn-sm btn-outline-secondary" href="/cv">Back</NavLink>
+		</div>
+	</div>
+
+	@if (_errorMessage is not null)
+	{
+		<div class="alert alert-danger py-2">@_errorMessage</div>
+	}
+
+	@if (!_loaded)
+	{
+		<div class="text-muted">Loading…</div>
+	}
+	else
+	{
+		@* ── Proficiency Levels ─────────────────────────── *@
+		<div class="card mb-4">
+			<div class="card-header d-flex justify-content-between align-items-center py-2">
+				<button type="button" class="btn btn-sm btn-link text-decoration-none p-0"
+						@onclick="() => _proficienciesExpanded = !_proficienciesExpanded">
+					<Icon Kind="@(_proficienciesExpanded? IconKind.ChevronDown: IconKind.ChevronRight)"
+						  Size="16" CssClass="me-1" />
+					<span class="fw-semibold">Proficiency Levels</span>
+					<span class="badge bg-secondary ms-2">@_proficiencies.Count</span>
+				</button>
+				<button type="button" class="btn btn-sm btn-outline-success"
+						@onclick="HandleCreateProficiency">
+					<Icon Kind="IconKind.Plus" CssClass="me-1" />Add Level
+				</button>
+			</div>
+
+			@if (_proficienciesExpanded)
+			{
+				<div class="card-body pt-2 pb-1">
+					@if (_proficiencies.Count == 0)
+					{
+						<div class="text-muted mb-2">No proficiency levels defined yet.</div>
+					}
+					else
+					{
+						@foreach (var prof in _proficiencies.OrderBy(p => p.Order).ThenBy(p => p.Scale))
+						{
+							<ProficiencyCard Proficiency="prof"
+											 OnEdit="HandleEditProficiency"
+											 OnDelete="HandleDeleteProficiency" />
+						}
+					}
+				</div>
+			}
+		</div>
+
+		@* ── Keywords per type ─────────────────────────── *@
+		@foreach (var type in new[] { KeywordType.Language, KeywordType.Skill, KeywordType.Technology })
+		{
+			var allOfType = _keywords.Where(k => k.Type == type).OrderBy(k => k.Order).ToList();
+			var keywords = _showVisibleOnly ? allOfType.Where(k => k.Display).ToList() : allOfType;
+			var hiddenCount = allOfType.Count - allOfType.Count(k => k.Display);
+			var typeName = type switch
+			{
+				KeywordType.Language => "Languages",
+				KeywordType.Skill => "Skills",
+				KeywordType.Technology => "Technologies",
+				_ => type.ToString(),
+			};
+
+			<div class="card mb-3">
+				<div class="card-header d-flex justify-content-between align-items-center py-2">
+					<div>
+						<span class="fw-semibold">@typeName</span>
+						<span class="badge bg-secondary ms-2">@allOfType.Count</span>
+						@if (hiddenCount > 0)
+						{
+							<span class="badge bg-warning bg-opacity-50 text-body-emphasis ms-1" title="Hidden from CV">
+								<Icon Kind="IconKind.EyeSlash" Size="12" /> @hiddenCount
+							</span>
+						}
+					</div>
+					<button type="button" class="btn btn-sm btn-outline-success"
+							@onclick="() => HandleCreateKeyword(type)">
+						<Icon Kind="IconKind.Plus" CssClass="me-1" />Add
+					</button>
+				</div>
+				<div class="card-body pt-2 pb-1">
+					@if (keywords.Count == 0)
+					{
+						<div class="text-muted mb-2">No @(typeName.ToLowerInvariant()) yet.</div>
+					}
+					else
+					{
+						@foreach (var kw in keywords)
+						{
+							<KeywordCard Keyword="kw"
+										 OnEdit="HandleEditKeyword"
+										 OnDelete="HandleDeleteKeyword" />
+						}
+					}
+				</div>
+			</div>
+		}
+	}
+</div>
+
+@* ── Modals ──────────────────────────────────────── *@
+<ProficiencyEditModal @ref="_proficiencyModal"
+					  Model="@_currentProficiency"
+					  Mode="@(_proficiencyModalMode ?? ModalMode.Edit)"
+					  OnSave="HandleSaveProficiency"
+					  OnCancel="CloseProficiencyEditor"
+					  IsSaving="@_isSaving"
+					  ErrorMessage="@_errorMessage" />
+
+<KeywordEditModal @ref="_keywordModal"
+				  Model="@_currentKeyword"
+				  Mode="@(_keywordModalMode ?? ModalMode.Edit)"
+				  Proficiencies="@_proficiencies"
+				  OnSave="HandleSaveKeyword"
+				  OnCancel="CloseKeywordEditor"
+				  IsSaving="@_isSaving"
+				  ErrorMessage="@_errorMessage" />

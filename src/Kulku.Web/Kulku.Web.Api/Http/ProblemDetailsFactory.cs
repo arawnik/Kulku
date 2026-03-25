@@ -17,8 +17,8 @@ public static class ProblemDetailsFactory
         if (validationErrors != null)
         {
             var errorsDict = validationErrors
-                .GroupBy(e => e.Code)
-                .ToDictionary(g => g.Key, g => g.Select(e => e.Message).ToList());
+                .GroupBy(e => e.Field ?? string.Empty)
+                .ToDictionary(g => g.Key, g => g.Select(e => e.Message).ToArray());
 
             problemDetails.Type = error?.Code ?? ErrorCodes.Validation;
             problemDetails.Detail = error?.Message ?? IValidationResult.ValidationError.Message;

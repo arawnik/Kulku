@@ -1,6 +1,6 @@
 using Carter;
 using Kulku.Application.Abstractions.Localization;
-using Kulku.Application.Cover;
+using Kulku.Application.Cover.Education;
 using Kulku.Application.Cover.Models;
 using Kulku.Web.Api.Http;
 using Microsoft.AspNetCore.Http.HttpResults;

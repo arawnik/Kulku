@@ -1,0 +1,139 @@
+@using Kulku.Application.Cover.Introduction.Models
+
+<div class="card shadow-sm @(IsActive ? "border-success" : "")">
+	@if (Introduction is not null)
+	{
+		var translations = Introduction.Translations
+			.OrderBy(t => t.Language.ToString()).ToList();
+
+		<div class="card-header d-flex justify-content-between align-items-start gap-3">
+			<div class="d-flex align-items-center gap-3">
+				<img src="@ResolveImageSrc(Introduction.SmallAvatarUrl)" alt="Avatar"
+					 class="rounded-circle flex-shrink-0"
+					 style="width:48px;height:48px;object-fit:cover;"
+					 onerror="this.style.display='none'" />
+				<div>
+					<h5 class="mb-0 fw-semibold">
+						@(translations.FirstOrDefault()?.Title ?? "Untitled")
+					</h5>
+					<div class="text-muted small">
+						@(translations.FirstOrDefault()?.Tagline ?? string.Empty)
+					</div>
+				</div>
+			</div>
+			<div class="d-flex align-items-center gap-2">
+				<span class="badge @StatusBadgeClass">@StatusLabel</span>
+				<span class="text-muted small text-nowrap">
+					@Introduction.PubDate.ToString("yyyy-MM-dd HH:mm")
+				</span>
+			</div>
+		</div>
+
+		<div class="card-body">
+			@if (translations.Count == 0)
+			{
+				<div class="text-muted small">No translations available.</div>
+			}
+			else
+			{
+				<div class="row g-3">
+					@foreach (var trans in translations)
+					{
+						<div class="@(translations.Count == 1 ? "col-12" : "col-12 col-md-6")">
+							<div class="d-flex align-items-center gap-2 mb-2">
+								<span class="badge bg-secondary">
+									@LanguageDisplayHelper.DisplayName(trans.Language)
+								</span>
+								<span class="fw-semibold small">@trans.Title</span>
+							</div>
+							<div class="text-muted small mb-1">@trans.Tagline</div>
+							@if (!string.IsNullOrWhiteSpace(trans.Content))
+							{
+								<div class="text-muted small intro-content">
+									<MarkdownView Content="@trans.Content" />
+								</div>
+							}
+						</div>
+					}
+				</div>
+			}
+		</div>
+
+		<div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
+			<div class="d-flex align-items-center gap-2">
+				<button type="button" class="btn btn-sm btn-outline-primary"
+						@onclick="HandleEditClick">
+					<Icon Kind="IconKind.Pencil" Size="14" CssClass="me-1" />Edit
+				</button>
+				<button type="button" class="btn btn-sm btn-outline-danger"
+						@onclick="() => _confirmingDelete = true">
+					<Icon Kind="IconKind.Trash" Size="14" CssClass="me-1" />Delete
+				</button>
+			</div>
+			<small class="text-muted">
+				@translations.Count translation(s)
+			</small>
+		</div>
+	}
+</div>
+
+<ConfirmDialog Visible="_confirmingDelete"
+			   Title="Delete Introduction"
+			   Message="Are you sure you want to delete this introduction? This action cannot be undone."
+			   ButtonText="Delete"
+			   ButtonStyle="danger"
+			   ButtonIcon="IconKind.Trash"
+			   OnConfirm="HandleConfirmDelete"
+			   OnCancel="() => _confirmingDelete = false" />
+
+@code {
+	[Parameter, EditorRequired]
+	public IntroductionTranslationsModel? Introduction { get; set; }
+
+	/// <summary>
+	/// Whether this introduction is the currently active one.
+	/// </summary>
+	[Parameter]
+	public bool IsActive { get; set; }
+
+	/// <summary>
+	/// Derived status label for display.
+	/// </summary>
+	[Parameter]
+	public string StatusLabel { get; set; } = "Superseded";
+
+	[Parameter]
+	public EventCallback<Guid> OnEdit { get; set; }
+
+	[Parameter]
+	public EventCallback<Guid> OnDelete { get; set; }
+
+	private bool _confirmingDelete;
+
+	private string StatusBadgeClass => StatusLabel switch
+	{
+		"Active" => "bg-success",
+		"Scheduled" => "bg-info",
+		_ => "bg-secondary",
+	};
+
+	private static string ResolveImageSrc(string imageUrl) =>
+		Uri.TryCreate(imageUrl, UriKind.Absolute, out _)
+			? imageUrl
+			: $"/static/introductions/{imageUrl}";
+
+	private async Task HandleEditClick()
+	{
+		if (Introduction is not null)
+			await OnEdit.InvokeAsync(Introduction.IntroductionId);
+	}
+
+	private async Task HandleConfirmDelete()
+	{
+		if (Introduction is not null)
+		{
+			_confirmingDelete = false;
+			await OnDelete.InvokeAsync(Introduction.IntroductionId);
+		}
+	}
+}

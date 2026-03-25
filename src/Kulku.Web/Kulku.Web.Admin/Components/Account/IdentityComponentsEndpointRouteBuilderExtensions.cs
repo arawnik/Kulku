@@ -168,10 +168,12 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                 }
 
                 var userId = await userManager.GetUserIdAsync(user);
+#pragma warning disable CA1873 // Avoid potentially expensive logging
                 downloadLogger.LogInformation(
                     "User with ID '{UserId}' asked for their personal data.",
                     userId
                 );
+#pragma warning restore CA1873 // Avoid potentially expensive logging
 
                 // Only include personal data for download
                 var personalData = new Dictionary<string, string>();

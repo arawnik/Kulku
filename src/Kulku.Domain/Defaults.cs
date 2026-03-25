@@ -21,4 +21,9 @@ public static class Defaults
     /// The default allowed length for larger text areas.
     /// </summary>
     public const int TextAreaLength = 2000;
+
+    /// <summary>
+    /// The default allowed length for CSS style / display hint fields.
+    /// </summary>
+    public const int StyleFieldLength = 50;
 }

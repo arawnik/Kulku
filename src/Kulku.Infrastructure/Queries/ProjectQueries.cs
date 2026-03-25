@@ -6,10 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kulku.Infrastructure.Queries;
 
+/// <summary>
+/// EF Core implementation of project read-side queries.
+/// </summary>
 public class ProjectQueries(AppDbContext context) : IProjectQueries
 {
     private readonly AppDbContext _context = context;
 
+    /// <inheritdoc />
     public async Task<IReadOnlyList<ProjectModel>> ListAllAsync(
         LanguageCode language,
         CancellationToken cancellationToken = default
@@ -64,6 +68,62 @@ public class ProjectQueries(AppDbContext context) : IProjectQueries
                     .ToList()
             ))
             .ToListAsync(cancellationToken);
+
+        return result;
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<ProjectTranslationsModel>> ListAllWithTranslationsAsync(
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await _context
+            .Projects.AsNoTracking()
+            .OrderBy(p => p.Order)
+            .Select(p => new ProjectTranslationsModel(
+                ProjectId: p.Id,
+                Url: p.Url,
+                ImageUrl: p.ImageUrl,
+                Order: p.Order,
+                Translations: p.Translations.Select(t => new ProjectTranslationItem(
+                        t.Language,
+                        t.Name,
+                        t.Info,
+                        t.Description ?? string.Empty
+                    ))
+                    .ToList(),
+                KeywordIds: p.ProjectKeywords.Select(pk => pk.KeywordId).ToList()
+            ))
+            .ToListAsync(cancellationToken);
+
+        return result;
+    }
+
+    /// <inheritdoc />
+    public async Task<ProjectTranslationsModel?> FindByIdWithTranslationsAsync(
+        Guid projectId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await _context
+            .Projects.AsNoTracking()
+            .Where(p => p.Id == projectId)
+            .Select(p => new ProjectTranslationsModel(
+                ProjectId: p.Id,
+                Url: p.Url,
+                ImageUrl: p.ImageUrl,
+                Order: p.Order,
+                Translations: p.Translations.Select(t => new ProjectTranslationItem(
+                        t.Language,
+                        t.Name,
+                        t.Info,
+                        t.Description ?? string.Empty
+                    ))
+                    .ToList(),
+                KeywordIds: p.ProjectKeywords.Select(pk => pk.KeywordId).ToList()
+            ))
+            .FirstOrDefaultAsync(cancellationToken);
+
         return result;
     }
 }

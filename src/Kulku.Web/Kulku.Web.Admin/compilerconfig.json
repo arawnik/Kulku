@@ -2,5 +2,9 @@
   {
     "outputFile": "wwwroot/css/app.css",
     "inputFile": "styles/scss/base.scss"
+  },
+  {
+    "outputFile": "wwwroot/js/bootstrap.bundle.min.js",
+    "inputFile": "styles/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
   }
 ]

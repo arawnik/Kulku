@@ -1,0 +1,227 @@
+@using System.ComponentModel.DataAnnotations
+@using Kulku.Application.Cover.Education.Models
+@using Kulku.Application.Cover.Models
+@using Kulku.Domain
+@using SoulNETLib.Clean.Domain
+
+<ModalDialog Visible="@(_form != null)"
+             Title="@(Mode == ModalMode.Create ? "Create Education" : "Edit Education")"
+             OnClose="OnCancel">
+    <ChildContent>
+        @if (ErrorMessage is not null)
+        {
+            <div class="alert alert-danger py-2 mb-3">@ErrorMessage</div>
+        }
+        @if (_form != null)
+        {
+            <EditForm EditContext="@_editContext">
+                <DataAnnotationsValidator />
+                <ServerValidation @ref="_serverValidation" />
+
+                @if (Mode == ModalMode.Create && Institutions is not null)
+                {
+                    <div class="mb-4">
+                        <label class="form-label">Institution</label>
+                        <InputSelect @bind-Value="_form.InstitutionId" class="form-select"
+                                     disabled="@IsSaving">
+                            <option value="">— Select institution —</option>
+                            @foreach (var inst in Institutions)
+                            {
+                                var name = inst.Translations.FirstOrDefault()?.Name ?? "Unnamed";
+                                <option value="@inst.InstitutionId">@name</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => _form.InstitutionId)" />
+                    </div>
+                }
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">Start Date</label>
+                        <InputDate @bind-Value="_form.StartDate" class="form-control"
+                                   disabled="@IsSaving" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">End Date <span class="text-muted fw-normal">(empty = ongoing)</span></label>
+                        <InputDate @bind-Value="_form.EndDate" class="form-control"
+                                   disabled="@IsSaving" />
+                        <ValidationMessage For="@(() => _form.EndDate)" />
+                    </div>
+                </div>
+
+                <h6 class="mb-3">Translations</h6>
+
+                @for (var i = 0; i < _form.Translations.Count; i++)
+                {
+                    var index = i;
+                    var trans = _form.Translations[index];
+
+                    <div class="card mb-3">
+                        <div class="card-header py-2">
+                            <strong>@LanguageDisplayHelper.DisplayName(trans.Language)</strong>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Title</label>
+                                <InputText @bind-Value="_form.Translations[index].Title"
+                                           class="form-control" disabled="@IsSaving" />
+                                <ValidationMessage For="@(() => _form.Translations[index].Title)" />
+                            </div>
+                            <div>
+                                <label class="form-label">Description</label>
+                                <InputTextArea @bind-Value="_form.Translations[index].Description"
+                                               class="form-control" rows="4"
+                                               disabled="@IsSaving" />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </EditForm>
+        }
+    </ChildContent>
+    <FooterContent>
+        <button type="button" class="btn btn-secondary"
+                @onclick="OnCancel" disabled="@IsSaving">
+            Cancel
+        </button>
+        <button type="button" class="btn btn-primary"
+                @onclick="HandleSubmit" disabled="@IsSaving">
+            @if (IsSaving)
+            {
+                <span class="spinner-border spinner-border-sm me-1"></span>
+                <span>Saving…</span>
+            }
+            else
+            {
+                <span>@(Mode == ModalMode.Create ? "Create" : "Save Changes")</span>
+            }
+        </button>
+    </FooterContent>
+</ModalDialog>
+
+@code {
+    [Parameter, EditorRequired]
+    public EducationTranslationsModel? Model { get; set; }
+
+    [Parameter]
+    public ModalMode Mode { get; set; } = ModalMode.Edit;
+
+    /// <summary>
+    /// Available institutions for the dropdown. Only used in <see cref="ModalMode.Create"/> mode.
+    /// </summary>
+    [Parameter]
+    public IReadOnlyList<InstitutionTranslationsModel>? Institutions { get; set; }
+
+    [Parameter]
+    public EventCallback<EducationTranslationsModel> OnSave { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    [Parameter]
+    public bool IsSaving { get; set; }
+
+    /// <summary>
+    /// General error message for non-validation failures (e.g. "Not found", load errors).
+    /// </summary>
+    [Parameter]
+    public string? ErrorMessage { get; set; }
+
+    private EducationEditFormModel? _form;
+    private EditContext? _editContext;
+    private ServerValidation? _serverValidation;
+
+    /// <summary>
+    /// Track which model instance we built the form from so we only rebuild
+    /// when the parent actually provides a different education, not on every re-render.
+    /// </summary>
+    private Guid? _lastModelId;
+
+    /// <summary>
+    /// Pushes server validation errors into the form's validation state.
+    /// Called by the parent page after a failed save.
+    /// </summary>
+    public void SetServerErrors(IEnumerable<Error> errors)
+    {
+        _serverValidation?.DisplayErrors(errors);
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (Model is null)
+        {
+            _form = null;
+            _editContext = null;
+            _lastModelId = null;
+            return;
+        }
+
+        if (_lastModelId != Model.EducationId)
+        {
+            _lastModelId = Model.EducationId;
+            _form = new EducationEditFormModel
+            {
+                InstitutionId = Model.InstitutionId,
+                StartDate = Model.StartDate,
+                EndDate = Model.EndDate,
+                Translations = Model.Translations
+                    .Select(t => new TranslationEditModel
+                    {
+                        Language = t.Language,
+                        Title = t.Title,
+                        Description = t.Description,
+                    })
+                    .ToList(),
+            };
+            _editContext = new EditContext(_form);
+            _editContext.SetFieldCssClassProvider(new BootstrapFieldCssClassProvider());
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (_form is null || Model is null || _editContext is null) return;
+        if (!_editContext.Validate()) return;
+
+        if (Mode == ModalMode.Create && _form.InstitutionId == Guid.Empty)
+        {
+            _serverValidation?.DisplayErrors(
+            [
+                new Error("InstitutionId.Required", "Please select an institution.", "InstitutionId"),
+            ]);
+            return;
+        }
+
+        var updatedTranslations = _form.Translations
+            .Select(t => new EducationTranslationItem(t.Language, t.Title, t.Description))
+            .ToList();
+
+        var updated = Model with
+        {
+            InstitutionId = _form.InstitutionId,
+            StartDate = _form.StartDate,
+            EndDate = _form.EndDate,
+            Translations = updatedTranslations,
+        };
+
+        await OnSave.InvokeAsync(updated);
+    }
+
+    private sealed class EducationEditFormModel
+    {
+        public Guid InstitutionId { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly? EndDate { get; set; }
+        public List<TranslationEditModel> Translations { get; set; } = [];
+    }
+
+    private sealed class TranslationEditModel
+    {
+        public LanguageCode Language { get; init; }
+
+        [Required(ErrorMessage = "Title is required.")]
+        public string Title { get; set; } = string.Empty;
+
+        public string Description { get; set; } = string.Empty;
+    }
+}

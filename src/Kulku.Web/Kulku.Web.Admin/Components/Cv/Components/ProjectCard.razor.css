@@ -1,0 +1,25 @@
+.project-thumbnail {
+  width: 96px;
+  height: 64px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.project-description {
+  line-height: 1.5;
+}
+
+  /* Tighten Markdig-generated HTML inside the card */
+  .project-description ::deep p:last-child {
+    margin-bottom: 0;
+  }
+
+  .project-description ::deep ul,
+  .project-description ::deep ol {
+    padding-left: 1.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .project-description ::deep a {
+    color: var(--bs-primary);
+  }

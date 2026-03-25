@@ -6,22 +6,25 @@ using Microsoft.EntityFrameworkCore;
 namespace Kulku.Infrastructure.Repositories;
 
 /// <summary>
-/// EF Core repository for accessing experience entries and their full localization graph.
+/// EF Core repository for managing experience entries and their full localization graph.
 /// </summary>
 public class ExperienceRepository(AppDbContext context) : IExperienceRepository
 {
     private readonly AppDbContext _context = context;
 
+    /// <inheritdoc />
     public void Add(Experience experience)
     {
         _context.Experiences.Add(experience);
     }
 
+    /// <inheritdoc />
     public void Remove(Experience experience)
     {
         _context.Remove(experience);
     }
 
+    /// <inheritdoc />
     public async Task<Experience?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default

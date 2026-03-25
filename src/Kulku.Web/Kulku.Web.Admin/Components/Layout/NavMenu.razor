@@ -2,91 +2,164 @@
 
 @inject NavigationManager NavigationManager
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Kulku.Web.Admin</a>
-    </div>
-</div>
+<nav class="kulku-sidebar @(IsCollapsed ? "kulku-sidebar--collapsed" : string.Empty)">
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+	@* ── Header: brand + toggle ── *@
+	<div class="kulku-sidebar__header">
+		@if (!IsCollapsed)
+		{
+			<NavLink class="d-flex align-items-center gap-2 text-white text-decoration-none" href="">
+				<span class="fs-5 fw-semibold">Kulku Admin</span>
+			</NavLink>
+		}
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
+		<button type="button"
+				class="btn btn-sm btn-outline-light kulku-sidebar-toggle"
+				title="Toggle sidebar"
+				@onclick="ToggleCollapsed">
+			<Icon Kind="@(IsCollapsed? IconKind.ArrowBarRight: IconKind.ArrowBarLeft)" Size="20" />
+			<span class="visually-hidden">Toggle sidebar</span>
+		</button>
+	</div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
+	<hr class="my-2" />
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
+	@* ── Scrollable nav area ── *@
+	<ul class="nav nav-pills flex-column kulku-sidebar__nav">
+		<li class="nav-item">
+			<NavLink class="nav-link text-white kulku-navlink" href="" Match="NavLinkMatch.All"
+					 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Home" : null)">
+				<Icon Kind="IconKind.House" Size="20" />
+				<span class="kulku-link-text">Home</span>
+			</NavLink>
+		</li>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="auth">
-                <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Auth Required
-            </NavLink>
-        </div>
+		<li class="nav-item">
+			<NavLink class="nav-link text-white kulku-navlink" href="developer"
+					 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Developer" : null)">
+				<Icon Kind="IconKind.Lightbulb" Size="20" />
+				<span class="kulku-link-text">Developer</span>
+			</NavLink>
+		</li>
 
-        <AuthorizeView>
-            <Authorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <form action="Account/Logout" method="post">
-                        <AntiforgeryToken />
-                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                        <button type="submit" class="nav-link">
-                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
-                        </button>
-                    </form>
-                </div>
-            </Authorized>
-            <NotAuthorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Register">
-                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Login">
-                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
-                    </NavLink>
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
-    </nav>
-</div>
+		<li class="nav-item">
+			<NavLink class="nav-link text-white kulku-navlink" href="cv" Match="NavLinkMatch.All"
+					 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Cv" : null)">
+				<Icon Kind="IconKind.FileEarmarkPerson" Size="20" />
+				<span class="kulku-link-text">Cv</span>
+			</NavLink>
+
+			@if (!IsCollapsed)
+			{
+				<ul class="nav flex-column kulku-subnav">
+					<li><NavLink class="nav-link kulku-sublink" href="cv/introduction"><Icon Kind="IconKind.FileText" Size="14" /> Introduction</NavLink></li>
+					<li><NavLink class="nav-link kulku-sublink" href="cv/education"><Icon Kind="IconKind.Mortarboard" Size="14" /> Education</NavLink></li>
+					<li><NavLink class="nav-link kulku-sublink" href="cv/experience"><Icon Kind="IconKind.Briefcase" Size="14" /> Experience</NavLink></li>
+					<li><NavLink class="nav-link kulku-sublink" href="cv/projects"><Icon Kind="IconKind.Folder" Size="14" /> Projects</NavLink></li>
+					<li><NavLink class="nav-link kulku-sublink" href="cv/keywords"><Icon Kind="IconKind.Tags" Size="14" /> Keywords</NavLink></li>
+				</ul>
+			}
+		</li>
+
+		<li class="nav-item">
+			<NavLink class="nav-link text-white kulku-navlink" href="ideas"
+					 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Ideas" : null)">
+				<Icon Kind="IconKind.Journal" Size="20" />
+				<span class="kulku-link-text">Ideas</span>
+			</NavLink>
+		</li>
+
+		<li class="nav-item">
+			<NavLink class="nav-link text-white kulku-navlink" href="weather"
+					 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Weather" : null)">
+				<Icon Kind="IconKind.ListNested" Size="20" />
+				<span class="kulku-link-text">Weather</span>
+			</NavLink>
+		</li>
+
+		<li class="nav-item">
+			<NavLink class="nav-link text-white kulku-navlink" href="auth"
+					 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Auth Required" : null)">
+				<Icon Kind="IconKind.Lock" Size="20" />
+				<span class="kulku-link-text">Auth Required</span>
+			</NavLink>
+		</li>
+	</ul>
+
+	@* ── Footer: user menu ── *@
+	<div class="kulku-sidebar__footer">
+		<hr class="my-2" />
+
+		<AuthorizeView>
+			<Authorized>
+				<div class="@(IsCollapsed ? "dropend" : "dropup")">
+					<a class="d-flex align-items-center gap-2 text-white text-decoration-none dropdown-toggle kulku-user-toggle"
+						   href="#"
+						   data-bs-toggle="dropdown"
+						   aria-expanded="false">
+						<Icon Kind="IconKind.PersonFill" Size="20" />
+						<strong class="kulku-link-text">@context.User.Identity?.Name</strong>
+					</a>
+
+					<ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+						<li>
+							<NavLink class="dropdown-item" href="Account/Manage">Profile</NavLink>
+						</li>
+						<li><hr class="dropdown-divider" /></li>
+						<li>
+							<form class="px-3 py-2" action="Account/Logout" method="post">
+								<AntiforgeryToken />
+								<input type="hidden" name="ReturnUrl" value="@currentUrl" />
+								<button type="submit" class="btn btn-sm btn-danger w-100">Logout</button>
+							</form>
+						</li>
+					</ul>
+				</div>
+			</Authorized>
+
+			<NotAuthorized>
+				<ul class="nav nav-pills flex-column">
+					<li class="nav-item">
+						<NavLink class="nav-link text-white kulku-navlink" href="Account/Login"
+								 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Login" : null)">
+							<Icon Kind="IconKind.PersonBadge" Size="20" />
+							<span class="kulku-link-text">Login</span>
+						</NavLink>
+					</li>
+					<li class="nav-item">
+						<NavLink class="nav-link text-white kulku-navlink" href="Account/Register"
+								 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Register" : null)">
+							<Icon Kind="IconKind.Person" Size="20" />
+							<span class="kulku-link-text">Register</span>
+						</NavLink>
+					</li>
+				</ul>
+			</NotAuthorized>
+		</AuthorizeView>
+	</div>
+</nav>
 
 @code {
-    private string? currentUrl;
+	private string? currentUrl;
 
-    protected override void OnInitialized()
-    {
-        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-        NavigationManager.LocationChanged += OnLocationChanged;
-    }
+	//TODO: Persist per-user.
+	private bool IsCollapsed { get; set; }
 
-    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
-    {
-        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
-        StateHasChanged();
-    }
+	private bool IsOnCvSection => currentUrl?.StartsWith("cv", StringComparison.OrdinalIgnoreCase) == true;
 
-    public void Dispose()
-    {
-        NavigationManager.LocationChanged -= OnLocationChanged;
-    }
+	protected override void OnInitialized()
+	{
+		currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+		NavigationManager.LocationChanged += OnLocationChanged;
+	}
+
+	private void ToggleCollapsed() => IsCollapsed = !IsCollapsed;
+
+	private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+	{
+		currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+		StateHasChanged();
+	}
+
+	protected override void OnDispose() => NavigationManager.LocationChanged -= OnLocationChanged;
 }
-

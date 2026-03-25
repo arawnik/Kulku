@@ -1,0 +1,35 @@
+using SoulNETLib.Clean.Domain;
+
+namespace Kulku.Application.Projects;
+
+/// <summary>
+/// Shared validation logic for proficiency create and update commands.
+/// </summary>
+internal static class ProficiencyCommandValidator
+{
+    public static Error[] Validate(int scale, IReadOnlyList<ProficiencyTranslationDto> translations)
+    {
+        List<Error> errors = [];
+
+        if (scale < 0 || scale > 100)
+            errors.Add(Error.Validation(nameof(scale), "Scale must be between 0 and 100."));
+
+        if (translations.Count == 0)
+            errors.Add(
+                Error.Validation(nameof(translations), "At least one translation is required.")
+            );
+
+        for (var i = 0; i < translations.Count; i++)
+        {
+            if (string.IsNullOrWhiteSpace(translations[i].Name))
+                errors.Add(
+                    Error.Validation(
+                        $"{nameof(translations)}[{i}].Name",
+                        $"Name is required for the {translations[i].Language} translation."
+                    )
+                );
+        }
+
+        return [.. errors];
+    }
+}

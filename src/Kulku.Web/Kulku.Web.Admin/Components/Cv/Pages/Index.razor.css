@@ -1,0 +1,13 @@
+.overview-description ::deep p {
+  margin-bottom: 0.25rem;
+}
+
+  .overview-description ::deep p:last-child {
+    margin-bottom: 0;
+  }
+
+.overview-description ::deep ul,
+.overview-description ::deep ol {
+  padding-left: 1.25rem;
+  margin-bottom: 0;
+}

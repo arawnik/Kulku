@@ -13,7 +13,7 @@ public class EducationConfiguration : IEntityTypeConfiguration<Education>
         builder.Property(e => e.Id).UuidGeneratedOnAdd();
 
         builder.Property(e => e.StartDate).IsRequired();
-        builder.Property(e => e.EndDate).IsRequired();
+        builder.Property(e => e.EndDate).IsRequired(false);
 
         builder
             .HasMany(e => e.Translations)

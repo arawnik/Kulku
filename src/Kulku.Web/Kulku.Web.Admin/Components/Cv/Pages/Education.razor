@@ -1,0 +1,104 @@
+@page "/cv/education"
+@using Kulku.Application.Cover.Education.Models
+@using Kulku.Application.Cover.Models
+@attribute [Authorize]
+
+<PageTitle>Education — Admin</PageTitle>
+
+<div class="container-fluid py-4">
+	<div class="d-flex justify-content-between align-items-start mb-3">
+		<div>
+			<h1 class="h4 mb-1">Education</h1>
+			<div class="text-muted">Manage education entries, institutions, and translations</div>
+		</div>
+		<div class="d-flex gap-2">
+			<button type="button" class="btn btn-sm btn-outline-success" @onclick="HandleCreate">
+				<Icon Kind="IconKind.Plus" CssClass="me-1" />Add Education
+			</button>
+			<NavLink class="btn btn-sm btn-outline-secondary" href="/cv">Back</NavLink>
+		</div>
+	</div>
+
+	@if (_errorMessage is not null && _modalMode is null && _institutionModalMode is null)
+	{
+		<div class="alert alert-danger py-2">@_errorMessage</div>
+	}
+
+	@if (!_loaded)
+	{
+		<div class="text-muted">Loading…</div>
+	}
+	else
+	{
+		@* ── Institutions ─────────────────────────── *@
+		<div class="card mb-4">
+			<div class="card-header d-flex justify-content-between align-items-center py-2">
+				<button type="button" class="btn btn-sm btn-link text-decoration-none p-0"
+						@onclick="() => _institutionsExpanded = !_institutionsExpanded">
+					<Icon Kind="@(_institutionsExpanded? IconKind.ChevronDown: IconKind.ChevronRight)"
+						  Size="16" CssClass="me-1" />
+					<span class="fw-semibold">Institutions</span>
+					<span class="badge bg-secondary ms-2">@_allInstitutions.Count</span>
+				</button>
+				<button type="button" class="btn btn-sm btn-outline-success"
+						@onclick="HandleCreateInstitution">
+					<Icon Kind="IconKind.Plus" CssClass="me-1" />Add Institution
+				</button>
+			</div>
+
+			@if (_institutionsExpanded)
+			{
+				<div class="card-body pt-2 pb-1">
+					@if (_allInstitutions.Count == 0)
+					{
+						<div class="text-muted mb-2">No institutions yet.</div>
+					}
+					else
+					{
+						@foreach (var inst in _allInstitutions)
+						{
+							<InstitutionCard Institution="inst"
+											 OnEdit="HandleEditInstitution"
+											 OnDelete="HandleDeleteInstitution" />
+						}
+					}
+				</div>
+			}
+		</div>
+
+		@* ── Education entries ─────────────────── *@
+		@if (Educations.Count <= 0)
+		{
+			<div class="alert alert-secondary">There are no education entries.</div>
+		}
+		else
+		{
+			<div class="row g-3">
+				@foreach (var edu in Educations)
+				{
+					<EducationCard Education="edu" OnEdit="HandleEdit" OnDelete="HandleDelete" />
+				}
+			</div>
+		}
+	}
+</div>
+
+@if (_modalMode is not null && CurrentEditModel != null)
+{
+	<EducationEditModal @ref="_editModal"
+						Model="CurrentEditModel"
+						Mode="_modalMode.Value"
+						Institutions="_institutions"
+						OnSave="HandleSave"
+						OnCancel="HandleCancel"
+						IsSaving="IsSaving"
+						ErrorMessage="@_errorMessage" />
+}
+
+<InstitutionEditModal @ref="_institutionModal"
+					  Model="@_currentInstitution"
+					  Mode="@(_institutionModalMode ?? ModalMode.Edit)"
+					  OnSave="HandleSaveInstitution"
+					  OnCancel="CloseInstitutionEditor"
+					  IsSaving="@_isSavingInstitution"
+					  ErrorMessage="@_institutionErrorMessage" />

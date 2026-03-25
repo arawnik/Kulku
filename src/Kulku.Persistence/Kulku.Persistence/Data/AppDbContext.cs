@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Kulku.Domain;
 using Kulku.Domain.Contacts;
 using Kulku.Domain.Cover;
+using Kulku.Domain.Ideas;
 using Kulku.Domain.Projects;
 using Kulku.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +44,17 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<IntroductionTranslation> IntroductionTranslations { get; set; } = null!;
 
     public DbSet<ContactRequest> ContactRequests { get; set; } = null!;
+
+    // Ideas
+    public DbSet<Idea> Ideas { get; set; } = null!;
+    public DbSet<IdeaNote> IdeaNotes { get; set; } = null!;
+    public DbSet<IdeaDomain> IdeaDomains { get; set; } = null!;
+    public DbSet<IdeaDomainTranslation> IdeaDomainTranslations { get; set; } = null!;
+    public DbSet<IdeaStatus> IdeaStatuses { get; set; } = null!;
+    public DbSet<IdeaStatusTranslation> IdeaStatusTranslations { get; set; } = null!;
+    public DbSet<IdeaPriority> IdeaPriorities { get; set; } = null!;
+    public DbSet<IdeaPriorityTranslation> IdeaPriorityTranslations { get; set; } = null!;
+    public DbSet<IdeaTag> IdeaTags { get; set; } = null!;
 
     /// <summary>
     /// Configures global EF Core model conventions for this DbContext.

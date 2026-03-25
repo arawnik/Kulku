@@ -1,0 +1,104 @@
+@page "/cv/experience"
+@using Kulku.Application.Cover.Experience.Models
+@using Kulku.Application.Cover.Models
+@attribute [Authorize]
+
+<PageTitle>Experience — Admin</PageTitle>
+
+<div class="container-fluid py-4">
+	<div class="d-flex justify-content-between align-items-start mb-3">
+		<div>
+			<h1 class="h4 mb-1">Experience</h1>
+			<div class="text-muted">Manage experience entries, companies, and translations</div>
+		</div>
+		<div class="d-flex gap-2">
+			<button type="button" class="btn btn-sm btn-outline-success" @onclick="HandleCreate">
+				<Icon Kind="IconKind.Plus" CssClass="me-1" />Add Experience
+			</button>
+			<NavLink class="btn btn-sm btn-outline-secondary" href="/cv">Back</NavLink>
+		</div>
+	</div>
+
+	@if (_errorMessage is not null && _modalMode is null && _companyModalMode is null)
+	{
+		<div class="alert alert-danger py-2">@_errorMessage</div>
+	}
+
+	@if (!_loaded)
+	{
+		<div class="text-muted">Loading…</div>
+	}
+	else
+	{
+		@* ── Companies ─────────────────────────── *@
+		<div class="card mb-4">
+			<div class="card-header d-flex justify-content-between align-items-center py-2">
+				<button type="button" class="btn btn-sm btn-link text-decoration-none p-0"
+						@onclick="() => _companiesExpanded = !_companiesExpanded">
+					<Icon Kind="@(_companiesExpanded? IconKind.ChevronDown: IconKind.ChevronRight)"
+						  Size="16" CssClass="me-1" />
+					<span class="fw-semibold">Companies</span>
+					<span class="badge bg-secondary ms-2">@_allCompanies.Count</span>
+				</button>
+				<button type="button" class="btn btn-sm btn-outline-success"
+						@onclick="HandleCreateCompany">
+					<Icon Kind="IconKind.Plus" CssClass="me-1" />Add Company
+				</button>
+			</div>
+
+			@if (_companiesExpanded)
+			{
+				<div class="card-body pt-2 pb-1">
+					@if (_allCompanies.Count == 0)
+					{
+						<div class="text-muted mb-2">No companies yet.</div>
+					}
+					else
+					{
+						@foreach (var co in _allCompanies)
+						{
+							<CompanyCard Company="co"
+										 OnEdit="HandleEditCompany"
+										 OnDelete="HandleDeleteCompany" />
+						}
+					}
+				</div>
+			}
+		</div>
+
+		@* ── Experience entries ─────────────────── *@
+		@if (Experiences.Count <= 0)
+		{
+			<div class="alert alert-secondary">There are no experience entries.</div>
+		}
+		else
+		{
+			<div class="row g-3">
+				@foreach (var exp in Experiences)
+				{
+					<ExperienceCard Experience="exp" OnEdit="HandleEdit" OnDelete="HandleDelete" />
+				}
+			</div>
+		}
+	}
+</div>
+
+@if (_modalMode is not null && CurrentEditModel != null)
+{
+	<ExperienceEditModal @ref="_editModal"
+						 Model="CurrentEditModel"
+						 Mode="_modalMode.Value"
+						 Companies="_companies"
+						 OnSave="HandleSave"
+						 OnCancel="HandleCancel"
+						 IsSaving="IsSaving"
+						 ErrorMessage="@_errorMessage" />
+}
+
+<CompanyEditModal @ref="_companyModal"
+				  Model="@_currentCompany"
+				  Mode="@(_companyModalMode ?? ModalMode.Edit)"
+				  OnSave="HandleSaveCompany"
+				  OnCancel="CloseCompanyEditor"
+				  IsSaving="@_isSavingCompany"
+				  ErrorMessage="@_companyErrorMessage" />

@@ -1,6 +1,7 @@
 using Carter;
 using Kulku.Application.Abstractions.Localization;
-using Kulku.Application.Cover;
+using Kulku.Application.Abstractions.Rendering;
+using Kulku.Application.Cover.Introduction;
 using Kulku.Application.Cover.Models;
 using Kulku.Web.Api.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -23,6 +24,7 @@ public class IntroductionEndpoints : ICarterModule
     > GetIntroductionAsync(
         [FromServices] IQueryHandler<GetIntroduction.Query, IntroductionModel?> handler,
         [FromServices] ILanguageContext languageContext,
+        [FromServices] IMarkdownRenderer markdownRenderer,
         CancellationToken cancellationToken
     )
     {
@@ -30,9 +32,13 @@ public class IntroductionEndpoints : ICarterModule
             new GetIntroduction.Query(languageContext.Current),
             cancellationToken
         );
-        if (result.IsSuccess)
+        if (result.IsSuccess && result.Value is not null)
         {
-            return TypedResults.Ok(result.Value);
+            var rendered = result.Value with
+            {
+                Content = markdownRenderer.ToHtml(result.Value.Content),
+            };
+            return TypedResults.Ok(rendered);
         }
         return result.HandleFailure();
     }

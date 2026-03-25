@@ -1,0 +1,135 @@
+@page "/ideas/{Id:guid}"
+
+@using Kulku.Application.IdeaBank.Models
+@using Kulku.Application.Projects.Models
+@using Kulku.Web.Admin.Components.Ideas.Components
+
+@attribute [Authorize]
+
+<PageTitle>@(_idea?.Title ?? "Idea") — Idea Bank</PageTitle>
+
+<div class="container-fluid py-4 px-4">
+	@if (!_loaded)
+	{
+		<p class="text-muted">Loading…</p>
+	}
+	else if (_idea is null)
+	{
+		<div class="alert alert-warning">Idea not found.</div>
+		<a href="/ideas" class="btn btn-outline-secondary btn-sm">← Back to Ideas</a>
+	}
+	else
+	{
+		@* ── Header ── *@
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<div>
+				<a href="/ideas" class="text-decoration-none text-muted">← Ideas</a>
+				<h3 class="mt-1 mb-0">@_idea.Title</h3>
+				@if (!string.IsNullOrWhiteSpace(_idea.Summary))
+				{
+					<p class="text-muted mb-0">@_idea.Summary</p>
+				}
+			</div>
+			<button class="btn btn-outline-primary btn-sm" @onclick="HandleEdit">
+				<Icon Kind="IconKind.Pencil" Size="16" /> Edit
+			</button>
+		</div>
+
+		@* ── Metadata ── *@
+		<div class="d-flex flex-wrap gap-2 mb-3">
+			<span class="badge @_idea.StatusStyle">@_idea.StatusName</span>
+			<span class="badge @_idea.PriorityStyle">@_idea.PriorityName</span>
+			<span class="badge bg-dark">
+				<i class="bi bi-@_idea.DomainIcon me-1"></i>@_idea.DomainName
+			</span>
+			@foreach (var tag in _idea.Tags)
+			{
+				<span class="badge" style="background:@(tag.ColorHex ?? "#6c757d")">@tag.Name</span>
+			}
+			@foreach (var kw in _idea.Keywords)
+			{
+				<span class="badge bg-success bg-opacity-75">@kw.Name</span>
+			}
+		</div>
+
+		<div class="row">
+			@* ── Description ── *@
+			<div class="col-lg-7 mb-4">
+				<div class="card">
+					<div class="card-header d-flex justify-content-between align-items-center">
+						<h5 class="mb-0">Description</h5>
+					</div>
+					<div class="card-body">
+						@if (!string.IsNullOrWhiteSpace(_idea.Description))
+						{
+							<MarkdownView Content="@_idea.Description" />
+						}
+						else
+						{
+							<p class="text-muted fst-italic">No description yet.</p>
+						}
+					</div>
+				</div>
+			</div>
+
+			@* ── Notes ── *@
+			<div class="col-lg-5 mb-4">
+				<div class="card">
+					<div class="card-header d-flex justify-content-between align-items-center">
+						<h5 class="mb-0">Notes <span class="badge bg-secondary ms-1">@_idea.Notes.Count</span></h5>
+					</div>
+					<div class="card-body">
+						@* Add note form *@
+						<div class="mb-3">
+							<MarkdownEditor @bind-Value="_newNoteContent"
+											Rows="2"
+											MinHeight="3"
+											Disabled="@_noteSaving"
+											Placeholder="Add a note…" />
+							<div class="mt-1 d-flex justify-content-end">
+								<button class="btn btn-primary btn-sm" @onclick="HandleAddNote"
+										disabled="@(_noteSaving || string.IsNullOrWhiteSpace(_newNoteContent))">
+									@if (_noteSaving)
+									{
+										<span class="spinner-border spinner-border-sm me-1"></span>
+									}
+									Add Note
+								</button>
+							</div>
+						</div>
+
+						@if (_idea.Notes.Count == 0)
+						{
+							<p class="text-muted fst-italic">No notes yet.</p>
+						}
+						else
+						{
+							@foreach (var note in _idea.Notes.OrderByDescending(n => n.CreatedAt))
+							{
+								<IdeaNoteEntry Note="@note" OnDelete="HandleDeleteNote" />
+							}
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="text-muted small">
+			Created @_idea.CreatedAt.ToString("dd MMM yyyy HH:mm") · Updated @_idea.UpdatedAt.ToString("dd MMM yyyy HH:mm")
+		</div>
+	}
+</div>
+
+@* ── Edit Modal ── *@
+<IdeaEditModal @ref="_editModal"
+			   Model="@_editingIdea"
+			   Mode="ModalMode.Edit"
+			   Domains="@_domains"
+			   Statuses="@_statuses"
+			   Priorities="@_priorities"
+			   Tags="@_tags"
+			   Keywords="@_keywords"
+			   OnSave="HandleSaveIdea"
+			   OnCancel="CloseEditor"
+			   IsSaving="@_ideaSaving"
+			   ErrorMessage="@_ideaError" />

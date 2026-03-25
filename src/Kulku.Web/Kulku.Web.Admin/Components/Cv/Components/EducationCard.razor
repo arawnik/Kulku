@@ -1,0 +1,132 @@
+@using Kulku.Application.Cover.Education.Models
+@using Kulku.Application.Cover.Models
+@using Kulku.Domain
+
+<div class="col-12">
+    <div class="card shadow-sm">
+        @if (Education is not null)
+        {
+            var translations = Education.Translations
+                .OrderBy(t => t.Language.ToString()).ToList();
+            var instTranslations = Education.InstitutionTranslations;
+
+            <div class="card-header d-flex justify-content-between align-items-start gap-3">
+                <div>
+                    <h5 class="mb-0 fw-semibold">
+                        @(translations.FirstOrDefault()?.Title ?? "Untitled")
+                    </h5>
+                    @{
+                        var primaryInst = instTranslations
+                            .FirstOrDefault(it => it.Language == (translations.FirstOrDefault()?.Language ?? default));
+                    }
+                    <div class="text-muted small">
+                        @(primaryInst?.Name ?? "Unknown institution")
+                        @if (!string.IsNullOrEmpty(primaryInst?.Department))
+                        {
+                            <span>&middot; @primaryInst.Department</span>
+                        }
+                    </div>
+                </div>
+                <div class="text-end text-nowrap">
+                    <div class="fw-semibold">
+                        @Education.StartDate.ToString("yyyy")–@(Education.EndDate?.ToString("yyyy") ?? "Present")
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                @if (translations.Count == 0)
+                {
+                    <div class="text-muted small">No translations available.</div>
+                }
+                else
+                {
+                    <div class="row g-3">
+                        @foreach (var trans in translations)
+                        {
+                            var inst = instTranslations
+                                .FirstOrDefault(it => it.Language == trans.Language);
+
+                            <div class="@(translations.Count == 1 ? "col-12" : "col-12 col-md-6")">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <span class="badge bg-secondary">
+                                        @LanguageDisplayHelper.DisplayName(trans.Language)
+                                    </span>
+                                    <span class="fw-semibold small">@trans.Title</span>
+                                </div>
+                                @if (inst is not null && inst.Name != primaryInst?.Name)
+                                {
+                                    <div class="text-muted small mb-1">
+                                        @inst.Name
+                                        @if (!string.IsNullOrEmpty(inst.Department))
+                                        {
+                                            <span>&middot; @inst.Department</span>
+                                        }
+                                    </div>
+                                }
+                                <div class="text-muted small education-description">
+                                    @trans.Description
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-primary"
+                            @onclick="HandleEditClick">
+                        <Icon Kind="IconKind.Pencil" Size="14" CssClass="me-1" />Edit
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-danger"
+                            @onclick="() => _confirmingDelete = true">
+                        <Icon Kind="IconKind.Trash" Size="14" CssClass="me-1" />Delete
+                    </button>
+                </div>
+                <small class="text-muted">
+                    @translations.Count translation(s)
+                </small>
+            </div>
+        }
+    </div>
+</div>
+
+<ConfirmDialog Visible="_confirmingDelete"
+               Title="Delete Education"
+               Message="Are you sure you want to delete this education entry? This action cannot be undone."
+               ButtonText="Delete"
+               ButtonStyle="danger"
+               ButtonIcon="IconKind.Trash"
+               OnConfirm="HandleConfirmDelete"
+               OnCancel="() => _confirmingDelete = false" />
+
+@code {
+    [Parameter, EditorRequired]
+    public EducationTranslationsModel? Education { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> OnEdit { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> OnDelete { get; set; }
+
+    private bool _confirmingDelete;
+
+    private async Task HandleEditClick()
+    {
+        if (Education is not null)
+        {
+            await OnEdit.InvokeAsync(Education.EducationId);
+        }
+    }
+
+    private async Task HandleConfirmDelete()
+    {
+        if (Education is not null)
+        {
+            _confirmingDelete = false;
+            await OnDelete.InvokeAsync(Education.EducationId);
+        }
+    }
+}

@@ -28,7 +28,7 @@ public class LanguageCodeMapperTests
     public void FromCultureNullReturnsDefault()
     {
         // Arrange & Act
-        var result = LanguageCodeMapper.FromCulture(null!);
+        var result = LanguageCodeMapper.FromCulture((CultureInfo)null!);
 
         // Assert
         Assert.Equal(Defaults.Language, result);

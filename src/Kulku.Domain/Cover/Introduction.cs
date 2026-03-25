@@ -16,14 +16,14 @@ public class Introduction : ITranslatableEntity<IntroductionTranslation>
     public Guid Id { get; set; }
 
     /// <summary>
-    /// URL to the full-size avatar image.
+    /// Filename or absolute URL for the full-size avatar image.
     /// </summary>
-    public required Uri AvatarUrl { get; set; }
+    public required string AvatarUrl { get; set; }
 
     /// <summary>
-    /// URL to the small avatar image.
+    /// Filename or absolute URL for the small avatar image.
     /// </summary>
-    public required Uri SmallAvatarUrl { get; set; }
+    public required string SmallAvatarUrl { get; set; }
 
     /// <summary>
     /// Publication timestamp for the introduction content.

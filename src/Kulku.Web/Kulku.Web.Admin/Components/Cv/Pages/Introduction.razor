@@ -1,0 +1,103 @@
+@page "/cv/introduction"
+@using Kulku.Application.Cover.Introduction.Models
+@attribute [Authorize]
+
+<PageTitle>Introduction — Admin</PageTitle>
+
+<div class="container-fluid py-4">
+	<div class="d-flex justify-content-between align-items-start mb-3">
+		<div>
+			<h1 class="h4 mb-1">Introduction</h1>
+			<div class="text-muted">Manage introductions and schedule publications</div>
+		</div>
+		<div class="d-flex gap-2">
+			<button type="button" class="btn btn-sm btn-outline-success" @onclick="HandleCreate">
+				<Icon Kind="IconKind.Plus" CssClass="me-1" />Add Introduction
+			</button>
+			<NavLink class="btn btn-sm btn-outline-secondary" href="/cv">Back</NavLink>
+		</div>
+	</div>
+
+	@if (!_loaded)
+	{
+		<div class="text-muted">Loading…</div>
+	}
+	else if (_allIntroductions.Count <= 0)
+	{
+		<div class="alert alert-secondary">There are no introductions.</div>
+	}
+	else
+	{
+		@* ── Active ── *@
+		@if (_active is not null)
+		{
+			<h5 class="mb-2">Active</h5>
+			<div class="mb-4">
+				<IntroductionCard Introduction="_active"
+								  IsActive="true"
+								  StatusLabel="Active"
+								  OnEdit="HandleEdit"
+								  OnDelete="HandleDelete" />
+			</div>
+		}
+
+		@* ── Scheduled ── *@
+		@if (_scheduled.Count > 0)
+		{
+			<h5 class="mb-2">Scheduled</h5>
+			<div class="row g-3 mb-4">
+				@foreach (var intro in _scheduled)
+				{
+					<div class="col-12">
+						<IntroductionCard Introduction="intro"
+										  StatusLabel="Scheduled"
+										  OnEdit="HandleEdit"
+										  OnDelete="HandleDelete" />
+					</div>
+				}
+			</div>
+		}
+
+		@* ── History ── *@
+		@if (_history.Count > 0)
+		{
+			<div class="mb-2">
+				<button type="button" class="btn btn-sm btn-link text-muted p-0"
+						@onclick="() => _showHistory = !_showHistory">
+					<Icon Kind="@(_showHistory? IconKind.ChevronDown: IconKind.ChevronRight)" Size="14" CssClass="me-1" />
+					History (@_history.Count)
+				</button>
+			</div>
+			@if (_showHistory)
+			{
+				<div class="row g-3">
+					@foreach (var intro in _history)
+					{
+						<div class="col-12">
+							<IntroductionCard Introduction="intro"
+											  StatusLabel="Superseded"
+											  OnEdit="HandleEdit"
+											  OnDelete="HandleDelete" />
+						</div>
+					}
+				</div>
+			}
+		}
+	}
+
+	@if (_errorMessage is not null && _modalMode is null)
+	{
+		<div class="alert alert-danger mt-3">@_errorMessage</div>
+	}
+</div>
+
+@if (_modalMode is not null && CurrentEditModel != null)
+{
+	<IntroductionEditModal @ref="_editModal"
+						   Model="CurrentEditModel"
+						   Mode="_modalMode.Value"
+						   OnSave="HandleSave"
+						   OnCancel="HandleCancel"
+						   IsSaving="IsSaving"
+						   ErrorMessage="@_errorMessage" />
+}

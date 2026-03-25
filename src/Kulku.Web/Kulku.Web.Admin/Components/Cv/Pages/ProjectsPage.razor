@@ -1,0 +1,58 @@
+@page "/cv/projects"
+@using Kulku.Application.Projects.Models
+@attribute [Authorize]
+
+<PageTitle>Projects — Admin</PageTitle>
+
+<div class="container-fluid py-4">
+	<div class="d-flex justify-content-between align-items-start mb-3">
+		<div>
+			<h1 class="h4 mb-1">Projects</h1>
+			<div class="text-muted">Manage portfolio projects and translations</div>
+		</div>
+		<div class="d-flex gap-2">
+			<button type="button" class="btn btn-sm btn-outline-success" @onclick="HandleCreate">
+				<Icon Kind="IconKind.Plus" CssClass="me-1" />Add Project
+			</button>
+			<NavLink class="btn btn-sm btn-outline-secondary" href="/cv">Back</NavLink>
+		</div>
+	</div>
+
+	@if (!_loaded)
+	{
+		<div class="text-muted">Loading…</div>
+	}
+	else if (Projects.Count <= 0)
+	{
+		<div class="alert alert-secondary">There are no projects.</div>
+	}
+	else
+	{
+		<div class="row g-3">
+			@foreach (var proj in Projects)
+			{
+				<ProjectCard Project="proj"
+							 KeywordNames="ResolveKeywordNames(proj.KeywordIds)"
+							 OnEdit="HandleEdit"
+							 OnDelete="HandleDelete" />
+			}
+		</div>
+	}
+
+	@if (_errorMessage is not null && _modalMode is null)
+	{
+		<div class="alert alert-danger mt-3">@_errorMessage</div>
+	}
+</div>
+
+@if (_modalMode is not null && CurrentEditModel != null)
+{
+	<ProjectEditModal @ref="_editModal"
+					  Model="CurrentEditModel"
+					  Mode="_modalMode.Value"
+					  Keywords="_keywords"
+					  OnSave="HandleSave"
+					  OnCancel="HandleCancel"
+					  IsSaving="IsSaving"
+					  ErrorMessage="@_errorMessage" />
+}
