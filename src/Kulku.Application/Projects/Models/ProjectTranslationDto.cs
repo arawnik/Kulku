@@ -1,6 +1,6 @@
 using Kulku.Domain;
 
-namespace Kulku.Application.Projects;
+namespace Kulku.Application.Projects.Models;
 
 /// <summary>
 /// Input DTO for project translation data in create/update commands.

@@ -1,5 +1,3 @@
-using Kulku.Domain;
-
 namespace Kulku.Application.Projects.Models;
 
 /// <summary>
@@ -11,10 +9,4 @@ public sealed record ProficiencyTranslationsModel(
     int Order,
     int KeywordCount,
     IReadOnlyList<ProficiencyTranslationItem> Translations
-);
-
-public sealed record ProficiencyTranslationItem(
-    LanguageCode Language,
-    string Name,
-    string? Description
 );

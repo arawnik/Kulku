@@ -1,5 +1,3 @@
-using Kulku.Domain;
-
 namespace Kulku.Application.Projects.Models;
 
 /// <summary>
@@ -13,11 +11,4 @@ public sealed record ProjectTranslationsModel(
     int Order,
     IReadOnlyList<ProjectTranslationItem> Translations,
     IReadOnlyList<Guid> KeywordIds
-);
-
-public sealed record ProjectTranslationItem(
-    LanguageCode Language,
-    string Name,
-    string Info,
-    string Description
 );

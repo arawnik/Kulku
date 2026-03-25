@@ -1,3 +1,4 @@
+using Kulku.Application.Projects.Models;
 using Kulku.Domain.Projects;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
