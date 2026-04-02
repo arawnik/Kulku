@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Kulku.Application.Abstractions.Assets;
 using Kulku.Application.Abstractions.Rendering;
 using Kulku.Application.Abstractions.Security;
 using Kulku.Application.Cover.Education.Ports;
@@ -8,6 +9,7 @@ using Kulku.Application.Cover.Ports;
 using Kulku.Application.IdeaBank.Ports;
 using Kulku.Application.Projects.Ports;
 using Kulku.Domain.Repositories;
+using Kulku.Infrastructure.Assets;
 using Kulku.Infrastructure.Queries;
 using Kulku.Infrastructure.Queries.Ideas;
 using Kulku.Infrastructure.Rendering;
@@ -92,6 +94,36 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IIdeaStatusQueries, IdeaStatusQueries>();
         services.AddScoped<IIdeaPriorityQueries, IdeaPriorityQueries>();
         services.AddScoped<IIdeaTagQueries, IdeaTagQueries>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Registers <see cref="AssetOptions"/> (with validation) and the
+    /// <see cref="AssetUrlBuilder"/> singleton.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection"/> to register asset services into.</param>
+    /// <returns>The updated <see cref="IServiceCollection"/>.</returns>
+    public static IServiceCollection AddAssets(this IServiceCollection services)
+    {
+        services
+            .AddOptions<AssetOptions>()
+            .BindConfiguration(AssetOptions.SectionName)
+            .Validate(
+                o =>
+                    !string.IsNullOrWhiteSpace(o.LocalPath)
+                    || !string.IsNullOrWhiteSpace(o.BaseUrl),
+                "Configure either Assets:LocalPath or Assets:BaseUrl."
+            )
+            .Validate(
+                o =>
+                    string.IsNullOrWhiteSpace(o.BaseUrl)
+                    || Uri.IsWellFormedUriString(o.BaseUrl, UriKind.Absolute),
+                "Assets:BaseUrl must be a valid absolute URL."
+            )
+            .ValidateOnStart();
+
+        services.AddSingleton<IAssetUrlBuilder, AssetUrlBuilder>();
 
         return services;
     }

@@ -1,7 +1,10 @@
 @using System.ComponentModel.DataAnnotations
+@using Kulku.Application.Abstractions.Assets
 @using Kulku.Application.Cover.Introduction.Models
 @using Kulku.Domain
 @using SoulNETLib.Clean.Domain
+
+@inject IAssetUrlBuilder StaticAssets
 
 <ModalDialog Visible="@(_form != null)"
 			 Title="@(Mode == ModalMode.Create ? "Create Introduction" : "Edit Introduction")"
@@ -26,7 +29,7 @@
 						<ValidationMessage For="@(() => _form.AvatarUrl)" />
 						@if (!string.IsNullOrWhiteSpace(_form.AvatarUrl))
 						{
-							<img src="@ResolveImageSrc(_form.AvatarUrl)" alt="Avatar preview"
+							<img src="@StaticAssets.Introduction(_form.AvatarUrl)" alt="Avatar preview"
 								 class="mt-2 rounded" style="max-height:80px;"
 								 onerror="this.style.display='none'" />
 						}
@@ -38,7 +41,7 @@
 						<ValidationMessage For="@(() => _form.SmallAvatarUrl)" />
 						@if (!string.IsNullOrWhiteSpace(_form.SmallAvatarUrl))
 						{
-							<img src="@ResolveImageSrc(_form.SmallAvatarUrl)" alt="Small avatar preview"
+							<img src="@StaticAssets.Introduction(_form.SmallAvatarUrl)" alt="Small avatar preview"
 								 class="mt-2 rounded-circle" style="width:48px;height:48px;object-fit:cover;"
 								 onerror="this.style.display='none'" />
 						}
@@ -188,11 +191,6 @@
 
 		await OnSave.InvokeAsync(updated);
 	}
-
-	private static string ResolveImageSrc(string imageUrl) =>
-		Uri.TryCreate(imageUrl, UriKind.Absolute, out _)
-			? imageUrl
-			: $"/static/introductions/{imageUrl}";
 
 	private sealed class IntroductionEditFormModel
 	{

@@ -1,4 +1,7 @@
 @using Kulku.Application.Projects.Models
+@using Kulku.Application.Abstractions.Assets
+
+@inject IAssetUrlBuilder StaticAssets
 
 <div class="col-12">
 	<div class="card shadow-sm">
@@ -9,7 +12,7 @@
 
 			<div class="card-header d-flex justify-content-between align-items-start gap-3">
 				<div class="d-flex align-items-center gap-3">
-					<img src="@ResolveImageSrc(Project.ImageUrl)" alt="Project thumbnail"
+					<img src="@StaticAssets.Project(Project.ImageUrl)" alt="Project thumbnail"
 						 class="project-thumbnail rounded"
 						 onerror="this.style.display='none'" />
 					<div>
@@ -115,15 +118,6 @@
 	public EventCallback<Guid> OnDelete { get; set; }
 
 	private bool _confirmingDelete;
-
-	/// <summary>
-	/// If the image value is already an absolute URL, use it directly.
-	/// Otherwise treat it as a filename under /static/projects/.
-	/// </summary>
-	private static string ResolveImageSrc(string imageUrl) =>
-		Uri.TryCreate(imageUrl, UriKind.Absolute, out _)
-			? imageUrl
-			: $"/static/projects/{imageUrl}";
 
 	private async Task HandleEditClick()
 	{

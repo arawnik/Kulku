@@ -11,6 +11,10 @@
             <h1 class="h3 mb-1">Developer Overview</h1>
         </div>
 
+		<AuthorizeView>
+			Hello @context.User.Identity?.Name!
+		</AuthorizeView>
+
         <div class="d-flex flex-wrap gap-2">
             <NavLink class="btn btn-sm btn-primary" href="developer">Developer CRM</NavLink>
             <NavLink class="btn btn-sm btn-outline-secondary" href="ideas">Idea Bank</NavLink>

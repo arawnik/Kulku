@@ -34,7 +34,7 @@
 						else
 						{
 							<div class="d-flex gap-3 align-items-start">
-								<img src="@ResolveIntroductionImage(IntroductionPreview.SmallAvatarUrl)"
+								<img src="@staticAssets.Introduction(IntroductionPreview.SmallAvatarUrl)"
 									 alt="Avatar" class="rounded-circle flex-shrink-0"
 									 style="width:48px;height:48px;object-fit:cover;"
 									 onerror="this.style.display='none'" />
@@ -201,7 +201,7 @@
 								{
 									<div class="list-group-item px-0">
 										<div class="d-flex gap-3 align-items-start">
-											<img src="@ResolveProjectImage(project.ImageUrl)"
+											<img src="@staticAssets.Project(project.ImageUrl)"
 												 alt="" class="rounded flex-shrink-0"
 												 style="width:48px;height:32px;object-fit:cover;"
 												 onerror="this.style.display='none'" />

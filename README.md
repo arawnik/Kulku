@@ -36,8 +36,13 @@ A high-level list of all major components:
 
 ### 2. Core Patterns & Principles
 - **Clean Architecture**
-  - Core (domain) -> Application -> Infrastructure (+Persistence) -> Presentation
   - Dependency Inversion keeps your domain pure.
+  - Core (domain) -> Application -> Infrastructure (+Persistence) -> Presentation
+  - Rough responsibility areas:
+    - Domain: entities, value objects, rules, domain events
+    - Application: commands, queries, handlers, validators, interfaces
+    - Infrastructure: EF Core, external services, file storage, email, queues
+    - API/Representation: endpoints, auth, serialization, OpenAPI
 - **CQRS**
   - Commands mutate state; Queries read models.
   - Handlers live alongside their feature slice.
