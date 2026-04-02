@@ -1,6 +1,9 @@
 @implements IDisposable
 
+@using Kulku.Web.Admin.Options
+
 @inject NavigationManager NavigationManager
+@inject IOptions<ManagementOptions> ManagementOptions
 
 <nav class="kulku-sidebar @(IsCollapsed ? "kulku-sidebar--collapsed" : string.Empty)">
 
@@ -34,40 +37,42 @@
 			</NavLink>
 		</li>
 
-		<li class="nav-item">
-			<NavLink class="nav-link text-white kulku-navlink" href="developer"
-					 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Developer" : null)">
-				<Icon Kind="IconKind.Lightbulb" Size="20" />
-				<span class="kulku-link-text">Developer</span>
-			</NavLink>
-		</li>
+		<AuthorizeView>
+			<li class="nav-item">
+				<NavLink class="nav-link text-white kulku-navlink" href="developer"
+						 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Developer" : null)">
+					<Icon Kind="IconKind.Lightbulb" Size="20" />
+					<span class="kulku-link-text">Developer</span>
+				</NavLink>
+			</li>
 
-		<li class="nav-item">
-			<NavLink class="nav-link text-white kulku-navlink" href="cv" Match="NavLinkMatch.All"
-					 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Cv" : null)">
-				<Icon Kind="IconKind.FileEarmarkPerson" Size="20" />
-				<span class="kulku-link-text">Cv</span>
-			</NavLink>
+			<li class="nav-item">
+				<NavLink class="nav-link text-white kulku-navlink" href="cv" Match="NavLinkMatch.All"
+						 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Cv" : null)">
+					<Icon Kind="IconKind.FileEarmarkPerson" Size="20" />
+					<span class="kulku-link-text">Cv</span>
+				</NavLink>
 
-			@if (!IsCollapsed)
-			{
-				<ul class="nav flex-column kulku-subnav">
-					<li><NavLink class="nav-link kulku-sublink" href="cv/introduction"><Icon Kind="IconKind.FileText" Size="14" /> Introduction</NavLink></li>
-					<li><NavLink class="nav-link kulku-sublink" href="cv/education"><Icon Kind="IconKind.Mortarboard" Size="14" /> Education</NavLink></li>
-					<li><NavLink class="nav-link kulku-sublink" href="cv/experience"><Icon Kind="IconKind.Briefcase" Size="14" /> Experience</NavLink></li>
-					<li><NavLink class="nav-link kulku-sublink" href="cv/projects"><Icon Kind="IconKind.Folder" Size="14" /> Projects</NavLink></li>
-					<li><NavLink class="nav-link kulku-sublink" href="cv/keywords"><Icon Kind="IconKind.Tags" Size="14" /> Keywords</NavLink></li>
-				</ul>
-			}
-		</li>
+				@if (!IsCollapsed)
+				{
+					<ul class="nav flex-column kulku-subnav">
+						<li><NavLink class="nav-link kulku-sublink" href="cv/introduction"><Icon Kind="IconKind.FileText" Size="14" /> Introduction</NavLink></li>
+						<li><NavLink class="nav-link kulku-sublink" href="cv/education"><Icon Kind="IconKind.Mortarboard" Size="14" /> Education</NavLink></li>
+						<li><NavLink class="nav-link kulku-sublink" href="cv/experience"><Icon Kind="IconKind.Briefcase" Size="14" /> Experience</NavLink></li>
+						<li><NavLink class="nav-link kulku-sublink" href="cv/projects"><Icon Kind="IconKind.Folder" Size="14" /> Projects</NavLink></li>
+						<li><NavLink class="nav-link kulku-sublink" href="cv/keywords"><Icon Kind="IconKind.Tags" Size="14" /> Keywords</NavLink></li>
+					</ul>
+				}
+			</li>
 
-		<li class="nav-item">
-			<NavLink class="nav-link text-white kulku-navlink" href="ideas"
-					 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Ideas" : null)">
-				<Icon Kind="IconKind.Journal" Size="20" />
-				<span class="kulku-link-text">Ideas</span>
-			</NavLink>
-		</li>
+			<li class="nav-item">
+				<NavLink class="nav-link text-white kulku-navlink" href="ideas"
+						 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Ideas" : null)">
+					<Icon Kind="IconKind.Journal" Size="20" />
+					<span class="kulku-link-text">Ideas</span>
+				</NavLink>
+			</li>
+		</AuthorizeView>
 	</ul>
 
 	@* ── Footer: user menu ── *@
@@ -110,13 +115,16 @@
 							<span class="kulku-link-text">Login</span>
 						</NavLink>
 					</li>
-					<li class="nav-item">
-						<NavLink class="nav-link text-white kulku-navlink" href="Account/Register"
-								 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Register" : null)">
-							<Icon Kind="IconKind.Person" Size="20" />
-							<span class="kulku-link-text">Register</span>
-						</NavLink>
-					</li>
+					@if (ManagementOptions.Value.RegistrationEnabled)
+					{
+						<li class="nav-item">
+							<NavLink class="nav-link text-white kulku-navlink" href="Account/Register"
+									 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Register" : null)">
+								<Icon Kind="IconKind.Person" Size="20" />
+								<span class="kulku-link-text">Register</span>
+							</NavLink>
+						</li>
+					}
 				</ul>
 			</NotAuthorized>
 		</AuthorizeView>
