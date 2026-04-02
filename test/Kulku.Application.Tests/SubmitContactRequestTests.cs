@@ -56,7 +56,7 @@ public class SubmitContactRequestTests
         // Act
         var result = await handler.Handle(
             new SubmitContactRequest.Command(dto),
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         // Assert
@@ -79,7 +79,7 @@ public class SubmitContactRequestTests
         // Act
         var result = await handler.Handle(
             new SubmitContactRequest.Command(dto),
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         // Assert
@@ -99,7 +99,10 @@ public class SubmitContactRequestTests
         Assert.Throws<ArgumentNullException>(() =>
         {
             handler
-                .Handle(new SubmitContactRequest.Command(dto), CancellationToken.None)
+                .Handle(
+                    new SubmitContactRequest.Command(dto),
+                    TestContext.Current.CancellationToken
+                )
                 .GetAwaiter()
                 .GetResult();
         });

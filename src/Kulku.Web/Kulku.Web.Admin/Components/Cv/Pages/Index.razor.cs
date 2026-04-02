@@ -1,3 +1,4 @@
+using Kulku.Application.Abstractions.Assets;
 using Kulku.Application.Abstractions.Localization;
 using Kulku.Application.Cover.Education;
 using Kulku.Application.Cover.Experience;
@@ -15,7 +16,8 @@ partial class Index(
     IQueryHandler<GetExperiences.Query, IReadOnlyList<ExperienceModel>> experienceHandler,
     IQueryHandler<GetEducations.Query, IReadOnlyList<EducationModel>> educationHandler,
     IQueryHandler<GetProjects.Query, IReadOnlyList<ProjectModel>> projectsHandler,
-    ILanguageContext languageContext
+    ILanguageContext languageContext,
+    IAssetUrlBuilder staticAssets
 )
 {
     private IntroductionModel? IntroductionPreview { get; set; }
@@ -86,14 +88,4 @@ partial class Index(
 
         _loaded = true;
     }
-
-    private static string ResolveProjectImage(string imageUrl) =>
-        Uri.TryCreate(imageUrl, UriKind.Absolute, out _)
-            ? imageUrl
-            : $"/static/projects/{imageUrl}";
-
-    private static string ResolveIntroductionImage(string imageUrl) =>
-        Uri.TryCreate(imageUrl, UriKind.Absolute, out _)
-            ? imageUrl
-            : $"/static/introductions/{imageUrl}";
 }

@@ -1,47 +1,162 @@
 @page "/"
 @using Kulku.Web.Admin.Components.Developer
+@using Kulku.Web.Admin.Options
 @inject CrmProtoStore Store
+@inject IOptions<ManagementOptions> ManagementOptions
 
-<PageTitle>CRM Dashboard</PageTitle>
+<AuthorizeView>
+	<Authorized>
+		<PageTitle>CRM Dashboard</PageTitle>
 
-<div class="container-fluid py-4">
+		<div class="container-fluid py-4">
+			<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-4">
+				<div>
+					<h1 class="h3 mb-1">Developer Overview</h1>
+				</div>
 
-    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-4">
-        <div>
-            <h1 class="h3 mb-1">Developer Overview</h1>
-        </div>
+				<span class="text-muted">Hello @context.User.Identity?.Name!</span>
 
-        <div class="d-flex flex-wrap gap-2">
-            <NavLink class="btn btn-sm btn-primary" href="developer">Developer CRM</NavLink>
-            <NavLink class="btn btn-sm btn-outline-secondary" href="ideas">Idea Bank</NavLink>
-        </div>
-    </div>
+				<div class="d-flex flex-wrap gap-2">
+					<NavLink class="btn btn-sm btn-primary" href="developer">Developer CRM</NavLink>
+					<NavLink class="btn btn-sm btn-outline-secondary" href="ideas">Idea Bank</NavLink>
+				</div>
+			</div>
 
-    <!-- KPIs -->
-    <div class="row g-3 mb-4">
-        <div class="col-6 col-md-3">
-            <InfoCard Title="Companies tracked"
-                      BadgeCount="@Store.Companies.Count"
-                      BadgeText="focus list"
-                      BadgeColor="secondary"
-                      Description="Keep this small. Quality relationships only." />
-        </div>
+			<div class="row g-3 mb-4">
+				<div class="col-6 col-md-3">
+					<InfoCard Title="Companies tracked"
+							  BadgeCount="@Store.Companies.Count"
+							  BadgeText="focus list"
+							  BadgeColor="secondary"
+							  Description="Keep this small. Quality relationships only." />
+				</div>
 
-        <div class="col-6 col-md-3">
-            <InfoCard Title="Inbound (90d)"
-                      BadgeCount="@InboundTotal"
-                      BadgeText="signal"
-                      BadgeColor="primary"
-                      Description="Channel performance across your funnel." />
-        </div>
+				<div class="col-6 col-md-3">
+					<InfoCard Title="Inbound (90d)"
+							  BadgeCount="@InboundTotal"
+							  BadgeText="signal"
+							  BadgeColor="primary"
+							  Description="Channel performance across your funnel." />
+				</div>
 
-        <div class="col-6 col-md-3">
-            <InfoCard Title="Outbound (90d)"
-                      BadgeCount="@OutboundTotal"
-                      BadgeText="discipline"
-                      BadgeColor="secondary"
-                      Description="Selective touches; avoid volume bias." />
-        </div>
+				<div class="col-6 col-md-3">
+					<InfoCard Title="Outbound (90d)"
+							  BadgeCount="@OutboundTotal"
+							  BadgeText="discipline"
+							  BadgeColor="secondary"
+							  Description="Selective touches; avoid volume bias." />
+				</div>
+			</div>
+		</div>
+	</Authorized>
+	<NotAuthorized>
+		<PageTitle>Kulku Admin</PageTitle>
 
-    </div>
-</div>
+		<div class="container py-5">
+			<div class="text-center mb-5">
+				<h1 class="display-5 fw-bold mb-3">Kulku Admin</h1>
+				<p class="lead text-muted mx-auto" style="max-width: 600px;">
+					A personal management dashboard for maintaining your professional
+					portfolio, CV content, project showcases, and developer workflow.
+				</p>
+
+				@if (!ManagementOptions.Value.RegistrationEnabled
+																&& !string.IsNullOrEmpty(ManagementOptions.Value.ContactUrl))
+				{
+					<br />
+					<div class="text-center">
+						<h4 class="fw-semibold mb-3">Want to get in touch?</h4>
+						<p class="text-muted mx-auto" style="max-width: 500px;">
+							Registration is currently closed. If you'd like to reach out,
+							you can send me a message through my contact form.
+						</p>
+						<a href="@ManagementOptions.Value.ContactUrl"
+							   target="_blank"
+							   rel="noopener noreferrer"
+							   class="btn btn-outline-primary mt-2">
+							Send a message
+						</a>
+					</div>
+				}
+				else
+				{
+					<br />
+					<div class="d-flex justify-content-center gap-3 mt-3">
+						<a href="Account/Login" class="btn btn-primary btn-lg">
+							<Icon Kind="IconKind.PersonBadge" Size="20" />
+							Sign in
+						</a>
+						<a href="Account/Register" class="btn btn-outline-primary btn-lg">
+							<Icon Kind="IconKind.Person" Size="20" />
+							Register
+						</a>
+					</div>
+				}
+			</div>
+
+			<hr class="my-5" />
+
+			<div class="row g-4">
+				<div class="col-md-6 col-lg-3">
+					<div class="card h-100 border-0 shadow-sm">
+						<div class="card-body text-center">
+							<div class="mb-3 text-primary">
+								<Icon Kind="IconKind.FileEarmarkPerson" Size="36" />
+							</div>
+							<h5 class="card-title">CV Management</h5>
+							<p class="card-text text-muted small">
+								Manage your introduction, education, work experience, and skill keywords
+								across multiple languages.
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-6 col-lg-3">
+					<div class="card h-100 border-0 shadow-sm">
+						<div class="card-body text-center">
+							<div class="mb-3 text-primary">
+								<Icon Kind="IconKind.Folder" Size="36" />
+							</div>
+							<h5 class="card-title">Project Portfolio</h5>
+							<p class="card-text text-muted small">
+								Showcase your projects with descriptions, images, and links.
+								Content feeds directly to the public site.
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-6 col-lg-3">
+					<div class="card h-100 border-0 shadow-sm">
+						<div class="card-body text-center">
+							<div class="mb-3 text-primary">
+								<Icon Kind="IconKind.Journal" Size="36" />
+							</div>
+							<h5 class="card-title">Idea Bank</h5>
+							<p class="card-text text-muted small">
+								Capture and organize project ideas, feature requests, and inspiration
+								for future work.
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-6 col-lg-3">
+					<div class="card h-100 border-0 shadow-sm">
+						<div class="card-body text-center">
+							<div class="mb-3 text-primary">
+								<Icon Kind="IconKind.Lightbulb" Size="36" />
+							</div>
+							<h5 class="card-title">Developer CRM</h5>
+							<p class="card-text text-muted small">
+								Track companies, interactions, and networking activity
+								to stay on top of your professional outreach.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</NotAuthorized>
+</AuthorizeView>

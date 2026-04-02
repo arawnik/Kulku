@@ -34,11 +34,13 @@ services:
       - kulku-user-conn
     volumes:
       - /var/www/manager/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/jerejunttila/out:/app/assets:ro
     environment:
       ASPNETCORE_HTTPS_PORTS: 7215
       ForceHttps: "true"
       ASPNETCORE_ENVIRONMENT: Production
       Management__MigrateOnStart: "true"
+      Assets__LocalPath: /app/assets
     ports:
       - 7215:7215
       - 5090:5090
@@ -48,7 +50,7 @@ services:
     restart: unless-stopped
     volumes:
       - /var/www/jerejunttila/out/downloads:/app/public/static/downloads:ro
-      - /var/www/jerejunttila/out/profile:/app/public/static/profile:ro
+      - /var/www/jerejunttila/out/introductions:/app/public/static/introductions:ro
       - /var/www/jerejunttila/out/projects:/app/public/static/projects:ro
     environment:
       - NEXT_PUBLIC_RECAPTCHA_SITE_KEY

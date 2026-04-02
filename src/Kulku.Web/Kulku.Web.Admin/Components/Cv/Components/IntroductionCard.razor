@@ -1,4 +1,7 @@
 @using Kulku.Application.Cover.Introduction.Models
+@using Kulku.Application.Abstractions.Assets
+
+@inject IAssetUrlBuilder StaticAssets
 
 <div class="card shadow-sm @(IsActive ? "border-success" : "")">
 	@if (Introduction is not null)
@@ -8,7 +11,7 @@
 
 		<div class="card-header d-flex justify-content-between align-items-start gap-3">
 			<div class="d-flex align-items-center gap-3">
-				<img src="@ResolveImageSrc(Introduction.SmallAvatarUrl)" alt="Avatar"
+				<img src="@StaticAssets.Introduction(Introduction.SmallAvatarUrl)" alt="Avatar"
 					 class="rounded-circle flex-shrink-0"
 					 style="width:48px;height:48px;object-fit:cover;"
 					 onerror="this.style.display='none'" />
@@ -116,11 +119,6 @@
 		"Scheduled" => "bg-info",
 		_ => "bg-secondary",
 	};
-
-	private static string ResolveImageSrc(string imageUrl) =>
-		Uri.TryCreate(imageUrl, UriKind.Absolute, out _)
-			? imageUrl
-			: $"/static/introductions/{imageUrl}";
 
 	private async Task HandleEditClick()
 	{
