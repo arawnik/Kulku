@@ -32,6 +32,7 @@ builder
 
 //TODO: Remove when crm has actual implementation.
 builder.Services.AddSingleton<CrmProtoStore>();
+builder.Services.AddScoped<CrmService>();
 
 var app = builder.Build();
 

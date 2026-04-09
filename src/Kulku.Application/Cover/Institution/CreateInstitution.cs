@@ -4,6 +4,7 @@ using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
+using DomainInstitution = Kulku.Domain.Cover.Institution;
 
 namespace Kulku.Application.Cover.Institution;
 
@@ -29,7 +30,7 @@ public static class CreateInstitution
             if (errors.Length > 0)
                 return ValidationResult<Guid>.WithErrors(errors);
 
-            var institution = new Domain.Cover.Institution
+            var institution = new DomainInstitution
             {
                 Translations =
                 [

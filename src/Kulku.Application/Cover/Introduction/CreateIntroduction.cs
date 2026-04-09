@@ -4,6 +4,7 @@ using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
+using DomainIntroduction = Kulku.Domain.Cover.Introduction;
 
 namespace Kulku.Application.Cover.Introduction;
 
@@ -37,7 +38,7 @@ public static class CreateIntroduction
             if (errors.Length > 0)
                 return ValidationResult<Guid>.WithErrors(errors);
 
-            var introduction = new Domain.Cover.Introduction
+            var introduction = new DomainIntroduction
             {
                 AvatarUrl = command.AvatarUrl,
                 SmallAvatarUrl = command.SmallAvatarUrl,

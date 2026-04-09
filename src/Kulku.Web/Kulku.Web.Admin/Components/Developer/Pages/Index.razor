@@ -1,4 +1,7 @@
 @page "/developer/"
+@using Kulku.Web.Admin.Components.Developer.Components
+
+@inject CrmService Crm
 @inject CrmProtoStore Store
 
 @attribute [Authorize]
@@ -16,7 +19,12 @@
 		</div>
 
 		<div class="d-flex flex-wrap gap-2">
-			<NavLink class="btn btn-sm btn-primary" href="developer/loginteraction">+ Log interaction</NavLink>
+			<NavLink class="btn btn-sm btn-outline-secondary" href="developer/companies">
+				<Icon Kind="IconKind.Building" Size="14" CssClass="me-1" />Companies
+			</NavLink>
+			<NavLink class="btn btn-sm btn-primary" href="developer/loginteraction">
+				<Icon Kind="IconKind.Plus" Size="14" CssClass="me-1" />Log interaction
+			</NavLink>
 		</div>
 	</div>
 
@@ -27,7 +35,7 @@
 				<div class="card-body">
 					<div class="text-uppercase text-muted small mb-1">Companies tracked</div>
 					<div class="d-flex align-items-baseline gap-2">
-						<div class="h2 mb-0">@Store.Companies.Count</div>
+						<div class="h2 mb-0">@_enrolledCount</div>
 						<span class="badge text-bg-secondary">focus list</span>
 					</div>
 					<div class="text-muted small mt-2">Keep this small. Quality relationships only.</div>
@@ -40,7 +48,7 @@
 				<div class="card-body">
 					<div class="text-uppercase text-muted small mb-1">Inbound (90d)</div>
 					<div class="d-flex align-items-baseline gap-2">
-						<div class="h2 mb-0">@InboundTotal</div>
+						<div class="h2 mb-0">@_inboundTotal</div>
 						<span class="badge text-bg-primary">signal</span>
 					</div>
 					<div class="text-muted small mt-2">Channel performance across your funnel.</div>
@@ -53,7 +61,7 @@
 				<div class="card-body">
 					<div class="text-uppercase text-muted small mb-1">Outbound (90d)</div>
 					<div class="d-flex align-items-baseline gap-2">
-						<div class="h2 mb-0">@OutboundTotal</div>
+						<div class="h2 mb-0">@_outboundTotal</div>
 						<span class="badge text-bg-secondary">discipline</span>
 					</div>
 					<div class="text-muted small mt-2">Selective touches; avoid volume bias.</div>
@@ -61,6 +69,43 @@
 			</div>
 		</div>
 
+		<div class="col-6 col-md-3">
+			<div class="card shadow-sm h-100">
+				<div class="card-body">
+					<div class="text-uppercase text-muted small mb-1">Actions due</div>
+					<div class="d-flex align-items-baseline gap-2">
+						<div class="h2 mb-0">@_nextActions.Count</div>
+						@if (_overdueCount > 0)
+						{
+							<span class="badge text-bg-danger">@_overdueCount overdue</span>
+						}
+						else
+						{
+							<span class="badge text-bg-success">on track</span>
+						}
+					</div>
+					<div class="text-muted small mt-2">Pending commitments across all companies.</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Pipeline summary -->
+	<div class="card shadow-sm mb-4">
+		<div class="card-body py-2">
+			<div class="d-flex align-items-center gap-3 flex-wrap">
+				<span class="small text-muted">Pipeline:</span>
+				@foreach (var stage in Enum.GetValues<CompanyStage>())
+				{
+					var count = _companies.Count(c => c.Profile!.Stage == stage);
+					<NavLink href="developer/companies" class="text-decoration-none">
+						<span class="badge @CrmCompanyCard.StageBadgeClass(stage)">
+							@CrmCompanyCard.StageLabel(stage) @count
+						</span>
+					</NavLink>
+				}
+			</div>
+		</div>
 	</div>
 
 	<!-- Top row: channel mix + next actions -->
@@ -76,14 +121,14 @@
 				</div>
 
 				<div class="card-body">
-					@if (ActiveChannelStats.Count == 0)
+					@if (_activeChannelStats.Count == 0)
 					{
 						<div class="text-muted">No interactions in the last 90 days.</div>
 					}
 					else
 					{
 						<div class="row g-3">
-							@foreach (var item in ActiveChannelStats)
+							@foreach (var item in _activeChannelStats)
 							{
 								<div class="col-12 col-md-6">
 									<div class="border rounded p-3 h-100">
@@ -132,14 +177,14 @@
 						<strong>Next actions</strong>
 						<div class="text-muted small">Time-bound, company-specific.</div>
 					</div>
-					@if (NextActions.Count > 0)
+					@if (_nextActions.Count > 0)
 					{
-						<span class="badge text-bg-warning">@NextActions.Count due</span>
+						<span class="badge text-bg-warning">@_nextActions.Count due</span>
 					}
 				</div>
 
 				<div class="card-body">
-					@if (NextActions.Count == 0)
+					@if (_nextActions.Count == 0)
 					{
 						<div class="text-muted">
 							No upcoming actions. Either you’re done, or you’re not capturing next steps.
@@ -148,7 +193,7 @@
 					else
 					{
 						<div class="list-group list-group-flush">
-							@foreach (var a in NextActions)
+							@foreach (var a in _nextActions)
 							{
 								<div class="list-group-item px-0">
 									<div class="d-flex justify-content-between align-items-start">
@@ -178,101 +223,106 @@
 		</div>
 	</div>
 
-	<!-- Bottom row: interaction stream -->
-	<div class="row g-3">
-		<div class="col-12">
-			<div class="card shadow-sm">
-				<div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
-					<div>
-						<strong>Interaction stream</strong>
-						<div class="text-muted small">All touchpoints (inbound + outbound), capped for signal.</div>
-					</div>
-					<span class="badge text-bg-light border">last 180 days</span>
-				</div>
+<!-- Bottom row: interaction stream -->
+<div class="row g-3">
+<div class="col-12">
+<div class="card shadow-sm">
+<div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+<div>
+<strong>Interaction stream</strong>
+<div class="text-muted small">All touchpoints (inbound + outbound), capped for signal.</div>
+</div>
+<span class="badge text-bg-light border">last 180 days</span>
+</div>
 
-				<div class="card-body p-0">
-					@if (StreamRows.Count == 0)
-					{
-						<div class="p-3 text-muted">No interactions in the last 180 days.</div>
-					}
-					else
-					{
-						<div class="table-responsive">
-							<table class="table table-sm align-middle mb-0">
-								<thead class="table-active">
-									<tr>
-										<th class="text-nowrap">Date</th>
-										<th>Company</th>
-										<th class="text-nowrap">Dir</th>
-										<th class="text-nowrap">Channel</th>
-										<th>Summary</th>
-										<th class="text-nowrap">Warm</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach (var r in StreamRows)
-									{
-										<tr>
-											<td class="text-nowrap">
-												<span class="@RecencyTextClass(r.Date)">@r.Date.ToString("yyyy-MM-dd")</span>
-											</td>
-											<td>
-												<div class="fw-semibold">@r.CompanyName</div>
-												@if (!string.IsNullOrWhiteSpace(r.CategoryLine))
-												{
-													<div class="text-muted small">@r.CategoryLine</div>
-												}
-											</td>
-											<td class="text-nowrap">
-												<span class="badge @(r.Direction == InteractionDirection.Inbound ? "text-bg-primary" : "text-bg-secondary")">@r.Direction</span>
-											</td>
-											<td class="text-nowrap">
-												<span class="badge text-bg-light border">@ChannelLabel(r.Channel)</span>
-											</td>
-											<td>
-												<div class="text-muted small">@r.Summary</div>
-												@if (!string.IsNullOrWhiteSpace(r.ReferralLine))
-												{
-													<div class="mt-1">
-														<span class="badge text-bg-success">@r.ReferralLine</span>
-													</div>
-												}
-											</td>
-											<td class="text-nowrap">
-												@if (r.IsWarmIntro)
-												{
-													<span class="badge text-bg-success">Yes</span>
-												}
-												else
-												{
-													<span class="badge text-bg-secondary">No</span>
-												}
-											</td>
-										</tr>
-									}
-								</tbody>
-							</table>
-						</div>
-					}
-				</div>
+<div class="card-body p-2">
+@if (_streamInteractions.Count == 0)
+{
+<div class="p-3 text-muted">No interactions in the last 180 days.</div>
+}
+else
+{
+@foreach (var interaction in _streamInteractions)
+{
+var companyName = _companyNameCache.GetValueOrDefault(interaction.CompanyId, "Unknown");
+var contactName = interaction.ContactId.HasValue
+? Store.GetContact(interaction.ContactId.Value)?.PersonName
+: null;
 
-				<div class="card-footer text-muted small">
-					Stream is capped by design. This is not a “lead inbox”.
-				</div>
-			</div>
-		</div>
-	</div>
+<InteractionCard Interaction="@interaction"
+ CompanyName="@companyName"
+ CompanyLink="@($"/developer/companies/{interaction.CompanyId}")"
+ ContactName="@contactName" />
+}
+}
+</div>
+
+<div class="card-footer text-muted small">
+Stream is capped by design. This is not a "lead inbox".
+</div>
+</div>
+</div>
+</div>
 </div>
 
 @code {
-	private DateTime MixCutoff => DateTime.Today.AddDays(-90);
-	private DateTime StreamCutoff => DateTime.Today.AddDays(-180);
+	private static readonly DateTime MixCutoff = DateTime.Today.AddDays(-90);
+	private static readonly DateTime StreamCutoff = DateTime.Today.AddDays(-180);
 
-	private int InboundTotal =>
-		Store.Interactions.Count(i => i.Direction == InteractionDirection.Inbound && i.Date >= MixCutoff);
+	private IReadOnlyList<CrmCompanyViewModel> _companies = [];
+	private int _enrolledCount;
+	private int _inboundTotal;
+	private int _outboundTotal;
+	private int _overdueCount;
+	private List<ChannelMixRow> _activeChannelStats = [];
+	private List<NextActionRow> _nextActions = [];
+	private IReadOnlyList<InteractionLite> _streamInteractions = [];
+	private Dictionary<Guid, string> _companyNameCache = [];
 
-	private int OutboundTotal =>
-		Store.Interactions.Count(i => i.Direction == InteractionDirection.Outbound && i.Date >= MixCutoff);
+	protected override async Task OnInitializedAsync()
+	{
+		_companies = await Crm.GetEnrolledCompaniesAsync();
+		_enrolledCount = _companies.Count;
+
+		_inboundTotal = Store.Interactions.Count(i => i.Direction == InteractionDirection.Inbound && i.Date >= MixCutoff);
+		_outboundTotal = Store.Interactions.Count(i => i.Direction == InteractionDirection.Outbound && i.Date >= MixCutoff);
+		_overdueCount = Store.Interactions.Count(i => i.NextActionDue.HasValue && i.NextActionDue.Value.Date < DateTime.Today);
+
+		_activeChannelStats = Enum.GetValues<InteractionChannel>()
+			.Select(ch =>
+			{
+				var inbound = Store.Interactions.Count(i => i.Date >= MixCutoff && i.Channel == ch && i.Direction == InteractionDirection.Inbound);
+				var outbound = Store.Interactions.Count(i => i.Date >= MixCutoff && i.Channel == ch && i.Direction == InteractionDirection.Outbound);
+				var warm = Store.Interactions.Count(i => i.Date >= MixCutoff && i.Channel == ch && i.Direction == InteractionDirection.Inbound && i.IsWarmIntro);
+				return new ChannelMixRow(ch, ChannelLabel(ch), ChannelNote(ch), inbound, outbound, warm);
+			})
+			.Where(r => r.Total > 0)
+			.OrderByDescending(r => r.Total)
+			.ToList();
+
+		_companyNameCache = _companies.ToDictionary(c => c.Id, c => c.Name);
+
+		_nextActions = [];
+		foreach (var i in Store.Interactions.Where(i => i.NextActionDue is not null).OrderBy(i => i.NextActionDue).Take(8))
+		{
+			var name = _companyNameCache.GetValueOrDefault(i.CompanyId);
+			if (name is null)
+				name = await Crm.GetCompanyNameAsync(i.CompanyId);
+			_nextActions.Add(new NextActionRow(name, i.NextAction ?? "(missing)", i.NextActionDue!.Value.Date, i.Direction, i.Channel, i.IsWarmIntro));
+		}
+
+		_streamInteractions = Store.Interactions
+			.Where(i => i.Date >= StreamCutoff)
+			.OrderByDescending(i => i.Date)
+			.Take(16)
+			.ToList();
+
+		foreach (var interaction in _streamInteractions)
+		{
+			if (!_companyNameCache.ContainsKey(interaction.CompanyId))
+				_companyNameCache[interaction.CompanyId] = await Crm.GetCompanyNameAsync(interaction.CompanyId);
+		}
+	}
 
 	// Channel mix
 	private sealed record ChannelMixRow(
@@ -286,75 +336,8 @@
 		public int Total => Inbound + Outbound;
 	}
 
-	private List<ChannelMixRow> ActiveChannelStats =>
-		Enum.GetValues<InteractionChannel>()
-			.Select(ch =>
-			{
-				var inbound = Store.Interactions.Count(i => i.Date >= MixCutoff && i.Channel == ch && i.Direction == InteractionDirection.Inbound);
-				var outbound = Store.Interactions.Count(i => i.Date >= MixCutoff && i.Channel == ch && i.Direction == InteractionDirection.Outbound);
-				var warm = Store.Interactions.Count(i => i.Date >= MixCutoff && i.Channel == ch && i.Direction == InteractionDirection.Inbound && i.IsWarmIntro);
-				return new ChannelMixRow(ch, ChannelLabel(ch), ChannelNote(ch), inbound, outbound, warm);
-			})
-			.Where(r => r.Total > 0) // hide empty
-			.OrderByDescending(r => r.Total)
-			.ToList();
-
 	// Next actions
 	private sealed record NextActionRow(string CompanyName, string Action, DateTime Due, InteractionDirection Direction, InteractionChannel Channel, bool IsWarmIntro);
-
-	private List<NextActionRow> NextActions =>
-		Store.Interactions
-			.Where(i => i.NextActionDue is not null)
-			.Select(i =>
-			{
-				var company = Store.Companies.First(c => c.Id == i.CompanyId);
-				return new NextActionRow(company.Name, i.NextAction ?? "(missing)", i.NextActionDue!.Value.Date, i.Direction, i.Channel, i.IsWarmIntro);
-			})
-			.OrderBy(a => a.Due)
-			.Take(8)
-			.ToList();
-
-	// Stream
-	private sealed record StreamRow(
-		DateTime Date,
-		string CompanyName,
-		string? CategoryLine,
-		InteractionDirection Direction,
-		InteractionChannel Channel,
-		string Summary,
-		bool IsWarmIntro,
-		string? ReferralLine
-	);
-
-	private List<StreamRow> StreamRows =>
-		Store.Interactions
-			.Where(i => i.Date >= StreamCutoff)
-			.OrderByDescending(i => i.Date)
-			.Take(16)
-			.Select(i =>
-			{
-				var company = Store.Companies.First(c => c.Id == i.CompanyId);
-				var categoryLine = BuildCategoryLine(company.CategoryIds);
-
-				var referralLine = i.IsWarmIntro
-					? $"{i.ReferredByRelation ?? "Warm"} intro: {i.ReferredByName ?? "(unspecified)"}"
-					: null;
-
-				return new StreamRow(i.Date.Date, company.Name, categoryLine, i.Direction, i.Channel, i.Summary, i.IsWarmIntro, referralLine);
-			})
-			.ToList();
-
-	private string? BuildCategoryLine(IReadOnlyList<Guid> categoryIds)
-	{
-		if (categoryIds.Count == 0) return null;
-
-		var names = categoryIds
-			.Select(id => Store.GetCategory(id)?.Name)
-			.Where(n => !string.IsNullOrWhiteSpace(n))
-			.ToList();
-
-		return names.Count == 0 ? null : string.Join(" • ", names);
-	}
 
 	// UI helpers
 	private static string ChannelLabel(InteractionChannel ch) => ch switch
@@ -375,14 +358,6 @@
 		_ => ""
 	};
 
-	private static string RecencyTextClass(DateTime d)
-	{
-		var days = (DateTime.Today - d.Date).TotalDays;
-		if (days <= 21) return "text-success";
-		if (days <= 60) return "text-warning";
-		return "text-danger";
-	}
-
 	private static string DueBadge(DateTime due)
 	{
 		var days = (due.Date - DateTime.Today).TotalDays;
@@ -391,3 +366,4 @@
 		return "text-bg-secondary";
 	}
 }
+

@@ -18,6 +18,19 @@
 				<DataAnnotationsValidator />
 				<ServerValidation @ref="_serverValidation" />
 
+				<div class="row mb-3">
+					<div class="col-md-6">
+						<label class="form-label">Website</label>
+						<InputText @bind-Value="_form.Website"
+								   class="form-control" placeholder="https://example.com" disabled="@IsSaving" />
+					</div>
+					<div class="col-md-6">
+						<label class="form-label">Region</label>
+						<InputText @bind-Value="_form.Region"
+								   class="form-control" placeholder="e.g. Helsinki, Finland" disabled="@IsSaving" />
+					</div>
+				</div>
+
 				<h6 class="mb-3">Translations</h6>
 
 				@for (var i = 0; i < _form.Translations.Count; i++)
@@ -112,6 +125,8 @@
 			_form = new CompanyEditFormModel
 			{
 				CompanyId = Model.CompanyId,
+				Website = Model.Website ?? string.Empty,
+				Region = Model.Region ?? string.Empty,
 				Translations = Model.Translations
 					.Select(t => new CompanyTransEditModel
 					{
@@ -135,7 +150,12 @@
 			.Select(t => new CompanyTranslationItem(t.Language, t.Name, t.Description))
 			.ToList();
 
-		var updated = Model with { Translations = updatedTranslations };
+		var updated = Model with
+		{
+			Website = string.IsNullOrWhiteSpace(_form.Website) ? null : _form.Website.Trim(),
+			Region = string.IsNullOrWhiteSpace(_form.Region) ? null : _form.Region.Trim(),
+			Translations = updatedTranslations,
+		};
 
 		await OnSave.InvokeAsync(updated);
 	}
@@ -143,6 +163,8 @@
 	private sealed class CompanyEditFormModel
 	{
 		public Guid CompanyId { get; init; }
+		public string Website { get; set; } = string.Empty;
+		public string Region { get; set; } = string.Empty;
 		public List<CompanyTransEditModel> Translations { get; set; } = [];
 	}
 

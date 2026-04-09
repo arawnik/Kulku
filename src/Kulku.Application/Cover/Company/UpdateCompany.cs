@@ -4,6 +4,7 @@ using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
+using DomainCompany = Kulku.Domain.Cover.Company;
 
 namespace Kulku.Application.Cover.Company;
 
@@ -12,8 +13,12 @@ namespace Kulku.Application.Cover.Company;
 /// </summary>
 public static class UpdateCompany
 {
-    public sealed record Command(Guid CompanyId, IReadOnlyList<CompanyTranslationDto> Translations)
-        : ICommand;
+    public sealed record Command(
+        Guid CompanyId,
+        string? Website,
+        string? Region,
+        IReadOnlyList<CompanyTranslationDto> Translations
+    ) : ICommand;
 
     internal sealed class Handler(ICompanyRepository companyRepository, IUnitOfWork unitOfWork)
         : ICommandHandler<Command>
@@ -35,6 +40,9 @@ public static class UpdateCompany
             if (company is null)
                 return Error.NotFound("Company not found.");
 
+            company.Website = command.Website;
+            company.Region = command.Region;
+
             MergeTranslations(company, command.Translations);
 
             await _unitOfWork.CompleteAsync(cancellationToken);
@@ -42,7 +50,7 @@ public static class UpdateCompany
         }
 
         private static void MergeTranslations(
-            Domain.Cover.Company company,
+            DomainCompany company,
             IReadOnlyList<CompanyTranslationDto> incoming
         )
         {

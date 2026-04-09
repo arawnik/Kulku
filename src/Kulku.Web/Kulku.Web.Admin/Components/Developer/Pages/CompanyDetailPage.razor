@@ -1,0 +1,325 @@
+@page "/developer/companies/{CompanyId:guid}"
+@using Kulku.Web.Admin.Components.Developer.Components
+
+@inject CrmService Crm
+@inject CrmProtoStore Store
+@inject NavigationManager Nav
+
+@attribute [Authorize]
+
+@if (_company is null)
+{
+	<PageTitle>Company not found</PageTitle>
+	<div class="container-fluid py-4">
+		<div class="alert alert-warning">Company not found.</div>
+		<NavLink class="btn btn-sm btn-outline-secondary" href="developer/companies">Back to companies</NavLink>
+	</div>
+}
+else
+{
+	<PageTitle>@_company.Name</PageTitle>
+
+	<div class="container-fluid py-4">
+		@* ── Header ── *@
+		<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-4">
+			<div>
+				<div class="d-flex align-items-center gap-2 mb-1">
+					<NavLink class="btn btn-sm btn-outline-secondary" href="developer/companies">
+						<span style="display:inline-block;transform:rotate(180deg)"><Icon Kind="IconKind.ChevronRight" Size="14" /></span> Back
+					</NavLink>
+				</div>
+				<h1 class="h3 mb-1">@_company.Name</h1>
+				<div class="d-flex align-items-center gap-2">
+					<span class="badge @CrmCompanyCard.StageBadgeClass(_company.Profile!.Stage)">
+						@CrmCompanyCard.StageLabel(_company.Profile!.Stage)
+					</span>
+					@if (!string.IsNullOrWhiteSpace(_company.Region))
+					{
+						<span class="text-muted">@_company.Region</span>
+					}
+					@if (!string.IsNullOrWhiteSpace(_company.Website))
+					{
+						<a href="@_company.Website" target="_blank" class="text-decoration-none small">
+							@_company.Website
+						</a>
+					}
+				</div>
+				@if (_companyCategories.Count > 0)
+				{
+					<div class="d-flex flex-wrap gap-1 mt-2">
+						@foreach (var cat in _companyCategories)
+						{
+							<span class="badge text-bg-@(cat.ColorToken ?? "secondary") bg-opacity-50 fw-normal">
+								@cat.Name
+							</span>
+						}
+					</div>
+				}
+			</div>
+
+			<div class="d-flex flex-wrap gap-2">
+				<button class="btn btn-sm btn-outline-primary" @onclick="HandleEditCompany">
+					<Icon Kind="IconKind.Pencil" Size="14" CssClass="me-1" />Edit Company
+				</button>
+				<NavLink class="btn btn-sm btn-primary" href="developer/loginteraction">
+					<Icon Kind="IconKind.Plus" Size="14" CssClass="me-1" />Log Interaction
+				</NavLink>
+			</div>
+		</div>
+
+		@* ── Stage selector ── *@
+		<div class="card shadow-sm mb-4">
+			<div class="card-body py-2">
+				<div class="d-flex align-items-center gap-2">
+					<span class="small text-muted me-2">Stage:</span>
+					@foreach (var stage in Enum.GetValues<CompanyStage>())
+					{
+						<button class="btn btn-sm @(stage == _company.Profile!.Stage ? CrmCompanyCard.StageBadgeClass(stage).Replace("text-bg-", "btn-") : "btn-outline-secondary")"
+								@onclick="() => ChangeStage(stage)">
+							@CrmCompanyCard.StageLabel(stage)
+						</button>
+					}
+				</div>
+			</div>
+		</div>
+
+		@* ── Notes ── *@
+		@if (!string.IsNullOrWhiteSpace(_company.Profile?.Notes))
+		{
+			<div class="card shadow-sm mb-4">
+				<div class="card-header py-2">
+					<strong>Notes</strong>
+				</div>
+				<div class="card-body py-2">
+					<p class="mb-0 text-muted">@_company.Profile.Notes</p>
+				</div>
+			</div>
+		}
+
+		<div class="row g-4">
+			@* ── Contacts ── *@
+			<div class="col-12 col-xl-4">
+				<div class="card shadow-sm h-100">
+					<div class="card-header py-2 d-flex justify-content-between align-items-center">
+						<div class="d-flex align-items-center gap-2">
+							<strong>Contacts</strong>
+							<span class="badge bg-secondary">@_contacts.Count</span>
+						</div>
+						<button class="btn btn-sm btn-outline-success" @onclick="HandleCreateContact">
+							<Icon Kind="IconKind.Plus" Size="14" />
+						</button>
+					</div>
+					<div class="card-body p-2">
+						@if (_contacts.Count == 0)
+						{
+							<div class="text-muted small text-center py-3">No contacts yet.</div>
+						}
+						else
+						{
+							@foreach (var contact in _contacts)
+							{
+								<div class="card mb-2 border-0 bg-body-secondary">
+									<div class="card-body py-2 px-3">
+										<div class="d-flex justify-content-between align-items-start">
+											<div>
+												<div class="fw-semibold small">@(contact.PersonName ?? "(unnamed)")</div>
+												@if (!string.IsNullOrWhiteSpace(contact.Title))
+												{
+													<small class="text-muted">@contact.Title</small>
+												}
+												<div class="d-flex flex-wrap gap-2 mt-1">
+													@if (!string.IsNullOrWhiteSpace(contact.Email))
+													{
+														<small class="text-muted">📧 @contact.Email</small>
+													}
+													@if (!string.IsNullOrWhiteSpace(contact.Phone))
+													{
+														<small class="text-muted">📱 @contact.Phone</small>
+													}
+												</div>
+												@if (!string.IsNullOrWhiteSpace(contact.LinkedInUrl))
+												{
+													<div class="mt-1">
+														<a href="@contact.LinkedInUrl" target="_blank"
+														   class="text-decoration-none small">LinkedIn</a>
+													</div>
+												}
+											</div>
+
+											<div class="d-flex gap-1">
+												<button class="btn btn-sm btn-outline-primary" title="Edit"
+														@onclick="() => HandleEditContact(contact)">
+													<Icon Kind="IconKind.Pencil" Size="12" />
+												</button>
+												<button class="btn btn-sm btn-outline-danger" title="Delete"
+														@onclick="() => HandleDeleteContact(contact.Id)">
+													<Icon Kind="IconKind.Trash" Size="12" />
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							}
+						}
+					</div>
+				</div>
+			</div>
+
+			@* ── Interaction Timeline ── *@
+			<div class="col-12 col-xl-8">
+				<div class="card shadow-sm h-100">
+					<div class="card-header py-2 d-flex justify-content-between align-items-center">
+						<div class="d-flex align-items-center gap-2">
+							<strong>Interaction Timeline</strong>
+							<span class="badge bg-secondary">@_interactions.Count</span>
+						</div>
+					</div>
+					<div class="card-body p-2">
+						@if (_interactions.Count == 0)
+						{
+							<div class="text-muted small text-center py-3">
+								No interactions recorded.
+								<NavLink href="developer/loginteraction" class="text-decoration-none">Log one now.</NavLink>
+							</div>
+						}
+						else
+						{
+							@foreach (var interaction in _interactions)
+							{
+								var contactName = interaction.ContactId.HasValue
+									? Store.GetContact(interaction.ContactId.Value)?.PersonName
+									: null;
+
+								<InteractionCard Interaction="@interaction"
+												 ContactName="@contactName"
+												 OnDelete="HandleDeleteInteraction" />
+							}
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	@* ── Modals ── *@
+	<CrmCompanyEditModal @ref="_companyModal"
+					  IsVisible="@(_companyEditVisible)"
+					  Mode="ModalMode.Edit"
+					  Categories="@Store.Categories"
+					  OnSave="HandleSaveCompany"
+					  OnCancel="CloseCompanyEditor" />
+
+	<CrmContactEditModal @ref="_contactModal"
+					  IsVisible="@(_contactMode is not null)"
+					  Mode="@(_contactMode ?? ModalMode.Create)"
+					  OnSave="HandleSaveContact"
+					  OnCancel="CloseContactEditor" />
+}
+
+@code {
+	[Parameter]
+	public Guid CompanyId { get; set; }
+
+	private CrmCompanyViewModel? _company;
+	private IReadOnlyList<CategoryLite> _companyCategories = [];
+	private IReadOnlyList<ContactLite> _contacts = [];
+	private IReadOnlyList<InteractionLite> _interactions = [];
+
+	private bool _companyEditVisible;
+	private CrmCompanyEditModal _companyModal = null!;
+
+	private ModalMode? _contactMode;
+	private CrmContactEditModal _contactModal = null!;
+
+	protected override async Task OnInitializedAsync()
+	{
+		await ReloadAsync();
+	}
+
+	private async Task ReloadAsync()
+	{
+		_company = await Crm.GetCompanyDetailAsync(CompanyId);
+		if (_company is null) return;
+
+		_companyCategories = (_company.Profile?.CategoryIds ?? [])
+			.Select(id => Store.GetCategory(id))
+			.Where(c => c is not null)
+			.Cast<CategoryLite>()
+			.ToList();
+		_contacts = Store.GetCompanyContacts(CompanyId);
+		_interactions = Store.GetCompanyInteractions(CompanyId);
+	}
+
+	// ── Stage ──
+
+	private async Task ChangeStage(CompanyStage stage)
+	{
+		if (_company?.Profile is null) return;
+		Store.UpdateProfile(_company.Id, stage, _company.Profile.Notes, _company.Profile.CategoryIds.ToList());
+		await ReloadAsync();
+	}
+
+	// ── Company Edit ──
+
+	private void HandleEditCompany()
+	{
+		if (_company?.Profile is null) return;
+		_companyModal.LoadForEdit(_company.Profile);
+		_companyEditVisible = true;
+	}
+
+	private async Task HandleSaveCompany(CrmCompanyEditModal.ProfileFormModel form)
+	{
+		Store.UpdateProfile(form.ResolvedCompanyId, form.Stage, form.Notes, form.CategoryIds.ToList());
+		CloseCompanyEditor();
+		await ReloadAsync();
+	}
+
+	private void CloseCompanyEditor() => _companyEditVisible = false;
+
+	// ── Contact CRUD ──
+
+	private void HandleCreateContact()
+	{
+		_contactModal.LoadForCreate();
+		_contactMode = ModalMode.Create;
+	}
+
+	private void HandleEditContact(ContactLite contact)
+	{
+		_contactModal.LoadForEdit(contact);
+		_contactMode = ModalMode.Edit;
+	}
+
+	private async Task HandleSaveContact(CrmContactEditModal.ContactFormModel form)
+	{
+		if (_contactMode == ModalMode.Create)
+		{
+			Store.AddContact(CompanyId, form.PersonName, form.Email,
+				form.Phone, form.LinkedInUrl, form.Title);
+		}
+		else if (form.Id.HasValue)
+		{
+			Store.UpdateContact(form.Id.Value, form.PersonName, form.Email,
+				form.Phone, form.LinkedInUrl, form.Title);
+		}
+		CloseContactEditor();
+		await ReloadAsync();
+	}
+
+	private async Task HandleDeleteContact(Guid contactId)
+	{
+		Store.RemoveContact(contactId);
+		await ReloadAsync();
+	}
+
+	private void CloseContactEditor() => _contactMode = null;
+
+	// ── Interaction ──
+
+	private async Task HandleDeleteInteraction(Guid interactionId)
+	{
+		Store.RemoveInteraction(interactionId);
+		await ReloadAsync();
+	}
+}

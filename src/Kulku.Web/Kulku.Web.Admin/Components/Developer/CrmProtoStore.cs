@@ -33,27 +33,30 @@ public enum CompanyStage
 /// </summary>
 public sealed record CategoryLite(Guid Id, string Name, string? ColorToken = null);
 
-public sealed record CompanyLite(
-    Guid Id,
-    string Name,
-    string? Website,
-    string? Region,
-    string? Notes,
+/// <summary>
+/// CRM-specific profile data for a company. Keyed by the Domain Company's Id.
+/// Website and Region live on the Domain Company entity.
+/// </summary>
+public sealed record CrmCompanyProfile(
+    Guid CompanyId,
     CompanyStage Stage,
+    string? Notes,
     IReadOnlyList<Guid> CategoryIds
 );
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage(
     "Design",
     "CA1056:URI-like properties should not be strings",
-    Justification = "<Pending>"
+    Justification = "Prototype record; URI validation deferred to persistence layer."
 )]
 [System.Diagnostics.CodeAnalysis.SuppressMessage(
     "Design",
     "CA1054:URI-like parameters should not be strings",
-    Justification = "<Pending>"
+    Justification = "Prototype record; URI validation deferred to persistence layer."
 )]
 public sealed record ContactLite(
+    Guid Id,
+    Guid CompanyId,
     string? PersonName,
     string? Email,
     string? Phone,
@@ -69,8 +72,8 @@ public sealed record InteractionLite(
     InteractionChannel Channel,
     bool IsWarmIntro,
     string? ReferredByName,
-    string? ReferredByRelation, // Friend/Colleague/Other
-    ContactLite Contact,
+    string? ReferredByRelation,
+    Guid? ContactId,
     string Summary,
     string? NextAction,
     DateTime? NextActionDue
@@ -78,193 +81,27 @@ public sealed record InteractionLite(
 
 public sealed class CrmProtoStore
 {
-    private readonly List<CategoryLite> _categories = new();
-    private readonly List<CompanyLite> _companies = new();
-    private readonly List<InteractionLite> _interactions = new();
+    private readonly List<CategoryLite> _categories = [];
+    private readonly List<CrmCompanyProfile> _profiles = [];
+    private readonly List<ContactLite> _contacts = [];
+    private readonly List<InteractionLite> _interactions = [];
+
     public IReadOnlyList<CategoryLite> Categories => _categories;
-    public IReadOnlyList<CompanyLite> Companies => _companies;
+    public IReadOnlyList<CrmCompanyProfile> Profiles => _profiles;
+    public IReadOnlyList<ContactLite> Contacts => _contacts;
     public IReadOnlyList<InteractionLite> Interactions => _interactions;
 
-    public CrmProtoStore()
-    {
-        // Categories (configurable later)
-        var health = AddCategory("Health Tech", "success");
-        var gaming = AddCategory("Gaming", "warning");
-        var fintech = AddCategory("FinTech", "primary");
-        var b2b = AddCategory("B2B SaaS", "info");
-        var publicSector = AddCategory("Public Sector", "secondary");
-
-        // Companies (stage + categories)
-        var c1 = AddCompany(
-            name: "Nordic FinTech Group",
-            website: "https://example.com",
-            region: "Helsinki",
-            notes: "Long-term platform modernization potential.",
-            stage: CompanyStage.Relationship,
-            categoryIds: [fintech.Id]
-        );
-
-        var c2 = AddCompany(
-            name: "Industrial Analytics Oy",
-            website: null,
-            region: "Tampere",
-            notes: "Data pipelines + cloud cost optimization; likely recurring needs.",
-            stage: CompanyStage.Discovery,
-            categoryIds: [b2b.Id]
-        );
-
-        var c3 = AddCompany(
-            name: "Health Product Studio",
-            website: null,
-            region: "Remote EU",
-            notes: "Product studio; could become a repeat delivery partner.",
-            stage: CompanyStage.Proposal,
-            categoryIds: [health.Id]
-        );
-
-        var c4 = AddCompany(
-            name: "Public Sector Digital Unit",
-            website: null,
-            region: "Finland",
-            notes: "Procurement cycles; long horizon. Keep warm without spamming.",
-            stage: CompanyStage.Parked,
-            categoryIds: [publicSector.Id]
-        );
-
-        // Interactions (include inbound + outbound)
-        AddInteraction(
-            new InteractionLite(
-                Id: Guid.NewGuid(),
-                CompanyId: c1.Id,
-                Date: DateTime.Today.AddDays(-10),
-                Direction: InteractionDirection.Inbound,
-                Channel: InteractionChannel.CvContactForm,
-                IsWarmIntro: true,
-                ReferredByName: "Mikko (ex-colleague)",
-                ReferredByRelation: "Colleague",
-                Contact: new ContactLite("CTO", "cto@example.com", null, null, "CTO"),
-                Summary: "Inbound via CV contact form; wants modernization workshop; timeline Q2–Q3.",
-                NextAction: "Send 1-pager + propose 60min workshop slot",
-                NextActionDue: DateTime.Today.AddDays(7)
-            )
-        );
-
-        AddInteraction(
-            new InteractionLite(
-                Id: Guid.NewGuid(),
-                CompanyId: c1.Id,
-                Date: DateTime.Today.AddDays(-7),
-                Direction: InteractionDirection.Outbound,
-                Channel: InteractionChannel.Email,
-                IsWarmIntro: false,
-                ReferredByName: null,
-                ReferredByRelation: null,
-                Contact: new ContactLite("CTO", "cto@example.com", null, null, "CTO"),
-                Summary: "Sent short follow-up email with workshop agenda + 2 relevant references.",
-                NextAction: "Confirm workshop slot",
-                NextActionDue: DateTime.Today.AddDays(6)
-            )
-        );
-
-        AddInteraction(
-            new InteractionLite(
-                Id: Guid.NewGuid(),
-                CompanyId: c2.Id,
-                Date: DateTime.Today.AddDays(-24),
-                Direction: InteractionDirection.Inbound,
-                Channel: InteractionChannel.LinkedIn,
-                IsWarmIntro: false,
-                ReferredByName: null,
-                ReferredByRelation: null,
-                Contact: new ContactLite(
-                    "Head of Data",
-                    null,
-                    null,
-                    "https://linkedin.com/in/example",
-                    "Head of Data"
-                ),
-                Summary: "LinkedIn message: needs help with data platform reliability & cost.",
-                NextAction: "Reply with 2 relevant references + suggest intro call",
-                NextActionDue: DateTime.Today.AddDays(5)
-            )
-        );
-
-        AddInteraction(
-            new InteractionLite(
-                Id: Guid.NewGuid(),
-                CompanyId: c2.Id,
-                Date: DateTime.Today.AddDays(-20),
-                Direction: InteractionDirection.Outbound,
-                Channel: InteractionChannel.LinkedIn,
-                IsWarmIntro: false,
-                ReferredByName: null,
-                ReferredByRelation: null,
-                Contact: new ContactLite(
-                    "Head of Data",
-                    null,
-                    null,
-                    "https://linkedin.com/in/example",
-                    "Head of Data"
-                ),
-                Summary: "Replied with brief note + asked for 30min discovery call; kept it tight and relevant.",
-                NextAction: null,
-                NextActionDue: null
-            )
-        );
-
-        AddInteraction(
-            new InteractionLite(
-                Id: Guid.NewGuid(),
-                CompanyId: c3.Id,
-                Date: DateTime.Today.AddDays(-4),
-                Direction: InteractionDirection.Inbound,
-                Channel: InteractionChannel.Email,
-                IsWarmIntro: true,
-                ReferredByName: "Anna (friend)",
-                ReferredByRelation: "Friend",
-                Contact: new ContactLite(
-                    "Product Lead",
-                    "pl@example.com",
-                    null,
-                    null,
-                    "Product Lead"
-                ),
-                Summary: "Warm intro via friend; exploring delivery support for upcoming release cycle.",
-                NextAction: "Schedule discovery call + ask for constraints & priorities",
-                NextActionDue: DateTime.Today.AddDays(3)
-            )
-        );
-
-        AddInteraction(
-            new InteractionLite(
-                Id: Guid.NewGuid(),
-                CompanyId: c4.Id,
-                Date: DateTime.Today.AddDays(-120),
-                Direction: InteractionDirection.Inbound,
-                Channel: InteractionChannel.Email,
-                IsWarmIntro: false,
-                ReferredByName: null,
-                ReferredByRelation: null,
-                Contact: new ContactLite(
-                    "Procurement",
-                    "proc@example.com",
-                    null,
-                    null,
-                    "Procurement"
-                ),
-                Summary: "Older tender cycle ended; keep an eye on next procurement window.",
-                NextAction: "Re-check procurement calendar",
-                NextActionDue: DateTime.Today.AddDays(45)
-            )
-        );
-    }
+    /// <summary>
+    /// Whether the CrmService has already seeded demo data.
+    /// </summary>
+    public bool IsSeeded { get; set; }
 
     // ===== Categories =====
+
     public CategoryLite AddCategory(string name, string? colorToken = null)
     {
         var existing = _categories.FirstOrDefault(c =>
-            c.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
-        );
+            c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         if (existing is not null)
             return existing;
 
@@ -273,51 +110,138 @@ public sealed class CrmProtoStore
         return category;
     }
 
-    public CategoryLite? GetCategory(Guid id) => _categories.FirstOrDefault(c => c.Id == id);
+    public CategoryLite? GetCategory(Guid id) =>
+        _categories.FirstOrDefault(c => c.Id == id);
 
-    // ===== Companies =====
-    public CompanyLite AddCompany(
-        string name,
-        string? website,
-        string? region,
-        string? notes,
-        CompanyStage stage,
-        IReadOnlyList<Guid> categoryIds
-    )
+    public CategoryLite UpdateCategory(Guid id, string name, string? colorToken)
     {
-        var existing = _companies.FirstOrDefault(c =>
-            c.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
-        );
-        if (existing is not null)
-            return existing;
-
-        var company = new CompanyLite(
-            Id: Guid.NewGuid(),
-            Name: name.Trim(),
-            Website: website?.Trim(),
-            Region: region?.Trim(),
-            Notes: notes?.Trim(),
-            Stage: stage,
-            CategoryIds: categoryIds.ToList()
-        );
-
-        _companies.Add(company);
-        return company;
-    }
-
-    public CompanyLite? GetCompany(Guid id) => _companies.FirstOrDefault(c => c.Id == id);
-
-    public CompanyLite UpdateCompanyCategories(Guid companyId, IReadOnlyList<Guid> categoryIds)
-    {
-        var company = _companies.First(c => c.Id == companyId);
-        var updated = company with { CategoryIds = categoryIds.ToList() };
-        _companies[_companies.IndexOf(company)] = updated;
+        var idx = _categories.FindIndex(c => c.Id == id);
+        if (idx < 0) throw new InvalidOperationException($"Category {id} not found.");
+        var updated = new CategoryLite(id, name.Trim(), colorToken);
+        _categories[idx] = updated;
         return updated;
     }
 
+    public bool RemoveCategory(Guid id) =>
+        _categories.RemoveAll(c => c.Id == id) > 0;
+
+    // ===== CRM Profiles =====
+
+    public CrmCompanyProfile AddProfile(Guid companyId, CompanyStage stage,
+        string? notes, IReadOnlyList<Guid> categoryIds)
+    {
+        var existing = _profiles.FirstOrDefault(p => p.CompanyId == companyId);
+        if (existing is not null)
+            return existing;
+
+        var profile = new CrmCompanyProfile(companyId, stage, notes?.Trim(), categoryIds.ToList());
+        _profiles.Add(profile);
+        return profile;
+    }
+
+    public CrmCompanyProfile? GetProfile(Guid companyId) =>
+        _profiles.FirstOrDefault(p => p.CompanyId == companyId);
+
+    public CrmCompanyProfile UpdateProfile(Guid companyId, CompanyStage stage,
+        string? notes, IReadOnlyList<Guid> categoryIds)
+    {
+        var idx = _profiles.FindIndex(p => p.CompanyId == companyId);
+        if (idx < 0) throw new InvalidOperationException($"Profile for company {companyId} not found.");
+        var updated = new CrmCompanyProfile(companyId, stage, notes?.Trim(), categoryIds.ToList());
+        _profiles[idx] = updated;
+        return updated;
+    }
+
+    public bool RemoveProfile(Guid companyId)
+    {
+        _interactions.RemoveAll(i => i.CompanyId == companyId);
+        _contacts.RemoveAll(c => c.CompanyId == companyId);
+        return _profiles.RemoveAll(p => p.CompanyId == companyId) > 0;
+    }
+
+    // ===== Contacts =====
+
+    public ContactLite AddContact(Guid companyId, string? personName, string? email,
+        string? phone, string? linkedInUrl, string? title)
+    {
+        var contact = new ContactLite(Guid.NewGuid(), companyId, personName?.Trim(),
+            email?.Trim(), phone?.Trim(), linkedInUrl?.Trim(), title?.Trim());
+        _contacts.Add(contact);
+        return contact;
+    }
+
+    public ContactLite? GetContact(Guid id) =>
+        _contacts.FirstOrDefault(c => c.Id == id);
+
+    public IReadOnlyList<ContactLite> GetCompanyContacts(Guid companyId) =>
+        _contacts.Where(c => c.CompanyId == companyId).ToList();
+
+    public ContactLite UpdateContact(Guid id, string? personName, string? email,
+        string? phone, string? linkedInUrl, string? title)
+    {
+        var idx = _contacts.FindIndex(c => c.Id == id);
+        if (idx < 0) throw new InvalidOperationException($"Contact {id} not found.");
+        var existing = _contacts[idx];
+        var updated = existing with
+        {
+            PersonName = personName?.Trim(),
+            Email = email?.Trim(),
+            Phone = phone?.Trim(),
+            LinkedInUrl = linkedInUrl?.Trim(),
+            Title = title?.Trim(),
+        };
+        _contacts[idx] = updated;
+        return updated;
+    }
+
+    public bool RemoveContact(Guid id)
+    {
+        foreach (var interaction in _interactions.Where(i => i.ContactId == id).ToList())
+        {
+            var idx = _interactions.FindIndex(i => i.Id == interaction.Id);
+            if (idx >= 0)
+                _interactions[idx] = interaction with { ContactId = null };
+        }
+        return _contacts.RemoveAll(c => c.Id == id) > 0;
+    }
+
     // ===== Interactions =====
-    public void AddInteraction(InteractionLite interaction) => _interactions.Add(interaction);
+
+    public void AddInteraction(InteractionLite interaction) =>
+        _interactions.Add(interaction);
+
+    public InteractionLite? GetInteraction(Guid id) =>
+        _interactions.FirstOrDefault(i => i.Id == id);
 
     public IReadOnlyList<InteractionLite> GetCompanyInteractions(Guid companyId) =>
-        _interactions.Where(i => i.CompanyId == companyId).OrderByDescending(i => i.Date).ToList();
+        _interactions.Where(i => i.CompanyId == companyId)
+            .OrderByDescending(i => i.Date).ToList();
+
+    public InteractionLite UpdateInteraction(Guid id, DateTime date,
+        InteractionDirection direction, InteractionChannel channel,
+        bool isWarmIntro, string? referredByName, string? referredByRelation,
+        Guid? contactId, string summary, string? nextAction, DateTime? nextActionDue)
+    {
+        var idx = _interactions.FindIndex(i => i.Id == id);
+        if (idx < 0) throw new InvalidOperationException($"Interaction {id} not found.");
+        var existing = _interactions[idx];
+        var updated = existing with
+        {
+            Date = date,
+            Direction = direction,
+            Channel = channel,
+            IsWarmIntro = isWarmIntro,
+            ReferredByName = referredByName,
+            ReferredByRelation = referredByRelation,
+            ContactId = contactId,
+            Summary = summary.Trim(),
+            NextAction = string.IsNullOrWhiteSpace(nextAction) ? null : nextAction.Trim(),
+            NextActionDue = nextActionDue,
+        };
+        _interactions[idx] = updated;
+        return updated;
+    }
+
+    public bool RemoveInteraction(Guid id) =>
+        _interactions.RemoveAll(i => i.Id == id) > 0;
 }

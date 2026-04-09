@@ -1,4 +1,6 @@
 @page "/developer/loginteraction"
+@using Kulku.Web.Admin.Components.Developer.Components
+@inject CrmService Crm
 @inject CrmProtoStore Store
 @inject NavigationManager Nav
 
@@ -12,7 +14,7 @@
             <h1 class="h4 mb-1">Log interaction</h1>
             <div class="text-muted">Companies are usually created here. Link history when possible.</div>
         </div>
-        <NavLink class="btn btn-sm btn-outline-secondary" href="/">Back to dashboard</NavLink>
+        <NavLink class="btn btn-sm btn-outline-secondary" href="developer">Back to dashboard</NavLink>
     </div>
 
     <div class="row g-3">
@@ -60,40 +62,13 @@
                             <div class="row g-2">
                                 <div class="col-md-7">
                                     <select class="form-select" @onchange="OnCompanyChanged">
-                                        <option value="">— New company —</option>
-                                        @foreach (var c in Store.Companies.OrderBy(c => c.Name))
+                                        <option value="">— Select company —</option>
+                                        @foreach (var c in _enrolledCompanies.OrderBy(c => c.Name))
                                         {
                                             <option value="@c.Id">@c.Name (@c.Region)</option>
                                         }
                                     </select>
-                                    <div class="form-text">Select existing to link history. Otherwise create a new company here.</div>
-                                </div>
-
-                                <div class="col-md-5">
-                                    <input class="form-control" placeholder="New company name" @bind="NewCompanyName" disabled="@HasSelectedCompany" />
-                                </div>
-                            </div>
-
-                            <div class="row g-2 mt-2">
-                                <div class="col-md-6">
-                                    <input class="form-control" placeholder="Website (optional)" @bind="NewCompanyWebsite" disabled="@HasSelectedCompany" />
-                                </div>
-                                <div class="col-md-3">
-                                    <input class="form-control" placeholder="Region (optional)" @bind="NewCompanyRegion" disabled="@HasSelectedCompany" />
-                                </div>
-                                <div class="col-md-3">
-                                    <select class="form-select" @bind="NewCompanyStage" disabled="@HasSelectedCompany">
-                                        @foreach (var s in Enum.GetValues<CompanyStage>())
-                                        {
-                                            <option value="@s">@s</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row g-2 mt-2">
-                                <div class="col-md-12">
-                                    <input class="form-control" placeholder="Company notes (optional)" @bind="NewCompanyNotes" disabled="@HasSelectedCompany" />
+                                    <div class="form-text">Select an enrolled company to link this interaction.</div>
                                 </div>
                             </div>
                         </div>
@@ -122,24 +97,34 @@
                             </div>
                         </div>
 
-                        <!-- Contact basics -->
+                        <!-- Contact selection -->
                         <div class="mb-3">
-                            <label class="form-label">Contact (basic)</label>
+                            <label class="form-label">Contact</label>
+                            @if (HasSelectedCompany && CompanyContacts.Count > 0)
+                            {
+                                <select class="form-select mb-2" @onchange="OnContactChanged">
+                                    <option value="">— New contact —</option>
+                                    @foreach (var ct in CompanyContacts)
+                                    {
+                                        <option value="@ct.Id">@ct.PersonName (@ct.Title)</option>
+                                    }
+                                </select>
+                            }
                             <div class="row g-2">
                                 <div class="col-md-4">
-                                    <input class="form-control" placeholder="Person name" @bind="Model.ContactPersonName" />
+                                    <input class="form-control" placeholder="Person name" @bind="Model.ContactPersonName" disabled="@SelectedContactId.HasValue" />
                                 </div>
                                 <div class="col-md-4">
-                                    <input class="form-control" placeholder="Email" @bind="Model.ContactEmail" />
+                                    <input class="form-control" placeholder="Email" @bind="Model.ContactEmail" disabled="@SelectedContactId.HasValue" />
                                 </div>
                                 <div class="col-md-4">
-                                    <input class="form-control" placeholder="Phone" @bind="Model.ContactPhone" />
+                                    <input class="form-control" placeholder="Phone" @bind="Model.ContactPhone" disabled="@SelectedContactId.HasValue" />
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" placeholder="LinkedIn URL" @bind="Model.ContactLinkedInUrl" />
+                                    <input class="form-control" placeholder="LinkedIn URL" @bind="Model.ContactLinkedInUrl" disabled="@SelectedContactId.HasValue" />
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" placeholder="Title/role" @bind="Model.ContactTitle" />
+                                    <input class="form-control" placeholder="Title/role" @bind="Model.ContactTitle" disabled="@SelectedContactId.HasValue" />
                                 </div>
                             </div>
                         </div>
@@ -189,17 +174,18 @@
                                 <input class="form-check-input"
                                        type="checkbox"
                                        checked="@SelectedCompanyCategoryIds.Contains(cat.Id)"
-                                       @onchange="e => ToggleCompanyCategory(cat.Id, (bool)e.Value!)"
-                                       disabled="@HasSelectedCompany" />
+                                       @onchange="e => ToggleCompanyCategory(cat.Id, (bool)e.Value!)" />
                                 <label class="form-check-label">@cat.Name</label>
                             </div>
                         }
 
                         @if (HasSelectedCompany)
                         {
-                            <div class="mt-2 text-muted small">
-                                Prototype: editing categories for existing companies can be added later.
-                                Currently categories are set when creating a new company here.
+                            <div class="mt-2">
+                                <button type="button" class="btn btn-sm btn-outline-primary"
+                                        @onclick="SaveCompanyCategories">
+                                    Update categories
+                                </button>
                             </div>
                         }
                     }
@@ -218,47 +204,55 @@
                     }
                     else
                     {
-                        var c = Store.Companies.First(x => x.Id == SelectedCompanyId!.Value);
-                        <div class="mb-2">
-                            <div class="fw-semibold">@c.Name</div>
-                            <div class="text-muted small">@c.Region • @c.Website • @c.Stage</div>
-                        </div>
-
-                        <div class="mb-2">
-                            @foreach (var cat in c.CategoryIds.Select(id => Store.GetCategory(id)).Where(x => x is not null)!)
-                            {
-                                <span class="badge text-bg-light border me-1 mb-1">@cat!.Name</span>
-                            }
-                        </div>
-
-                        <hr />
-
-                        var history = Store.GetCompanyInteractions(c.Id);
-                        if (history.Count == 0)
+                        var c = _enrolledCompanies.FirstOrDefault(x => x.Id == SelectedCompanyId!.Value);
+                        @if (c is not null)
                         {
-                            <div class="text-muted">No prior interactions recorded.</div>
-                        }
-                        else
-                        {
-                            <ul class="list-group list-group-flush">
-                                @foreach (var h in history.Take(8))
+                            <div class="mb-2">
+                                <div class="fw-semibold">@c.Name</div>
+                                <div class="text-muted small">@c.Region • @c.Website • @CrmCompanyCard.StageLabel(c.Profile!.Stage)</div>
+                            </div>
+
+                            <div class="mb-2">
+                                @foreach (var cat in (c.Profile?.CategoryIds ?? []).Select(id => Store.GetCategory(id)).Where(x => x is not null)!)
                                 {
-                                    <li class="list-group-item px-0">
-                                        <div class="d-flex justify-content-between">
-                                            <div class="fw-semibold">@h.Date.ToString("yyyy-MM-dd")</div>
-                                            <span class="badge text-bg-light border">@ChannelLabel(h.Channel)</span>
-                                        </div>
-                                        <div class="text-muted small">@h.Summary</div>
-                                        <div class="mt-1">
-                                            <span class="badge @(h.Direction == InteractionDirection.Inbound ? "text-bg-primary" : "text-bg-secondary")">@h.Direction</span>
-                                            @if (h.IsWarmIntro)
-                                            {
-                                                <span class="badge text-bg-success">Warm</span>
-                                            }
-                                        </div>
-                                    </li>
+                                    <span class="badge text-bg-light border me-1 mb-1">@cat!.Name</span>
                                 }
-                            </ul>
+                            </div>
+
+                            <hr />
+
+                            var history = Store.GetCompanyInteractions(c.Id);
+                            if (history.Count == 0)
+                            {
+                                <div class="text-muted">No prior interactions recorded.</div>
+                            }
+                            else
+                            {
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var h in history.Take(8))
+                                    {
+                                        var contactName = GetContactName(h);
+                                        <li class="list-group-item px-0">
+                                            <div class="d-flex justify-content-between">
+                                                <div class="fw-semibold">@h.Date.ToString("yyyy-MM-dd")</div>
+                                                <span class="badge text-bg-light border">@ChannelLabel(h.Channel)</span>
+                                            </div>
+                                            @if (!string.IsNullOrWhiteSpace(contactName))
+                                            {
+                                                <div class="small"><Icon Kind="IconKind.PersonLinesFill" Size="12" CssClass="me-1" />@contactName</div>
+                                            }
+                                            <div class="text-muted small">@h.Summary</div>
+                                            <div class="mt-1">
+                                                <span class="badge @(h.Direction == InteractionDirection.Inbound ? "text-bg-primary" : "text-bg-secondary")">@h.Direction</span>
+                                                @if (h.IsWarmIntro)
+                                                {
+                                                    <span class="badge text-bg-success">Warm</span>
+                                                }
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            }
                         }
                     }
                 </div>
@@ -292,16 +286,17 @@
 
     private LogInteractionModel Model = new();
 
+    private IReadOnlyList<CrmCompanyViewModel> _enrolledCompanies = [];
     private Guid? SelectedCompanyId;
+    private Guid? SelectedContactId;
     private bool HasSelectedCompany => SelectedCompanyId.HasValue;
 
-    // New company fields
-    private string? NewCompanyName;
-    private string? NewCompanyWebsite;
-    private string? NewCompanyRegion;
-    private string? NewCompanyNotes;
-    private CompanyStage NewCompanyStage = CompanyStage.Watchlist;
     private HashSet<Guid> SelectedCompanyCategoryIds = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _enrolledCompanies = await Crm.GetEnrolledCompaniesAsync();
+    }
 
     private void ToggleCompanyCategory(Guid id, bool isChecked)
     {
@@ -309,70 +304,89 @@
         else SelectedCompanyCategoryIds.Remove(id);
     }
 
-    private void OnCompanyChanged(ChangeEventArgs _)
+    private void OnCompanyChanged(ChangeEventArgs e)
     {
+        SelectedCompanyId = Guid.TryParse(e.Value?.ToString(), out var id) ? id : null;
+        SelectedContactId = null;
+
         if (!HasSelectedCompany)
         {
-            NewCompanyName = null;
-            NewCompanyWebsite = null;
-            NewCompanyRegion = null;
-            NewCompanyNotes = null;
-            NewCompanyStage = CompanyStage.Watchlist;
             SelectedCompanyCategoryIds.Clear();
         }
+        else
+        {
+            var profile = Store.GetProfile(SelectedCompanyId!.Value);
+            if (profile is not null)
+                SelectedCompanyCategoryIds = [.. profile.CategoryIds];
+        }
     }
+
+    private void OnContactChanged(ChangeEventArgs e)
+    {
+        SelectedContactId = Guid.TryParse(e.Value?.ToString(), out var id) ? id : null;
+
+        if (SelectedContactId.HasValue)
+        {
+            var contact = Store.GetContact(SelectedContactId.Value);
+            if (contact is not null)
+            {
+                Model.ContactPersonName = contact.PersonName;
+                Model.ContactEmail = contact.Email;
+                Model.ContactPhone = contact.Phone;
+                Model.ContactLinkedInUrl = contact.LinkedInUrl;
+                Model.ContactTitle = contact.Title;
+            }
+        }
+        else
+        {
+            Model.ContactPersonName = null;
+            Model.ContactEmail = null;
+            Model.ContactPhone = null;
+            Model.ContactLinkedInUrl = null;
+            Model.ContactTitle = null;
+        }
+    }
+
+    private IReadOnlyList<ContactLite> CompanyContacts =>
+        HasSelectedCompany ? Store.GetCompanyContacts(SelectedCompanyId!.Value) : [];
 
     private void ResetForm()
     {
         Model = new();
         SelectedCompanyId = null;
-        NewCompanyName = null;
-        NewCompanyWebsite = null;
-        NewCompanyRegion = null;
-        NewCompanyNotes = null;
-        NewCompanyStage = CompanyStage.Watchlist;
+        SelectedContactId = null;
         SelectedCompanyCategoryIds.Clear();
     }
 
     private Task OnSubmit()
     {
-        CompanyLite company;
+        if (!HasSelectedCompany) return Task.CompletedTask;
 
-        if (HasSelectedCompany)
+        var companyId = SelectedCompanyId!.Value;
+
+        ContactLite? contact = null;
+        if (SelectedContactId.HasValue)
         {
-            company = Store.Companies.First(c => c.Id == SelectedCompanyId!.Value);
+            contact = Store.GetContact(SelectedContactId.Value);
         }
-        else
+        else if (!string.IsNullOrWhiteSpace(Model.ContactPersonName)
+            || !string.IsNullOrWhiteSpace(Model.ContactEmail))
         {
-            var name = (NewCompanyName ?? "").Trim();
-            if (string.IsNullOrWhiteSpace(name)) return Task.CompletedTask;
-
-            company = Store.AddCompany(
-                name: name,
-                website: NewCompanyWebsite,
-                region: NewCompanyRegion,
-                notes: NewCompanyNotes,
-                stage: NewCompanyStage,
-                categoryIds: SelectedCompanyCategoryIds.ToList()
-            );
+            contact = Store.AddContact(companyId,
+                Model.ContactPersonName, Model.ContactEmail,
+                Model.ContactPhone, Model.ContactLinkedInUrl, Model.ContactTitle);
         }
 
         var interaction = new InteractionLite(
             Id: Guid.NewGuid(),
-            CompanyId: company.Id,
+            CompanyId: companyId,
             Date: Model.Date.Date,
             Direction: Model.Direction,
             Channel: Model.Channel,
             IsWarmIntro: Model.IsWarmIntro,
             ReferredByName: Model.IsWarmIntro ? Model.ReferredByName : null,
             ReferredByRelation: Model.IsWarmIntro ? Model.ReferredByRelation : null,
-            Contact: new ContactLite(
-                Model.ContactPersonName,
-                Model.ContactEmail,
-                Model.ContactPhone,
-                Model.ContactLinkedInUrl,
-                Model.ContactTitle
-            ),
+            ContactId: contact?.Id,
             Summary: string.IsNullOrWhiteSpace(Model.Summary) ? "(missing summary)" : Model.Summary.Trim(),
             NextAction: string.IsNullOrWhiteSpace(Model.NextAction) ? null : Model.NextAction.Trim(),
             NextActionDue: Model.NextActionDue?.Date
@@ -380,7 +394,7 @@
 
         Store.AddInteraction(interaction);
 
-        Nav.NavigateTo("/");
+        Nav.NavigateTo("/developer");
         return Task.CompletedTask;
     }
 
@@ -392,4 +406,17 @@
         InteractionChannel.LinkedIn => "LinkedIn",
         _ => ch.ToString()
     };
+
+    private void SaveCompanyCategories()
+    {
+        if (!HasSelectedCompany) return;
+        var profile = Store.GetProfile(SelectedCompanyId!.Value);
+        if (profile is null) return;
+        Store.UpdateProfile(profile.CompanyId, profile.Stage, profile.Notes, SelectedCompanyCategoryIds.ToList());
+    }
+
+    private string? GetContactName(InteractionLite interaction) =>
+        interaction.ContactId.HasValue
+            ? Store.GetContact(interaction.ContactId.Value)?.PersonName
+            : null;
 }

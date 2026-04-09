@@ -44,6 +44,15 @@
 					<Icon Kind="IconKind.Lightbulb" Size="20" />
 					<span class="kulku-link-text">Developer</span>
 				</NavLink>
+
+				@if (!IsCollapsed)
+				{
+					<ul class="nav flex-column kulku-subnav">
+						<li><NavLink class="nav-link kulku-sublink" href="developer" Match="NavLinkMatch.All"><Icon Kind="IconKind.Speedometer" Size="14" /> Dashboard</NavLink></li>
+						<li><NavLink class="nav-link kulku-sublink" href="developer/companies"><Icon Kind="IconKind.Building" Size="14" /> Companies</NavLink></li>
+						<li><NavLink class="nav-link kulku-sublink" href="developer/loginteraction"><Icon Kind="IconKind.ChatDots" Size="14" /> Log Interaction</NavLink></li>
+					</ul>
+				}
 			</li>
 
 			<li class="nav-item">

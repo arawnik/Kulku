@@ -1,0 +1,92 @@
+@using Kulku.Web.Admin.Components.Developer
+
+<div class="card shadow-sm h-100">
+	<div class="card-header py-2 d-flex justify-content-between align-items-center">
+		<div class="d-flex align-items-center gap-2">
+			<span class="badge @CrmCompanyCard.StageBadgeClass(Stage)">@CrmCompanyCard.StageLabel(Stage)</span>
+			<span class="badge bg-secondary">@Companies.Count</span>
+		</div>
+	</div>
+
+	<div class="card-body p-2" style="min-height: 120px;">
+		@if (Companies.Count == 0)
+		{
+			<div class="text-muted small text-center py-3">No companies</div>
+		}
+		else
+		{
+			@foreach (var item in Companies)
+			{
+				<div class="card mb-2 border-0 bg-body-secondary">
+					<div class="card-body py-2 px-3">
+						<div class="fw-semibold small">
+							<a href="/developer/companies/@item.Company.Id" class="text-decoration-none">@item.Company.Name</a>
+						</div>
+						@if (!string.IsNullOrWhiteSpace(item.Company.Region))
+						{
+							<small class="text-muted">@item.Company.Region</small>
+						}
+						@if (item.Categories.Count > 0)
+						{
+							<div class="d-flex flex-wrap gap-1 mt-1">
+								@foreach (var cat in item.Categories)
+								{
+									<span class="badge text-bg-@(cat.ColorToken ?? "secondary") bg-opacity-50 fw-normal"
+										  style="font-size: 0.7rem;">@cat.Name</span>
+								}
+							</div>
+						}
+						<div class="d-flex align-items-center gap-2 mt-1">
+							@if (item.LastInteractionDate.HasValue)
+							{
+								<small class="@RecencyTextClass(item.LastInteractionDate.Value)"
+									   style="font-size: 0.75rem;">
+									@item.LastInteractionDate.Value.ToString("yyyy-MM-dd")
+								</small>
+							}
+							@if (item.NextActionDue.HasValue)
+							{
+								<span class="badge @DueBadge(item.NextActionDue.Value)"
+									  style="font-size: 0.65rem;">
+									⏱ @item.NextActionDue.Value.ToString("MM-dd")
+								</span>
+							}
+						</div>
+					</div>
+				</div>
+			}
+		}
+	</div>
+</div>
+
+@code {
+	[Parameter, EditorRequired]
+	public CompanyStage Stage { get; set; }
+
+	[Parameter]
+	public IReadOnlyList<PipelineCompanyItem> Companies { get; set; } = [];
+
+	public sealed record PipelineCompanyItem(
+		CrmCompanyViewModel Company,
+		IReadOnlyList<CategoryLite> Categories,
+		DateTime? LastInteractionDate,
+		DateTime? NextActionDue
+	);
+
+	private static string RecencyTextClass(DateTime d)
+	{
+		var days = (DateTime.Today - d.Date).TotalDays;
+		if (days <= 21) return "text-success";
+		if (days <= 60) return "text-warning";
+		return "text-danger";
+	}
+
+	private static string DueBadge(DateTime due)
+	{
+		var days = (due.Date - DateTime.Today).TotalDays;
+		if (days < 0) return "text-bg-danger";
+		if (days <= 7) return "text-bg-warning";
+		return "text-bg-secondary";
+	}
+}
+

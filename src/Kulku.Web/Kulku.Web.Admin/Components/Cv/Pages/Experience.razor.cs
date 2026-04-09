@@ -243,6 +243,8 @@ partial class Experience(
 
         _currentCompany = new CompanyTranslationsModel(
             CompanyId: Guid.NewGuid(),
+            Website: null,
+            Region: null,
             ExperienceCount: 0,
             Translations: blankTranslations
         );
@@ -287,7 +289,7 @@ partial class Experience(
             if (_companyModalMode == ModalMode.Create)
             {
                 var result = await createCompanyHandler.Handle(
-                    new CreateCompany.Command(translations),
+                    new CreateCompany.Command(model.Website, model.Region, translations),
                     CancellationToken
                 );
 
@@ -309,7 +311,7 @@ partial class Experience(
             }
 
             var updateResult = await updateCompanyHandler.Handle(
-                new UpdateCompany.Command(model.CompanyId, translations),
+                new UpdateCompany.Command(model.CompanyId, model.Website, model.Region, translations),
                 CancellationToken
             );
 
