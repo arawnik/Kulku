@@ -203,123 +203,15 @@ else
 
 	@* ── Modals ── *@
 	<CrmCompanyEditModal @ref="_companyModal"
-					  IsVisible="@(_companyEditVisible)"
-					  Mode="ModalMode.Edit"
-					  Categories="@Store.Categories"
-					  OnSave="HandleSaveCompany"
-					  OnCancel="CloseCompanyEditor" />
+						 IsVisible="@(_companyEditVisible)"
+						 Mode="ModalMode.Edit"
+						 Categories="@Store.Categories"
+						 OnSave="HandleSaveCompany"
+						 OnCancel="CloseCompanyEditor" />
 
 	<CrmContactEditModal @ref="_contactModal"
-					  IsVisible="@(_contactMode is not null)"
-					  Mode="@(_contactMode ?? ModalMode.Create)"
-					  OnSave="HandleSaveContact"
-					  OnCancel="CloseContactEditor" />
-}
-
-@code {
-	[Parameter]
-	public Guid CompanyId { get; set; }
-
-	private CrmCompanyViewModel? _company;
-	private IReadOnlyList<CategoryLite> _companyCategories = [];
-	private IReadOnlyList<ContactLite> _contacts = [];
-	private IReadOnlyList<InteractionLite> _interactions = [];
-
-	private bool _companyEditVisible;
-	private CrmCompanyEditModal _companyModal = null!;
-
-	private ModalMode? _contactMode;
-	private CrmContactEditModal _contactModal = null!;
-
-	protected override async Task OnInitializedAsync()
-	{
-		await ReloadAsync();
-	}
-
-	private async Task ReloadAsync()
-	{
-		_company = await Crm.GetCompanyDetailAsync(CompanyId);
-		if (_company is null) return;
-
-		_companyCategories = (_company.Profile?.CategoryIds ?? [])
-			.Select(id => Store.GetCategory(id))
-			.Where(c => c is not null)
-			.Cast<CategoryLite>()
-			.ToList();
-		_contacts = Store.GetCompanyContacts(CompanyId);
-		_interactions = Store.GetCompanyInteractions(CompanyId);
-	}
-
-	// ── Stage ──
-
-	private async Task ChangeStage(CompanyStage stage)
-	{
-		if (_company?.Profile is null) return;
-		Store.UpdateProfile(_company.Id, stage, _company.Profile.Notes, _company.Profile.CategoryIds.ToList());
-		await ReloadAsync();
-	}
-
-	// ── Company Edit ──
-
-	private void HandleEditCompany()
-	{
-		if (_company?.Profile is null) return;
-		_companyModal.LoadForEdit(_company.Profile);
-		_companyEditVisible = true;
-	}
-
-	private async Task HandleSaveCompany(CrmCompanyEditModal.ProfileFormModel form)
-	{
-		Store.UpdateProfile(form.ResolvedCompanyId, form.Stage, form.Notes, form.CategoryIds.ToList());
-		CloseCompanyEditor();
-		await ReloadAsync();
-	}
-
-	private void CloseCompanyEditor() => _companyEditVisible = false;
-
-	// ── Contact CRUD ──
-
-	private void HandleCreateContact()
-	{
-		_contactModal.LoadForCreate();
-		_contactMode = ModalMode.Create;
-	}
-
-	private void HandleEditContact(ContactLite contact)
-	{
-		_contactModal.LoadForEdit(contact);
-		_contactMode = ModalMode.Edit;
-	}
-
-	private async Task HandleSaveContact(CrmContactEditModal.ContactFormModel form)
-	{
-		if (_contactMode == ModalMode.Create)
-		{
-			Store.AddContact(CompanyId, form.PersonName, form.Email,
-				form.Phone, form.LinkedInUrl, form.Title);
-		}
-		else if (form.Id.HasValue)
-		{
-			Store.UpdateContact(form.Id.Value, form.PersonName, form.Email,
-				form.Phone, form.LinkedInUrl, form.Title);
-		}
-		CloseContactEditor();
-		await ReloadAsync();
-	}
-
-	private async Task HandleDeleteContact(Guid contactId)
-	{
-		Store.RemoveContact(contactId);
-		await ReloadAsync();
-	}
-
-	private void CloseContactEditor() => _contactMode = null;
-
-	// ── Interaction ──
-
-	private async Task HandleDeleteInteraction(Guid interactionId)
-	{
-		Store.RemoveInteraction(interactionId);
-		await ReloadAsync();
-	}
+						 IsVisible="@(_contactMode is not null)"
+						 Mode="@(_contactMode ?? ModalMode.Create)"
+						 OnSave="HandleSaveContact"
+						 OnCancel="CloseContactEditor" />
 }

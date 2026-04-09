@@ -38,16 +38,3 @@
 		</div>
 	</div>
 </div>
-
-@code {
-	[Parameter, EditorRequired]
-	public IdeaTagModel Tag { get; set; } = null!;
-
-	[Parameter]
-	public EventCallback<IdeaTagModel> OnEdit { get; set; }
-
-	[Parameter]
-	public EventCallback<Guid> OnDelete { get; set; }
-
-	private bool _confirmDelete;
-}

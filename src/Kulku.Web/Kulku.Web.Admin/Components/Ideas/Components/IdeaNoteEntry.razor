@@ -32,13 +32,3 @@
 		</div>
 	</div>
 </div>
-
-@code {
-	[Parameter, EditorRequired]
-	public IdeaNoteModel Note { get; set; } = null!;
-
-	[Parameter]
-	public EventCallback<Guid> OnDelete { get; set; }
-
-	private bool _confirmDelete;
-}

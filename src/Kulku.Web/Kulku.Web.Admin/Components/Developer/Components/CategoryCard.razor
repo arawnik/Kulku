@@ -38,16 +38,3 @@
 		</div>
 	</div>
 </div>
-
-@code {
-	[Parameter, EditorRequired]
-	public CategoryLite Category { get; set; } = null!;
-
-	[Parameter]
-	public EventCallback<CategoryLite> OnEdit { get; set; }
-
-	[Parameter]
-	public EventCallback<Guid> OnDelete { get; set; }
-
-	private bool _confirmDelete;
-}
