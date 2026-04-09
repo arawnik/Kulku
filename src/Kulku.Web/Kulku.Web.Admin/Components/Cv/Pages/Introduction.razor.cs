@@ -1,10 +1,8 @@
 using Kulku.Application.Cover.Introduction;
 using Kulku.Application.Cover.Introduction.Models;
-using Kulku.Domain;
 using Kulku.Web.Admin.Components.Cv.Components;
 using Kulku.Web.Admin.Components.Shared;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
-using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Web.Admin.Components.Cv.Pages;
 
@@ -64,16 +62,12 @@ partial class Introduction(
     {
         _errorMessage = null;
 
-        var blankTranslations = Defaults
-            .SupportedCultures.Select(LanguageCodeFromCulture)
-            .Where(lc => lc.HasValue)
-            .Select(lc => new IntroductionTranslationItem(
-                lc!.Value,
-                string.Empty,
-                string.Empty,
-                string.Empty
-            ))
-            .ToList();
+        var blankTranslations = BuildBlankTranslations(lc => new IntroductionTranslationItem(
+            lc,
+            string.Empty,
+            string.Empty,
+            string.Empty
+        ));
 
         CurrentEditModel = new IntroductionTranslationsModel(
             IntroductionId: Guid.NewGuid(),
@@ -133,22 +127,19 @@ partial class Introduction(
                     CancellationToken
                 );
 
-                if (createResult.IsSuccess)
+                if (
+                    !TryHandleError(
+                        createResult,
+                        e => _editModal?.SetServerErrors(e),
+                        ref _errorMessage,
+                        "Failed to create introduction. Please try again."
+                    )
+                )
                 {
                     CloseEditor();
                     await LoadIntroductionsAsync();
-                    return;
                 }
 
-                if (createResult is IValidationResult createValidation)
-                {
-                    _editModal?.SetServerErrors(createValidation.Errors);
-                    return;
-                }
-
-                _errorMessage =
-                    createResult.Error?.Message
-                    ?? "Failed to create introduction. Please try again.";
                 return;
             }
 
@@ -163,19 +154,17 @@ partial class Introduction(
                 CancellationToken
             );
 
-            if (result.IsSuccess)
+            if (
+                !TryHandleError(
+                    result,
+                    e => _editModal?.SetServerErrors(e),
+                    ref _errorMessage,
+                    "Failed to save changes. Please try again."
+                )
+            )
             {
                 CloseEditor();
                 await LoadIntroductionsAsync();
-            }
-            else if (result is IValidationResult validation)
-            {
-                _editModal?.SetServerErrors(validation.Errors);
-            }
-            else
-            {
-                _errorMessage =
-                    result.Error?.Message ?? "Failed to save changes. Please try again.";
             }
         }
         finally
@@ -214,12 +203,4 @@ partial class Introduction(
         CurrentEditModel = null;
         _errorMessage = null;
     }
-
-    private static LanguageCode? LanguageCodeFromCulture(string culture) =>
-        culture switch
-        {
-            "en" => LanguageCode.English,
-            "fi" => LanguageCode.Finnish,
-            _ => null,
-        };
 }

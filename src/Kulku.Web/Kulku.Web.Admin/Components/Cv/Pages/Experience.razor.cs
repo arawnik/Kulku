@@ -3,11 +3,9 @@ using Kulku.Application.Cover.Company.Models;
 using Kulku.Application.Cover.Experience;
 using Kulku.Application.Cover.Experience.Models;
 using Kulku.Application.Cover.Models;
-using Kulku.Domain;
 using Kulku.Web.Admin.Components.Cv.Components;
 using Kulku.Web.Admin.Components.Shared;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
-using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Web.Admin.Components.Cv.Pages;
 
@@ -82,11 +80,11 @@ partial class Experience(
     {
         _errorMessage = null;
 
-        var blankTranslations = Defaults
-            .SupportedCultures.Select(LanguageCodeFromCulture)
-            .Where(lc => lc.HasValue)
-            .Select(lc => new ExperienceTranslationItem(lc!.Value, string.Empty, string.Empty))
-            .ToList();
+        var blankTranslations = BuildBlankTranslations(lc => new ExperienceTranslationItem(
+            lc,
+            string.Empty,
+            string.Empty
+        ));
 
         CurrentEditModel = new ExperienceTranslationsModel(
             ExperienceId: Guid.NewGuid(),
@@ -135,7 +133,6 @@ partial class Experience(
                 ))
                 .ToList();
 
-            Result result;
             if (_modalMode == ModalMode.Create)
             {
                 var createResult = await createHandler.Handle(
@@ -148,25 +145,23 @@ partial class Experience(
                     CancellationToken
                 );
 
-                if (createResult.IsSuccess)
+                if (
+                    !TryHandleError(
+                        createResult,
+                        e => _editModal?.SetServerErrors(e),
+                        ref _errorMessage,
+                        "Failed to create experience. Please try again."
+                    )
+                )
                 {
                     CloseEditor();
                     await LoadAllAsync();
-                    return;
                 }
 
-                if (createResult is IValidationResult createValidation)
-                {
-                    _editModal?.SetServerErrors(createValidation.Errors);
-                    return;
-                }
-
-                _errorMessage =
-                    createResult.Error?.Message ?? "Failed to create experience. Please try again.";
                 return;
             }
 
-            result = await updateHandler.Handle(
+            var result = await updateHandler.Handle(
                 new UpdateExperience.Command(
                     model.ExperienceId,
                     model.StartDate,
@@ -176,19 +171,17 @@ partial class Experience(
                 CancellationToken
             );
 
-            if (result.IsSuccess)
+            if (
+                !TryHandleError(
+                    result,
+                    e => _editModal?.SetServerErrors(e),
+                    ref _errorMessage,
+                    "Failed to save changes. Please try again."
+                )
+            )
             {
                 CloseEditor();
                 await LoadAllAsync();
-            }
-            else if (result is IValidationResult validation)
-            {
-                _editModal?.SetServerErrors(validation.Errors);
-            }
-            else
-            {
-                _errorMessage =
-                    result.Error?.Message ?? "Failed to save changes. Please try again.";
             }
         }
         finally
@@ -235,11 +228,11 @@ partial class Experience(
         _companyErrorMessage = null;
         _companiesExpanded = true;
 
-        var blankTranslations = Defaults
-            .SupportedCultures.Select(LanguageCodeFromCulture)
-            .Where(lc => lc.HasValue)
-            .Select(lc => new CompanyTranslationItem(lc!.Value, string.Empty, string.Empty))
-            .ToList();
+        var blankTranslations = BuildBlankTranslations(lc => new CompanyTranslationItem(
+            lc,
+            string.Empty,
+            string.Empty
+        ));
 
         _currentCompany = new CompanyTranslationsModel(
             CompanyId: Guid.NewGuid(),
@@ -293,40 +286,43 @@ partial class Experience(
                     CancellationToken
                 );
 
-                if (result.IsSuccess)
+                if (
+                    !TryHandleError(
+                        result,
+                        e => _companyModal?.SetServerErrors(e),
+                        ref _companyErrorMessage,
+                        "Failed to create company."
+                    )
+                )
                 {
                     CloseCompanyEditor();
                     await LoadAllAsync();
-                    return;
                 }
 
-                if (result is IValidationResult v)
-                {
-                    _companyModal?.SetServerErrors(v.Errors);
-                    return;
-                }
-
-                _companyErrorMessage = result.Error?.Message ?? "Failed to create company.";
                 return;
             }
 
             var updateResult = await updateCompanyHandler.Handle(
-                new UpdateCompany.Command(model.CompanyId, model.Website, model.Region, translations),
+                new UpdateCompany.Command(
+                    model.CompanyId,
+                    model.Website,
+                    model.Region,
+                    translations
+                ),
                 CancellationToken
             );
 
-            if (updateResult.IsSuccess)
+            if (
+                !TryHandleError(
+                    updateResult,
+                    e => _companyModal?.SetServerErrors(e),
+                    ref _companyErrorMessage,
+                    "Failed to save company."
+                )
+            )
             {
                 CloseCompanyEditor();
                 await LoadAllAsync();
-            }
-            else if (updateResult is IValidationResult validation)
-            {
-                _companyModal?.SetServerErrors(validation.Errors);
-            }
-            else
-            {
-                _companyErrorMessage = updateResult.Error?.Message ?? "Failed to save company.";
             }
         }
         finally
@@ -359,14 +355,4 @@ partial class Experience(
         _currentCompany = null;
         _companyErrorMessage = null;
     }
-
-    // ── Helpers ──────────────────────────────────────
-
-    private static LanguageCode? LanguageCodeFromCulture(string culture) =>
-        culture switch
-        {
-            "en" => LanguageCode.English,
-            "fi" => LanguageCode.Finnish,
-            _ => null,
-        };
 }
