@@ -1,8 +1,7 @@
 @page "/developer/companies"
+@using Kulku.Application.Network.Models
+@using Kulku.Domain.Network
 @using Kulku.Web.Admin.Components.Developer.Components
-
-@inject CrmService Crm
-@inject CrmProtoStore Store
 
 @attribute [Authorize]
 
@@ -52,7 +51,7 @@
 			<div class="col-md-2">
 				<select class="form-select form-select-sm" @bind="_filterCategoryId">
 					<option value="@Guid.Empty">All Categories</option>
-					@foreach (var c in Store.Categories.OrderBy(c => c.Name))
+					@foreach (var c in _categories.OrderBy(c => c.Name))
 					{
 						<option value="@c.Id">@c.Name</option>
 					}
@@ -69,27 +68,21 @@
 		{
 			<div class="text-muted text-center py-4">
 				@(_companies.Count == 0
-					? "No companies tracked yet."
-					: "No companies match the current filters.")
+				? "No companies tracked yet."
+				: "No companies match the current filters.")
 			</div>
 		}
 		else
 		{
 			@foreach (var company in filtered)
 			{
-				var contacts = Store.GetCompanyContacts(company.Id);
-				var interactions = Store.GetCompanyInteractions(company.Id);
-				var categories = company.Profile!.CategoryIds
-					.Select(id => Store.GetCategory(id))
-					.Where(c => c is not null)
-					.Cast<CategoryLite>()
-					.ToList();
+				var lastDate = _interactions
+				.Where(i => i.CompanyId == company.CompanyId)
+				.Select(i => (DateTime?)i.Date)
+				.FirstOrDefault();
 
 				<CrmCompanyCard Company="@company"
-								Categories="@categories"
-								ContactCount="@contacts.Count"
-								InteractionCount="@interactions.Count"
-								LastInteractionDate="@interactions.Select(i => (DateTime?)i.Date).FirstOrDefault()"
+								LastInteractionDate="@lastDate"
 								OnEdit="HandleEditCompany"
 								OnDelete="HandleDeleteCompany" />
 			}
@@ -111,9 +104,9 @@
 	<div class="mt-4">
 		<div class="d-flex align-items-center gap-2 mb-2 cursor-pointer"
 			 @onclick="() => _personalContactsExpanded = !_personalContactsExpanded">
-			<Icon Kind="@(_personalContactsExpanded ? IconKind.ChevronDown : IconKind.ChevronRight)" Size="16" />
+			<Icon Kind="@(_personalContactsExpanded? IconKind.ChevronDown: IconKind.ChevronRight)" Size="16" />
 			<h5 class="mb-0">Personal Contacts</h5>
-			<span class="badge bg-secondary">@Store.GetUnaffiliatedContacts().Count</span>
+			<span class="badge bg-secondary">@_personalContacts.Count</span>
 		</div>
 
 		@if (_personalContactsExpanded)
@@ -124,15 +117,13 @@
 				</button>
 			</div>
 
-			var personalContacts = Store.GetUnaffiliatedContacts();
-
-			@if (personalContacts.Count == 0)
+			@if (_personalContacts.Count == 0)
 			{
 				<p class="text-muted">No personal contacts. These are people not currently affiliated with a company.</p>
 			}
 			else
 			{
-				@foreach (var contact in personalContacts.OrderBy(c => c.PersonName))
+				@foreach (var contact in _personalContacts.OrderBy(c => c.PersonName))
 				{
 					<div class="card mb-2">
 						<div class="card-body py-2 px-3">
@@ -174,7 +165,7 @@
 											{
 												<li>
 													<button class="dropdown-item small"
-															@onclick="() => HandleLinkPersonalContact(contact.Id, c.Id)">
+															@onclick="() => HandleLinkPersonalContact(contact.Id, c.CompanyId)">
 														@c.Name
 													</button>
 												</li>
@@ -200,7 +191,7 @@
 			 @onclick="() => _categoriesExpanded = !_categoriesExpanded">
 			<Icon Kind="@(_categoriesExpanded? IconKind.ChevronDown: IconKind.ChevronRight)" Size="16" />
 			<h5 class="mb-0">Categories</h5>
-			<span class="badge bg-secondary">@Store.Categories.Count</span>
+			<span class="badge bg-secondary">@_categories.Count</span>
 		</div>
 
 		@if (_categoriesExpanded)
@@ -211,13 +202,13 @@
 				</button>
 			</div>
 
-			@if (Store.Categories.Count == 0)
+			@if (_categories.Count == 0)
 			{
 				<p class="text-muted">No categories yet.</p>
 			}
 			else
 			{
-				@foreach (var cat in Store.Categories.OrderBy(c => c.Name))
+				@foreach (var cat in _categories.OrderBy(c => c.Name))
 				{
 					<CategoryCard Category="@cat" OnEdit="HandleEditCategory" OnDelete="HandleDeleteCategory" />
 				}
@@ -230,7 +221,7 @@
 <CrmCompanyEditModal @ref="_companyModal"
 					 IsVisible="@(_companyMode is not null)"
 					 Mode="@(_companyMode ?? ModalMode.Edit)"
-					 Categories="@Store.Categories"
+					 Categories="@_categories"
 					 AvailableCompanies="@_availableCompanies"
 					 OnSave="HandleSaveCompany"
 					 OnCancel="CloseCompanyEditor" />

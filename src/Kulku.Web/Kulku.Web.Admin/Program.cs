@@ -5,7 +5,6 @@ using Kulku.Infrastructure.Security;
 using Kulku.Web.Admin;
 using Kulku.Web.Admin.Components;
 using Kulku.Web.Admin.Components.Account;
-using Kulku.Web.Admin.Components.Developer;
 using Kulku.Web.Admin.Options;
 using Microsoft.Extensions.Options;
 
@@ -29,10 +28,6 @@ builder
     .AddApplication()
     .AddInfrastructure(builder.Configuration)
     .AddAssets();
-
-//TODO: Remove when crm has actual implementation.
-builder.Services.AddSingleton<CrmProtoStore>();
-builder.Services.AddScoped<CrmService>();
 
 var app = builder.Build();
 

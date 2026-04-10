@@ -1,7 +1,8 @@
 @page "/developer/loginteraction"
+@using Kulku.Application.Network.Models
+@using Kulku.Domain.Network
 @using Kulku.Web.Admin.Components.Developer.Components
-@inject CrmService Crm
-@inject CrmProtoStore Store
+
 @inject NavigationManager Nav
 
 @attribute [Authorize]
@@ -65,7 +66,7 @@
 										<option value="">— Select company —</option>
 										@foreach (var c in _enrolledCompanies.OrderBy(c => c.Name))
 										{
-											<option value="@c.Id">@c.Name (@c.Region)</option>
+											<option value="@c.CompanyId">@c.Name (@c.Region)</option>
 										}
 									</select>
 									<div class="form-text">Select an enrolled company to link this interaction.</div>
@@ -176,13 +177,13 @@
 					<div class="text-muted small">Shared taxonomy with Idea Bank.</div>
 				</div>
 				<div class="card-body">
-					@if (Store.Categories.Count == 0)
+					@if (_categories.Count == 0)
 					{
 						<div class="text-muted">No categories configured.</div>
 					}
 					else
 					{
-						@foreach (var cat in Store.Categories.OrderBy(c => c.Name))
+						@foreach (var cat in _categories.OrderBy(c => c.Name))
 						{
 							<div class="form-check mb-2">
 								<input class="form-check-input"
@@ -218,42 +219,40 @@
 					}
 					else
 					{
-						var c = _enrolledCompanies.FirstOrDefault(x => x.Id == SelectedCompanyId!.Value);
+						var c = _enrolledCompanies.FirstOrDefault(x => x.CompanyId == SelectedCompanyId!.Value);
 						@if (c is not null)
 						{
 							<div class="mb-2">
 								<div class="fw-semibold">@c.Name</div>
-								<div class="text-muted small">@c.Region • @c.Website • @CrmCompanyCard.StageLabel(c.Profile!.Stage)</div>
+								<div class="text-muted small">@c.Region • @c.Website • @CrmCompanyCard.StageLabel(c.Stage)</div>
 							</div>
 
 							<div class="mb-2">
-								@foreach (var cat in (c.Profile?.CategoryIds ?? []).Select(id => Store.GetCategory(id)).Where(x => x is not null)!)
+								@foreach (var cat in c.Categories)
 								{
-									<span class="badge text-bg-light border me-1 mb-1">@cat!.Name</span>
+									<span class="badge text-bg-light border me-1 mb-1">@cat.Name</span>
 								}
 							</div>
 
 							<hr />
 
-							var history = Store.GetCompanyInteractions(c.Id);
-							if (history.Count == 0)
+							@if (_companyHistory.Count == 0)
 							{
 								<div class="text-muted">No prior interactions recorded.</div>
 							}
 							else
 							{
 								<ul class="list-group list-group-flush">
-									@foreach (var h in history.Take(8))
+									@foreach (var h in _companyHistory.Take(8))
 									{
-										var contactName = GetContactName(h);
 										<li class="list-group-item px-0">
 											<div class="d-flex justify-content-between">
 												<div class="fw-semibold">@h.Date.ToString("yyyy-MM-dd")</div>
 												<span class="badge text-bg-light border">@ChannelLabel(h.Channel)</span>
 											</div>
-											@if (!string.IsNullOrWhiteSpace(contactName))
+											@if (!string.IsNullOrWhiteSpace(h.ContactName))
 											{
-												<div class="small"><Icon Kind="IconKind.PersonLinesFill" Size="12" CssClass="me-1" />@contactName</div>
+												<div class="small"><Icon Kind="IconKind.PersonLinesFill" Size="12" CssClass="me-1" />@h.ContactName</div>
 											}
 											<div class="text-muted small">@h.Summary</div>
 											<div class="mt-1">

@@ -1,40 +1,40 @@
-@using Kulku.Web.Admin.Components.Developer
+@using Kulku.Application.Network.Models
 
 <div class="card mb-2">
-	<div class="card-body py-2 px-3">
-		<div class="d-flex justify-content-between align-items-center">
-			<div class="d-flex align-items-center gap-2">
-				<span class="badge text-bg-@(Category.ColorToken ?? "secondary")">@Category.Name</span>
-				@if (!string.IsNullOrWhiteSpace(Category.ColorToken))
-				{
-					<small class="text-muted">@Category.ColorToken</small>
-				}
-			</div>
+<div class="card-body py-2 px-3">
+<div class="d-flex justify-content-between align-items-center">
+<div class="d-flex align-items-center gap-2">
+<span class="badge text-bg-@(Category.ColorToken ?? "secondary")">@Category.Name</span>
+@if (!string.IsNullOrWhiteSpace(Category.ColorToken))
+{
+<small class="text-muted">@Category.ColorToken</small>
+}
+</div>
 
-			<div class="d-flex gap-1">
-				<button class="btn btn-sm btn-outline-primary" title="Edit"
-						@onclick="() => OnEdit.InvokeAsync(Category)">
-					<Icon Kind="IconKind.Pencil" Size="14" />
-				</button>
-				@if (!_confirmDelete)
-				{
-					<button class="btn btn-sm btn-outline-danger" title="Delete"
-							@onclick="() => _confirmDelete = true">
-						<Icon Kind="IconKind.Trash" Size="14" />
-					</button>
-				}
-				else
-				{
-					<button class="btn btn-sm btn-danger" title="Confirm delete"
-							@onclick="() => OnDelete.InvokeAsync(Category.Id)">
-						<Icon Kind="IconKind.Check" Size="14" />
-					</button>
-					<button class="btn btn-sm btn-outline-secondary" title="Cancel"
-							@onclick="() => _confirmDelete = false">
-						✕
-					</button>
-				}
-			</div>
-		</div>
-	</div>
+<div class="d-flex gap-1">
+<button class="btn btn-sm btn-outline-primary" title="Edit"
+@onclick="() => OnEdit.InvokeAsync(Category)">
+<Icon Kind="IconKind.Pencil" Size="14" />
+</button>
+@if (!_confirmDelete)
+{
+<button class="btn btn-sm btn-outline-danger" title="Delete"
+@onclick="() => _confirmDelete = true">
+<Icon Kind="IconKind.Trash" Size="14" />
+</button>
+}
+else
+{
+<button class="btn btn-sm btn-danger" title="Confirm delete"
+@onclick="() => OnDelete.InvokeAsync(Category.Id)">
+<Icon Kind="IconKind.Check" Size="14" />
+</button>
+<button class="btn btn-sm btn-outline-secondary" title="Cancel"
+@onclick="() => _confirmDelete = false">
+✕
+</button>
+}
+</div>
+</div>
+</div>
 </div>

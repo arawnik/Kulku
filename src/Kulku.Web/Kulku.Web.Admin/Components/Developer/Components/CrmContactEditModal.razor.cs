@@ -1,3 +1,4 @@
+using Kulku.Application.Network.Models;
 using Kulku.Web.Admin.Components.Shared;
 using Microsoft.AspNetCore.Components;
 
@@ -24,7 +25,7 @@ partial class CrmContactEditModal
         Form = new ContactFormModel();
     }
 
-    public void LoadForEdit(ContactLite contact)
+    public void LoadForEdit(NetworkContactModel contact)
     {
         Form = new ContactFormModel
         {

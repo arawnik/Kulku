@@ -1,7 +1,36 @@
+using Kulku.Application.Abstractions.Localization;
+using Kulku.Application.Network.Company;
+using Kulku.Application.Network.Contact;
+using Kulku.Application.Network.Interaction;
+using Kulku.Application.Network.Models;
+using Kulku.Domain.Network;
+using Microsoft.AspNetCore.Components;
+using SoulNETLib.Clean.Application.Abstractions.CQRS;
+
 namespace Kulku.Web.Admin.Components.Developer.Pages;
 
 partial class Index
 {
+    [Inject]
+    private IQueryHandler<
+        GetNetworkCompanies.Query,
+        IReadOnlyList<NetworkCompanyModel>
+    > CompanyQueries { get; set; } = null!;
+
+    [Inject]
+    private IQueryHandler<
+        GetNetworkInteractions.Query,
+        IReadOnlyList<NetworkInteractionModel>
+    > InteractionQueries { get; set; } = null!;
+
+    [Inject]
+    private IQueryHandler<
+        GetNetworkContacts.Query,
+        IReadOnlyList<NetworkContactModel>
+    > ContactQueries { get; set; } = null!;
+
+    [Inject]
+    private ILanguageContext LanguageContext { get; set; } = null!;
 
     // Network pulse
     private int _totalRelationships;
@@ -11,7 +40,7 @@ partial class Index
     private int _overdueCount;
 
     // Relationship directory
-    private IReadOnlyList<CrmCompanyViewModel> _companies = [];
+    private IReadOnlyList<NetworkCompanyModel> _companies = [];
     private List<RelationshipSummary> _relationships = [];
     private string _searchText = string.Empty;
     private string _filterStage = string.Empty;
@@ -21,18 +50,36 @@ partial class Index
     private List<AttentionItem> _coldRelationships = [];
 
     // Activity stream
-    private IReadOnlyList<InteractionLite> _streamInteractions = [];
-    private Dictionary<Guid, string> _companyNameCache = [];
+    private IReadOnlyList<NetworkInteractionModel> _streamInteractions = [];
+    private IReadOnlyList<NetworkInteractionModel> _allInteractions = [];
+    private IReadOnlyList<NetworkContactModel> _allContacts = [];
 
     protected override async Task OnInitializedAsync()
     {
-        _companies = await Crm.GetEnrolledCompaniesAsync();
-        _companyNameCache = _companies.ToDictionary(c => c.Id, c => c.Name);
+        var lang = LanguageContext.Current;
+
+        var companiesResult = await CompanyQueries.Handle(
+            new GetNetworkCompanies.Query(lang),
+            default
+        );
+        _companies = companiesResult.IsSuccess ? companiesResult.Value ?? [] : [];
+
+        var interactionsResult = await InteractionQueries.Handle(
+            new GetNetworkInteractions.Query(lang),
+            default
+        );
+        _allInteractions = interactionsResult.IsSuccess ? interactionsResult.Value ?? [] : [];
+
+        var contactsResult = await ContactQueries.Handle(
+            new GetNetworkContacts.Query(lang),
+            default
+        );
+        _allContacts = contactsResult.IsSuccess ? contactsResult.Value ?? [] : [];
 
         BuildRelationshipSummaries();
         BuildNetworkPulse();
         BuildAttentionLists();
-        await BuildStreamAsync();
+        BuildStream();
     }
 
     private void BuildRelationshipSummaries()
@@ -41,13 +88,12 @@ partial class Index
 
         foreach (var company in _companies)
         {
-            var interactions = Store.GetCompanyInteractions(company.Id);
-            var contacts = Store.GetCompanyContacts(company.Id);
-            var categories = (company.Profile?.CategoryIds ?? [])
-                .Select(id => Store.GetCategory(id))
-                .Where(c => c is not null)
-                .Cast<CategoryLite>()
+            var interactions = _allInteractions
+                .Where(i => i.CompanyId == company.CompanyId)
+                .OrderByDescending(i => i.Date)
                 .ToList();
+
+            var contacts = _allContacts.Where(c => c.CompanyId == company.CompanyId).ToList();
 
             var lastInteraction = interactions.Count > 0 ? interactions[0] : null;
             var firstInteraction = interactions.Count > 0 ? interactions[^1] : null;
@@ -71,31 +117,36 @@ partial class Index
 
             var primaryContact = contacts.Count > 0 ? contacts[0] : null;
 
-            _relationships.Add(new RelationshipSummary(
-                CompanyId: company.Id,
-                CompanyName: company.Name,
-                Region: company.Region,
-                Stage: company.Profile!.Stage,
-                Categories: categories,
-                PrimaryContactName: primaryContact?.PersonName,
-                PrimaryContactTitle: primaryContact?.Title,
-                FirstInteractionDate: firstInteraction?.Date,
-                LastInteractionDate: lastInteraction?.Date,
-                LastChannel: lastInteraction?.Channel,
-                LastSummary: lastInteraction?.Summary,
-                DaysSinceLastTouch: daysSince,
-                Health: health,
-                NextAction: nextActionInteraction?.NextAction,
-                NextActionDue: nextActionInteraction?.NextActionDue,
-                InteractionCount: interactions.Count,
-                ContactCount: contacts.Count
-            ));
+            _relationships.Add(
+                new RelationshipSummary(
+                    CompanyId: company.CompanyId,
+                    CompanyName: company.Name,
+                    Region: company.Region,
+                    Stage: company.Stage,
+                    Categories: company.Categories,
+                    PrimaryContactName: primaryContact?.PersonName,
+                    PrimaryContactTitle: primaryContact?.Title,
+                    FirstInteractionDate: firstInteraction?.Date,
+                    LastInteractionDate: lastInteraction?.Date,
+                    LastChannel: lastInteraction?.Channel,
+                    LastSummary: lastInteraction?.Summary,
+                    DaysSinceLastTouch: daysSince,
+                    Health: health,
+                    NextAction: nextActionInteraction?.NextAction,
+                    NextActionDue: nextActionInteraction?.NextActionDue,
+                    InteractionCount: interactions.Count,
+                    ContactCount: contacts.Count
+                )
+            );
         }
 
         // Sort: coldest first (no history, then cold, then cooling, then fresh)
-        _relationships = [.. _relationships
-            .OrderByDescending(r => r.Health)
-            .ThenByDescending(r => r.DaysSinceLastTouch ?? int.MaxValue)];
+        _relationships =
+        [
+            .. _relationships
+                .OrderByDescending(r => r.Health)
+                .ThenByDescending(r => r.DaysSinceLastTouch ?? int.MaxValue),
+        ];
     }
 
     private void BuildNetworkPulse()
@@ -104,62 +155,67 @@ partial class Index
 
         _activeCount = _relationships.Count(r =>
             r.LastInteractionDate.HasValue
-            && (DateTime.Today - r.LastInteractionDate.Value.Date).TotalDays <= 365);
+            && (DateTime.Today - r.LastInteractionDate.Value.Date).TotalDays <= 365
+        );
 
         _goingColdCount = _relationships.Count(r =>
             r.Health is RelationshipHealth.Cold or RelationshipHealth.NoHistory
-            && r.NextActionDue is null);
+            && r.NextActionDue is null
+        );
 
-        _followUpsDue = Store.Interactions.Count(i => i.NextActionDue.HasValue);
+        _followUpsDue = _allInteractions.Count(i => i.NextActionDue.HasValue);
 
-        _overdueCount = Store.Interactions.Count(i =>
-            i.NextActionDue.HasValue && i.NextActionDue.Value.Date < DateTime.Today);
+        _overdueCount = _allInteractions.Count(i =>
+            i.NextActionDue.HasValue && i.NextActionDue.Value.Date < DateTime.Today
+        );
     }
 
     private void BuildAttentionLists()
     {
         _overdueActions = [];
-        foreach (var i in Store.Interactions
-            .Where(i => i.NextActionDue.HasValue && i.NextActionDue.Value.Date < DateTime.Today)
-            .OrderBy(i => i.NextActionDue))
+        foreach (
+            var i in _allInteractions
+                .Where(i => i.NextActionDue.HasValue && i.NextActionDue.Value.Date < DateTime.Today)
+                .OrderBy(i => i.NextActionDue)
+        )
         {
-            var name = _companyNameCache.GetValueOrDefault(i.CompanyId, "Unknown");
             var daysOverdue = (int)(DateTime.Today - i.NextActionDue!.Value.Date).TotalDays;
-            _overdueActions.Add(new AttentionItem(
-                i.CompanyId, name, i.NextAction ?? "(missing)",
-                i.NextActionDue.Value, daysOverdue));
+            _overdueActions.Add(
+                new AttentionItem(
+                    i.CompanyId,
+                    i.CompanyName,
+                    i.NextAction ?? "(missing)",
+                    i.NextActionDue.Value,
+                    daysOverdue
+                )
+            );
         }
 
         _coldRelationships = [];
-        foreach (var r in _relationships.Where(r =>
-            r.Health is RelationshipHealth.Cold or RelationshipHealth.NoHistory
-            && r.NextActionDue is null))
+        foreach (
+            var r in _relationships.Where(r =>
+                r.Health is RelationshipHealth.Cold or RelationshipHealth.NoHistory
+                && r.NextActionDue is null
+            )
+        )
         {
-            _coldRelationships.Add(new AttentionItem(
-                r.CompanyId, r.CompanyName,
-                r.LastInteractionDate.HasValue
-                    ? $"Last contact {r.DaysSinceLastTouch} days ago"
-                    : "No interactions recorded",
-                r.LastInteractionDate,
-                r.DaysSinceLastTouch));
+            _coldRelationships.Add(
+                new AttentionItem(
+                    r.CompanyId,
+                    r.CompanyName,
+                    r.LastInteractionDate.HasValue
+                        ? $"Last contact {r.DaysSinceLastTouch} days ago"
+                        : "No interactions recorded",
+                    r.LastInteractionDate,
+                    r.DaysSinceLastTouch
+                )
+            );
         }
     }
 
-    private async Task BuildStreamAsync()
+    private void BuildStream()
     {
-        _streamInteractions =
-        [
-            .. Store.Interactions
-                .OrderByDescending(i => i.Date)
-                .Take(10),
-        ];
-
-        foreach (var interaction in _streamInteractions)
-        {
-            if (!_companyNameCache.ContainsKey(interaction.CompanyId))
-                _companyNameCache[interaction.CompanyId] = await Crm.GetCompanyNameAsync(
-                    interaction.CompanyId);
-        }
+        _streamInteractions = [.. _allInteractions.OrderByDescending(i => i.Date).Take(10)];
     }
 
     private IReadOnlyList<RelationshipSummary> FilteredRelationships
@@ -171,11 +227,21 @@ partial class Index
             if (!string.IsNullOrWhiteSpace(_searchText))
                 query = query.Where(r =>
                     r.CompanyName.Contains(_searchText, StringComparison.OrdinalIgnoreCase)
-                    || (r.Region?.Contains(_searchText, StringComparison.OrdinalIgnoreCase) ?? false)
-                    || (r.PrimaryContactName?.Contains(_searchText, StringComparison.OrdinalIgnoreCase) ?? false));
+                    || (
+                        r.Region?.Contains(_searchText, StringComparison.OrdinalIgnoreCase) ?? false
+                    )
+                    || (
+                        r.PrimaryContactName?.Contains(
+                            _searchText,
+                            StringComparison.OrdinalIgnoreCase
+                        ) ?? false
+                    )
+                );
 
-            if (!string.IsNullOrWhiteSpace(_filterStage)
-                && Enum.TryParse<CompanyStage>(_filterStage, out var stage))
+            if (
+                !string.IsNullOrWhiteSpace(_filterStage)
+                && Enum.TryParse<CompanyStage>(_filterStage, out var stage)
+            )
                 query = query.Where(r => r.Stage == stage);
 
             return [.. query];

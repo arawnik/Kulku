@@ -1,15 +1,34 @@
-using Kulku.Web.Admin.Components.Developer.Components;
+using Kulku.Application.Abstractions.Localization;
+using Kulku.Application.Network.Company;
+using Kulku.Application.Network.Interaction;
+using Kulku.Application.Network.Models;
+using Kulku.Domain.Network;
+using Microsoft.AspNetCore.Components;
+using SoulNETLib.Clean.Application.Abstractions.CQRS;
 
 namespace Kulku.Web.Admin.Components.Developer.Pages;
 
 partial class ActivityLog
 {
+    [Inject]
+    private IQueryHandler<
+        GetNetworkCompanies.Query,
+        IReadOnlyList<NetworkCompanyModel>
+    > CompanyQueries { get; set; } = null!;
+
+    [Inject]
+    private IQueryHandler<
+        GetNetworkInteractions.Query,
+        IReadOnlyList<NetworkInteractionModel>
+    > InteractionQueries { get; set; } = null!;
+
+    [Inject]
+    private ILanguageContext LanguageContext { get; set; } = null!;
+
     private const int PageSize = 20;
 
-    private IReadOnlyList<CrmCompanyViewModel> _companies = [];
-    private Dictionary<Guid, string> _companyNameCache = [];
-
-    private List<InteractionLite> _allInteractions = [];
+    private IReadOnlyList<NetworkCompanyModel> _companies = [];
+    private IReadOnlyList<NetworkInteractionModel> _allInteractions = [];
     private int _visibleCount = PageSize;
 
     // Filters
@@ -20,21 +39,24 @@ partial class ActivityLog
 
     protected override async Task OnInitializedAsync()
     {
-        _companies = await Crm.GetEnrolledCompaniesAsync();
-        _companyNameCache = _companies.ToDictionary(c => c.Id, c => c.Name);
+        var lang = LanguageContext.Current;
 
-        _allInteractions = [.. Store.Interactions.OrderByDescending(i => i.Date)];
+        var companiesResult = await CompanyQueries.Handle(
+            new GetNetworkCompanies.Query(lang),
+            default
+        );
+        _companies = companiesResult.IsSuccess ? companiesResult.Value ?? [] : [];
 
-        // Fill in names for any companies not in enrolled list
-        foreach (var interaction in _allInteractions)
-        {
-            if (!_companyNameCache.ContainsKey(interaction.CompanyId))
-                _companyNameCache[interaction.CompanyId] = await Crm.GetCompanyNameAsync(
-                    interaction.CompanyId);
-        }
+        var interactionsResult = await InteractionQueries.Handle(
+            new GetNetworkInteractions.Query(lang),
+            default
+        );
+        _allInteractions = interactionsResult.IsSuccess
+            ? [.. (interactionsResult.Value ?? []).OrderByDescending(i => i.Date)]
+            : [];
     }
 
-    private IReadOnlyList<InteractionLite> FilteredInteractions
+    private IReadOnlyList<NetworkInteractionModel> FilteredInteractions
     {
         get
         {
@@ -43,19 +65,23 @@ partial class ActivityLog
             if (Guid.TryParse(_filterCompanyId, out var companyId) && companyId != Guid.Empty)
                 query = query.Where(i => i.CompanyId == companyId);
 
-            if (!string.IsNullOrWhiteSpace(_filterChannel)
-                && Enum.TryParse<InteractionChannel>(_filterChannel, out var channel))
+            if (
+                !string.IsNullOrWhiteSpace(_filterChannel)
+                && Enum.TryParse<InteractionChannel>(_filterChannel, out var channel)
+            )
                 query = query.Where(i => i.Channel == channel);
 
-            if (!string.IsNullOrWhiteSpace(_filterDirection)
-                && Enum.TryParse<InteractionDirection>(_filterDirection, out var direction))
+            if (
+                !string.IsNullOrWhiteSpace(_filterDirection)
+                && Enum.TryParse<InteractionDirection>(_filterDirection, out var direction)
+            )
                 query = query.Where(i => i.Direction == direction);
 
             if (!string.IsNullOrWhiteSpace(_searchText))
                 query = query.Where(i =>
                     i.Summary.Contains(_searchText, StringComparison.OrdinalIgnoreCase)
-                    || (_companyNameCache.GetValueOrDefault(i.CompanyId, "")
-                        .Contains(_searchText, StringComparison.OrdinalIgnoreCase)));
+                    || i.CompanyName.Contains(_searchText, StringComparison.OrdinalIgnoreCase)
+                );
 
             return [.. query];
         }

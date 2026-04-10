@@ -1,11 +1,12 @@
-@using Kulku.Web.Admin.Components.Developer
+@using Kulku.Application.Network.Models
+@using Kulku.Domain.Network
 
 <div class="card mb-2">
 	<div class="card-body py-2 px-3">
 		<div class="d-flex justify-content-between align-items-start">
 			<div class="flex-grow-1 me-2">
 				<div class="d-flex align-items-center gap-2 mb-1">
-					<span class="badge @StageBadgeClass(Company.Profile!.Stage)">@StageLabel(Company.Profile!.Stage)</span>
+					<span class="badge @StageBadgeClass(Company.Stage)">@StageLabel(Company.Stage)</span>
 					@if (!string.IsNullOrWhiteSpace(Company.Region))
 					{
 						<small class="text-muted">@Company.Region</small>
@@ -13,13 +14,13 @@
 				</div>
 
 				<h6 class="mb-1">
-					<a href="/developer/companies/@Company.Id" class="text-decoration-none">@Company.Name</a>
+					<a href="/developer/companies/@Company.CompanyId" class="text-decoration-none">@Company.Name</a>
 				</h6>
 
-				@if (Categories.Count > 0)
+				@if (Company.Categories.Count > 0)
 				{
 					<div class="d-flex flex-wrap gap-1 mb-1">
-						@foreach (var cat in Categories)
+						@foreach (var cat in Company.Categories)
 						{
 							<span class="badge text-bg-@(cat.ColorToken ?? "secondary") bg-opacity-50 fw-normal">@cat.Name</span>
 						}
@@ -27,16 +28,16 @@
 				}
 
 				<div class="d-flex align-items-center gap-3 mt-1">
-					@if (ContactCount > 0)
+					@if (Company.ContactCount > 0)
 					{
 						<small class="text-muted">
-							<Icon Kind="IconKind.PersonLinesFill" Size="12" CssClass="me-1" />@ContactCount contact(s)
+							<Icon Kind="IconKind.PersonLinesFill" Size="12" CssClass="me-1" />@Company.ContactCount contact(s)
 						</small>
 					}
-					@if (InteractionCount > 0)
+					@if (Company.InteractionCount > 0)
 					{
 						<small class="text-muted">
-							<Icon Kind="IconKind.ChatDots" Size="12" CssClass="me-1" />@InteractionCount interaction(s)
+							<Icon Kind="IconKind.ChatDots" Size="12" CssClass="me-1" />@Company.InteractionCount interaction(s)
 						</small>
 					}
 					@if (LastInteractionDate.HasValue)
@@ -50,7 +51,7 @@
 
 			<div class="d-flex gap-1 flex-shrink-0">
 				<button class="btn btn-sm btn-outline-primary" title="Edit"
-						@onclick="() => OnEdit.InvokeAsync(Company.Id)">
+						@onclick="() => OnEdit.InvokeAsync(Company.CompanyId)">
 					<Icon Kind="IconKind.Pencil" Size="14" />
 				</button>
 				@if (!_confirmDelete)
@@ -63,7 +64,7 @@
 				else
 				{
 					<button class="btn btn-sm btn-danger" title="Confirm delete"
-							@onclick="() => OnDelete.InvokeAsync(Company.Id)">
+							@onclick="() => OnDelete.InvokeAsync(Company.CompanyId)">
 						<Icon Kind="IconKind.Check" Size="14" />
 					</button>
 					<button class="btn btn-sm btn-outline-secondary" title="Cancel"

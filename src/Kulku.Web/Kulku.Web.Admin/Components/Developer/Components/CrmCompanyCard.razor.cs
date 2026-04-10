@@ -1,4 +1,5 @@
-using Kulku.Web.Admin.Components.Developer;
+using Kulku.Application.Network.Models;
+using Kulku.Domain.Network;
 using Microsoft.AspNetCore.Components;
 
 namespace Kulku.Web.Admin.Components.Developer.Components;
@@ -6,16 +7,7 @@ namespace Kulku.Web.Admin.Components.Developer.Components;
 partial class CrmCompanyCard
 {
     [Parameter, EditorRequired]
-    public CrmCompanyViewModel Company { get; set; } = null!;
-
-    [Parameter]
-    public IReadOnlyList<CategoryLite> Categories { get; set; } = [];
-
-    [Parameter]
-    public int ContactCount { get; set; }
-
-    [Parameter]
-    public int InteractionCount { get; set; }
+    public NetworkCompanyModel Company { get; set; } = null!;
 
     [Parameter]
     public DateTime? LastInteractionDate { get; set; }

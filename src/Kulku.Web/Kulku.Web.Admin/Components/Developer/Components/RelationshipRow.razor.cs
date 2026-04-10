@@ -1,3 +1,4 @@
+using Kulku.Domain.Network;
 using Microsoft.AspNetCore.Components;
 
 namespace Kulku.Web.Admin.Components.Developer.Components;
@@ -7,14 +8,15 @@ partial class RelationshipRow
     [Parameter, EditorRequired]
     public RelationshipSummary Relationship { get; set; } = null!;
 
-    private string FreshnessClass => Relationship.Health switch
-    {
-        RelationshipHealth.Fresh => "border-success",
-        RelationshipHealth.Cooling => "border-warning",
-        RelationshipHealth.Cold => "border-danger",
-        RelationshipHealth.NoHistory => "border-secondary",
-        _ => "border-secondary",
-    };
+    private string FreshnessClass =>
+        Relationship.Health switch
+        {
+            RelationshipHealth.Fresh => "border-success",
+            RelationshipHealth.Cooling => "border-warning",
+            RelationshipHealth.Cold => "border-danger",
+            RelationshipHealth.NoHistory => "border-secondary",
+            _ => "border-secondary",
+        };
 
     private static string RelativeTime(DateTime date)
     {

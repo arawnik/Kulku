@@ -1,8 +1,7 @@
 @page "/developer/"
+@using Kulku.Application.Network.Models
+@using Kulku.Domain.Network
 @using Kulku.Web.Admin.Components.Developer.Components
-
-@inject CrmService Crm
-@inject CrmProtoStore Store
 
 @attribute [Authorize]
 
@@ -75,7 +74,7 @@ Your professional network — who you know, what happened, and where to reconnec
 <span class="small text-muted">Pipeline:</span>
 @foreach (var stage in Enum.GetValues<CompanyStage>())
 {
-var count = _companies.Count(c => c.Profile!.Stage == stage);
+var count = _companies.Count(c => c.Stage == stage);
 <NavLink href="developer/companies" class="text-decoration-none">
 <span class="badge @CrmCompanyCard.StageBadgeClass(stage)">
 @CrmCompanyCard.StageLabel(stage) @count
@@ -234,15 +233,8 @@ else
 {
 @foreach (var interaction in _streamInteractions)
 {
-var companyName = _companyNameCache.GetValueOrDefault(interaction.CompanyId, "Unknown");
-var contactName = interaction.ContactId.HasValue
-? Store.GetContact(interaction.ContactId.Value)?.PersonName
-: null;
-
 <InteractionCard Interaction="@interaction"
- CompanyName="@companyName"
- CompanyLink="@($"/developer/companies/{interaction.CompanyId}")"
- ContactName="@contactName" />
+ CompanyLink="@($"/developer/companies/{interaction.CompanyId}")" />
 }
 }
 </div>

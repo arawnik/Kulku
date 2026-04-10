@@ -1,101 +1,102 @@
-@using Kulku.Web.Admin.Components.Developer
+@using Kulku.Application.Network.Models
+@using Kulku.Domain.Network
 
 <div class="card mb-2">
-	<div class="card-body py-2 px-3">
-		<div class="d-flex justify-content-between align-items-start">
-			<div class="flex-grow-1 me-2">
-				<div class="d-flex align-items-center gap-2 mb-1">
-					<span class="badge @(Interaction.Direction == InteractionDirection.Inbound ? "text-bg-primary" : "text-bg-secondary")">
-						@Interaction.Direction
-					</span>
-					<span class="badge text-bg-light border">@ChannelLabel(Interaction.Channel)</span>
-					@if (Interaction.IsWarmIntro)
-					{
-						<span class="badge text-bg-success">Warm intro</span>
-					}
-					<small class="text-muted">@Interaction.Date.ToString("yyyy-MM-dd")</small>
-				</div>
+<div class="card-body py-2 px-3">
+<div class="d-flex justify-content-between align-items-start">
+<div class="flex-grow-1 me-2">
+<div class="d-flex align-items-center gap-2 mb-1">
+<span class="badge @(Interaction.Direction == InteractionDirection.Inbound ? "text-bg-primary" : "text-bg-secondary")">
+@Interaction.Direction
+</span>
+<span class="badge text-bg-light border">@ChannelLabel(Interaction.Channel)</span>
+@if (Interaction.IsWarmIntro)
+{
+<span class="badge text-bg-success">Warm intro</span>
+}
+<small class="text-muted">@Interaction.Date.ToString("yyyy-MM-dd")</small>
+</div>
 
-				@if (!string.IsNullOrWhiteSpace(CompanyName))
-				{
-					<div class="fw-semibold small mb-1">
-						@if (CompanyLink is not null)
-						{
-							<a href="@CompanyLink" class="text-decoration-none">@CompanyName</a>
-						}
-						else
-						{
-							@CompanyName
-						}
-					</div>
-				}
+@if (ShowCompanyName)
+{
+<div class="fw-semibold small mb-1">
+@if (CompanyLink is not null)
+{
+<a href="@CompanyLink" class="text-decoration-none">@Interaction.CompanyName</a>
+}
+else
+{
+@Interaction.CompanyName
+}
+</div>
+}
 
-				<div class="text-muted small">@Interaction.Summary</div>
+<div class="text-muted small">@Interaction.Summary</div>
 
-				@if (!string.IsNullOrWhiteSpace(ContactName))
-				{
-					<div class="small mt-1">
-						<Icon Kind="IconKind.PersonLinesFill" Size="12" CssClass="me-1" />@ContactName
-					</div>
-				}
+@if (!string.IsNullOrWhiteSpace(Interaction.ContactName))
+{
+<div class="small mt-1">
+<Icon Kind="IconKind.PersonLinesFill" Size="12" CssClass="me-1" />@Interaction.ContactName
+</div>
+}
 
-				@if (Interaction.IsWarmIntro && !string.IsNullOrWhiteSpace(Interaction.ReferredByName))
-				{
-					<div class="mt-1">
-						<span class="badge text-bg-success bg-opacity-50 fw-normal">
-							@(Interaction.ReferredByRelation ?? "Warm") intro: @Interaction.ReferredByName
-						</span>
-					</div>
-				}
+@if (Interaction.IsWarmIntro && !string.IsNullOrWhiteSpace(Interaction.ReferredByName))
+{
+<div class="mt-1">
+<span class="badge text-bg-success bg-opacity-50 fw-normal">
+@(Interaction.ReferredByRelation ?? "Warm") intro: @Interaction.ReferredByName
+</span>
+</div>
+}
 
-				@if (!string.IsNullOrWhiteSpace(Interaction.NextAction))
-				{
-					<div class="mt-1 d-flex align-items-center gap-2">
-						<span class="text-muted small">Next:</span>
-						<span class="small">@Interaction.NextAction</span>
-						@if (Interaction.NextActionDue.HasValue)
-						{
-							<span class="badge @DueBadge(Interaction.NextActionDue.Value)">
-								@Interaction.NextActionDue.Value.ToString("yyyy-MM-dd")
-							</span>
-						}
-					</div>
-				}
-			</div>
+@if (!string.IsNullOrWhiteSpace(Interaction.NextAction))
+{
+<div class="mt-1 d-flex align-items-center gap-2">
+<span class="text-muted small">Next:</span>
+<span class="small">@Interaction.NextAction</span>
+@if (Interaction.NextActionDue.HasValue)
+{
+<span class="badge @DueBadge(Interaction.NextActionDue.Value)">
+@Interaction.NextActionDue.Value.ToString("yyyy-MM-dd")
+</span>
+}
+</div>
+}
+</div>
 
-			@if (OnEdit.HasDelegate || OnDelete.HasDelegate)
-			{
-				<div class="d-flex gap-1 flex-shrink-0">
-					@if (OnEdit.HasDelegate)
-					{
-						<button class="btn btn-sm btn-outline-primary" title="Edit"
-								@onclick="() => OnEdit.InvokeAsync(Interaction.Id)">
-							<Icon Kind="IconKind.Pencil" Size="14" />
-						</button>
-					}
-					@if (OnDelete.HasDelegate)
-					{
-						@if (!_confirmDelete)
-						{
-							<button class="btn btn-sm btn-outline-danger" title="Delete"
-									@onclick="() => _confirmDelete = true">
-								<Icon Kind="IconKind.Trash" Size="14" />
-							</button>
-						}
-						else
-						{
-							<button class="btn btn-sm btn-danger" title="Confirm delete"
-									@onclick="() => OnDelete.InvokeAsync(Interaction.Id)">
-								<Icon Kind="IconKind.Check" Size="14" />
-							</button>
-							<button class="btn btn-sm btn-outline-secondary" title="Cancel"
-									@onclick="() => _confirmDelete = false">
-								✕
-							</button>
-						}
-					}
-				</div>
-			}
-		</div>
-	</div>
+@if (OnEdit.HasDelegate || OnDelete.HasDelegate)
+{
+<div class="d-flex gap-1 flex-shrink-0">
+@if (OnEdit.HasDelegate)
+{
+<button class="btn btn-sm btn-outline-primary" title="Edit"
+@onclick="() => OnEdit.InvokeAsync(Interaction.Id)">
+<Icon Kind="IconKind.Pencil" Size="14" />
+</button>
+}
+@if (OnDelete.HasDelegate)
+{
+@if (!_confirmDelete)
+{
+<button class="btn btn-sm btn-outline-danger" title="Delete"
+@onclick="() => _confirmDelete = true">
+<Icon Kind="IconKind.Trash" Size="14" />
+</button>
+}
+else
+{
+<button class="btn btn-sm btn-danger" title="Confirm delete"
+@onclick="() => OnDelete.InvokeAsync(Interaction.Id)">
+<Icon Kind="IconKind.Check" Size="14" />
+</button>
+<button class="btn btn-sm btn-outline-secondary" title="Cancel"
+@onclick="() => _confirmDelete = false">
+✕
+</button>
+}
+}
+</div>
+}
+</div>
+</div>
 </div>

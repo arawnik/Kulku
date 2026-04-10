@@ -1,8 +1,7 @@
 @page "/developer/activity"
+@using Kulku.Application.Network.Models
+@using Kulku.Domain.Network
 @using Kulku.Web.Admin.Components.Developer.Components
-
-@inject CrmService Crm
-@inject CrmProtoStore Store
 
 @attribute [Authorize]
 
@@ -39,7 +38,7 @@
 						<option value="">All companies</option>
 						@foreach (var c in _companies.OrderBy(c => c.Name))
 						{
-							<option value="@c.Id">@c.Name</option>
+							<option value="@c.CompanyId">@c.Name</option>
 						}
 					</select>
 				</div>
@@ -99,15 +98,8 @@
 
 		@foreach (var interaction in visible)
 		{
-			var companyName = _companyNameCache.GetValueOrDefault(interaction.CompanyId, "Unknown");
-			var contactName = interaction.ContactId.HasValue
-				? Store.GetContact(interaction.ContactId.Value)?.PersonName
-				: null;
-
 			<InteractionCard Interaction="@interaction"
-							 CompanyName="@companyName"
-							 CompanyLink="@($"/developer/companies/{interaction.CompanyId}")"
-							 ContactName="@contactName" />
+							 CompanyLink="@($"/developer/companies/{interaction.CompanyId}")" />
 		}
 
 		@if (hasMore)

@@ -1,3 +1,5 @@
+using Kulku.Application.Network.Models;
+using Kulku.Domain.Network;
 using Microsoft.AspNetCore.Components;
 
 namespace Kulku.Web.Admin.Components.Developer.Components;
@@ -5,16 +7,13 @@ namespace Kulku.Web.Admin.Components.Developer.Components;
 partial class InteractionCard
 {
     [Parameter, EditorRequired]
-    public InteractionLite Interaction { get; set; } = null!;
+    public NetworkInteractionModel Interaction { get; set; } = null!;
 
     [Parameter]
-    public string? CompanyName { get; set; }
+    public bool ShowCompanyName { get; set; } = true;
 
     [Parameter]
     public string? CompanyLink { get; set; }
-
-    [Parameter]
-    public string? ContactName { get; set; }
 
     [Parameter]
     public EventCallback<Guid> OnEdit { get; set; }

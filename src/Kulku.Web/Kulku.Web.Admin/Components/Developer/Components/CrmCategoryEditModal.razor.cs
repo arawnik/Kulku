@@ -1,3 +1,4 @@
+using Kulku.Application.Network.Models;
 using Kulku.Web.Admin.Components.Shared;
 using Microsoft.AspNetCore.Components;
 
@@ -24,7 +25,7 @@ partial class CrmCategoryEditModal
         Form = new CategoryFormModel();
     }
 
-    public void LoadForEdit(CategoryLite category)
+    public void LoadForEdit(NetworkCategoryModel category)
     {
         Form = new CategoryFormModel
         {

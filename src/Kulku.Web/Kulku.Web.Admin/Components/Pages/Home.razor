@@ -1,12 +1,10 @@
 @page "/"
-@using Kulku.Web.Admin.Components.Developer
 @using Kulku.Web.Admin.Options
-@inject CrmProtoStore Store
 @inject IOptions<ManagementOptions> ManagementOptions
 
 <AuthorizeView>
 	<Authorized>
-		<PageTitle>CRM Dashboard</PageTitle>
+		<PageTitle>Kulku Admin</PageTitle>
 
 		<div class="container-fluid py-4">
 			<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-4">
@@ -17,34 +15,8 @@
 				<span class="text-muted">Hello @context.User.Identity?.Name!</span>
 
 				<div class="d-flex flex-wrap gap-2">
-					<NavLink class="btn btn-sm btn-primary" href="developer">Developer CRM</NavLink>
+					<NavLink class="btn btn-sm btn-primary" href="developer">Network</NavLink>
 					<NavLink class="btn btn-sm btn-outline-secondary" href="ideas">Idea Bank</NavLink>
-				</div>
-			</div>
-
-			<div class="row g-3 mb-4">
-				<div class="col-6 col-md-3">
-					<InfoCard Title="Companies tracked"
-							  BadgeCount="@Store.Profiles.Count"
-							  BadgeText="focus list"
-							  BadgeColor="secondary"
-							  Description="Keep this small. Quality relationships only." />
-				</div>
-
-				<div class="col-6 col-md-3">
-					<InfoCard Title="Inbound (90d)"
-							  BadgeCount="@InboundTotal"
-							  BadgeText="signal"
-							  BadgeColor="primary"
-							  Description="Channel performance across your funnel." />
-				</div>
-
-				<div class="col-6 col-md-3">
-					<InfoCard Title="Outbound (90d)"
-							  BadgeCount="@OutboundTotal"
-							  BadgeText="discipline"
-							  BadgeColor="secondary"
-							  Description="Selective touches; avoid volume bias." />
 				</div>
 			</div>
 		</div>

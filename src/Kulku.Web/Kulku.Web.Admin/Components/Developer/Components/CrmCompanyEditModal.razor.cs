@@ -1,3 +1,5 @@
+using Kulku.Application.Network.Models;
+using Kulku.Domain.Network;
 using Kulku.Web.Admin.Components.Shared;
 using Microsoft.AspNetCore.Components;
 
@@ -12,13 +14,13 @@ partial class CrmCompanyEditModal
     public ModalMode Mode { get; set; } = ModalMode.Create;
 
     [Parameter]
-    public IReadOnlyList<CategoryLite> Categories { get; set; } = [];
+    public IReadOnlyList<NetworkCategoryModel> Categories { get; set; } = [];
 
     /// <summary>
-    /// Companies available for enrollment (not yet in CRM). Only used in Create mode.
+    /// Companies available for enrollment (not yet in the network). Only used in Create mode.
     /// </summary>
     [Parameter]
-    public IReadOnlyList<CrmCompanyViewModel> AvailableCompanies { get; set; } = [];
+    public IReadOnlyList<NetworkAvailableCompanyModel> AvailableCompanies { get; set; } = [];
 
     [Parameter]
     public EventCallback<ProfileFormModel> OnSave { get; set; }
@@ -35,7 +37,7 @@ partial class CrmCompanyEditModal
         {
             ModalMode.Create when Form.IsNewCompany => "Create & Enroll Company",
             ModalMode.Create => "Enroll Company",
-            _ => "Edit CRM Profile",
+            _ => "Edit Network Profile",
         };
 
     private string SubmitLabel =>
@@ -60,15 +62,15 @@ partial class CrmCompanyEditModal
         Form = new ProfileFormModel();
     }
 
-    public void LoadForEdit(CrmCompanyProfile profile)
+    public void LoadForEdit(NetworkCompanyModel company)
     {
-        _companyId = profile.CompanyId;
+        _companyId = company.CompanyId;
         Form = new ProfileFormModel
         {
-            SelectedCompanyId = profile.CompanyId,
-            Notes = profile.Notes,
-            Stage = profile.Stage,
-            CategoryIds = [.. profile.CategoryIds],
+            SelectedCompanyId = company.CompanyId,
+            Notes = company.Notes,
+            Stage = company.Stage,
+            CategoryIds = [.. company.Categories.Select(c => c.Id)],
         };
     }
 

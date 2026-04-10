@@ -1,3 +1,5 @@
+using Kulku.Application.Network.Models;
+using Kulku.Domain.Network;
 using Microsoft.AspNetCore.Components;
 
 namespace Kulku.Web.Admin.Components.Developer.Components;
@@ -11,8 +13,7 @@ partial class PipelineColumn
     public IReadOnlyList<PipelineCompanyItem> Companies { get; set; } = [];
 
     public sealed record PipelineCompanyItem(
-        CrmCompanyViewModel Company,
-        IReadOnlyList<CategoryLite> Categories,
+        NetworkCompanyModel Company,
         DateTime? LastInteractionDate,
         DateTime? NextActionDue
     );
