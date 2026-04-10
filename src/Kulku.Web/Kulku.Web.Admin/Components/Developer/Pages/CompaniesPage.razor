@@ -107,6 +107,93 @@
 		</div>
 	}
 
+	@* ── Personal contacts section (collapsible) ── *@
+	<div class="mt-4">
+		<div class="d-flex align-items-center gap-2 mb-2 cursor-pointer"
+			 @onclick="() => _personalContactsExpanded = !_personalContactsExpanded">
+			<Icon Kind="@(_personalContactsExpanded ? IconKind.ChevronDown : IconKind.ChevronRight)" Size="16" />
+			<h5 class="mb-0">Personal Contacts</h5>
+			<span class="badge bg-secondary">@Store.GetUnaffiliatedContacts().Count</span>
+		</div>
+
+		@if (_personalContactsExpanded)
+		{
+			<div class="mb-2">
+				<button class="btn btn-outline-primary btn-sm" @onclick="HandleCreatePersonalContact">
+					<Icon Kind="IconKind.Plus" Size="14" CssClass="me-1" />New Personal Contact
+				</button>
+			</div>
+
+			var personalContacts = Store.GetUnaffiliatedContacts();
+
+			@if (personalContacts.Count == 0)
+			{
+				<p class="text-muted">No personal contacts. These are people not currently affiliated with a company.</p>
+			}
+			else
+			{
+				@foreach (var contact in personalContacts.OrderBy(c => c.PersonName))
+				{
+					<div class="card mb-2">
+						<div class="card-body py-2 px-3">
+							<div class="d-flex justify-content-between align-items-start">
+								<div>
+									<div class="fw-semibold small">@(contact.PersonName ?? "(unnamed)")</div>
+									@if (!string.IsNullOrWhiteSpace(contact.Title))
+									{
+										<small class="text-muted">@contact.Title</small>
+									}
+									<div class="d-flex flex-wrap gap-2 mt-1">
+										@if (!string.IsNullOrWhiteSpace(contact.Email))
+										{
+											<small class="text-muted">📧 @contact.Email</small>
+										}
+										@if (!string.IsNullOrWhiteSpace(contact.Phone))
+										{
+											<small class="text-muted">📱 @contact.Phone</small>
+										}
+									</div>
+									@if (!string.IsNullOrWhiteSpace(contact.LinkedInUrl))
+									{
+										<div class="mt-1">
+											<a href="@contact.LinkedInUrl" target="_blank"
+											   class="text-decoration-none small">LinkedIn</a>
+										</div>
+									}
+								</div>
+
+								<div class="d-flex gap-1">
+									<div class="dropdown">
+										<button class="btn btn-sm btn-outline-success dropdown-toggle" title="Link to company"
+												data-bs-toggle="dropdown" data-bs-auto-close="true">
+											<Icon Kind="IconKind.Building" Size="12" />
+										</button>
+										<ul class="dropdown-menu dropdown-menu-end">
+											<li><h6 class="dropdown-header">Link to company…</h6></li>
+											@foreach (var c in _companies.OrderBy(c => c.Name))
+											{
+												<li>
+													<button class="dropdown-item small"
+															@onclick="() => HandleLinkPersonalContact(contact.Id, c.Id)">
+														@c.Name
+													</button>
+												</li>
+											}
+										</ul>
+									</div>
+									<button class="btn btn-sm btn-outline-danger" title="Delete"
+											@onclick="() => HandleDeletePersonalContact(contact.Id)">
+										<Icon Kind="IconKind.Trash" Size="12" />
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+			}
+		}
+	</div>
+
 	@* ── Categories section (collapsible) ── *@
 	<div class="mt-4">
 		<div class="d-flex align-items-center gap-2 mb-2 cursor-pointer"
@@ -153,3 +240,9 @@
 					  Mode="@(_categoryMode ?? ModalMode.Create)"
 					  OnSave="HandleSaveCategory"
 					  OnCancel="CloseCategoryEditor" />
+
+<CrmContactEditModal @ref="_contactModal"
+					 IsVisible="@(_contactMode is not null)"
+					 Mode="@(_contactMode ?? ModalMode.Create)"
+					 OnSave="HandleSavePersonalContact"
+					 OnCancel="ClosePersonalContactEditor" />

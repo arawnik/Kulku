@@ -36,7 +36,7 @@ partial class CrmCompanyCard
             CompanyStage.Discovery => "text-bg-primary",
             CompanyStage.Proposal => "text-bg-warning",
             CompanyStage.ActiveDelivery => "text-bg-success",
-            CompanyStage.Parked => "text-bg-secondary bg-opacity-50",
+            CompanyStage.Parked => "text-bg-accent",
             _ => "text-bg-secondary",
         };
 

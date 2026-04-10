@@ -94,6 +94,9 @@ partial class LogInteraction
     private IReadOnlyList<ContactLite> CompanyContacts =>
         HasSelectedCompany ? Store.GetCompanyContacts(SelectedCompanyId!.Value) : [];
 
+    private IReadOnlyList<ContactLite> PersonalContacts =>
+        Store.GetUnaffiliatedContacts();
+
     private void ResetForm()
     {
         Model = new();

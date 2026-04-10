@@ -100,13 +100,27 @@
 						<!-- Contact selection -->
 						<div class="mb-3">
 							<label class="form-label">Contact</label>
-							@if (HasSelectedCompany && CompanyContacts.Count > 0)
+							@if (HasSelectedCompany && (CompanyContacts.Count > 0 || PersonalContacts.Count > 0))
 							{
 								<select class="form-select mb-2" @onchange="OnContactChanged">
 									<option value="">— New contact —</option>
-									@foreach (var ct in CompanyContacts)
+									@if (CompanyContacts.Count > 0)
 									{
-										<option value="@ct.Id">@ct.PersonName (@ct.Title)</option>
+										<optgroup label="Company contacts">
+											@foreach (var ct in CompanyContacts)
+											{
+												<option value="@ct.Id">@ct.PersonName (@ct.Title)</option>
+											}
+										</optgroup>
+									}
+									@if (PersonalContacts.Count > 0)
+									{
+										<optgroup label="Personal contacts">
+											@foreach (var ct in PersonalContacts)
+											{
+												<option value="@ct.Id">@ct.PersonName @(ct.Title is not null ? $"({ct.Title})" : "") — Personal</option>
+											}
+										</optgroup>
 									}
 								</select>
 							}

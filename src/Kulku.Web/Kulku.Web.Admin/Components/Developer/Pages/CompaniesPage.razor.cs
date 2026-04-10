@@ -16,6 +16,7 @@ partial class CompaniesPage
     private string _filterStage = string.Empty;
     private Guid _filterCategoryId = Guid.Empty;
     private bool _categoriesExpanded;
+    private bool _personalContactsExpanded;
 
     private IReadOnlyList<CrmCompanyViewModel> _companies = [];
     private IReadOnlyList<CrmCompanyViewModel> _availableCompanies = [];
@@ -28,6 +29,11 @@ partial class CompaniesPage
     private ModalMode? _categoryMode;
 #pragma warning disable CA2213
     private CrmCategoryEditModal _categoryModal = null!;
+#pragma warning restore CA2213
+
+    private ModalMode? _contactMode;
+#pragma warning disable CA2213
+    private CrmContactEditModal _contactModal = null!;
 #pragma warning restore CA2213
 
     protected override async Task OnInitializedAsync()
@@ -185,4 +191,41 @@ partial class CompaniesPage
     }
 
     private void CloseCategoryEditor() => _categoryMode = null;
+
+    // ── Personal Contacts ──
+
+    private void HandleCreatePersonalContact()
+    {
+        _contactModal.LoadForCreate();
+        _contactMode = ModalMode.Create;
+    }
+
+    private async Task HandleSavePersonalContact(CrmContactEditModal.ContactFormModel form)
+    {
+        if (_contactMode == ModalMode.Create)
+        {
+            Store.AddContact(
+                null,
+                form.PersonName,
+                form.Email,
+                form.Phone,
+                form.LinkedInUrl,
+                form.Title
+            );
+        }
+        ClosePersonalContactEditor();
+        await Task.CompletedTask;
+    }
+
+    private void HandleLinkPersonalContact(Guid contactId, Guid companyId)
+    {
+        Store.MoveContact(contactId, companyId);
+    }
+
+    private void HandleDeletePersonalContact(Guid contactId)
+    {
+        Store.RemoveContact(contactId);
+    }
+
+    private void ClosePersonalContactEditor() => _contactMode = null;
 }

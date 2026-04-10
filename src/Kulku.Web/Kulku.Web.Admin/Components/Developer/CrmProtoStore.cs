@@ -56,7 +56,7 @@ public sealed record CrmCompanyProfile(
 )]
 public sealed record ContactLite(
     Guid Id,
-    Guid CompanyId,
+    Guid? CompanyId,
     string? PersonName,
     string? Email,
     string? Phone,
@@ -77,6 +77,37 @@ public sealed record InteractionLite(
     string Summary,
     string? NextAction,
     DateTime? NextActionDue
+);
+
+public enum RelationshipHealth
+{
+    Fresh,
+    Cooling,
+    Cold,
+    NoHistory,
+}
+
+/// <summary>
+/// Computed summary of a company relationship for the dashboard directory.
+/// </summary>
+public sealed record RelationshipSummary(
+    Guid CompanyId,
+    string CompanyName,
+    string? Region,
+    CompanyStage Stage,
+    IReadOnlyList<CategoryLite> Categories,
+    string? PrimaryContactName,
+    string? PrimaryContactTitle,
+    DateTime? FirstInteractionDate,
+    DateTime? LastInteractionDate,
+    InteractionChannel? LastChannel,
+    string? LastSummary,
+    int? DaysSinceLastTouch,
+    RelationshipHealth Health,
+    string? NextAction,
+    DateTime? NextActionDue,
+    int InteractionCount,
+    int ContactCount
 );
 
 public sealed class CrmProtoStore
@@ -101,7 +132,8 @@ public sealed class CrmProtoStore
     public CategoryLite AddCategory(string name, string? colorToken = null)
     {
         var existing = _categories.FirstOrDefault(c =>
-            c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            c.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
+        );
         if (existing is not null)
             return existing;
 
@@ -110,25 +142,28 @@ public sealed class CrmProtoStore
         return category;
     }
 
-    public CategoryLite? GetCategory(Guid id) =>
-        _categories.FirstOrDefault(c => c.Id == id);
+    public CategoryLite? GetCategory(Guid id) => _categories.FirstOrDefault(c => c.Id == id);
 
     public CategoryLite UpdateCategory(Guid id, string name, string? colorToken)
     {
         var idx = _categories.FindIndex(c => c.Id == id);
-        if (idx < 0) throw new InvalidOperationException($"Category {id} not found.");
+        if (idx < 0)
+            throw new InvalidOperationException($"Category {id} not found.");
         var updated = new CategoryLite(id, name.Trim(), colorToken);
         _categories[idx] = updated;
         return updated;
     }
 
-    public bool RemoveCategory(Guid id) =>
-        _categories.RemoveAll(c => c.Id == id) > 0;
+    public bool RemoveCategory(Guid id) => _categories.RemoveAll(c => c.Id == id) > 0;
 
     // ===== CRM Profiles =====
 
-    public CrmCompanyProfile AddProfile(Guid companyId, CompanyStage stage,
-        string? notes, IReadOnlyList<Guid> categoryIds)
+    public CrmCompanyProfile AddProfile(
+        Guid companyId,
+        CompanyStage stage,
+        string? notes,
+        IReadOnlyList<Guid> categoryIds
+    )
     {
         var existing = _profiles.FirstOrDefault(p => p.CompanyId == companyId);
         if (existing is not null)
@@ -142,11 +177,16 @@ public sealed class CrmProtoStore
     public CrmCompanyProfile? GetProfile(Guid companyId) =>
         _profiles.FirstOrDefault(p => p.CompanyId == companyId);
 
-    public CrmCompanyProfile UpdateProfile(Guid companyId, CompanyStage stage,
-        string? notes, IReadOnlyList<Guid> categoryIds)
+    public CrmCompanyProfile UpdateProfile(
+        Guid companyId,
+        CompanyStage stage,
+        string? notes,
+        IReadOnlyList<Guid> categoryIds
+    )
     {
         var idx = _profiles.FindIndex(p => p.CompanyId == companyId);
-        if (idx < 0) throw new InvalidOperationException($"Profile for company {companyId} not found.");
+        if (idx < 0)
+            throw new InvalidOperationException($"Profile for company {companyId} not found.");
         var updated = new CrmCompanyProfile(companyId, stage, notes?.Trim(), categoryIds.ToList());
         _profiles[idx] = updated;
         return updated;
@@ -161,26 +201,58 @@ public sealed class CrmProtoStore
 
     // ===== Contacts =====
 
-    public ContactLite AddContact(Guid companyId, string? personName, string? email,
-        string? phone, string? linkedInUrl, string? title)
+    public ContactLite AddContact(
+        Guid? companyId,
+        string? personName,
+        string? email,
+        string? phone,
+        string? linkedInUrl,
+        string? title
+    )
     {
-        var contact = new ContactLite(Guid.NewGuid(), companyId, personName?.Trim(),
-            email?.Trim(), phone?.Trim(), linkedInUrl?.Trim(), title?.Trim());
+        var contact = new ContactLite(
+            Guid.NewGuid(),
+            companyId,
+            personName?.Trim(),
+            email?.Trim(),
+            phone?.Trim(),
+            linkedInUrl?.Trim(),
+            title?.Trim()
+        );
         _contacts.Add(contact);
         return contact;
     }
 
-    public ContactLite? GetContact(Guid id) =>
-        _contacts.FirstOrDefault(c => c.Id == id);
+    public ContactLite? GetContact(Guid id) => _contacts.FirstOrDefault(c => c.Id == id);
 
     public IReadOnlyList<ContactLite> GetCompanyContacts(Guid companyId) =>
-        _contacts.Where(c => c.CompanyId == companyId).ToList();
+        [.. _contacts.Where(c => c.CompanyId == companyId)];
 
-    public ContactLite UpdateContact(Guid id, string? personName, string? email,
-        string? phone, string? linkedInUrl, string? title)
+    public IReadOnlyList<ContactLite> GetUnaffiliatedContacts() =>
+        [.. _contacts.Where(c => c.CompanyId is null)];
+
+    public ContactLite? MoveContact(Guid contactId, Guid? newCompanyId)
+    {
+        var idx = _contacts.FindIndex(c => c.Id == contactId);
+        if (idx < 0)
+            return null;
+        var updated = _contacts[idx] with { CompanyId = newCompanyId };
+        _contacts[idx] = updated;
+        return updated;
+    }
+
+    public ContactLite UpdateContact(
+        Guid id,
+        string? personName,
+        string? email,
+        string? phone,
+        string? linkedInUrl,
+        string? title
+    )
     {
         var idx = _contacts.FindIndex(c => c.Id == id);
-        if (idx < 0) throw new InvalidOperationException($"Contact {id} not found.");
+        if (idx < 0)
+            throw new InvalidOperationException($"Contact {id} not found.");
         var existing = _contacts[idx];
         var updated = existing with
         {
@@ -207,23 +279,31 @@ public sealed class CrmProtoStore
 
     // ===== Interactions =====
 
-    public void AddInteraction(InteractionLite interaction) =>
-        _interactions.Add(interaction);
+    public void AddInteraction(InteractionLite interaction) => _interactions.Add(interaction);
 
     public InteractionLite? GetInteraction(Guid id) =>
         _interactions.FirstOrDefault(i => i.Id == id);
 
     public IReadOnlyList<InteractionLite> GetCompanyInteractions(Guid companyId) =>
-        _interactions.Where(i => i.CompanyId == companyId)
-            .OrderByDescending(i => i.Date).ToList();
+        _interactions.Where(i => i.CompanyId == companyId).OrderByDescending(i => i.Date).ToList();
 
-    public InteractionLite UpdateInteraction(Guid id, DateTime date,
-        InteractionDirection direction, InteractionChannel channel,
-        bool isWarmIntro, string? referredByName, string? referredByRelation,
-        Guid? contactId, string summary, string? nextAction, DateTime? nextActionDue)
+    public InteractionLite UpdateInteraction(
+        Guid id,
+        DateTime date,
+        InteractionDirection direction,
+        InteractionChannel channel,
+        bool isWarmIntro,
+        string? referredByName,
+        string? referredByRelation,
+        Guid? contactId,
+        string summary,
+        string? nextAction,
+        DateTime? nextActionDue
+    )
     {
         var idx = _interactions.FindIndex(i => i.Id == id);
-        if (idx < 0) throw new InvalidOperationException($"Interaction {id} not found.");
+        if (idx < 0)
+            throw new InvalidOperationException($"Interaction {id} not found.");
         var existing = _interactions[idx];
         var updated = existing with
         {
@@ -242,6 +322,5 @@ public sealed class CrmProtoStore
         return updated;
     }
 
-    public bool RemoveInteraction(Guid id) =>
-        _interactions.RemoveAll(i => i.Id == id) > 0;
+    public bool RemoveInteraction(Guid id) => _interactions.RemoveAll(i => i.Id == id) > 0;
 }

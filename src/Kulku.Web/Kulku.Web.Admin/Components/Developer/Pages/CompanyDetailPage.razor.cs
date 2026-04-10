@@ -11,6 +11,7 @@ partial class CompanyDetailPage
 
     private CrmCompanyViewModel? _company;
     private IReadOnlyList<CategoryLite> _companyCategories = [];
+    private IReadOnlyList<CrmCompanyViewModel> _enrolledCompanies = [];
     private IReadOnlyList<ContactLite> _contacts = [];
     private IReadOnlyList<InteractionLite> _interactions = [];
 
@@ -35,6 +36,7 @@ partial class CompanyDetailPage
         if (_company is null)
             return;
 
+        _enrolledCompanies = await Crm.GetEnrolledCompaniesAsync();
         _companyCategories =
         [
             .. (_company.Profile?.CategoryIds ?? [])
@@ -129,6 +131,20 @@ partial class CompanyDetailPage
     }
 
     private void CloseContactEditor() => _contactMode = null;
+
+    // ── Move Contact ──
+
+    private async Task HandleMoveContact(Guid contactId, Guid? targetCompanyId)
+    {
+        Store.MoveContact(contactId, targetCompanyId);
+        await ReloadAsync();
+    }
+
+    private async Task HandleUnaffiliateContact(Guid contactId)
+    {
+        Store.MoveContact(contactId, null);
+        await ReloadAsync();
+    }
 
     // ── Interaction ──
 

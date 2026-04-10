@@ -151,6 +151,31 @@ else
 														@onclick="() => HandleEditContact(contact)">
 													<Icon Kind="IconKind.Pencil" Size="12" />
 												</button>
+												<div class="dropdown">
+													<button class="btn btn-sm btn-outline-secondary dropdown-toggle" title="Move to…"
+															data-bs-toggle="dropdown" data-bs-auto-close="true">
+														<Icon Kind="IconKind.PersonLinesFill" Size="12" />
+													</button>
+													<ul class="dropdown-menu dropdown-menu-end">
+														<li><h6 class="dropdown-header">Move to…</h6></li>
+														@foreach (var c in _enrolledCompanies.Where(c => c.Id != CompanyId).OrderBy(c => c.Name))
+														{
+															<li>
+																<button class="dropdown-item small"
+																		@onclick="() => HandleMoveContact(contact.Id, c.Id)">
+																	@c.Name
+																</button>
+															</li>
+														}
+														<li><hr class="dropdown-divider" /></li>
+														<li>
+															<button class="dropdown-item small text-muted"
+																	@onclick="() => HandleUnaffiliateContact(contact.Id)">
+																Remove affiliation (personal)
+															</button>
+														</li>
+													</ul>
+												</div>
 												<button class="btn btn-sm btn-outline-danger" title="Delete"
 														@onclick="() => HandleDeleteContact(contact.Id)">
 													<Icon Kind="IconKind.Trash" Size="12" />
