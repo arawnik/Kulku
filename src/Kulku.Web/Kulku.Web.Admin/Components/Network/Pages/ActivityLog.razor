@@ -1,7 +1,7 @@
-@page "/developer/activity"
+@page "/network/activity"
 @using Kulku.Application.Network.Models
 @using Kulku.Domain.Network
-@using Kulku.Web.Admin.Components.Developer.Components
+@using Kulku.Web.Admin.Components.Network.Components
 
 @attribute [Authorize]
 
@@ -14,10 +14,10 @@
 			<div class="text-muted">Full interaction history across all companies.</div>
 		</div>
 		<div class="d-flex flex-wrap gap-2">
-			<NavLink class="btn btn-sm btn-outline-secondary" href="developer">
+			<NavLink class="btn btn-sm btn-outline-secondary" href="network">
 				<span style="display:inline-block;transform:rotate(180deg)"><Icon Kind="IconKind.ChevronRight" Size="14" /></span> Dashboard
 			</NavLink>
-			<NavLink class="btn btn-sm btn-primary" href="developer/loginteraction">
+			<NavLink class="btn btn-sm btn-primary" href="network/loginteraction">
 				<Icon Kind="IconKind.Plus" Size="14" CssClass="me-1" />Log interaction
 			</NavLink>
 		</div>
@@ -82,7 +82,7 @@
 			@if (_allInteractions.Count == 0)
 			{
 				<div class="mb-2">No interactions recorded yet.</div>
-				<NavLink href="developer/loginteraction" class="btn btn-sm btn-primary">Log your first interaction</NavLink>
+				<NavLink href="network/loginteraction" class="btn btn-sm btn-primary">Log your first interaction</NavLink>
 			}
 			else
 			{
@@ -99,7 +99,7 @@
 		@foreach (var interaction in visible)
 		{
 			<InteractionCard Interaction="@interaction"
-							 CompanyLink="@($"/developer/companies/{interaction.CompanyId}")" />
+							 CompanyLink="@($"/network/companies/{interaction.CompanyId}")" />
 		}
 
 		@if (hasMore)

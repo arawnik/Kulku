@@ -2,25 +2,25 @@
 
 @if (Visible)
 {
-    <div class="modal d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
-        <div class="modal-dialog modal-sm modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header py-2">
-                    <h6 class="modal-title">@Title</h6>
-                    <button type="button" class="btn-close" @onclick="HandleCancel"></button>
-                </div>
-                <div class="modal-body py-3">
-                    <p class="mb-0">@Message</p>
-                </div>
-                <div class="modal-footer py-2">
-                    <button type="button" class="btn btn-sm btn-secondary" @onclick="HandleCancel">
-                        Cancel
-                    </button>
-                    <button type="button" class="btn btn-sm btn-@ButtonStyle" @onclick="HandleConfirm">
-                        <Icon Kind="ButtonIcon" Size="14" CssClass="me-1" />@ButtonText
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="modal d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+		<div class="modal-dialog modal-sm modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header py-2">
+					<h6 class="modal-title">@Title</h6>
+					<button type="button" class="btn-close" @onclick="HandleCancel"></button>
+				</div>
+				<div class="modal-body py-3">
+					<p class="mb-0">@Message</p>
+				</div>
+				<div class="modal-footer py-2">
+					<button type="button" class="btn btn-sm btn-secondary" @onclick="HandleCancel">
+						Cancel
+					</button>
+					<button type="button" class="btn btn-sm btn-@ButtonStyle" @onclick="HandleConfirm">
+						<Icon Kind="ButtonIcon" Size="14" CssClass="me-1" />@ButtonText
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 }

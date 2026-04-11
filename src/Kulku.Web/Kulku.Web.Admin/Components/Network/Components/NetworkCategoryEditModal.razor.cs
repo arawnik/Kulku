@@ -2,9 +2,9 @@ using Kulku.Application.Network.Models;
 using Kulku.Web.Admin.Components.Shared;
 using Microsoft.AspNetCore.Components;
 
-namespace Kulku.Web.Admin.Components.Developer.Components;
+namespace Kulku.Web.Admin.Components.Network.Components;
 
-partial class CrmCategoryEditModal
+partial class NetworkCategoryEditModal
 {
     [Parameter]
     public bool IsVisible { get; set; }

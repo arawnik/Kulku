@@ -2,9 +2,9 @@ using Kulku.Application.Network.Models;
 using Kulku.Domain.Network;
 using Microsoft.AspNetCore.Components;
 
-namespace Kulku.Web.Admin.Components.Developer.Components;
+namespace Kulku.Web.Admin.Components.Network.Components;
 
-partial class CrmCompanyCard
+partial class NetworkCompanyCard
 {
     [Parameter, EditorRequired]
     public NetworkCompanyModel Company { get; set; } = null!;

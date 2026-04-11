@@ -6,7 +6,7 @@ using Kulku.Domain.Network;
 using Microsoft.AspNetCore.Components;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 
-namespace Kulku.Web.Admin.Components.Developer.Pages;
+namespace Kulku.Web.Admin.Components.Network.Pages;
 
 partial class ActivityLog
 {

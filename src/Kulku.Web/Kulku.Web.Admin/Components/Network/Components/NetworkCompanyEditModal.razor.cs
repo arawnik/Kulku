@@ -3,9 +3,9 @@ using Kulku.Domain.Network;
 using Kulku.Web.Admin.Components.Shared;
 using Microsoft.AspNetCore.Components;
 
-namespace Kulku.Web.Admin.Components.Developer.Components;
+namespace Kulku.Web.Admin.Components.Network.Components;
 
-partial class CrmCompanyEditModal
+partial class NetworkCompanyEditModal
 {
     [Parameter]
     public bool IsVisible { get; set; }

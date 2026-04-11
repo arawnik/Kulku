@@ -7,12 +7,12 @@ using Kulku.Application.Network.Contact;
 using Kulku.Application.Network.Interaction;
 using Kulku.Application.Network.Models;
 using Kulku.Domain.Network;
-using Kulku.Web.Admin.Components.Developer.Components;
+using Kulku.Web.Admin.Components.Network.Components;
 using Kulku.Web.Admin.Components.Shared;
 using Microsoft.AspNetCore.Components;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 
-namespace Kulku.Web.Admin.Components.Developer.Pages;
+namespace Kulku.Web.Admin.Components.Network.Pages;
 
 partial class CompaniesPage
 {
@@ -108,17 +108,17 @@ partial class CompaniesPage
 
     private ModalMode? _companyMode;
 #pragma warning disable CA2213 // Blazor child component references are managed by the framework
-    private CrmCompanyEditModal _companyModal = null!;
+    private NetworkCompanyEditModal _companyModal = null!;
 #pragma warning restore CA2213
 
     private ModalMode? _categoryMode;
 #pragma warning disable CA2213
-    private CrmCategoryEditModal _categoryModal = null!;
+    private NetworkCategoryEditModal _categoryModal = null!;
 #pragma warning restore CA2213
 
     private ModalMode? _contactMode;
 #pragma warning disable CA2213
-    private CrmContactEditModal _contactModal = null!;
+    private NetworkContactEditModal _contactModal = null!;
 #pragma warning restore CA2213
 
     protected override async Task OnInitializedAsync()
@@ -229,7 +229,7 @@ partial class CompaniesPage
         _companyMode = ModalMode.Edit;
     }
 
-    private async Task HandleSaveCompany(CrmCompanyEditModal.ProfileFormModel form)
+    private async Task HandleSaveCompany(NetworkCompanyEditModal.ProfileFormModel form)
     {
         if (_companyMode == ModalMode.Create)
         {
@@ -311,7 +311,7 @@ partial class CompaniesPage
         _categoryMode = ModalMode.Edit;
     }
 
-    private async Task HandleSaveCategory(CrmCategoryEditModal.CategoryFormModel form)
+    private async Task HandleSaveCategory(NetworkCategoryEditModal.CategoryFormModel form)
     {
         if (_categoryMode == ModalMode.Create)
         {
@@ -347,7 +347,7 @@ partial class CompaniesPage
         _contactMode = ModalMode.Create;
     }
 
-    private async Task HandleSavePersonalContact(CrmContactEditModal.ContactFormModel form)
+    private async Task HandleSavePersonalContact(NetworkContactEditModal.ContactFormModel form)
     {
         if (_contactMode == ModalMode.Create)
         {

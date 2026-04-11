@@ -5,12 +5,12 @@ using Kulku.Application.Network.Contact;
 using Kulku.Application.Network.Interaction;
 using Kulku.Application.Network.Models;
 using Kulku.Domain.Network;
-using Kulku.Web.Admin.Components.Developer.Components;
+using Kulku.Web.Admin.Components.Network.Components;
 using Kulku.Web.Admin.Components.Shared;
 using Microsoft.AspNetCore.Components;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 
-namespace Kulku.Web.Admin.Components.Developer.Pages;
+namespace Kulku.Web.Admin.Components.Network.Pages;
 
 partial class CompanyDetailPage
 {
@@ -81,12 +81,12 @@ partial class CompanyDetailPage
 
     private bool _companyEditVisible;
 #pragma warning disable CA2213 // Blazor child component references are managed by the framework
-    private CrmCompanyEditModal _companyModal = null!;
+    private NetworkCompanyEditModal _companyModal = null!;
 #pragma warning restore CA2213
 
     private ModalMode? _contactMode;
 #pragma warning disable CA2213
-    private CrmContactEditModal _contactModal = null!;
+    private NetworkContactEditModal _contactModal = null!;
 #pragma warning restore CA2213
 
     protected override async Task OnInitializedAsync()
@@ -171,7 +171,7 @@ partial class CompanyDetailPage
         _companyEditVisible = true;
     }
 
-    private async Task HandleSaveCompany(CrmCompanyEditModal.ProfileFormModel form)
+    private async Task HandleSaveCompany(NetworkCompanyEditModal.ProfileFormModel form)
     {
         await UpdateProfileHandler.Handle(
             new UpdateNetworkProfile.Command(
@@ -202,7 +202,7 @@ partial class CompanyDetailPage
         _contactMode = ModalMode.Edit;
     }
 
-    private async Task HandleSaveContact(CrmContactEditModal.ContactFormModel form)
+    private async Task HandleSaveContact(NetworkContactEditModal.ContactFormModel form)
     {
         if (_contactMode == ModalMode.Create)
         {

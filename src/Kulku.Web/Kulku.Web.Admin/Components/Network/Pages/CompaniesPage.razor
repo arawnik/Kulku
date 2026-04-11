@@ -1,7 +1,7 @@
-@page "/developer/companies"
+@page "/network/companies"
 @using Kulku.Application.Network.Models
 @using Kulku.Domain.Network
-@using Kulku.Web.Admin.Components.Developer.Components
+@using Kulku.Web.Admin.Components.Network.Components
 
 @attribute [Authorize]
 
@@ -44,7 +44,7 @@
 					<option value="">All Stages</option>
 					@foreach (var s in Enum.GetValues<CompanyStage>())
 					{
-						<option value="@s">@CrmCompanyCard.StageLabel(s)</option>
+						<option value="@s">@NetworkCompanyCard.StageLabel(s)</option>
 					}
 				</select>
 			</div>
@@ -81,10 +81,10 @@
 				.Select(i => (DateTime?)i.Date)
 				.FirstOrDefault();
 
-				<CrmCompanyCard Company="@company"
-								LastInteractionDate="@lastDate"
-								OnEdit="HandleEditCompany"
-								OnDelete="HandleDeleteCompany" />
+				<NetworkCompanyCard Company="@company"
+									LastInteractionDate="@lastDate"
+									OnEdit="HandleEditCompany"
+									OnDelete="HandleDeleteCompany" />
 			}
 		}
 	}
@@ -218,22 +218,22 @@
 </div>
 
 @* ── Modals ── *@
-<CrmCompanyEditModal @ref="_companyModal"
-					 IsVisible="@(_companyMode is not null)"
-					 Mode="@(_companyMode ?? ModalMode.Edit)"
-					 Categories="@_categories"
-					 AvailableCompanies="@_availableCompanies"
-					 OnSave="HandleSaveCompany"
-					 OnCancel="CloseCompanyEditor" />
+<NetworkCompanyEditModal @ref="_companyModal"
+						 IsVisible="@(_companyMode is not null)"
+						 Mode="@(_companyMode ?? ModalMode.Edit)"
+						 Categories="@_categories"
+						 AvailableCompanies="@_availableCompanies"
+						 OnSave="HandleSaveCompany"
+						 OnCancel="CloseCompanyEditor" />
 
-<CrmCategoryEditModal @ref="_categoryModal"
-					  IsVisible="@(_categoryMode is not null)"
-					  Mode="@(_categoryMode ?? ModalMode.Create)"
-					  OnSave="HandleSaveCategory"
-					  OnCancel="CloseCategoryEditor" />
+<NetworkCategoryEditModal @ref="_categoryModal"
+						  IsVisible="@(_categoryMode is not null)"
+						  Mode="@(_categoryMode ?? ModalMode.Create)"
+						  OnSave="HandleSaveCategory"
+						  OnCancel="CloseCategoryEditor" />
 
-<CrmContactEditModal @ref="_contactModal"
-					 IsVisible="@(_contactMode is not null)"
-					 Mode="@(_contactMode ?? ModalMode.Create)"
-					 OnSave="HandleSavePersonalContact"
-					 OnCancel="ClosePersonalContactEditor" />
+<NetworkContactEditModal @ref="_contactModal"
+						 IsVisible="@(_contactMode is not null)"
+						 Mode="@(_contactMode ?? ModalMode.Create)"
+						 OnSave="HandleSavePersonalContact"
+						 OnCancel="ClosePersonalContactEditor" />

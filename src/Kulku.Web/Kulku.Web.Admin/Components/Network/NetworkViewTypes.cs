@@ -1,7 +1,7 @@
 using Kulku.Application.Network.Models;
 using Kulku.Domain.Network;
 
-namespace Kulku.Web.Admin.Components.Developer;
+namespace Kulku.Web.Admin.Components.Network;
 
 /// <summary>
 /// Freshness of a company relationship based on last interaction date.

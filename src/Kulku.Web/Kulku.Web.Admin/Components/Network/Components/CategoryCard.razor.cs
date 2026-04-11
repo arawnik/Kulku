@@ -1,7 +1,7 @@
 using Kulku.Application.Network.Models;
 using Microsoft.AspNetCore.Components;
 
-namespace Kulku.Web.Admin.Components.Developer.Components;
+namespace Kulku.Web.Admin.Components.Network.Components;
 
 partial class CategoryCard
 {
