@@ -68,7 +68,7 @@
 			</li>
 
 			<li class="nav-item">
-				<NavLink class="nav-link text-white kulku-navlink" href="cv" Match="NavLinkMatch.All"
+				<NavLink class="nav-link text-white kulku-navlink" href="cv"
 						 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Cv" : null)">
 					<Icon Kind="IconKind.FileEarmarkPerson" Size="20" />
 					<span class="kulku-link-text">Cv</span>
@@ -77,6 +77,7 @@
 				@if (!IsCollapsed)
 				{
 					<ul class="nav flex-column kulku-subnav">
+						<li><NavLink class="nav-link kulku-sublink" href="cv" Match="NavLinkMatch.All"><Icon Kind="IconKind.Speedometer" Size="14" /> Overview</NavLink></li>
 						<li><NavLink class="nav-link kulku-sublink" href="cv/introduction"><Icon Kind="IconKind.FileText" Size="14" /> Introduction</NavLink></li>
 						<li><NavLink class="nav-link kulku-sublink" href="cv/education"><Icon Kind="IconKind.Mortarboard" Size="14" /> Education</NavLink></li>
 						<li><NavLink class="nav-link kulku-sublink" href="cv/experience"><Icon Kind="IconKind.Briefcase" Size="14" /> Experience</NavLink></li>
