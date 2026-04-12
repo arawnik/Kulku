@@ -35,4 +35,16 @@ public class NetworkContactRepository(AppDbContext context) : INetworkContactRep
             cancellationToken
         );
     }
+
+    /// <inheritdoc />
+    public async Task<NetworkContact?> FindByEmailAsync(
+        string email,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await _context.NetworkContacts.FirstOrDefaultAsync(
+            c => c.Email != null && c.Email == email,
+            cancellationToken
+        );
+    }
 }

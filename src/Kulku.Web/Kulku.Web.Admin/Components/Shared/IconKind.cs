@@ -103,4 +103,12 @@ public enum IconKind
 
     /// <summary>Kanban — pipeline / board view.</summary>
     Kanban,
+
+    // ── Inbox ──
+
+    /// <summary>Envelope — inbox / contact requests.</summary>
+    Envelope,
+
+    /// <summary>Exclamation triangle — warning / spam.</summary>
+    ExclamationTriangle,
 }

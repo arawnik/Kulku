@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Kulku.Application.Contacts;
+using Kulku.Application.Contacts.Models;
 using Kulku.Application.Cover.Company;
 using Kulku.Application.Cover.Education;
 using Kulku.Application.Cover.Education.Models;
@@ -199,6 +200,31 @@ public static class ApplicationDependencyInjection
         services.AddScoped<
             ICommandHandler<SubmitContactRequest.Command>,
             SubmitContactRequest.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetContactRequests.Query, IReadOnlyList<ContactRequestModel>>,
+            GetContactRequests.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetContactRequestDetail.Query, ContactRequestModel?>,
+            GetContactRequestDetail.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetNewContactRequestCount.Query, int>,
+            GetNewContactRequestCount.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<UpdateContactRequestStatus.Command>,
+            UpdateContactRequestStatus.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<ConvertContactRequest.Command>,
+            ConvertContactRequest.Handler
         >();
 
         // Company CRUD

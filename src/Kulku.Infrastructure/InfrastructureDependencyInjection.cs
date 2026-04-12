@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Kulku.Application.Abstractions.Assets;
 using Kulku.Application.Abstractions.Rendering;
 using Kulku.Application.Abstractions.Security;
+using Kulku.Application.Contacts.Ports;
 using Kulku.Application.Cover.Education.Ports;
 using Kulku.Application.Cover.Experience.Ports;
 using Kulku.Application.Cover.Introduction.Ports;
@@ -76,6 +77,9 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IInstitutionRepository, InstitutionRepository>();
 
         services.AddScoped<IContactRequestRepository, ContactRequestRepository>();
+
+        // Queries
+        services.AddScoped<IContactRequestQueries, ContactRequestQueries>();
 
         services.AddScoped<IIdeaRepository, IdeaRepository>();
         services.AddScoped<IIdeaTagRepository, IdeaTagRepository>();

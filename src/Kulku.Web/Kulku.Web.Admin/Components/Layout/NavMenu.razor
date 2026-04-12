@@ -37,6 +37,20 @@
 
 		<AuthorizeView>
 			<li class="nav-item">
+				<NavLink class="nav-link text-white kulku-navlink" href="inbox" Match="NavLinkMatch.All"
+						 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Inbox" : null)">
+					<Icon Kind="IconKind.Envelope" Size="20" />
+					<span class="kulku-link-text">
+						Inbox
+						@if (_newCount > 0)
+						{
+							<span class="badge text-bg-danger ms-1">@_newCount</span>
+						}
+					</span>
+				</NavLink>
+			</li>
+
+			<li class="nav-item">
 				<NavLink class="nav-link text-white kulku-navlink" href="network"
 						 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Network" : null)">
 					<Icon Kind="IconKind.Lightbulb" Size="20" />

@@ -1,0 +1,58 @@
+@using Kulku.Application.Contacts.Models
+@using Kulku.Domain.Contacts
+
+<div class="card mb-2">
+	<div class="card-body py-2 px-3">
+		<div class="d-flex justify-content-between align-items-start">
+			<div class="flex-grow-1 me-2">
+				<div class="d-flex align-items-center gap-2 mb-1">
+					<span class="badge @StatusBadgeClass">@StatusLabel</span>
+					<small class="text-muted">@Request.Timestamp.ToString("yyyy-MM-dd HH:mm")</small>
+				</div>
+
+				<div class="fw-semibold small mb-1">@Request.Name</div>
+				<div class="small text-muted mb-1">
+					<Icon Kind="IconKind.Envelope" Size="12" CssClass="me-1" />@Request.Email
+				</div>
+				<div class="small fw-medium mb-1">@Request.Subject</div>
+				<div class="text-muted small" style="white-space: pre-line;">@MessagePreview</div>
+			</div>
+
+			<div class="d-flex gap-1 flex-shrink-0">
+				@if (Request.Status == ContactRequestStatus.New)
+				{
+					<button class="btn btn-sm btn-outline-success" title="Convert to interaction"
+							@onclick="() => OnConvert.InvokeAsync(Request.Id)">
+						<Icon Kind="IconKind.ChatDots" Size="14" />
+					</button>
+					<button class="btn btn-sm btn-outline-warning" title="Mark as spam"
+							@onclick="() => RequestSpamConfirm()">
+						<Icon Kind="IconKind.ExclamationTriangle" Size="14" />
+					</button>
+					<button class="btn btn-sm btn-outline-secondary" title="Dismiss"
+							@onclick="() => RequestDismissConfirm()">
+						<Icon Kind="IconKind.EyeSlash" Size="14" />
+					</button>
+				}
+			</div>
+		</div>
+	</div>
+</div>
+
+<ConfirmDialog Visible="@_confirmSpam"
+			   Title="Mark as Spam"
+			   Message="@($"Mark the request from \"{Request.Name}\" as spam?")"
+			   ButtonText="Mark Spam"
+			   ButtonStyle="warning"
+			   ButtonIcon="IconKind.ExclamationTriangle"
+			   OnConfirm="() => HandleConfirmSpam()"
+			   OnCancel="() => _confirmSpam = false" />
+
+<ConfirmDialog Visible="@_confirmDismiss"
+			   Title="Dismiss Request"
+			   Message="@($"Dismiss the request from \"{Request.Name}\"?")"
+			   ButtonText="Dismiss"
+			   ButtonStyle="primary"
+			   ButtonIcon="IconKind.EyeSlash"
+			   OnConfirm="() => HandleConfirmDismiss()"
+			   OnCancel="() => _confirmDismiss = false" />
