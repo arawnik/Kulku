@@ -5,10 +5,10 @@ using Kulku.Application.Cover.Company;
 using Kulku.Application.Cover.Company.Models;
 using Kulku.Application.Network.Company;
 using Kulku.Application.Network.Models;
-using Kulku.Domain;
 using Kulku.Domain.Contacts;
 using Kulku.Domain.Network;
 using Kulku.Web.Admin.Components.Inbox.Components;
+using Kulku.Web.Admin.Components.Layout;
 using Microsoft.AspNetCore.Components;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 
@@ -27,7 +27,7 @@ partial class ContactRequests
         null!;
 
     [Inject]
-    private ICommandHandler<ConvertContactRequest.Command> ConvertHandler { get; set; } = null!;
+    private ICommandHandler<PromoteContactRequest.Command> PromoteHandler { get; set; } = null!;
 
     [Inject]
     private IQueryHandler<
@@ -45,13 +45,16 @@ partial class ContactRequests
     [Inject]
     private ILanguageContext LanguageContext { get; set; } = null!;
 
+    [Inject]
+    private InboxBadgeNotifier BadgeNotifier { get; set; } = null!;
+
     private IReadOnlyList<ContactRequestModel> _allRequests = [];
     private IReadOnlyList<NetworkCompanyModel> _enrolledCompanies = [];
     private ContactRequestStatus? _statusFilter = ContactRequestStatus.New;
     private string? _errorMessage;
 
-    private ContactRequestModel? _convertRequest;
-    private ConvertContactRequestModal? _convertModal;
+    private ContactRequestModel? _promoteRequest;
+    private PromoteContactRequestModal? _promoteModal;
 
     protected override async Task OnInitializedAsync()
     {
@@ -88,6 +91,7 @@ partial class ContactRequests
         {
             _errorMessage = null;
             await LoadRequests();
+            BadgeNotifier.Notify();
         }
         else
         {
@@ -106,6 +110,7 @@ partial class ContactRequests
         {
             _errorMessage = null;
             await LoadRequests();
+            BadgeNotifier.Notify();
         }
         else
         {
@@ -113,7 +118,7 @@ partial class ContactRequests
         }
     }
 
-    private async Task HandleConvert(Guid id)
+    private async Task HandlePromote(Guid id)
     {
         var request = _allRequests.FirstOrDefault(r => r.Id == id);
         if (request is null)
@@ -126,13 +131,13 @@ partial class ContactRequests
         );
         _enrolledCompanies = companiesResult.IsSuccess ? companiesResult.Value ?? [] : [];
 
-        _convertRequest = request;
-        _convertModal?.Load(request);
+        _promoteRequest = request;
+        _promoteModal?.Load(request);
     }
 
-    private async Task HandleConvertSave(ConvertContactRequestModal.ConvertFormModel form)
+    private async Task HandlePromoteSave(PromoteContactRequestModal.PromoteFormModel form)
     {
-        if (_convertRequest is null)
+        if (_promoteRequest is null)
             return;
 
         Guid companyId;
@@ -159,7 +164,7 @@ partial class ContactRequests
 
             if (!createResult.IsSuccess)
             {
-                _convertModal?.SetError(createResult.Error?.Message ?? "Failed to create company.");
+                _promoteModal?.SetError(createResult.Error?.Message ?? "Failed to create company.");
                 return;
             }
 
@@ -173,7 +178,7 @@ partial class ContactRequests
 
             if (!enrollResult.IsSuccess)
             {
-                _convertModal?.SetError(
+                _promoteModal?.SetError(
                     enrollResult.Error?.Message ?? "Failed to enroll company in network."
                 );
                 return;
@@ -184,14 +189,14 @@ partial class ContactRequests
             companyId = form.SelectedCompanyId;
             if (companyId == Guid.Empty)
             {
-                _convertModal?.SetError("Please select a company.");
+                _promoteModal?.SetError("Please select a company.");
                 return;
             }
         }
 
-        var result = await ConvertHandler.Handle(
-            new ConvertContactRequest.Command(
-                _convertRequest.Id,
+        var result = await PromoteHandler.Handle(
+            new PromoteContactRequest.Command(
+                _promoteRequest.Id,
                 companyId,
                 string.IsNullOrWhiteSpace(form.Summary) ? null : form.Summary.Trim()
             ),
@@ -201,17 +206,18 @@ partial class ContactRequests
         if (result.IsSuccess)
         {
             _errorMessage = null;
-            CloseConvertModal();
+            ClosePromoteModal();
             await LoadRequests();
+            BadgeNotifier.Notify();
         }
         else
         {
-            _convertModal?.SetError(result.Error?.Message ?? "Failed to convert contact request.");
+            _promoteModal?.SetError(result.Error?.Message ?? "Failed to promote contact request.");
         }
     }
 
-    private void CloseConvertModal()
+    private void ClosePromoteModal()
     {
-        _convertRequest = null;
+        _promoteRequest = null;
     }
 }

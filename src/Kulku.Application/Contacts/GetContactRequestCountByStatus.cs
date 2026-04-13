@@ -6,9 +6,9 @@ using SoulNETLib.Clean.Domain;
 namespace Kulku.Application.Contacts;
 
 /// <summary>
-/// Returns the count of contact requests with a given status (used for nav badge).
+/// Returns the count of contact requests with a given status.
 /// </summary>
-public static class GetNewContactRequestCount
+public static class GetContactRequestCountByStatus
 {
     public sealed record Query(ContactRequestStatus Status = ContactRequestStatus.New)
         : IQuery<int>;

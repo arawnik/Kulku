@@ -23,7 +23,7 @@ partial class Home
     // ── Injected query handlers ──
 
     [Inject]
-    private IQueryHandler<GetNewContactRequestCount.Query, int> InboxCountQuery { get; set; } =
+    private IQueryHandler<GetContactRequestCountByStatus.Query, int> InboxCountQuery { get; set; } =
         null!;
 
     [Inject]
@@ -108,7 +108,10 @@ partial class Home
         var ct = CancellationToken;
 
         // Inbox
-        var inboxResult = await InboxCountQuery.Handle(new GetNewContactRequestCount.Query(), ct);
+        var inboxResult = await InboxCountQuery.Handle(
+            new GetContactRequestCountByStatus.Query(),
+            ct
+        );
         _inboxNewCount = inboxResult.IsSuccess ? inboxResult.Value : 0;
 
         var requestsResult = await ContactRequestQuery.Handle(

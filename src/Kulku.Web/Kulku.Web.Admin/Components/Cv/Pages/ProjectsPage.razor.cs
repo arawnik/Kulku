@@ -121,7 +121,7 @@ partial class ProjectsPage(
                 );
 
                 if (
-                    !TryHandleError(
+                    TryHandleResult(
                         createResult,
                         e => _editModal?.SetServerErrors(e),
                         ref _errorMessage,
@@ -149,7 +149,7 @@ partial class ProjectsPage(
             );
 
             if (
-                !TryHandleError(
+                TryHandleResult(
                     result,
                     e => _editModal?.SetServerErrors(e),
                     ref _errorMessage,

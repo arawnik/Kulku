@@ -9,7 +9,7 @@ namespace Kulku.Application.Contacts.Ports;
 public interface IContactRequestQueries
 {
     /// <summary>
-    /// Returns all contact requests ordered by timestamp descending.
+    /// Returns all contact requests ordered newest first.
     /// </summary>
     Task<IReadOnlyList<ContactRequestModel>> ListAsync(
         ContactRequestStatus? statusFilter = null,

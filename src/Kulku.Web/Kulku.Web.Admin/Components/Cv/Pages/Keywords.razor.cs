@@ -135,7 +135,7 @@ partial class Keywords(
                 );
 
                 if (
-                    !TryHandleError(
+                    TryHandleResult(
                         result,
                         e => _proficiencyModal?.SetServerErrors(e),
                         ref _errorMessage,
@@ -161,7 +161,7 @@ partial class Keywords(
             );
 
             if (
-                !TryHandleError(
+                TryHandleResult(
                     updateResult,
                     e => _proficiencyModal?.SetServerErrors(e),
                     ref _errorMessage,
@@ -279,7 +279,7 @@ partial class Keywords(
                 );
 
                 if (
-                    !TryHandleError(
+                    TryHandleResult(
                         result,
                         e => _keywordModal?.SetServerErrors(e),
                         ref _errorMessage,
@@ -307,7 +307,7 @@ partial class Keywords(
             );
 
             if (
-                !TryHandleError(
+                TryHandleResult(
                     updateResult,
                     e => _keywordModal?.SetServerErrors(e),
                     ref _errorMessage,

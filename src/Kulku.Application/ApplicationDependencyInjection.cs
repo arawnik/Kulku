@@ -213,8 +213,8 @@ public static class ApplicationDependencyInjection
         >();
 
         services.AddScoped<
-            IQueryHandler<GetNewContactRequestCount.Query, int>,
-            GetNewContactRequestCount.Handler
+            IQueryHandler<GetContactRequestCountByStatus.Query, int>,
+            GetContactRequestCountByStatus.Handler
         >();
 
         services.AddScoped<
@@ -223,8 +223,8 @@ public static class ApplicationDependencyInjection
         >();
 
         services.AddScoped<
-            ICommandHandler<ConvertContactRequest.Command>,
-            ConvertContactRequest.Handler
+            ICommandHandler<PromoteContactRequest.Command>,
+            PromoteContactRequest.Handler
         >();
 
         // Company CRUD

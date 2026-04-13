@@ -8,12 +8,12 @@ using SoulNETLib.Clean.Domain.Repositories;
 namespace Kulku.Application.Contacts;
 
 /// <summary>
-/// Transactionally converts a contact request into a network interaction.
+/// Transactionally promotes a contact request into a network interaction.
 /// Creates (or reuses) a <see cref="NetworkContact"/>, logs an inbound
 /// <see cref="NetworkInteraction"/> via the CV contact form channel,
-/// and marks the <see cref="ContactRequest"/> as converted.
+/// and marks the <see cref="ContactRequest"/> as promoted.
 /// </summary>
-public static class ConvertContactRequest
+public static class PromoteContactRequest
 {
     public sealed record Command(Guid ContactRequestId, Guid CompanyId, string? Summary) : ICommand;
 
@@ -42,8 +42,8 @@ public static class ConvertContactRequest
             if (request is null)
                 return Error.NotFound("Contact request not found.");
 
-            if (request.Status == ContactRequestStatus.Converted)
-                return Error.BusinessRule("Contact request has already been converted.");
+            if (request.Status == ContactRequestStatus.Promoted)
+                return Error.BusinessRule("Contact request has already been promoted.");
 
             // Find or create network contact by email
             var contact = await _networkContactRepository.FindByEmailAsync(
@@ -70,7 +70,7 @@ public static class ConvertContactRequest
             var interaction = new NetworkInteraction
             {
                 CompanyId = command.CompanyId,
-                ContactId = contact.Id,
+                Contact = contact,
                 Date = request.Timestamp,
                 Direction = InteractionDirection.Inbound,
                 Channel = InteractionChannel.CvContactForm,
@@ -79,7 +79,7 @@ public static class ConvertContactRequest
             };
             _networkInteractionRepository.Add(interaction);
 
-            request.Status = ContactRequestStatus.Converted;
+            request.Status = ContactRequestStatus.Promoted;
 
             await _unitOfWork.CompleteAsync(cancellationToken);
 

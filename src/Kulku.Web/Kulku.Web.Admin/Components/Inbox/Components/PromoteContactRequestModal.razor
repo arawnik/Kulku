@@ -1,7 +1,7 @@
 @using Kulku.Application.Contacts.Models
 @using Kulku.Application.Network.Models
 
-<ModalDialog Visible="@IsVisible" Title="Convert to Interaction"
+<ModalDialog Visible="@IsVisible" Title="Promote to Interaction"
 			 Size="ModalSize.Large"
 			 OnClose="OnCancel">
 	<ChildContent>
@@ -83,7 +83,7 @@
 				<div class="d-flex gap-2">
 					<button type="submit" class="btn btn-success"
 							disabled="@IsSubmitDisabled">
-						<Icon Kind="IconKind.Check" Size="14" CssClass="me-1" />Convert
+						<Icon Kind="IconKind.Check" Size="14" CssClass="me-1" />Promote
 					</button>
 					<button type="button" class="btn btn-outline-secondary" @onclick="OnCancel">Cancel</button>
 				</div>

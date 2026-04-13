@@ -146,7 +146,7 @@ partial class Experience(
                 );
 
                 if (
-                    !TryHandleError(
+                    TryHandleResult(
                         createResult,
                         e => _editModal?.SetServerErrors(e),
                         ref _errorMessage,
@@ -172,7 +172,7 @@ partial class Experience(
             );
 
             if (
-                !TryHandleError(
+                TryHandleResult(
                     result,
                     e => _editModal?.SetServerErrors(e),
                     ref _errorMessage,
@@ -287,7 +287,7 @@ partial class Experience(
                 );
 
                 if (
-                    !TryHandleError(
+                    TryHandleResult(
                         result,
                         e => _companyModal?.SetServerErrors(e),
                         ref _companyErrorMessage,
@@ -313,7 +313,7 @@ partial class Experience(
             );
 
             if (
-                !TryHandleError(
+                TryHandleResult(
                     updateResult,
                     e => _companyModal?.SetServerErrors(e),
                     ref _companyErrorMessage,

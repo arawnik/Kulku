@@ -45,6 +45,8 @@ public static class AdminDependencyInjection
 
         services.AddScoped<ILanguageContext, RequestLanguageContext>();
 
+        services.AddScoped<Components.Layout.InboxBadgeNotifier>();
+
         services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
         return services;

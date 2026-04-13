@@ -10,7 +10,7 @@ partial class ContactRequestCard
     public ContactRequestModel Request { get; set; } = null!;
 
     [Parameter]
-    public EventCallback<Guid> OnConvert { get; set; }
+    public EventCallback<Guid> OnPromote { get; set; }
 
     [Parameter]
     public EventCallback<Guid> OnMarkSpam { get; set; }
@@ -28,7 +28,7 @@ partial class ContactRequestCard
         Request.Status switch
         {
             ContactRequestStatus.New => "New",
-            ContactRequestStatus.Converted => "Converted",
+            ContactRequestStatus.Promoted => "Promoted",
             ContactRequestStatus.Spam => "Spam",
             ContactRequestStatus.Dismissed => "Dismissed",
             _ => Request.Status.ToString(),
@@ -38,7 +38,7 @@ partial class ContactRequestCard
         Request.Status switch
         {
             ContactRequestStatus.New => "text-bg-primary",
-            ContactRequestStatus.Converted => "text-bg-success",
+            ContactRequestStatus.Promoted => "text-bg-success",
             ContactRequestStatus.Spam => "text-bg-warning",
             ContactRequestStatus.Dismissed => "text-bg-secondary",
             _ => "text-bg-light border",

@@ -25,10 +25,10 @@
 			</button>
 		</li>
 		<li class="nav-item">
-			<button class="nav-link @(_statusFilter == ContactRequestStatus.Converted ? "active" : "")"
-					@onclick="() => SetFilter(ContactRequestStatus.Converted)">
-				Converted
-				<span class="badge text-bg-success ms-1">@_allRequests.Count(r => r.Status == ContactRequestStatus.Converted)</span>
+			<button class="nav-link @(_statusFilter == ContactRequestStatus.Promoted ? "active" : "")"
+					@onclick="() => SetFilter(ContactRequestStatus.Promoted)">
+				Promoted
+				<span class="badge text-bg-success ms-1">@_allRequests.Count(r => r.Status == ContactRequestStatus.Promoted)</span>
 			</button>
 		</li>
 		<li class="nav-item">
@@ -86,16 +86,16 @@
 		@foreach (var request in filtered)
 		{
 			<ContactRequestCard Request="@request"
-								OnConvert="HandleConvert"
+								OnPromote="HandlePromote"
 								OnMarkSpam="HandleMarkSpam"
 								OnDismiss="HandleDismiss" />
 		}
 	}
 </div>
 
-<ConvertContactRequestModal @ref="_convertModal"
-							IsVisible="@(_convertRequest is not null)"
-							Request="@_convertRequest"
+<PromoteContactRequestModal @ref="_promoteModal"
+							IsVisible="@(_promoteRequest is not null)"
+							Request="@_promoteRequest"
 							EnrolledCompanies="@_enrolledCompanies"
-							OnSave="HandleConvertSave"
-							OnCancel="CloseConvertModal" />
+							OnSave="HandlePromoteSave"
+							OnCancel="ClosePromoteModal" />

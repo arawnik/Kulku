@@ -21,8 +21,8 @@
 			<div class="d-flex gap-1 flex-shrink-0">
 				@if (Request.Status == ContactRequestStatus.New)
 				{
-					<button class="btn btn-sm btn-outline-success" title="Convert to interaction"
-							@onclick="() => OnConvert.InvokeAsync(Request.Id)">
+					<button class="btn btn-sm btn-outline-success" title="Promote to interaction"
+							@onclick="() => OnPromote.InvokeAsync(Request.Id)">
 						<Icon Kind="IconKind.ChatDots" Size="14" />
 					</button>
 					<button class="btn btn-sm btn-outline-warning" title="Mark as spam"

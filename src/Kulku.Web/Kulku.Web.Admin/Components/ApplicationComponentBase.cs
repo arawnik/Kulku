@@ -22,9 +22,9 @@ public abstract class ApplicationComponentBase : ComponentBase, IDisposable, IAs
 
     /// <summary>
     /// Inspects a <see cref="Result"/> for validation or general failures.
-    /// Returns <c>true</c> if the result is a failure (handled), <c>false</c> if successful.
+    /// Returns <c>true</c> if the result is successful, <c>false</c> if a failure was handled.
     /// </summary>
-    protected static bool TryHandleError(
+    protected static bool TryHandleResult(
         Result result,
         Action<IEnumerable<Error>>? setServerErrors,
         ref string? errorMessage,
@@ -32,23 +32,23 @@ public abstract class ApplicationComponentBase : ComponentBase, IDisposable, IAs
     )
     {
         if (result.IsSuccess)
-            return false;
+            return true;
 
         if (result is IValidationResult validation)
         {
             setServerErrors?.Invoke(validation.Errors);
-            return true;
+            return false;
         }
 
         errorMessage = result.Error?.Message ?? fallbackMessage;
-        return true;
+        return false;
     }
 
     /// <summary>
     /// Inspects a <see cref="Result{T}"/> for validation or general failures.
-    /// Returns <c>true</c> if the result is a failure (handled), <c>false</c> if successful.
+    /// Returns <c>true</c> if the result is successful, <c>false</c> if a failure was handled.
     /// </summary>
-    protected static bool TryHandleError<T>(
+    protected static bool TryHandleResult<T>(
         Result<T> result,
         Action<IEnumerable<Error>>? setServerErrors,
         ref string? errorMessage,
@@ -56,16 +56,16 @@ public abstract class ApplicationComponentBase : ComponentBase, IDisposable, IAs
     )
     {
         if (result.IsSuccess)
-            return false;
+            return true;
 
         if (result is IValidationResult validation)
         {
             setServerErrors?.Invoke(validation.Errors);
-            return true;
+            return false;
         }
 
         errorMessage = result.Error?.Message ?? fallbackMessage;
-        return true;
+        return false;
     }
 
     public void Dispose()

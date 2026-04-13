@@ -8,8 +8,8 @@ public enum ContactRequestStatus
     /// <summary>The request has been received but not yet reviewed.</summary>
     New,
 
-    /// <summary>The request has been converted into a network interaction.</summary>
-    Converted,
+    /// <summary>The request has been promoted into a network interaction.</summary>
+    Promoted,
 
     /// <summary>The request was identified as spam.</summary>
     Spam,

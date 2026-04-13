@@ -128,7 +128,7 @@ partial class Introduction(
                 );
 
                 if (
-                    !TryHandleError(
+                    TryHandleResult(
                         createResult,
                         e => _editModal?.SetServerErrors(e),
                         ref _errorMessage,
@@ -155,7 +155,7 @@ partial class Introduction(
             );
 
             if (
-                !TryHandleError(
+                TryHandleResult(
                     result,
                     e => _editModal?.SetServerErrors(e),
                     ref _errorMessage,

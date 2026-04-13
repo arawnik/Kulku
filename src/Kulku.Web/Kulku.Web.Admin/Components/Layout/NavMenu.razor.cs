@@ -10,6 +10,9 @@ partial class NavMenu
     [Inject]
     private IServiceScopeFactory ScopeFactory { get; set; } = null!;
 
+    [Inject]
+    private InboxBadgeNotifier BadgeNotifier { get; set; } = null!;
+
     private int _newCount;
     private string? currentUrl;
 
@@ -20,19 +23,33 @@ partial class NavMenu
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
+        BadgeNotifier.OnChange += OnBadgeChange;
 
-        // Create a dedicated scope so NavMenu gets its own DbContext instance,
-        // avoiding concurrency with the page's OnInitializedAsync.
+        await RefreshBadgeAsync();
+    }
+
+    private async Task RefreshBadgeAsync()
+    {
         await using var scope = ScopeFactory.CreateAsyncScope();
         var handler = scope.ServiceProvider.GetRequiredService<
-            IQueryHandler<GetNewContactRequestCount.Query, int>
+            IQueryHandler<GetContactRequestCountByStatus.Query, int>
         >();
 
-        var result = await handler.Handle(new GetNewContactRequestCount.Query(), CancellationToken);
+        var result = await handler.Handle(
+            new GetContactRequestCountByStatus.Query(),
+            CancellationToken
+        );
 
         if (result.IsSuccess)
             _newCount = result.Value;
     }
+
+    private void OnBadgeChange(object? sender, EventArgs e) =>
+        InvokeAsync(async () =>
+        {
+            await RefreshBadgeAsync();
+            StateHasChanged();
+        });
 
     private void ToggleCollapsed() => IsCollapsed = !IsCollapsed;
 
@@ -42,5 +59,9 @@ partial class NavMenu
         InvokeAsync(StateHasChanged);
     }
 
-    protected override void OnDispose() => NavigationManager.LocationChanged -= OnLocationChanged;
+    protected override void OnDispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+        BadgeNotifier.OnChange -= OnBadgeChange;
+    }
 }

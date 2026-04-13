@@ -154,7 +154,7 @@ partial class Education(
                 );
 
                 if (
-                    !TryHandleError(
+                    TryHandleResult(
                         createResult,
                         e => _editModal?.SetServerErrors(e),
                         ref _errorMessage,
@@ -180,7 +180,7 @@ partial class Education(
             );
 
             if (
-                !TryHandleError(
+                TryHandleResult(
                     result,
                     e => _editModal?.SetServerErrors(e),
                     ref _errorMessage,
@@ -295,7 +295,7 @@ partial class Education(
                 );
 
                 if (
-                    !TryHandleError(
+                    TryHandleResult(
                         result,
                         e => _institutionModal?.SetServerErrors(e),
                         ref _institutionErrorMessage,
@@ -316,7 +316,7 @@ partial class Education(
             );
 
             if (
-                !TryHandleError(
+                TryHandleResult(
                     updateResult,
                     e => _institutionModal?.SetServerErrors(e),
                     ref _institutionErrorMessage,

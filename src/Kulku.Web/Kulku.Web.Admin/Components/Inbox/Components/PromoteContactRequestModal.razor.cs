@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Kulku.Web.Admin.Components.Inbox.Components;
 
-partial class ConvertContactRequestModal
+partial class PromoteContactRequestModal
 {
     [Parameter]
     public bool IsVisible { get; set; }
@@ -16,12 +16,12 @@ partial class ConvertContactRequestModal
     public IReadOnlyList<NetworkCompanyModel> EnrolledCompanies { get; set; } = [];
 
     [Parameter]
-    public EventCallback<ConvertFormModel> OnSave { get; set; }
+    public EventCallback<PromoteFormModel> OnSave { get; set; }
 
     [Parameter]
     public EventCallback OnCancel { get; set; }
 
-    public ConvertFormModel Form { get; set; } = new();
+    public PromoteFormModel Form { get; set; } = new();
 
     private string? _errorMessage;
 
@@ -33,7 +33,7 @@ partial class ConvertContactRequestModal
     public void Load(ContactRequestModel request)
     {
         Request = request;
-        Form = new ConvertFormModel { Summary = $"{request.Subject}: {request.Message}" };
+        Form = new PromoteFormModel { Summary = $"{request.Subject}: {request.Message}" };
         _errorMessage = null;
     }
 
@@ -41,7 +41,7 @@ partial class ConvertContactRequestModal
 
     private Task HandleSubmit() => OnSave.InvokeAsync(Form);
 
-    public sealed class ConvertFormModel
+    public sealed class PromoteFormModel
     {
         public bool IsNewCompany { get; set; }
         public Guid SelectedCompanyId { get; set; } = Guid.Empty;
