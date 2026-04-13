@@ -4,6 +4,7 @@ using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
+using DomainCompany = Kulku.Domain.Cover.Company;
 
 namespace Kulku.Application.Cover.Company;
 
@@ -12,8 +13,11 @@ namespace Kulku.Application.Cover.Company;
 /// </summary>
 public static class CreateCompany
 {
-    public sealed record Command(IReadOnlyList<CompanyTranslationDto> Translations)
-        : ICommand<Guid>;
+    public sealed record Command(
+        string? Website,
+        string? Region,
+        IReadOnlyList<CompanyTranslationDto> Translations
+    ) : ICommand<Guid>;
 
     internal sealed class Handler(ICompanyRepository companyRepository, IUnitOfWork unitOfWork)
         : ICommandHandler<Command, Guid>
@@ -27,8 +31,10 @@ public static class CreateCompany
             if (errors.Length > 0)
                 return ValidationResult<Guid>.WithErrors(errors);
 
-            var company = new Domain.Cover.Company
+            var company = new DomainCompany
             {
+                Website = command.Website,
+                Region = command.Region,
                 Translations =
                 [
                     .. command.Translations.Select(t => new CompanyTranslation

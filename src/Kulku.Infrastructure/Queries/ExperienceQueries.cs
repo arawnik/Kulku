@@ -43,13 +43,28 @@ public class ExperienceQueries(AppDbContext context) : IExperienceQueries
                         ct,
                     }
             )
+            .LeftJoin(
+                _context.Companies,
+                x => x.e.CompanyId,
+                c => c.Id,
+                (x, c) =>
+                    new
+                    {
+                        x.e,
+                        x.et,
+                        x.ct,
+                        c,
+                    }
+            )
             .Select(x => new ExperienceModel(
                 Id: x.e.Id,
                 Title: x.et != null ? x.et.Title : string.Empty,
                 Description: x.et != null ? x.et.Description : string.Empty,
                 Company: new CompanyModel(
                     Name: x.ct != null ? x.ct.Name : string.Empty,
-                    Description: x.ct != null ? x.ct.Description : string.Empty
+                    Description: x.ct != null ? x.ct.Description : string.Empty,
+                    Website: x.c != null ? x.c.Website : null,
+                    Region: x.c != null ? x.c.Region : null
                 ),
                 Keywords: x.e.Keywords.OrderBy(ek => ek.Order)
                     // Avoid multiple selects by shaping first

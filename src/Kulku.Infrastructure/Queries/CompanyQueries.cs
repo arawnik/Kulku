@@ -21,6 +21,8 @@ public class CompanyQueries(AppDbContext context) : ICompanyQueries
             .Companies.AsNoTracking()
             .Select(c => new CompanyTranslationsModel(
                 CompanyId: c.Id,
+                Website: c.Website,
+                Region: c.Region,
                 ExperienceCount: _context.Experiences.Count(e => e.CompanyId == c.Id),
                 Translations: c.Translations.Select(t => new CompanyTranslationItem(
                         t.Language,
@@ -45,6 +47,8 @@ public class CompanyQueries(AppDbContext context) : ICompanyQueries
             .Where(c => c.Id == companyId)
             .Select(c => new CompanyTranslationsModel(
                 CompanyId: c.Id,
+                Website: c.Website,
+                Region: c.Region,
                 ExperienceCount: _context.Experiences.Count(e => e.CompanyId == c.Id),
                 Translations: c.Translations.Select(t => new CompanyTranslationItem(
                         t.Language,

@@ -66,22 +66,3 @@
 			   ButtonIcon="IconKind.Trash"
 			   OnConfirm="HandleConfirmDelete"
 			   OnCancel="() => _confirmingDelete = false" />
-
-@code {
-	[Parameter, EditorRequired]
-	public ProficiencyTranslationsModel Proficiency { get; set; } = null!;
-
-	[Parameter]
-	public EventCallback<Guid> OnEdit { get; set; }
-
-	[Parameter]
-	public EventCallback<Guid> OnDelete { get; set; }
-
-	private bool _confirmingDelete;
-
-	private async Task HandleConfirmDelete()
-	{
-		_confirmingDelete = false;
-		await OnDelete.InvokeAsync(Proficiency.ProficiencyId);
-	}
-}

@@ -2,11 +2,3 @@
 @inject IMarkdownRenderer Markdown
 
 @((MarkupString)Markdown.ToHtml(Content))
-
-@code {
-    /// <summary>
-    /// Raw Markdown (or plain text) to render as HTML.
-    /// </summary>
-    [Parameter]
-    public string? Content { get; set; }
-}

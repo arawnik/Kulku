@@ -19,11 +19,11 @@ services:
     volumes:
       - /var/www/manager/letsencrypt:/etc/letsencrypt:ro
     environment:
-      ASPNETCORE_HTTPS_PORTS: 7219
-      ForceHttps: "true"
-      ASPNETCORE_ENVIRONMENT: Production
+      - ASPNETCORE_HTTPS_PORTS
+      - ASPNETCORE_ENVIRONMENT
+      - ForceHttps
+      - Cors__AllowedOrigins
     ports:
-      - 7219:7219
       - 5144:5144
 
   admin:
@@ -36,11 +36,12 @@ services:
       - /var/www/manager/letsencrypt:/etc/letsencrypt:ro
       - /var/www/jerejunttila/out:/app/assets:ro
     environment:
-      ASPNETCORE_HTTPS_PORTS: 7215
-      ForceHttps: "true"
-      ASPNETCORE_ENVIRONMENT: Production
-      Management__MigrateOnStart: "true"
-      Assets__LocalPath: /app/assets
+      - ASPNETCORE_HTTPS_PORTS
+      - ASPNETCORE_ENVIRONMENT
+      - ForceHttps
+      - Management__MigrateOnStart
+      - Management__ContactUrl
+      - Assets__LocalPath
     ports:
       - 7215:7215
       - 5090:5090

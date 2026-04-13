@@ -2,16 +2,19 @@ using System.Diagnostics.CodeAnalysis;
 using Kulku.Application.Abstractions.Assets;
 using Kulku.Application.Abstractions.Rendering;
 using Kulku.Application.Abstractions.Security;
+using Kulku.Application.Contacts.Ports;
 using Kulku.Application.Cover.Education.Ports;
 using Kulku.Application.Cover.Experience.Ports;
 using Kulku.Application.Cover.Introduction.Ports;
 using Kulku.Application.Cover.Ports;
 using Kulku.Application.IdeaBank.Ports;
+using Kulku.Application.Network.Ports;
 using Kulku.Application.Projects.Ports;
 using Kulku.Domain.Repositories;
 using Kulku.Infrastructure.Assets;
 using Kulku.Infrastructure.Queries;
 using Kulku.Infrastructure.Queries.Ideas;
+using Kulku.Infrastructure.Queries.Network;
 using Kulku.Infrastructure.Rendering;
 using Kulku.Infrastructure.Repositories;
 using Kulku.Infrastructure.Security;
@@ -75,8 +78,17 @@ public static class InfrastructureDependencyInjection
 
         services.AddScoped<IContactRequestRepository, ContactRequestRepository>();
 
+        // Queries
+        services.AddScoped<IContactRequestQueries, ContactRequestQueries>();
+
         services.AddScoped<IIdeaRepository, IdeaRepository>();
         services.AddScoped<IIdeaTagRepository, IdeaTagRepository>();
+
+        // Network
+        services.AddScoped<ICompanyNetworkProfileRepository, CompanyNetworkProfileRepository>();
+        services.AddScoped<INetworkCategoryRepository, NetworkCategoryRepository>();
+        services.AddScoped<INetworkContactRepository, NetworkContactRepository>();
+        services.AddScoped<INetworkInteractionRepository, NetworkInteractionRepository>();
 
         // Queries
         services.AddScoped<IProjectQueries, ProjectQueries>();
@@ -94,6 +106,12 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IIdeaStatusQueries, IdeaStatusQueries>();
         services.AddScoped<IIdeaPriorityQueries, IdeaPriorityQueries>();
         services.AddScoped<IIdeaTagQueries, IdeaTagQueries>();
+
+        // Network
+        services.AddScoped<INetworkCategoryQueries, NetworkCategoryQueries>();
+        services.AddScoped<INetworkCompanyQueries, NetworkCompanyQueries>();
+        services.AddScoped<INetworkContactQueries, NetworkContactQueries>();
+        services.AddScoped<INetworkInteractionQueries, NetworkInteractionQueries>();
 
         return services;
     }

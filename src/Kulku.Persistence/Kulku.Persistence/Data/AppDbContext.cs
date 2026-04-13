@@ -3,6 +3,7 @@ using Kulku.Domain;
 using Kulku.Domain.Contacts;
 using Kulku.Domain.Cover;
 using Kulku.Domain.Ideas;
+using Kulku.Domain.Network;
 using Kulku.Domain.Projects;
 using Kulku.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +56,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<IdeaPriority> IdeaPriorities { get; set; } = null!;
     public DbSet<IdeaPriorityTranslation> IdeaPriorityTranslations { get; set; } = null!;
     public DbSet<IdeaTag> IdeaTags { get; set; } = null!;
+
+    // Network
+    public DbSet<CompanyNetworkProfile> CompanyNetworkProfiles { get; set; } = null!;
+    public DbSet<NetworkCategory> NetworkCategories { get; set; } = null!;
+    public DbSet<CompanyNetworkProfileCategory> CompanyNetworkProfileCategories { get; set; } =
+        null!;
+    public DbSet<NetworkContact> NetworkContacts { get; set; } = null!;
+    public DbSet<NetworkInteraction> NetworkInteractions { get; set; } = null!;
 
     /// <summary>
     /// Configures global EF Core model conventions for this DbContext.

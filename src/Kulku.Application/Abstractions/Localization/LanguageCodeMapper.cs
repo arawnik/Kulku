@@ -20,6 +20,13 @@ namespace Kulku.Application.Abstractions.Localization;
 public static class LanguageCodeMapper
 {
     /// <summary>
+    /// Pre-computed list of <see cref="LanguageCode"/> values for all <see cref="Defaults.SupportedCultures"/>.
+    /// Use this instead of manually mapping culture strings to language codes.
+    /// </summary>
+    public static IReadOnlyList<LanguageCode> SupportedLanguageCodes { get; } =
+        [.. Defaults.SupportedCultures.Select(FromCulture)];
+
+    /// <summary>
     /// Maps a <see cref="CultureInfo"/> instance to a supported <see cref="LanguageCode"/>.
     /// </summary>
     /// <param name="culture">

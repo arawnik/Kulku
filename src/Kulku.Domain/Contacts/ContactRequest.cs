@@ -34,4 +34,9 @@ public class ContactRequest
     /// The UTC timestamp when the contact request was created.
     /// </summary>
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+
+    /// <summary>
+    /// The current lifecycle status of this contact request.
+    /// </summary>
+    public ContactRequestStatus Status { get; set; } = ContactRequestStatus.New;
 }

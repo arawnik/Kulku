@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Kulku.Application.Contacts;
+using Kulku.Application.Contacts.Models;
 using Kulku.Application.Cover.Company;
 using Kulku.Application.Cover.Education;
 using Kulku.Application.Cover.Education.Models;
@@ -11,6 +12,11 @@ using Kulku.Application.Cover.Introduction.Models;
 using Kulku.Application.Cover.Models;
 using Kulku.Application.IdeaBank;
 using Kulku.Application.IdeaBank.Models;
+using Kulku.Application.Network.Category;
+using Kulku.Application.Network.Company;
+using Kulku.Application.Network.Contact;
+using Kulku.Application.Network.Interaction;
+using Kulku.Application.Network.Models;
 using Kulku.Application.Projects;
 using Kulku.Application.Projects.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -196,6 +202,31 @@ public static class ApplicationDependencyInjection
             SubmitContactRequest.Handler
         >();
 
+        services.AddScoped<
+            IQueryHandler<GetContactRequests.Query, IReadOnlyList<ContactRequestModel>>,
+            GetContactRequests.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetContactRequestDetail.Query, ContactRequestModel?>,
+            GetContactRequestDetail.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetContactRequestCountByStatus.Query, int>,
+            GetContactRequestCountByStatus.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<UpdateContactRequestStatus.Command>,
+            UpdateContactRequestStatus.Handler
+        >();
+
+        services.AddScoped<
+            ICommandHandler<PromoteContactRequest.Command>,
+            PromoteContactRequest.Handler
+        >();
+
         // Company CRUD
         services.AddScoped<
             IQueryHandler<GetCompanies.Query, IReadOnlyList<CompanyTranslationsModel>>,
@@ -272,6 +303,90 @@ public static class ApplicationDependencyInjection
         services.AddScoped<ICommandHandler<CreateIdeaTag.Command, Guid>, CreateIdeaTag.Handler>();
         services.AddScoped<ICommandHandler<UpdateIdeaTag.Command>, UpdateIdeaTag.Handler>();
         services.AddScoped<ICommandHandler<DeleteIdeaTag.Command>, DeleteIdeaTag.Handler>();
+
+        // Network
+        services.AddScoped<
+            IQueryHandler<GetNetworkCategories.Query, IReadOnlyList<NetworkCategoryModel>>,
+            GetNetworkCategories.Handler
+        >();
+        services.AddScoped<
+            ICommandHandler<CreateNetworkCategory.Command, Guid>,
+            CreateNetworkCategory.Handler
+        >();
+        services.AddScoped<
+            ICommandHandler<UpdateNetworkCategory.Command>,
+            UpdateNetworkCategory.Handler
+        >();
+        services.AddScoped<
+            ICommandHandler<DeleteNetworkCategory.Command>,
+            DeleteNetworkCategory.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetNetworkCompanies.Query, IReadOnlyList<NetworkCompanyModel>>,
+            GetNetworkCompanies.Handler
+        >();
+        services.AddScoped<
+            IQueryHandler<GetNetworkCompanyDetail.Query, NetworkCompanyDetailModel?>,
+            GetNetworkCompanyDetail.Handler
+        >();
+        services.AddScoped<
+            IQueryHandler<
+                GetAvailableNetworkCompanies.Query,
+                IReadOnlyList<NetworkAvailableCompanyModel>
+            >,
+            GetAvailableNetworkCompanies.Handler
+        >();
+        services.AddScoped<
+            ICommandHandler<EnrollNetworkCompany.Command, Guid>,
+            EnrollNetworkCompany.Handler
+        >();
+        services.AddScoped<
+            ICommandHandler<UpdateNetworkProfile.Command>,
+            UpdateNetworkProfile.Handler
+        >();
+        services.AddScoped<
+            ICommandHandler<DisenrollNetworkCompany.Command>,
+            DisenrollNetworkCompany.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetNetworkContacts.Query, IReadOnlyList<NetworkContactModel>>,
+            GetNetworkContacts.Handler
+        >();
+        services.AddScoped<
+            ICommandHandler<CreateNetworkContact.Command, Guid>,
+            CreateNetworkContact.Handler
+        >();
+        services.AddScoped<
+            ICommandHandler<UpdateNetworkContact.Command>,
+            UpdateNetworkContact.Handler
+        >();
+        services.AddScoped<
+            ICommandHandler<DeleteNetworkContact.Command>,
+            DeleteNetworkContact.Handler
+        >();
+        services.AddScoped<
+            ICommandHandler<MoveNetworkContact.Command>,
+            MoveNetworkContact.Handler
+        >();
+
+        services.AddScoped<
+            IQueryHandler<GetNetworkInteractions.Query, IReadOnlyList<NetworkInteractionModel>>,
+            GetNetworkInteractions.Handler
+        >();
+        services.AddScoped<
+            ICommandHandler<CreateNetworkInteraction.Command, Guid>,
+            CreateNetworkInteraction.Handler
+        >();
+        services.AddScoped<
+            ICommandHandler<UpdateNetworkInteraction.Command>,
+            UpdateNetworkInteraction.Handler
+        >();
+        services.AddScoped<
+            ICommandHandler<DeleteNetworkInteraction.Command>,
+            DeleteNetworkInteraction.Handler
+        >();
 
         return services;
     }

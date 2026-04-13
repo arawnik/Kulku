@@ -1,3 +1,4 @@
+using Kulku.Domain;
 using Kulku.Domain.Cover;
 using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,9 @@ public class CompanyConfiguration : IEntityTypeConfiguration<Company>
     {
         builder.HasKey(c => c.Id);
         builder.Property(c => c.Id).UuidGeneratedOnAdd();
+
+        builder.Property(c => c.Website).HasMaxLength(Defaults.TextFieldLength);
+        builder.Property(c => c.Region).HasMaxLength(Defaults.TextFieldLength);
 
         builder
             .HasMany(c => c.Translations)

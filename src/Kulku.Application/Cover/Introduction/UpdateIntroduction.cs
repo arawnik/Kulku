@@ -4,6 +4,7 @@ using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
+using DomainIntroduction = Kulku.Domain.Cover.Introduction;
 
 namespace Kulku.Application.Cover.Introduction;
 
@@ -57,7 +58,7 @@ public static class UpdateIntroduction
         }
 
         private static void MergeTranslations(
-            Domain.Cover.Introduction introduction,
+            DomainIntroduction introduction,
             IReadOnlyList<IntroductionTranslationDto> incoming
         )
         {
