@@ -1,0 +1,93 @@
+@using Kulku.Application.Contacts.Models
+@using Kulku.Application.Network.Models
+
+<ModalDialog Visible="@IsVisible" Title="Promote to Interaction"
+			 Size="ModalSize.Large"
+			 OnClose="OnCancel">
+	<ChildContent>
+		@if (Request is not null)
+		{
+			<div class="card bg-body-secondary mb-3">
+				<div class="card-body py-2">
+					<div class="fw-semibold">@Request.Name</div>
+					<div class="small text-muted">
+						<Icon Kind="IconKind.Envelope" Size="12" CssClass="me-1" />@Request.Email
+					</div>
+					<div class="small fw-medium mt-1">@Request.Subject</div>
+					<div class="small text-muted mt-1" style="white-space: pre-line;">@Request.Message</div>
+					<div class="small text-muted mt-1">Received: @Request.Timestamp.ToString("yyyy-MM-dd HH:mm")</div>
+				</div>
+			</div>
+
+			<EditForm Model="@Form" OnValidSubmit="HandleSubmit">
+				<DataAnnotationsValidator />
+
+				<div class="mb-3">
+					<label class="form-label">Company <span class="text-danger">*</span></label>
+
+					<div class="btn-group btn-group-sm w-100 mb-2" role="group">
+						<button type="button"
+								class="btn @(!Form.IsNewCompany ? "btn-primary" : "btn-outline-primary")"
+								@onclick="() => Form.IsNewCompany = false">
+							Pick existing
+						</button>
+						<button type="button"
+								class="btn @(Form.IsNewCompany ? "btn-primary" : "btn-outline-primary")"
+								@onclick="() => Form.IsNewCompany = true">
+							Create new
+						</button>
+					</div>
+
+					@if (Form.IsNewCompany)
+					{
+						<div class="mb-2">
+							<label class="form-label">Company Name <span class="text-danger">*</span></label>
+							<InputText class="form-control" @bind-Value="Form.NewCompanyName" placeholder="Company name" />
+							<ValidationMessage For="@(() => Form.NewCompanyName)" />
+						</div>
+						<div class="row g-2">
+							<div class="col-md-6">
+								<label class="form-label">Website</label>
+								<InputText class="form-control" @bind-Value="Form.NewCompanyWebsite" placeholder="https://..." />
+							</div>
+							<div class="col-md-6">
+								<label class="form-label">Region</label>
+								<InputText class="form-control" @bind-Value="Form.NewCompanyRegion" placeholder="e.g. Helsinki, Finland" />
+							</div>
+						</div>
+					}
+					else
+					{
+						<select class="form-select" @bind="Form.SelectedCompanyId">
+							<option value="@Guid.Empty">— Select a company —</option>
+							@foreach (var c in EnrolledCompanies.OrderBy(c => c.Name))
+							{
+								<option value="@c.CompanyId">@c.Name @(c.Region is not null ? $"({c.Region})" : "")</option>
+							}
+						</select>
+					}
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label">Summary</label>
+					<textarea class="form-control" rows="3" @bind="Form.Summary"
+							  placeholder="Defaults to subject + message if left empty"></textarea>
+					<div class="form-text">Leave blank to use the original subject and message.</div>
+				</div>
+
+				@if (!string.IsNullOrWhiteSpace(_errorMessage))
+				{
+					<div class="alert alert-danger py-2 small">@_errorMessage</div>
+				}
+
+				<div class="d-flex gap-2">
+					<button type="submit" class="btn btn-success"
+							disabled="@IsSubmitDisabled">
+						<Icon Kind="IconKind.Check" Size="14" CssClass="me-1" />Promote
+					</button>
+					<button type="button" class="btn btn-outline-secondary" @onclick="OnCancel">Cancel</button>
+				</div>
+			</EditForm>
+		}
+	</ChildContent>
+</ModalDialog>

@@ -1,0 +1,114 @@
+@page "/network/activity"
+@using Kulku.Application.Network.Models
+@using Kulku.Domain.Network
+@using Kulku.Web.Admin.Components.Network.Components
+
+@attribute [Authorize]
+
+<PageTitle>Activity Log</PageTitle>
+
+<div class="container-fluid py-4">
+	<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+		<div>
+			<h1 class="h4 mb-1">Activity Log</h1>
+			<div class="text-muted">Full interaction history across all companies.</div>
+		</div>
+		<div class="d-flex flex-wrap gap-2">
+			<NavLink class="btn btn-sm btn-outline-secondary" href="network">
+				<span style="display:inline-block;transform:rotate(180deg)"><Icon Kind="IconKind.ChevronRight" Size="14" /></span> Dashboard
+			</NavLink>
+			<NavLink class="btn btn-sm btn-primary" href="network/loginteraction">
+				<Icon Kind="IconKind.Plus" Size="14" CssClass="me-1" />Log interaction
+			</NavLink>
+		</div>
+	</div>
+
+	@* ── Filters ── *@
+	<div class="card shadow-sm mb-3">
+		<div class="card-body py-2">
+			<div class="row g-2 align-items-end">
+				<div class="col-md-3">
+					<label class="form-label small text-muted mb-1">Search</label>
+					<input type="text" class="form-control form-control-sm" placeholder="Summary or company name…"
+						   @bind="_searchText" @bind:event="oninput" />
+				</div>
+				<div class="col-md-3">
+					<label class="form-label small text-muted mb-1">Company</label>
+					<select class="form-select form-select-sm" @bind="_filterCompanyId">
+						<option value="">All companies</option>
+						@foreach (var c in _companies.OrderBy(c => c.Name))
+						{
+							<option value="@c.CompanyId">@c.Name</option>
+						}
+					</select>
+				</div>
+				<div class="col-md-2">
+					<label class="form-label small text-muted mb-1">Channel</label>
+					<select class="form-select form-select-sm" @bind="_filterChannel">
+						<option value="">All channels</option>
+						@foreach (var ch in Enum.GetValues<InteractionChannel>())
+						{
+							<option value="@ch">@ChannelLabel(ch)</option>
+						}
+					</select>
+				</div>
+				<div class="col-md-2">
+					<label class="form-label small text-muted mb-1">Direction</label>
+					<select class="form-select form-select-sm" @bind="_filterDirection">
+						<option value="">All</option>
+						<option value="@InteractionDirection.Inbound">Inbound</option>
+						<option value="@InteractionDirection.Outbound">Outbound</option>
+					</select>
+				</div>
+				<div class="col-md-2 d-flex align-items-end">
+					<button class="btn btn-sm btn-outline-secondary w-100" @onclick="ClearFilters">
+						Clear filters
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	@* ── Interaction list ── *@
+	@{
+		var filtered = FilteredInteractions;
+		var visible = filtered.Take(_visibleCount).ToList();
+		var hasMore = filtered.Count > _visibleCount;
+	}
+
+	@if (filtered.Count == 0)
+	{
+		<div class="text-muted text-center py-5">
+			@if (_allInteractions.Count == 0)
+			{
+				<div class="mb-2">No interactions recorded yet.</div>
+				<NavLink href="network/loginteraction" class="btn btn-sm btn-primary">Log your first interaction</NavLink>
+			}
+			else
+			{
+				<div>No interactions match the current filters.</div>
+			}
+		</div>
+	}
+	else
+	{
+		<div class="mb-2 text-muted small">
+			Showing @visible.Count of @filtered.Count interaction(s)
+		</div>
+
+		@foreach (var interaction in visible)
+		{
+			<InteractionCard Interaction="@interaction"
+							 CompanyLink="@($"/network/companies/{interaction.CompanyId}")" />
+		}
+
+		@if (hasMore)
+		{
+			<div class="text-center py-3">
+				<button class="btn btn-sm btn-outline-primary" @onclick="ShowMore">
+					Show more (@(filtered.Count - _visibleCount) remaining)
+				</button>
+			</div>
+		}
+	}
+</div>

@@ -16,6 +16,16 @@ public class Company : ITranslatableEntity<CompanyTranslation>
     public Guid Id { get; set; }
 
     /// <summary>
+    /// Optional website URL for the company.
+    /// </summary>
+    public string? Website { get; set; }
+
+    /// <summary>
+    /// Optional geographic region or location of the company.
+    /// </summary>
+    public string? Region { get; set; }
+
+    /// <summary>
     /// A collection of localized translations for this company record.
     /// </summary>
     public ICollection<CompanyTranslation> Translations { get; init; } = [];

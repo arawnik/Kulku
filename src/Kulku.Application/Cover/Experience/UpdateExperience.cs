@@ -4,6 +4,7 @@ using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
+using DomainExperience = Kulku.Domain.Cover.Experience;
 
 namespace Kulku.Application.Cover.Experience;
 
@@ -62,7 +63,7 @@ public static class UpdateExperience
         }
 
         private static void MergeTranslations(
-            Domain.Cover.Experience experience,
+            DomainExperience experience,
             IReadOnlyList<ExperienceTranslationDto> incoming
         )
         {

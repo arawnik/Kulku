@@ -5,225 +5,96 @@
 @using SoulNETLib.Clean.Domain
 
 <ModalDialog Visible="@(_form != null)"
-             Title="@(Mode == ModalMode.Create ? "Create Experience" : "Edit Experience")"
-             OnClose="OnCancel">
-    <ChildContent>
-        @if (ErrorMessage is not null)
-        {
-            <div class="alert alert-danger py-2 mb-3">@ErrorMessage</div>
-        }
-        @if (_form != null)
-        {
-            <EditForm EditContext="@_editContext">
-                <DataAnnotationsValidator />
-                <ServerValidation @ref="_serverValidation" />
+			 Title="@(Mode == ModalMode.Create ? "Create Experience" : "Edit Experience")"
+			 OnClose="OnCancel">
+	<ChildContent>
+		@if (ErrorMessage is not null)
+		{
+			<div class="alert alert-danger py-2 mb-3">@ErrorMessage</div>
+		}
+		@if (_form != null)
+		{
+			<EditForm EditContext="@_editContext">
+				<DataAnnotationsValidator />
+				<ServerValidation @ref="_serverValidation" />
 
-                @if (Mode == ModalMode.Create && Companies is not null)
-                {
-                    <div class="mb-4">
-                        <label class="form-label">Company</label>
-                        <InputSelect @bind-Value="_form.CompanyId" class="form-select"
-                                     disabled="@IsSaving">
-                            <option value="">— Select company —</option>
-                            @foreach (var company in Companies)
-                            {
-                                var name = company.Translations.FirstOrDefault()?.Name ?? "Unnamed";
-                                <option value="@company.CompanyId">@name</option>
-                            }
-                        </InputSelect>
-                        <ValidationMessage For="@(() => _form.CompanyId)" />
-                    </div>
-                }
+				@if (Mode == ModalMode.Create && Companies is not null)
+				{
+					<div class="mb-4">
+						<label class="form-label">Company</label>
+						<InputSelect @bind-Value="_form.CompanyId" class="form-select"
+									 disabled="@IsSaving">
+							<option value="">— Select company —</option>
+							@foreach (var company in Companies)
+							{
+								var name = company.Translations.FirstOrDefault()?.Name ?? "Unnamed";
+								<option value="@company.CompanyId">@name</option>
+							}
+						</InputSelect>
+						<ValidationMessage For="@(() => _form.CompanyId)" />
+					</div>
+				}
 
-                <div class="row g-3 mb-4">
-                    <div class="col-md-6">
-                        <label class="form-label">Start Date</label>
-                        <InputDate @bind-Value="_form.StartDate" class="form-control"
-                                   disabled="@IsSaving" />
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">End Date <span class="text-muted fw-normal">(empty = ongoing)</span></label>
-                        <InputDate @bind-Value="_form.EndDate" class="form-control"
-                                   disabled="@IsSaving" />
-                        <ValidationMessage For="@(() => _form.EndDate)" />
-                    </div>
-                </div>
+				<div class="row g-3 mb-4">
+					<div class="col-md-6">
+						<label class="form-label">Start Date</label>
+						<InputDate @bind-Value="_form.StartDate" class="form-control"
+								   disabled="@IsSaving" />
+					</div>
+					<div class="col-md-6">
+						<label class="form-label">End Date <span class="text-muted fw-normal">(empty = ongoing)</span></label>
+						<InputDate @bind-Value="_form.EndDate" class="form-control"
+								   disabled="@IsSaving" />
+						<ValidationMessage For="@(() => _form.EndDate)" />
+					</div>
+				</div>
 
-                <h6 class="mb-3">Translations</h6>
+				<h6 class="mb-3">Translations</h6>
 
-                @for (var i = 0; i < _form.Translations.Count; i++)
-                {
-                    var index = i;
-                    var trans = _form.Translations[index];
+				@for (var i = 0; i < _form.Translations.Count; i++)
+				{
+					var index = i;
+					var trans = _form.Translations[index];
 
-                    <div class="card mb-3">
-                        <div class="card-header py-2">
-                            <strong>@LanguageDisplayHelper.DisplayName(trans.Language)</strong>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label">Title</label>
-                                <InputText @bind-Value="_form.Translations[index].Title"
-                                           class="form-control" disabled="@IsSaving" />
-                                <ValidationMessage For="@(() => _form.Translations[index].Title)" />
-                            </div>
-                            <div>
-                                <label class="form-label">Description</label>
-                                <InputTextArea @bind-Value="_form.Translations[index].Description"
-                                               class="form-control" rows="4"
-                                               disabled="@IsSaving" />
-                            </div>
-                        </div>
-                    </div>
-                }
-            </EditForm>
-        }
-    </ChildContent>
-    <FooterContent>
-        <button type="button" class="btn btn-secondary"
-                @onclick="OnCancel" disabled="@IsSaving">
-            Cancel
-        </button>
-        <button type="button" class="btn btn-primary"
-                @onclick="HandleSubmit" disabled="@IsSaving">
-            @if (IsSaving)
-            {
-                <span class="spinner-border spinner-border-sm me-1"></span>
-                <span>Saving…</span>
-            }
-            else
-            {
-                <span>@(Mode == ModalMode.Create ? "Create" : "Save Changes")</span>
-            }
-        </button>
-    </FooterContent>
+					<div class="card mb-3">
+						<div class="card-header py-2">
+							<strong>@LanguageDisplayHelper.DisplayName(trans.Language)</strong>
+						</div>
+						<div class="card-body">
+							<div class="mb-3">
+								<label class="form-label">Title</label>
+								<InputText @bind-Value="_form.Translations[index].Title"
+										   class="form-control" disabled="@IsSaving" />
+								<ValidationMessage For="@(() => _form.Translations[index].Title)" />
+							</div>
+							<div>
+								<label class="form-label">Description</label>
+								<InputTextArea @bind-Value="_form.Translations[index].Description"
+											   class="form-control" rows="4"
+											   disabled="@IsSaving" />
+							</div>
+						</div>
+					</div>
+				}
+			</EditForm>
+		}
+	</ChildContent>
+	<FooterContent>
+		<button type="button" class="btn btn-secondary"
+				@onclick="OnCancel" disabled="@IsSaving">
+			Cancel
+		</button>
+		<button type="button" class="btn btn-primary"
+				@onclick="HandleSubmit" disabled="@IsSaving">
+			@if (IsSaving)
+			{
+				<span class="spinner-border spinner-border-sm me-1"></span>
+				<span>Saving…</span>
+			}
+			else
+			{
+				<span>@(Mode == ModalMode.Create ? "Create" : "Save Changes")</span>
+			}
+		</button>
+	</FooterContent>
 </ModalDialog>
-
-@code {
-    [Parameter, EditorRequired]
-    public ExperienceTranslationsModel? Model { get; set; }
-
-    [Parameter]
-    public ModalMode Mode { get; set; } = ModalMode.Edit;
-
-    /// <summary>
-    /// Available companies for the dropdown. Only used in <see cref="ModalMode.Create"/> mode.
-    /// </summary>
-    [Parameter]
-    public IReadOnlyList<CompanyTranslationsModel>? Companies { get; set; }
-
-    [Parameter]
-    public EventCallback<ExperienceTranslationsModel> OnSave { get; set; }
-
-    [Parameter]
-    public EventCallback OnCancel { get; set; }
-
-    [Parameter]
-    public bool IsSaving { get; set; }
-
-    /// <summary>
-    /// General error message for non-validation failures (e.g. "Not found", load errors).
-    /// </summary>
-    [Parameter]
-    public string? ErrorMessage { get; set; }
-
-    private ExperienceEditFormModel? _form;
-    private EditContext? _editContext;
-    private ServerValidation? _serverValidation;
-
-    /// <summary>
-    /// Track which model instance we built the form from so we only rebuild
-    /// when the parent actually provides a different experience, not on every re-render.
-    /// </summary>
-    private Guid? _lastModelId;
-
-    /// <summary>
-    /// Pushes server validation errors into the form's validation state.
-    /// Called by the parent page after a failed save.
-    /// </summary>
-    public void SetServerErrors(IEnumerable<Error> errors)
-    {
-        _serverValidation?.DisplayErrors(errors);
-    }
-
-    protected override void OnParametersSet()
-    {
-        if (Model is null)
-        {
-            _form = null;
-            _editContext = null;
-            _lastModelId = null;
-            return;
-        }
-
-        if (_lastModelId != Model.ExperienceId)
-        {
-            _lastModelId = Model.ExperienceId;
-            _form = new ExperienceEditFormModel
-            {
-                ExperienceId = Model.ExperienceId,
-                CompanyId = Model.CompanyId,
-                StartDate = Model.StartDate,
-                EndDate = Model.EndDate,
-                Translations = Model.Translations
-                    .Select(t => new TranslationEditModel
-                    {
-                        Language = t.Language,
-                        Title = t.Title,
-                        Description = t.Description,
-                    })
-                    .ToList(),
-            };
-            _editContext = new EditContext(_form);
-            _editContext.SetFieldCssClassProvider(new BootstrapFieldCssClassProvider());
-        }
-    }
-
-    private async Task HandleSubmit()
-    {
-        if (_form is null || Model is null || _editContext is null) return;
-        if (!_editContext.Validate()) return;
-
-        if (Mode == ModalMode.Create && _form.CompanyId == Guid.Empty)
-        {
-            _serverValidation?.DisplayErrors(
-            [
-                new Error("CompanyId.Required", "Please select a company.", "CompanyId"),
-            ]);
-            return;
-        }
-
-        var updatedTranslations = _form.Translations
-            .Select(t => new ExperienceTranslationItem(t.Language, t.Title, t.Description))
-            .ToList();
-
-        var updated = Model with
-        {
-            CompanyId = _form.CompanyId,
-            StartDate = _form.StartDate,
-            EndDate = _form.EndDate,
-            Translations = updatedTranslations,
-        };
-
-        await OnSave.InvokeAsync(updated);
-    }
-
-    private sealed class ExperienceEditFormModel
-    {
-        public Guid ExperienceId { get; init; }
-        public Guid CompanyId { get; set; }
-        public DateOnly StartDate { get; set; }
-        public DateOnly? EndDate { get; set; }
-        public List<TranslationEditModel> Translations { get; set; } = [];
-    }
-
-    private sealed class TranslationEditModel
-    {
-        public LanguageCode Language { get; init; }
-
-        [Required(ErrorMessage = "Title is required.")]
-        public string Title { get; set; } = string.Empty;
-
-        public string Description { get; set; } = string.Empty;
-    }
-}

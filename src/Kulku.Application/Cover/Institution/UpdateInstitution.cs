@@ -4,6 +4,7 @@ using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
+using DomainInstitution = Kulku.Domain.Cover.Institution;
 
 namespace Kulku.Application.Cover.Institution;
 
@@ -46,7 +47,7 @@ public static class UpdateInstitution
         }
 
         private static void MergeTranslations(
-            Domain.Cover.Institution institution,
+            DomainInstitution institution,
             IReadOnlyList<InstitutionTranslationDto> incoming
         )
         {

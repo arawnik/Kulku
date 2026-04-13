@@ -3,11 +3,9 @@ using Kulku.Application.Cover.Education.Models;
 using Kulku.Application.Cover.Institution;
 using Kulku.Application.Cover.Institution.Models;
 using Kulku.Application.Cover.Models;
-using Kulku.Domain;
 using Kulku.Web.Admin.Components.Cv.Components;
 using Kulku.Web.Admin.Components.Shared;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
-using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Web.Admin.Components.Cv.Pages;
 
@@ -91,11 +89,11 @@ partial class Education(
     {
         _errorMessage = null;
 
-        var blankTranslations = Defaults
-            .SupportedCultures.Select(LanguageCodeFromCulture)
-            .Where(lc => lc.HasValue)
-            .Select(lc => new EducationTranslationItem(lc!.Value, string.Empty, string.Empty))
-            .ToList();
+        var blankTranslations = BuildBlankTranslations(lc => new EducationTranslationItem(
+            lc,
+            string.Empty,
+            string.Empty
+        ));
 
         CurrentEditModel = new EducationTranslationsModel(
             EducationId: Guid.NewGuid(),
@@ -143,7 +141,6 @@ partial class Education(
                 ))
                 .ToList();
 
-            Result result;
             if (_modalMode == ModalMode.Create)
             {
                 var createResult = await createHandler.Handle(
@@ -156,25 +153,23 @@ partial class Education(
                     CancellationToken
                 );
 
-                if (createResult.IsSuccess)
+                if (
+                    TryHandleResult(
+                        createResult,
+                        e => _editModal?.SetServerErrors(e),
+                        ref _errorMessage,
+                        "Failed to create education. Please try again."
+                    )
+                )
                 {
                     CloseEditor();
                     await LoadAllAsync();
-                    return;
                 }
 
-                if (createResult is IValidationResult createValidation)
-                {
-                    _editModal?.SetServerErrors(createValidation.Errors);
-                    return;
-                }
-
-                _errorMessage =
-                    createResult.Error?.Message ?? "Failed to create education. Please try again.";
                 return;
             }
 
-            result = await updateHandler.Handle(
+            var result = await updateHandler.Handle(
                 new UpdateEducation.Command(
                     model.EducationId,
                     model.StartDate,
@@ -184,19 +179,17 @@ partial class Education(
                 CancellationToken
             );
 
-            if (result.IsSuccess)
+            if (
+                TryHandleResult(
+                    result,
+                    e => _editModal?.SetServerErrors(e),
+                    ref _errorMessage,
+                    "Failed to save changes. Please try again."
+                )
+            )
             {
                 CloseEditor();
                 await LoadAllAsync();
-            }
-            else if (result is IValidationResult validation)
-            {
-                _editModal?.SetServerErrors(validation.Errors);
-            }
-            else
-            {
-                _errorMessage =
-                    result.Error?.Message ?? "Failed to save changes. Please try again.";
             }
         }
         finally
@@ -243,16 +236,12 @@ partial class Education(
         _institutionErrorMessage = null;
         _institutionsExpanded = true;
 
-        var blankTranslations = Defaults
-            .SupportedCultures.Select(LanguageCodeFromCulture)
-            .Where(lc => lc.HasValue)
-            .Select(lc => new InstitutionTranslationItem(
-                lc!.Value,
-                string.Empty,
-                null,
-                string.Empty
-            ))
-            .ToList();
+        var blankTranslations = BuildBlankTranslations(lc => new InstitutionTranslationItem(
+            lc,
+            string.Empty,
+            null,
+            string.Empty
+        ));
 
         _currentInstitution = new InstitutionTranslationsModel(
             InstitutionId: Guid.NewGuid(),
@@ -305,20 +294,19 @@ partial class Education(
                     CancellationToken
                 );
 
-                if (result.IsSuccess)
+                if (
+                    TryHandleResult(
+                        result,
+                        e => _institutionModal?.SetServerErrors(e),
+                        ref _institutionErrorMessage,
+                        "Failed to create institution."
+                    )
+                )
                 {
                     CloseInstitutionEditor();
                     await LoadAllAsync();
-                    return;
                 }
 
-                if (result is IValidationResult v)
-                {
-                    _institutionModal?.SetServerErrors(v.Errors);
-                    return;
-                }
-
-                _institutionErrorMessage = result.Error?.Message ?? "Failed to create institution.";
                 return;
             }
 
@@ -327,19 +315,17 @@ partial class Education(
                 CancellationToken
             );
 
-            if (updateResult.IsSuccess)
+            if (
+                TryHandleResult(
+                    updateResult,
+                    e => _institutionModal?.SetServerErrors(e),
+                    ref _institutionErrorMessage,
+                    "Failed to save institution."
+                )
+            )
             {
                 CloseInstitutionEditor();
                 await LoadAllAsync();
-            }
-            else if (updateResult is IValidationResult validation)
-            {
-                _institutionModal?.SetServerErrors(validation.Errors);
-            }
-            else
-            {
-                _institutionErrorMessage =
-                    updateResult.Error?.Message ?? "Failed to save institution.";
             }
         }
         finally
@@ -372,14 +358,4 @@ partial class Education(
         _currentInstitution = null;
         _institutionErrorMessage = null;
     }
-
-    // ── Helpers ──────────────────────────────────────
-
-    private static LanguageCode? LanguageCodeFromCulture(string culture) =>
-        culture switch
-        {
-            "en" => LanguageCode.English,
-            "fi" => LanguageCode.Finnish,
-            _ => null,
-        };
 }

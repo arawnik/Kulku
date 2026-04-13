@@ -86,4 +86,29 @@ public enum IconKind
 
     /// <summary>Eye with slash — hidden / not displayed.</summary>
     EyeSlash,
+
+    // ── CRM ──
+
+    /// <summary>Speedometer — dashboard / overview.</summary>
+    Speedometer,
+
+    /// <summary>Building — company / organization.</summary>
+    Building,
+
+    /// <summary>Chat dots — interaction / conversation.</summary>
+    ChatDots,
+
+    /// <summary>Person lines fill — contact / person details.</summary>
+    PersonLinesFill,
+
+    /// <summary>Kanban — pipeline / board view.</summary>
+    Kanban,
+
+    // ── Inbox ──
+
+    /// <summary>Envelope — inbox / contact requests.</summary>
+    Envelope,
+
+    /// <summary>Exclamation triangle — warning / spam.</summary>
+    ExclamationTriangle,
 }

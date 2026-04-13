@@ -1,0 +1,38 @@
+@using Kulku.Web.Admin.Components.Network
+
+<ModalDialog Visible="@IsVisible" Title="@(Mode == ModalMode.Create ? "New Category" : "Edit Category")"
+			 Size="ModalSize.Small"
+			 OnClose="OnCancel">
+	<ChildContent>
+		<EditForm Model="@Form" OnValidSubmit="HandleSave">
+			<DataAnnotationsValidator />
+
+			<div class="mb-3">
+				<label class="form-label">Name</label>
+				<InputText class="form-control" @bind-Value="Form.Name" />
+				<ValidationMessage For="() => Form.Name" />
+			</div>
+
+			<div class="mb-3">
+				<label class="form-label">Color token</label>
+				<InputSelect class="form-select" @bind-Value="Form.ColorToken">
+					<option value="">— None —</option>
+					<option value="primary">primary</option>
+					<option value="secondary">secondary</option>
+					<option value="success">success</option>
+					<option value="danger">danger</option>
+					<option value="warning">warning</option>
+					<option value="info">info</option>
+				</InputSelect>
+				<div class="form-text">Bootstrap contextual color for the badge.</div>
+			</div>
+
+			<div class="d-flex gap-2">
+				<button type="submit" class="btn btn-primary">
+					@(Mode == ModalMode.Create ? "Create" : "Save changes")
+				</button>
+				<button type="button" class="btn btn-outline-secondary" @onclick="OnCancel">Cancel</button>
+			</div>
+		</EditForm>
+	</ChildContent>
+</ModalDialog>

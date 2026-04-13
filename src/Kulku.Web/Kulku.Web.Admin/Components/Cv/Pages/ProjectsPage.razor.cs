@@ -1,10 +1,8 @@
 using Kulku.Application.Projects;
 using Kulku.Application.Projects.Models;
-using Kulku.Domain;
 using Kulku.Web.Admin.Components.Cv.Components;
 using Kulku.Web.Admin.Components.Shared;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
-using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Web.Admin.Components.Cv.Pages;
 
@@ -54,16 +52,12 @@ partial class ProjectsPage(
         _errorMessage = null;
         _keywords ??= await LoadKeywordsAsync();
 
-        var blankTranslations = Defaults
-            .SupportedCultures.Select(LanguageCodeFromCulture)
-            .Where(lc => lc.HasValue)
-            .Select(lc => new ProjectTranslationItem(
-                lc!.Value,
-                string.Empty,
-                string.Empty,
-                string.Empty
-            ))
-            .ToList();
+        var blankTranslations = BuildBlankTranslations(lc => new ProjectTranslationItem(
+            lc,
+            string.Empty,
+            string.Empty,
+            string.Empty
+        ));
 
         CurrentEditModel = new ProjectTranslationsModel(
             ProjectId: Guid.NewGuid(),
@@ -113,7 +107,6 @@ partial class ProjectsPage(
                 ))
                 .ToList();
 
-            Result result;
             if (_modalMode == ModalMode.Create)
             {
                 var createResult = await createHandler.Handle(
@@ -127,25 +120,23 @@ partial class ProjectsPage(
                     CancellationToken
                 );
 
-                if (createResult.IsSuccess)
+                if (
+                    TryHandleResult(
+                        createResult,
+                        e => _editModal?.SetServerErrors(e),
+                        ref _errorMessage,
+                        "Failed to create project. Please try again."
+                    )
+                )
                 {
                     CloseEditor();
                     await LoadProjectsAsync();
-                    return;
                 }
 
-                if (createResult is IValidationResult createValidation)
-                {
-                    _editModal?.SetServerErrors(createValidation.Errors);
-                    return;
-                }
-
-                _errorMessage =
-                    createResult.Error?.Message ?? "Failed to create project. Please try again.";
                 return;
             }
 
-            result = await updateHandler.Handle(
+            var result = await updateHandler.Handle(
                 new UpdateProject.Command(
                     model.ProjectId,
                     model.Url,
@@ -157,19 +148,17 @@ partial class ProjectsPage(
                 CancellationToken
             );
 
-            if (result.IsSuccess)
+            if (
+                TryHandleResult(
+                    result,
+                    e => _editModal?.SetServerErrors(e),
+                    ref _errorMessage,
+                    "Failed to save changes. Please try again."
+                )
+            )
             {
                 CloseEditor();
                 await LoadProjectsAsync();
-            }
-            else if (result is IValidationResult validation)
-            {
-                _editModal?.SetServerErrors(validation.Errors);
-            }
-            else
-            {
-                _errorMessage =
-                    result.Error?.Message ?? "Failed to save changes. Please try again.";
             }
         }
         finally
@@ -234,12 +223,4 @@ partial class ProjectsPage(
         var lookup = _keywords.ToDictionary(k => k.Id, k => k.Name);
         return keywordIds.Where(id => lookup.ContainsKey(id)).Select(id => lookup[id]).ToList();
     }
-
-    private static LanguageCode? LanguageCodeFromCulture(string culture) =>
-        culture switch
-        {
-            "en" => LanguageCode.English,
-            "fi" => LanguageCode.Finnish,
-            _ => null,
-        };
 }

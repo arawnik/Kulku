@@ -1,11 +1,9 @@
 using Kulku.Application.Projects;
 using Kulku.Application.Projects.Models;
-using Kulku.Domain;
 using Kulku.Domain.Projects;
 using Kulku.Web.Admin.Components.Cv.Components;
 using Kulku.Web.Admin.Components.Shared;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
-using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Web.Admin.Components.Cv.Pages;
 
@@ -78,11 +76,11 @@ partial class Keywords(
         _errorMessage = null;
         _proficienciesExpanded = true;
 
-        var blankTranslations = Defaults
-            .SupportedCultures.Select(LanguageCodeFromCulture)
-            .Where(lc => lc.HasValue)
-            .Select(lc => new ProficiencyTranslationItem(lc!.Value, string.Empty, string.Empty))
-            .ToList();
+        var blankTranslations = BuildBlankTranslations(lc => new ProficiencyTranslationItem(
+            lc,
+            string.Empty,
+            string.Empty
+        ));
 
         _currentProficiency = new ProficiencyTranslationsModel(
             ProficiencyId: Guid.NewGuid(),
@@ -136,20 +134,19 @@ partial class Keywords(
                     CancellationToken
                 );
 
-                if (result.IsSuccess)
+                if (
+                    TryHandleResult(
+                        result,
+                        e => _proficiencyModal?.SetServerErrors(e),
+                        ref _errorMessage,
+                        "Failed to create proficiency."
+                    )
+                )
                 {
                     CloseProficiencyEditor();
                     await LoadAllAsync();
-                    return;
                 }
 
-                if (result is IValidationResult v)
-                {
-                    _proficiencyModal?.SetServerErrors(v.Errors);
-                    return;
-                }
-
-                _errorMessage = result.Error?.Message ?? "Failed to create proficiency.";
                 return;
             }
 
@@ -163,18 +160,17 @@ partial class Keywords(
                 CancellationToken
             );
 
-            if (updateResult.IsSuccess)
+            if (
+                TryHandleResult(
+                    updateResult,
+                    e => _proficiencyModal?.SetServerErrors(e),
+                    ref _errorMessage,
+                    "Failed to save proficiency."
+                )
+            )
             {
                 CloseProficiencyEditor();
                 await LoadAllAsync();
-            }
-            else if (updateResult is IValidationResult validation)
-            {
-                _proficiencyModal?.SetServerErrors(validation.Errors);
-            }
-            else
-            {
-                _errorMessage = updateResult.Error?.Message ?? "Failed to save proficiency.";
             }
         }
         finally
@@ -214,11 +210,10 @@ partial class Keywords(
     {
         _errorMessage = null;
 
-        var blankTranslations = Defaults
-            .SupportedCultures.Select(LanguageCodeFromCulture)
-            .Where(lc => lc.HasValue)
-            .Select(lc => new KeywordTranslationItem(lc!.Value, string.Empty))
-            .ToList();
+        var blankTranslations = BuildBlankTranslations(lc => new KeywordTranslationItem(
+            lc,
+            string.Empty
+        ));
 
         var typeKeywords = _keywords.Where(k => k.Type == type).ToList();
 
@@ -283,20 +278,19 @@ partial class Keywords(
                     CancellationToken
                 );
 
-                if (result.IsSuccess)
+                if (
+                    TryHandleResult(
+                        result,
+                        e => _keywordModal?.SetServerErrors(e),
+                        ref _errorMessage,
+                        "Failed to create keyword."
+                    )
+                )
                 {
                     CloseKeywordEditor();
                     await LoadAllAsync();
-                    return;
                 }
 
-                if (result is IValidationResult v)
-                {
-                    _keywordModal?.SetServerErrors(v.Errors);
-                    return;
-                }
-
-                _errorMessage = result.Error?.Message ?? "Failed to create keyword.";
                 return;
             }
 
@@ -312,18 +306,17 @@ partial class Keywords(
                 CancellationToken
             );
 
-            if (updateResult.IsSuccess)
+            if (
+                TryHandleResult(
+                    updateResult,
+                    e => _keywordModal?.SetServerErrors(e),
+                    ref _errorMessage,
+                    "Failed to save keyword."
+                )
+            )
             {
                 CloseKeywordEditor();
                 await LoadAllAsync();
-            }
-            else if (updateResult is IValidationResult validation)
-            {
-                _keywordModal?.SetServerErrors(validation.Errors);
-            }
-            else
-            {
-                _errorMessage = updateResult.Error?.Message ?? "Failed to save keyword.";
             }
         }
         finally
@@ -356,14 +349,4 @@ partial class Keywords(
         _currentKeyword = null;
         _errorMessage = null;
     }
-
-    // ── Helpers ────────────────────────────────────────
-
-    private static LanguageCode? LanguageCodeFromCulture(string culture) =>
-        culture switch
-        {
-            "en" => LanguageCode.English,
-            "fi" => LanguageCode.Finnish,
-            _ => null,
-        };
 }
