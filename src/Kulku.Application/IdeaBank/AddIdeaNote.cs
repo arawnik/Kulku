@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Ideas;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
@@ -23,12 +24,17 @@ public static class AddIdeaNote
         {
             if (string.IsNullOrWhiteSpace(command.Content))
                 return ValidationResult<Guid>.WithErrors(
-                    [Error.Validation(nameof(command.Content), "Note content is required.")]
+                    [
+                        Error.Validation(
+                            nameof(command.Content),
+                            Strings.Validation_NoteContentRequired
+                        ),
+                    ]
                 );
 
             var idea = await _ideaRepository.GetByIdAsync(command.IdeaId, cancellationToken);
             if (idea is null)
-                return Error.NotFound("Idea not found.");
+                return Error.NotFound(Strings.NotFound_Idea);
 
             var note = new IdeaNote
             {

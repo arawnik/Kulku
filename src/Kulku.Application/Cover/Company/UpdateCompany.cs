@@ -1,4 +1,5 @@
 using Kulku.Application.Cover.Company.Models;
+using Kulku.Application.Resources;
 using Kulku.Domain.Cover;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
@@ -38,7 +39,7 @@ public static class UpdateCompany
             );
 
             if (company is null)
-                return Error.NotFound("Company not found.");
+                return Error.NotFound(Strings.NotFound_Company);
 
             company.Website = command.Website;
             company.Region = command.Region;

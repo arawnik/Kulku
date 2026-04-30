@@ -1,4 +1,5 @@
 using Kulku.Application.Cover.Institution.Models;
+using Kulku.Application.Resources;
 using Kulku.Domain.Cover;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
@@ -38,7 +39,7 @@ public static class UpdateInstitution
             );
 
             if (institution is null)
-                return Error.NotFound("Institution not found.");
+                return Error.NotFound(Strings.NotFound_Institution);
 
             MergeTranslations(institution, command.Translations);
 

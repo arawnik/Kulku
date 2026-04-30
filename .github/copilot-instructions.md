@@ -52,9 +52,23 @@ This repository is a public-facing showcase. Optimize for coherence, readability
 - `LanguageCode` is a **Domain** enum (persisted in translation tables).
 - Language selection is a **presentation concern**:
   - API/UI resolves culture/language and passes it explicitly to queries/commands.
-  - Domain/Application/Infrastructure must NOT read ambient culture (`CultureInfo.CurrentCulture`) directly.
+  - **Database translations**: Domain/Application/Infrastructure must NOT read ambient culture (`CultureInfo.CurrentCulture`) directly. Use `ILanguageContext` and `LanguageCode` for all DB translation queries.
+  - **Static string translations (.resx)**: Accessing `.resx` resources (e.g., `Strings.Title`) via `PublicResXFileCodeGenerator` is allowed in all layers. The generated `ResourceManager` reads `CultureInfo.CurrentUICulture` implicitly, which is set by the `UseRequestLocalization` middleware. This is safe because it complements (not replaces) the `ILanguageContext` system.
 - Localized use cases may implement/accept `ILocalizedRequest` and must be explicit about language.
 - Mapping from `CultureInfo` to `LanguageCode` belongs in `Application.Abstractions.Localization` (policy) or in `Web.Api.Localization` (edge).
+
+## .resx resource file conventions
+
+- Use `PublicResXFileCodeGenerator` for all `.resx` files to produce strongly-typed static classes.
+- Set `<NeutralLanguage>en</NeutralLanguage>` on every project that contains `.resx` files.
+- **Per-layer resources**:
+  - `Kulku.Domain/Resources/Strings.resx` — domain-level strings (e.g., reCAPTCHA errors).
+  - `Kulku.Application/Resources/Strings.resx` — validation and error messages used by command validators and handlers.
+  - `Kulku.Web.Admin/Resources/Strings.resx` — common/shared UI strings (Save, Cancel, Edit, Delete, Loading…).
+  - `Kulku.Web.Admin/Resources/{Feature}Strings.resx` — feature-specific UI strings (CvStrings, NetworkStrings, IdeasStrings, InboxStrings, AccountStrings, LayoutStrings).
+- Access pattern: `Strings.PropertyName` or `CvStrings.PropertyName` — no magic strings, no `IStringLocalizer`.
+- Format strings use `{0}`, `{1}` placeholders with `string.Format(Strings.Key, args)`.
+- Every `.resx` must have a matching `.fi.resx` with Finnish translations.
 
 ## Enums and persistence
 

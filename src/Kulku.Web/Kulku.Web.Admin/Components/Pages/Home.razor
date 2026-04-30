@@ -11,45 +11,45 @@
 
 <AuthorizeView>
 	<Authorized>
-		<PageTitle>Dashboard — Kulku Admin</PageTitle>
+		<PageTitle>@LayoutStrings.Dashboard_PageTitle</PageTitle>
 
 		<div class="container-fluid py-4">
 
 			@* ── Header ── *@
 			<div class="mb-4">
-				<h1 class="h3 mb-1">Dashboard</h1>
-				<div class="text-muted">Welcome back, @context.User.Identity?.Name</div>
+				<h1 class="h3 mb-1">@LayoutStrings.Dashboard_Heading</h1>
+				<div class="text-muted">@LayoutStrings.Dashboard_Welcome @context.User.Identity?.Name</div>
 			</div>
 
 			@* ── KPI Cards ── *@
 			<div class="row g-3 mb-4">
 				<div class="col-6 col-lg-3">
-					<InfoCard Title="Inbox"
+					<InfoCard Title="@LayoutStrings.Dashboard_Inbox"
 							  BadgeCount="_inboxNewCount"
-							  BadgeText="new"
+							  BadgeText="@LayoutStrings.Dashboard_New"
 							  BadgeColor="@(_inboxNewCount > 0 ? "danger" : "secondary")"
-							  Description="Unread contact requests" />
+							  Description="@LayoutStrings.Dashboard_UnreadRequests" />
 				</div>
 				<div class="col-6 col-lg-3">
-					<InfoCard Title="Network"
+					<InfoCard Title="@LayoutStrings.Dashboard_Network"
 							  BadgeCount="_networkCount"
-							  BadgeText="companies"
+							  BadgeText="@LayoutStrings.Dashboard_Companies"
 							  BadgeColor="primary"
-							  Description="Tracked relationships" />
+							  Description="@LayoutStrings.Dashboard_TrackedRelationships" />
 				</div>
 				<div class="col-6 col-lg-3">
-					<InfoCard Title="Idea Bank"
+					<InfoCard Title="@LayoutStrings.Dashboard_IdeaBank"
 							  BadgeCount="_ideaCount"
-							  BadgeText="ideas"
+							  BadgeText="@LayoutStrings.Dashboard_Ideas"
 							  BadgeColor="info"
-							  Description="In the idea bank" />
+							  Description="@LayoutStrings.Dashboard_InTheIdeaBank" />
 				</div>
 				<div class="col-6 col-lg-3">
-					<InfoCard Title="Portfolio"
+					<InfoCard Title="@LayoutStrings.Dashboard_Portfolio"
 							  BadgeCount="_projectCount"
-							  BadgeText="projects"
+							  BadgeText="@LayoutStrings.Dashboard_Projects"
 							  BadgeColor="success"
-							  Description="Showcase projects" />
+							  Description="@LayoutStrings.Dashboard_ShowcaseProjects" />
 				</div>
 			</div>
 
@@ -60,12 +60,12 @@
 						<div class="card-header d-flex justify-content-between align-items-center">
 							<div>
 								<strong>
-									<Icon Kind="IconKind.Envelope" Size="16" CssClass="me-1" />Recent Requests
+									<Icon Kind="IconKind.Envelope" Size="16" CssClass="me-1" />@LayoutStrings.Dashboard_RecentRequests
 								</strong>
-								<div class="text-muted small">Latest new contact requests</div>
+								<div class="text-muted small">@LayoutStrings.Dashboard_LatestNewRequests</div>
 							</div>
 							<NavLink href="inbox" class="btn btn-sm btn-outline-secondary text-decoration-none">
-								View all
+								@Strings.ViewAll
 							</NavLink>
 						</div>
 						<div class="card-body p-2">
@@ -73,7 +73,7 @@
 							{
 								<div class="text-muted text-center py-3">
 									<Icon Kind="IconKind.Check" Size="20" CssClass="me-1 text-success" />
-									No new requests — inbox is clear.
+									@LayoutStrings.Dashboard_NoNewRequests
 								</div>
 							}
 							else
@@ -101,9 +101,9 @@
 					<div class="card shadow-sm h-100">
 						<div class="card-header">
 							<strong>
-								<Icon Kind="IconKind.ExclamationTriangle" Size="16" CssClass="me-1" />Attention Needed
+								<Icon Kind="IconKind.ExclamationTriangle" Size="16" CssClass="me-1" />@LayoutStrings.Dashboard_AttentionNeeded
 							</strong>
-							<div class="text-muted small">Overdue actions &amp; cold relationships</div>
+							<div class="text-muted small">@LayoutStrings.Dashboard_OverdueAndCold</div>
 						</div>
 						<div class="card-body">
 							@if (_overdueActions.Count == 0 && _coldRelationships.Count == 0)
@@ -112,7 +112,7 @@
 									<div class="text-success mb-2">
 										<Icon Kind="IconKind.Check" Size="24" />
 									</div>
-									<div class="text-muted">All relationships are on track.</div>
+									<div class="text-muted">@LayoutStrings.Dashboard_AllOnTrack</div>
 								</div>
 							}
 							else
@@ -121,8 +121,8 @@
 								{
 									<div class="mb-3">
 										<div class="d-flex align-items-center gap-2 mb-2">
-											<span class="badge text-bg-danger">Overdue</span>
-											<small class="text-muted">@_overdueActions.Count action(s)</small>
+											<span class="badge text-bg-danger">@LayoutStrings.Dashboard_Overdue</span>
+											<small class="text-muted">@_overdueActions.Count @LayoutStrings.Dashboard_Actions</small>
 										</div>
 										<div class="list-group list-group-flush">
 											@foreach (var item in _overdueActions)
@@ -143,8 +143,8 @@
 								{
 									<div>
 										<div class="d-flex align-items-center gap-2 mb-2">
-											<span class="badge text-bg-warning">Going cold</span>
-											<small class="text-muted">@_coldRelationships.Count relationship(s)</small>
+											<span class="badge text-bg-warning">@LayoutStrings.Dashboard_GoingCold</span>
+											<small class="text-muted">@_coldRelationships.Count @LayoutStrings.Dashboard_Relationships</small>
 										</div>
 										<div class="list-group list-group-flush">
 											@foreach (var item in _coldRelationships)
@@ -170,18 +170,18 @@
 						<div class="card-header d-flex justify-content-between align-items-center">
 							<div>
 								<strong>
-									<Icon Kind="IconKind.Journal" Size="16" CssClass="me-1" />Recent Ideas
+									<Icon Kind="IconKind.Journal" Size="16" CssClass="me-1" />@LayoutStrings.Dashboard_RecentIdeas
 								</strong>
-								<div class="text-muted small">Recently updated ideas</div>
+								<div class="text-muted small">@LayoutStrings.Dashboard_RecentlyUpdatedIdeas</div>
 							</div>
 							<NavLink href="ideas" class="btn btn-sm btn-outline-secondary text-decoration-none">
-								View all
+								@Strings.ViewAll
 							</NavLink>
 						</div>
 						<div class="card-body p-2">
 							@if (_recentIdeas.Count == 0)
 							{
-								<div class="text-muted text-center py-3">No ideas yet.</div>
+								<div class="text-muted text-center py-3">@LayoutStrings.Dashboard_NoIdeasYet</div>
 							}
 							else
 							{
@@ -215,10 +215,10 @@
 					<div class="card shadow-sm h-100">
 						<div class="card-header d-flex justify-content-between align-items-center">
 							<strong>
-								<Icon Kind="IconKind.Kanban" Size="16" CssClass="me-1" />Pipeline
+								<Icon Kind="IconKind.Kanban" Size="16" CssClass="me-1" />@NetworkStrings.Pipeline
 							</strong>
 							<NavLink href="network" class="btn btn-sm btn-outline-secondary text-decoration-none">
-								Details
+								@Strings.Details
 							</NavLink>
 						</div>
 						<div class="card-body">
@@ -236,14 +236,14 @@
 
 							@{
 								var latestInteraction = _allInteractions
-									.OrderByDescending(i => i.Date)
-									.FirstOrDefault();
+								  .OrderByDescending(i => i.Date)
+								  .FirstOrDefault();
 							}
 
 							@if (latestInteraction is not null)
 							{
 								<hr class="my-2" />
-								<div class="small text-muted mb-1">Latest activity</div>
+								<div class="small text-muted mb-1">@LayoutStrings.Dashboard_LatestActivity</div>
 								<div class="d-flex justify-content-between align-items-start">
 									<div>
 										<div class="fw-semibold small">@latestInteraction.CompanyName</div>
@@ -254,7 +254,7 @@
 							}
 							else
 							{
-								<div class="text-muted small text-center py-2">No interactions yet.</div>
+								<div class="text-muted small text-center py-2">@LayoutStrings.Dashboard_NoInteractionsYet</div>
 							}
 						</div>
 					</div>
@@ -266,7 +266,7 @@
 				<div class="card-header d-flex justify-content-between align-items-center">
 					<div>
 						<strong>
-							<Icon Kind="IconKind.FileEarmarkPerson" Size="16" CssClass="me-1" />CV Overview
+							<Icon Kind="IconKind.FileEarmarkPerson" Size="16" CssClass="me-1" />@LayoutStrings.Dashboard_CvOverview
 						</strong>
 						@if (_introduction is not null && !string.IsNullOrWhiteSpace(_introduction.Tagline))
 						{
@@ -274,7 +274,7 @@
 						}
 					</div>
 					<NavLink href="cv" class="btn btn-sm btn-outline-secondary text-decoration-none">
-						Manage CV
+						@LayoutStrings.Dashboard_ManageCv
 					</NavLink>
 				</div>
 				<div class="card-body py-3">
@@ -282,7 +282,7 @@
 						<div class="d-flex align-items-baseline gap-2">
 							<Icon Kind="IconKind.Briefcase" Size="16" CssClass="text-muted" />
 							<span class="h5 mb-0">@_experienceCount</span>
-							<span class="text-muted small">experience</span>
+							<span class="text-muted small">@LayoutStrings.Dashboard_Experience</span>
 						</div>
 
 						<div class="vr d-none d-md-block"></div>
@@ -290,7 +290,7 @@
 						<div class="d-flex align-items-baseline gap-2">
 							<Icon Kind="IconKind.Mortarboard" Size="16" CssClass="text-muted" />
 							<span class="h5 mb-0">@_educationCount</span>
-							<span class="text-muted small">education</span>
+							<span class="text-muted small">@LayoutStrings.Dashboard_Education</span>
 						</div>
 
 						<div class="vr d-none d-md-block"></div>
@@ -298,7 +298,7 @@
 						<div class="d-flex align-items-baseline gap-2">
 							<Icon Kind="IconKind.Folder" Size="16" CssClass="text-muted" />
 							<span class="h5 mb-0">@_projectCount</span>
-							<span class="text-muted small">projects</span>
+							<span class="text-muted small">@LayoutStrings.Dashboard_Projects</span>
 						</div>
 
 						<div class="vr d-none d-md-block"></div>
@@ -306,7 +306,7 @@
 						<div class="d-flex align-items-baseline gap-2">
 							<Icon Kind="IconKind.Tags" Size="16" CssClass="text-muted" />
 							<span class="h5 mb-0">@_keywordCount</span>
-							<span class="text-muted small">keywords</span>
+							<span class="text-muted small">@LayoutStrings.Dashboard_Keywords</span>
 						</div>
 					</div>
 				</div>
@@ -315,30 +315,28 @@
 		</div>
 	</Authorized>
 	<NotAuthorized>
-		<PageTitle>Kulku Admin</PageTitle>
+		<PageTitle>@LayoutStrings.AppTitle</PageTitle>
 
 		<div class="container py-5">
 			<div class="text-center mb-5">
-				<h1 class="display-5 fw-bold mb-3">Kulku Admin</h1>
+				<h1 class="display-5 fw-bold mb-3">@LayoutStrings.AppTitle</h1>
 				<p class="lead text-muted mx-auto" style="max-width: 600px;">
-					A personal management dashboard for maintaining your professional
-					portfolio, CV content, project showcases, and developer workflow.
+					@LayoutStrings.Landing_Description
 				</p>
 
 				@if (!ManagementOptions.Value.RegistrationEnabled && !string.IsNullOrEmpty(ManagementOptions.Value.ContactUrl))
 				{
 					<br />
 					<div class="text-center">
-						<h4 class="fw-semibold mb-3">Want to get in touch?</h4>
+						<h4 class="fw-semibold mb-3">@LayoutStrings.Landing_GetInTouch</h4>
 						<p class="text-muted mx-auto" style="max-width: 500px;">
-							Registration is currently closed. If you'd like to reach out,
-							you can send me a message through my contact form.
+							@LayoutStrings.Landing_RegistrationClosed
 						</p>
 						<a href="@ManagementOptions.Value.ContactUrl"
 							   target="_blank"
 							   rel="noopener noreferrer"
 							   class="btn btn-outline-primary mt-2">
-							Send a message
+							@LayoutStrings.Landing_SendMessage
 						</a>
 					</div>
 				}
@@ -348,11 +346,11 @@
 					<div class="d-flex justify-content-center gap-3 mt-3">
 						<a href="Account/Login" class="btn btn-primary btn-lg">
 							<Icon Kind="IconKind.PersonBadge" Size="20" />
-							Sign in
+							@LayoutStrings.Landing_SignIn
 						</a>
 						<a href="Account/Register" class="btn btn-outline-primary btn-lg">
 							<Icon Kind="IconKind.Person" Size="20" />
-							Register
+							@LayoutStrings.Landing_Register
 						</a>
 					</div>
 				}
@@ -367,10 +365,9 @@
 							<div class="mb-3 text-primary">
 								<Icon Kind="IconKind.FileEarmarkPerson" Size="36" />
 							</div>
-							<h5 class="card-title">CV Management</h5>
+							<h5 class="card-title">@LayoutStrings.Landing_CvManagement</h5>
 							<p class="card-text text-muted small">
-								Manage your introduction, education, work experience, and skill keywords
-								across multiple languages.
+								@LayoutStrings.Landing_CvManagementDesc
 							</p>
 						</div>
 					</div>
@@ -382,10 +379,9 @@
 							<div class="mb-3 text-primary">
 								<Icon Kind="IconKind.Folder" Size="36" />
 							</div>
-							<h5 class="card-title">Project Portfolio</h5>
+							<h5 class="card-title">@LayoutStrings.Landing_ProjectPortfolio</h5>
 							<p class="card-text text-muted small">
-								Showcase your projects with descriptions, images, and links.
-								Content feeds directly to the public site.
+								@LayoutStrings.Landing_ProjectPortfolioDesc
 							</p>
 						</div>
 					</div>
@@ -397,10 +393,9 @@
 							<div class="mb-3 text-primary">
 								<Icon Kind="IconKind.Journal" Size="36" />
 							</div>
-							<h5 class="card-title">Idea Bank</h5>
+							<h5 class="card-title">@LayoutStrings.Landing_IdeaBank</h5>
 							<p class="card-text text-muted small">
-								Capture and organize project ideas, feature requests, and inspiration
-								for future work.
+								@LayoutStrings.Landing_IdeaBankDesc
 							</p>
 						</div>
 					</div>
@@ -412,10 +407,9 @@
 							<div class="mb-3 text-primary">
 								<Icon Kind="IconKind.Lightbulb" Size="36" />
 							</div>
-							<h5 class="card-title">Network</h5>
+							<h5 class="card-title">@LayoutStrings.Landing_Network</h5>
 							<p class="card-text text-muted small">
-								Track companies, interactions, and networking activity
-								to stay on top of your professional outreach.
+								@LayoutStrings.Landing_NetworkDesc
 							</p>
 						</div>
 					</div>

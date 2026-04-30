@@ -1,0 +1,478 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Overview_PageTitle" xml:space="preserve">
+    <value>Verkoston yleiskatsaus</value>
+  </data>
+  <data name="Overview_Heading" xml:space="preserve">
+    <value>Verkoston yleiskatsaus</value>
+  </data>
+  <data name="Overview_Subtitle" xml:space="preserve">
+    <value>Ammatillinen verkostosi — ketä tunnet, mitä on tapahtunut ja mihin ottaa yhteyttä.</value>
+  </data>
+  <data name="Overview_Companies" xml:space="preserve">
+    <value>Yritykset</value>
+  </data>
+  <data name="Overview_ActivityLog" xml:space="preserve">
+    <value>Toimintaloki</value>
+  </data>
+  <data name="Overview_LogInteraction" xml:space="preserve">
+    <value>Kirjaa vuorovaikutus</value>
+  </data>
+  <data name="Overview_Relationships" xml:space="preserve">
+    <value>suhdetta</value>
+  </data>
+  <data name="Overview_Active" xml:space="preserve">
+    <value>aktiivista</value>
+  </data>
+  <data name="Overview_TwelveMonths" xml:space="preserve">
+    <value>(12kk)</value>
+  </data>
+  <data name="Overview_GoingCold" xml:space="preserve">
+    <value>kylmenemässä</value>
+  </data>
+  <data name="Overview_FollowUps" xml:space="preserve">
+    <value>seurantaa</value>
+  </data>
+  <data name="Overview_Overdue" xml:space="preserve">
+    <value>myöhässä</value>
+  </data>
+  <data name="Overview_Pipeline" xml:space="preserve">
+    <value>Pipeline:</value>
+  </data>
+  <data name="Overview_RelationshipDirectory" xml:space="preserve">
+    <value>Suhdehakemisto</value>
+  </data>
+  <data name="Overview_DirectorySubtitle" xml:space="preserve">
+    <value>Kaikki seuratut yritykset — kylmimmät suhteet ensin.</value>
+  </data>
+  <data name="Overview_AttentionNeeded" xml:space="preserve">
+    <value>Huomiota vaativat</value>
+  </data>
+  <data name="Companies_PageTitle" xml:space="preserve">
+    <value>Yritykset</value>
+  </data>
+  <data name="Companies_Heading" xml:space="preserve">
+    <value>Yritykset</value>
+  </data>
+  <data name="Companies_Subtitle" xml:space="preserve">
+    <value>Keskityslista — pidä pienenä, vain laadukkaat suhteet.</value>
+  </data>
+  <data name="Companies_Enroll" xml:space="preserve">
+    <value>Lisää yritys</value>
+  </data>
+  <data name="Companies_ListView" xml:space="preserve">
+    <value>Lista</value>
+  </data>
+  <data name="Companies_AllCategories" xml:space="preserve">
+    <value>Kaikki kategoriat</value>
+  </data>
+  <data name="Companies_NoCompanies" xml:space="preserve">
+    <value>Ei seurattavia yrityksiä vielä.</value>
+  </data>
+  <data name="Companies_NoMatch" xml:space="preserve">
+    <value>Suodattimet eivät löytäneet yrityksiä.</value>
+  </data>
+  <data name="Companies_Contacts" xml:space="preserve">
+    <value>yhteyshenkilöä</value>
+  </data>
+  <data name="Companies_Interactions" xml:space="preserve">
+    <value>vuorovaikutusta</value>
+  </data>
+  <data name="Companies_Last" xml:space="preserve">
+    <value>Viimeisin:</value>
+  </data>
+  <data name="Detail_NotFound" xml:space="preserve">
+    <value>Yritystä ei löytynyt.</value>
+  </data>
+  <data name="Detail_BackToCompanies" xml:space="preserve">
+    <value>Takaisin yrityksiin</value>
+  </data>
+  <data name="Detail_EditCompany" xml:space="preserve">
+    <value>Muokkaa yritystä</value>
+  </data>
+  <data name="Detail_LogInteraction" xml:space="preserve">
+    <value>Kirjaa vuorovaikutus</value>
+  </data>
+  <data name="Detail_Stage" xml:space="preserve">
+    <value>Vaihe:</value>
+  </data>
+  <data name="Detail_Contacts" xml:space="preserve">
+    <value>Yhteyshenkilöt</value>
+  </data>
+  <data name="Detail_NoContacts" xml:space="preserve">
+    <value>Ei yhteyshenkilöitä vielä.</value>
+  </data>
+  <data name="Detail_Unnamed" xml:space="preserve">
+    <value>(nimetön)</value>
+  </data>
+  <data name="ActivityLog_PageTitle" xml:space="preserve">
+    <value>Toimintaloki</value>
+  </data>
+  <data name="ActivityLog_Heading" xml:space="preserve">
+    <value>Toimintaloki</value>
+  </data>
+  <data name="ActivityLog_Subtitle" xml:space="preserve">
+    <value>Täydellinen vuorovaikutushistoria kaikista yrityksistä.</value>
+  </data>
+  <data name="ActivityLog_Dashboard" xml:space="preserve">
+    <value>Hallintapaneeli</value>
+  </data>
+  <data name="ActivityLog_Search" xml:space="preserve">
+    <value>Haku</value>
+  </data>
+  <data name="ActivityLog_SearchPlaceholder" xml:space="preserve">
+    <value>Yhteenveto tai yrityksen nimi…</value>
+  </data>
+  <data name="ActivityLog_AllCompanies" xml:space="preserve">
+    <value>Kaikki yritykset</value>
+  </data>
+  <data name="ActivityLog_AllChannels" xml:space="preserve">
+    <value>Kaikki kanavat</value>
+  </data>
+  <data name="ActivityLog_Inbound" xml:space="preserve">
+    <value>Saapuva</value>
+  </data>
+  <data name="ActivityLog_Outbound" xml:space="preserve">
+    <value>Lähtevä</value>
+  </data>
+  <data name="ActivityLog_ClearFilters" xml:space="preserve">
+    <value>Tyhjennä suodattimet</value>
+  </data>
+  <data name="ActivityLog_LogFirst" xml:space="preserve">
+    <value>Kirjaa ensimmäinen vuorovaikutus</value>
+  </data>
+  <data name="ActivityLog_NoMatch" xml:space="preserve">
+    <value>Suodattimet eivät löytäneet vuorovaikutuksia.</value>
+  </data>
+  <data name="ActivityLog_ShowingCount" xml:space="preserve">
+    <value>Näytetään {0}/{1} vuorovaikutusta</value>
+  </data>
+  <data name="LogInteraction_PageTitle" xml:space="preserve">
+    <value>Kirjaa vuorovaikutus</value>
+  </data>
+  <data name="LogInteraction_Heading" xml:space="preserve">
+    <value>Kirjaa vuorovaikutus</value>
+  </data>
+  <data name="LogInteraction_Subtitle" xml:space="preserve">
+    <value>Yritykset luodaan yleensä täällä. Linkitä historia mahdollisuuksien mukaan.</value>
+  </data>
+  <data name="LogInteraction_BackToDashboard" xml:space="preserve">
+    <value>Takaisin hallintapaneeliin</value>
+  </data>
+  <data name="LogInteraction_Details" xml:space="preserve">
+    <value>Vuorovaikutuksen tiedot</value>
+  </data>
+  <data name="LogInteraction_SelectCompany" xml:space="preserve">
+    <value>Valitse verkostossa oleva yritys linkittääksesi tämän vuorovaikutuksen.</value>
+  </data>
+  <data name="LogInteraction_WarmIntro" xml:space="preserve">
+    <value>Lämmin esittely (ystävä / kollega)</value>
+  </data>
+  <data name="LogInteraction_ReferredBy" xml:space="preserve">
+    <value>Suosittelija (nimi/konteksti)</value>
+  </data>
+  <data name="LogInteraction_Friend" xml:space="preserve">
+    <value>Ystävä</value>
+  </data>
+  <data name="LogInteraction_Colleague" xml:space="preserve">
+    <value>Kollega</value>
+  </data>
+  <data name="LogInteraction_Other" xml:space="preserve">
+    <value>Muu</value>
+  </data>
+  <data name="LogInteraction_NewContact" xml:space="preserve">
+    <value>— Uusi yhteyshenkilö —</value>
+  </data>
+  <data name="LogInteraction_CompanyContacts" xml:space="preserve">
+    <value>Yrityksen yhteyshenkilöt</value>
+  </data>
+  <data name="LogInteraction_Personal" xml:space="preserve">
+    <value>— Henkilökohtainen</value>
+  </data>
+  <data name="LogInteraction_PersonName" xml:space="preserve">
+    <value>Henkilön nimi</value>
+  </data>
+  <data name="LogInteraction_TitleRole" xml:space="preserve">
+    <value>Nimike/rooli</value>
+  </data>
+  <data name="NetworkCompany_CreateModal" xml:space="preserve">
+    <value>Luo verkostoyritys</value>
+  </data>
+  <data name="NetworkCompany_EditModal" xml:space="preserve">
+    <value>Muokkaa verkostoyritystä</value>
+  </data>
+  <data name="NetworkCompany_PickExisting" xml:space="preserve">
+    <value>Valitse olemassa oleva</value>
+  </data>
+  <data name="NetworkCompany_CreateNew" xml:space="preserve">
+    <value>Luo uusi</value>
+  </data>
+  <data name="NetworkCompany_RegionPlaceholder" xml:space="preserve">
+    <value>esim. Helsinki, Suomi</value>
+  </data>
+  <data name="NetworkCompany_AllEnrolled" xml:space="preserve">
+    <value>Kaikki yritykset on jo lisätty verkostoon.</value>
+  </data>
+  <data name="NetworkCompany_SelectCompany" xml:space="preserve">
+    <value>— Valitse yritys —</value>
+  </data>
+  <data name="ActivityLog_ShowMore" xml:space="preserve">
+    <value>Näytä lisää ({0} jäljellä)</value>
+  </data>
+  <data name="Companies_LinkToCompany" xml:space="preserve">
+    <value>Linkitä yritykseen…</value>
+  </data>
+  <data name="Companies_NewCategory" xml:space="preserve">
+    <value>Uusi kategoria</value>
+  </data>
+  <data name="Companies_NewPersonalContact" xml:space="preserve">
+    <value>Uusi henkilökohtainen yhteyshenkilö</value>
+  </data>
+  <data name="Companies_NoCategories" xml:space="preserve">
+    <value>Ei kategorioita vielä.</value>
+  </data>
+  <data name="Companies_NoPersonalContacts" xml:space="preserve">
+    <value>Ei henkilökohtaisia yhteyshenkilöitä. Nämä ovat henkilöitä, jotka eivät ole tällä hetkellä yrityksen palveluksessa.</value>
+  </data>
+  <data name="Detail_CompanyNotFoundTitle" xml:space="preserve">
+    <value>Yritystä ei löytynyt</value>
+  </data>
+  <data name="Detail_InteractionTimeline" xml:space="preserve">
+    <value>Vuorovaikutusaikajana</value>
+  </data>
+  <data name="Detail_LogOneNow" xml:space="preserve">
+    <value>Kirjaa ensimmäinen nyt.</value>
+  </data>
+  <data name="Detail_MoveTo" xml:space="preserve">
+    <value>Siirrä…</value>
+  </data>
+  <data name="Detail_NoInteractions" xml:space="preserve">
+    <value>Ei kirjattuja vuorovaikutuksia.</value>
+  </data>
+  <data name="Detail_RemoveAffiliation" xml:space="preserve">
+    <value>Poista kytkös (henkilökohtainen)</value>
+  </data>
+  <data name="InteractionCard_WarmIntro" xml:space="preserve">
+    <value>Lämmin esittely</value>
+  </data>
+  <data name="LogInteraction_ActionPlaceholder" xml:space="preserve">
+    <value>Konkreettinen, aikasidonnainen toimenpide</value>
+  </data>
+  <data name="LogInteraction_CategorySubtitle" xml:space="preserve">
+    <value>Jaettu luokittelu Ideapankin kanssa.</value>
+  </data>
+  <data name="LogInteraction_CompanyCategories" xml:space="preserve">
+    <value>Yrityksen kategoriat</value>
+  </data>
+  <data name="LogInteraction_CompanyHistory" xml:space="preserve">
+    <value>Yrityksen historia</value>
+  </data>
+  <data name="LogInteraction_CompanyHistoryEmpty" xml:space="preserve">
+    <value>Valitse olemassa oleva yritys nähdäksesi sen historian. Uudet yritykset aloittavat tyhjinä.</value>
+  </data>
+  <data name="LogInteraction_DueDate" xml:space="preserve">
+    <value>Eräpäivä</value>
+  </data>
+  <data name="LogInteraction_NextAction" xml:space="preserve">
+    <value>Seuraava toimenpide (valinnainen)</value>
+  </data>
+  <data name="LogInteraction_NoCategories" xml:space="preserve">
+    <value>Ei määritettyjä kategorioita.</value>
+  </data>
+  <data name="LogInteraction_NoPriorInteractions" xml:space="preserve">
+    <value>Ei aiempia kirjattuja vuorovaikutuksia.</value>
+  </data>
+  <data name="LogInteraction_Preview" xml:space="preserve">
+    <value>esikatselu</value>
+  </data>
+  <data name="LogInteraction_Reset" xml:space="preserve">
+    <value>Tyhjennä</value>
+  </data>
+  <data name="LogInteraction_SaveInteraction" xml:space="preserve">
+    <value>Tallenna vuorovaikutus</value>
+  </data>
+  <data name="LogInteraction_UpdateCategories" xml:space="preserve">
+    <value>Päivitä kategoriat</value>
+  </data>
+  <data name="NetworkCategory_ColorHelp" xml:space="preserve">
+    <value>Bootstrap-kontekstiväri merkille.</value>
+  </data>
+  <data name="NetworkCategory_ColorToken" xml:space="preserve">
+    <value>Väritunniste</value>
+  </data>
+  <data name="NetworkCategory_EditTitle" xml:space="preserve">
+    <value>Muokkaa kategoriaa</value>
+  </data>
+  <data name="NetworkCategory_NewTitle" xml:space="preserve">
+    <value>Uusi kategoria</value>
+  </data>
+  <data name="NetworkCategory_NoneOption" xml:space="preserve">
+    <value>— Ei mitään —</value>
+  </data>
+  <data name="NetworkCompany_CreateAndEnrollButton" xml:space="preserve">
+    <value>Luo ja lisää</value>
+  </data>
+  <data name="NetworkCompany_CreateAndEnrollTitle" xml:space="preserve">
+    <value>Luo ja lisää yritys</value>
+  </data>
+  <data name="NetworkCompany_EditProfileTitle" xml:space="preserve">
+    <value>Muokkaa verkostoprofiilia</value>
+  </data>
+  <data name="NetworkCompany_EnrollButton" xml:space="preserve">
+    <value>Lisää</value>
+  </data>
+  <data name="NetworkCompany_EnrollTitle" xml:space="preserve">
+    <value>Lisää yritys</value>
+  </data>
+  <data name="NetworkContact_EditTitle" xml:space="preserve">
+    <value>Muokkaa yhteyshenkilöä</value>
+  </data>
+  <data name="NetworkContact_LinkedIn" xml:space="preserve">
+    <value>LinkedIn</value>
+  </data>
+  <data name="NetworkContact_NewTitle" xml:space="preserve">
+    <value>Uusi yhteyshenkilö</value>
+  </data>
+  <data name="NetworkContact_TitleRole" xml:space="preserve">
+    <value>Nimike / Rooli</value>
+  </data>
+  <data name="Overview_ActionCount" xml:space="preserve">
+    <value>{0} toimenpidettä</value>
+  </data>
+  <data name="Overview_AllOnTrack" xml:space="preserve">
+    <value>Kaikki suhteet ovat kunnossa.</value>
+  </data>
+  <data name="Overview_AttentionSubtitle" xml:space="preserve">
+    <value>Myöhässä olevat toimenpiteet ja kylmenevät suhteet.</value>
+  </data>
+  <data name="Overview_BorderColorLegend" xml:space="preserve">
+    <value>Vasemman reunan väri:</value>
+  </data>
+  <data name="Overview_ColdLegend" xml:space="preserve">
+    <value>kylmä (&gt;6kk)</value>
+  </data>
+  <data name="Overview_ConsiderCheckingIn" xml:space="preserve">
+    <value>Harkitse yhteydenottoa</value>
+  </data>
+  <data name="Overview_CoolingLegend" xml:space="preserve">
+    <value>kylmenemässä (3–6kk)</value>
+  </data>
+  <data name="Overview_DaysOverdue" xml:space="preserve">
+    <value>{0} pv myöhässä</value>
+  </data>
+  <data name="Overview_FreshLegend" xml:space="preserve">
+    <value>tuore (&lt;3kk)</value>
+  </data>
+  <data name="Overview_GoingColdBadge" xml:space="preserve">
+    <value>Kylmenemässä</value>
+  </data>
+  <data name="Overview_JournalSubtitle" xml:space="preserve">
+    <value>Vuorovaikutuspäiväkirjasi.</value>
+  </data>
+  <data name="Overview_LatestActivity" xml:space="preserve">
+    <value>Viimeisin toiminta</value>
+  </data>
+  <data name="Overview_NoCompaniesTracked" xml:space="preserve">
+    <value>Ei seurattavia yrityksiä vielä. Lisää yrityksiä Yritykset-sivulta.</value>
+  </data>
+  <data name="Overview_NoHistoryLegend" xml:space="preserve">
+    <value>ei historiaa</value>
+  </data>
+  <data name="Overview_NoRelationshipsMatch" xml:space="preserve">
+    <value>Suodattimet eivät löytäneet suhteita.</value>
+  </data>
+  <data name="Overview_OverdueLabel" xml:space="preserve">
+    <value>Myöhässä</value>
+  </data>
+  <data name="Overview_RelationshipCount" xml:space="preserve">
+    <value>{0} suhdetta</value>
+  </data>
+  <data name="Overview_SearchPlaceholder" xml:space="preserve">
+    <value>Hae nimi, alue, yhteyshenkilö…</value>
+  </data>
+  <data name="Overview_ShowingRecent" xml:space="preserve">
+    <value>Näytetään enintään 10 viimeisintä.</value>
+  </data>
+  <data name="Overview_ViewFullHistory" xml:space="preserve">
+    <value>Näytä koko historia</value>
+  </data>
+  <data name="PipelineColumn_NoCompanies" xml:space="preserve">
+    <value>Ei yrityksiä</value>
+  </data>
+  <data name="RelationshipRow_Days" xml:space="preserve">
+    <value>päivää</value>
+  </data>
+  <data name="RelationshipRow_LastTouch" xml:space="preserve">
+    <value>Viimeisin yhteys:</value>
+  </data>
+  <data name="RelationshipRow_NoInteractions" xml:space="preserve">
+    <value>Ei kirjattuja vuorovaikutuksia vielä</value>
+  </data>
+  <data name="RelationshipRow_Since" xml:space="preserve">
+    <value>Alkaen</value>
+  </data>
+  <data name="Pipeline" xml:space="preserve">
+    <value>Pipeline</value>
+  </data>
+  <data name="LinkedInUrl" xml:space="preserve">
+    <value>LinkedIn URL</value>
+  </data>
+</root>

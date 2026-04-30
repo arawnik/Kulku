@@ -4,7 +4,7 @@
 @using SoulNETLib.Clean.Domain
 
 <ModalDialog Visible="@(_form != null)"
-			 Title="@(Mode == ModalMode.Create ? "New Idea" : "Edit Idea")"
+			 Title="@(Mode == ModalMode.Create ? IdeasStrings.Idea_CreateModal : IdeasStrings.Idea_EditModal)"
 			 Size="ModalSize.Large"
 			 OnClose="OnCancel">
 	<ChildContent>
@@ -19,16 +19,16 @@
 				<ServerValidation @ref="_serverValidation" />
 
 				<div class="mb-3">
-					<label class="form-label">Title</label>
+					<label class="form-label">@Strings.Title</label>
 					<InputText @bind-Value="_form.Title" class="form-control" disabled="@IsSaving"
 							   placeholder="A short, descriptive title" />
 					<ValidationMessage For="@(() => _form.Title)" />
 				</div>
 
 				<div class="mb-3">
-					<label class="form-label">Summary</label>
+					<label class="form-label">@Strings.Summary</label>
 					<InputText @bind-Value="_form.Summary" class="form-control" disabled="@IsSaving"
-							   placeholder="One-liner hook or intent (optional)" />
+							   placeholder="@IdeasStrings.SummaryPlaceholder" />
 				</div>
 
 				<div class="mb-3">
@@ -42,7 +42,7 @@
 
 				<div class="row mb-3">
 					<div class="col-md-4">
-						<label class="form-label">Domain</label>
+						<label class="form-label">@Strings.Domain</label>
 						<InputSelect @bind-Value="_form.DomainId" class="form-select" disabled="@IsSaving">
 							@foreach (var domain in Domains)
 							{
@@ -52,7 +52,7 @@
 						<ValidationMessage For="@(() => _form.DomainId)" />
 					</div>
 					<div class="col-md-4">
-						<label class="form-label">Status</label>
+						<label class="form-label">@Strings.Status</label>
 						<InputSelect @bind-Value="_form.StatusId" class="form-select" disabled="@IsSaving">
 							@foreach (var status in Statuses)
 							{
@@ -61,7 +61,7 @@
 						</InputSelect>
 					</div>
 					<div class="col-md-4">
-						<label class="form-label">Priority</label>
+						<label class="form-label">@Strings.Priority</label>
 						<InputSelect @bind-Value="_form.PriorityId" class="form-select" disabled="@IsSaving">
 							@foreach (var priority in Priorities)
 							{
@@ -74,7 +74,7 @@
 				@if (Tags.Count > 0)
 				{
 					<div class="mb-3">
-						<label class="form-label">Tags</label>
+						<label class="form-label">@Strings.Tags</label>
 						<div class="d-flex flex-wrap gap-2">
 							@foreach (var tag in Tags)
 							{
@@ -93,7 +93,7 @@
 				@if (Keywords.Count > 0)
 				{
 					<div class="mb-3">
-						<label class="form-label">Keywords</label>
+						<label class="form-label">@Strings.Keywords</label>
 						@foreach (var group in Keywords.GroupBy(k => k.Type).OrderBy(g => g.Key))
 						{
 							<div class="mb-2">
@@ -120,18 +120,18 @@
 	<FooterContent>
 		<button type="button" class="btn btn-secondary"
 				@onclick="OnCancel" disabled="@IsSaving">
-			Cancel
+			@Strings.Cancel
 		</button>
 		<button type="button" class="btn btn-primary"
 				@onclick="HandleSubmit" disabled="@IsSaving">
 			@if (IsSaving)
 			{
 				<span class="spinner-border spinner-border-sm me-1"></span>
-				<span>Saving…</span>
+				<span>@Strings.Saving</span>
 			}
 			else
 			{
-				<span>@(Mode == ModalMode.Create ? "Create" : "Save Changes")</span>
+				<span>@(Mode == ModalMode.Create ? Strings.Create : Strings.SaveChanges)</span>
 			}
 		</button>
 	</FooterContent>

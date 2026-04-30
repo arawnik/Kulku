@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Overview_PageTitle" xml:space="preserve">
+    <value>CV-yleiskatsaus</value>
+  </data>
+  <data name="Overview_Subtitle" xml:space="preserve">
+    <value>Pikaesikatselu kaikista CV-osioista.</value>
+  </data>
+  <data name="Overview_NoActiveIntroduction" xml:space="preserve">
+    <value>Ei aktiivista esittelyä.</value>
+  </data>
+  <data name="Overview_NoKeywords" xml:space="preserve">
+    <value>Ei avainsanoja saatavilla.</value>
+  </data>
+  <data name="Overview_Languages" xml:space="preserve">
+    <value>Kielet</value>
+  </data>
+  <data name="Overview_Skills" xml:space="preserve">
+    <value>Taidot</value>
+  </data>
+  <data name="Overview_Technologies" xml:space="preserve">
+    <value>Teknologiat</value>
+  </data>
+  <data name="Overview_NoExperiences" xml:space="preserve">
+    <value>Ei kokemuksia saatavilla.</value>
+  </data>
+  <data name="Overview_NoEducation" xml:space="preserve">
+    <value>Ei koulutuksia saatavilla.</value>
+  </data>
+  <data name="Overview_NoProjects" xml:space="preserve">
+    <value>Ei projekteja saatavilla.</value>
+  </data>
+  <data name="Overview_KeywordSingular" xml:space="preserve">
+    <value>avainsana</value>
+  </data>
+  <data name="Overview_KeywordPlural" xml:space="preserve">
+    <value>avainsanaa</value>
+  </data>
+  <data name="Introduction_PageTitle" xml:space="preserve">
+    <value>Esittely — Hallinta</value>
+  </data>
+  <data name="Introduction_Heading" xml:space="preserve">
+    <value>Esittely</value>
+  </data>
+  <data name="Introduction_Subtitle" xml:space="preserve">
+    <value>Hallinnoi esittelyjä ja ajasta julkaisuja</value>
+  </data>
+  <data name="Introduction_Add" xml:space="preserve">
+    <value>Lisää esittely</value>
+  </data>
+  <data name="Introduction_NoEntries" xml:space="preserve">
+    <value>Esittelyjä ei ole.</value>
+  </data>
+  <data name="Introduction_Active" xml:space="preserve">
+    <value>Aktiivinen</value>
+  </data>
+  <data name="Introduction_Scheduled" xml:space="preserve">
+    <value>Ajastettu</value>
+  </data>
+  <data name="Introduction_History" xml:space="preserve">
+    <value>Historia</value>
+  </data>
+  <data name="Introduction_Superseded" xml:space="preserve">
+    <value>Korvattu</value>
+  </data>
+  <data name="Introduction_CreateModal" xml:space="preserve">
+    <value>Luo esittely</value>
+  </data>
+  <data name="Introduction_EditModal" xml:space="preserve">
+    <value>Muokkaa esittelyä</value>
+  </data>
+  <data name="Introduction_AvatarFilename" xml:space="preserve">
+    <value>Avatar-tiedostonimi</value>
+  </data>
+  <data name="Introduction_AvatarPlaceholder" xml:space="preserve">
+    <value>avatar.webp</value>
+  </data>
+  <data name="Introduction_SmallAvatarFilename" xml:space="preserve">
+    <value>Pienen avatarin tiedostonimi</value>
+  </data>
+  <data name="Introduction_SmallAvatarPlaceholder" xml:space="preserve">
+    <value>small_avatar.webp</value>
+  </data>
+  <data name="Introduction_PubDate" xml:space="preserve">
+    <value>Julkaisupäivä</value>
+  </data>
+  <data name="Introduction_DeleteTitle" xml:space="preserve">
+    <value>Poista esittely</value>
+  </data>
+  <data name="Introduction_DeleteMessage" xml:space="preserve">
+    <value>Haluatko varmasti poistaa tämän esittelyn? Toimintoa ei voi kumota.</value>
+  </data>
+  <data name="Introduction_FailedToLoad" xml:space="preserve">
+    <value>Esittelyn tietojen lataus epäonnistui.</value>
+  </data>
+  <data name="Introduction_FailedToCreate" xml:space="preserve">
+    <value>Esittelyn luominen epäonnistui. Yritä uudelleen.</value>
+  </data>
+  <data name="Introduction_FailedToDelete" xml:space="preserve">
+    <value>Esittelyn poistaminen epäonnistui.</value>
+  </data>
+  <data name="Education_PageTitle" xml:space="preserve">
+    <value>Koulutus — Hallinta</value>
+  </data>
+  <data name="Education_Heading" xml:space="preserve">
+    <value>Koulutus</value>
+  </data>
+  <data name="Education_Subtitle" xml:space="preserve">
+    <value>Hallinnoi koulutuksia, oppilaitoksia ja käännöksiä</value>
+  </data>
+  <data name="Education_Add" xml:space="preserve">
+    <value>Lisää koulutus</value>
+  </data>
+  <data name="Education_NoEntries" xml:space="preserve">
+    <value>Koulutuksia ei ole.</value>
+  </data>
+  <data name="Education_Institutions" xml:space="preserve">
+    <value>Oppilaitokset</value>
+  </data>
+  <data name="Education_AddInstitution" xml:space="preserve">
+    <value>Lisää oppilaitos</value>
+  </data>
+  <data name="Education_NoInstitutions" xml:space="preserve">
+    <value>Ei vielä yhtään oppilaitosta.</value>
+  </data>
+  <data name="Education_CreateModal" xml:space="preserve">
+    <value>Luo koulutus</value>
+  </data>
+  <data name="Education_EditModal" xml:space="preserve">
+    <value>Muokkaa koulutusta</value>
+  </data>
+  <data name="Education_FailedToDelete" xml:space="preserve">
+    <value>Koulutuksen poistaminen epäonnistui.</value>
+  </data>
+  <data name="Experience_PageTitle" xml:space="preserve">
+    <value>Kokemus — Hallinta</value>
+  </data>
+  <data name="Experience_Heading" xml:space="preserve">
+    <value>Kokemus</value>
+  </data>
+  <data name="Experience_Subtitle" xml:space="preserve">
+    <value>Hallinnoi kokemuksia, yrityksiä ja käännöksiä</value>
+  </data>
+  <data name="Experience_Add" xml:space="preserve">
+    <value>Lisää kokemus</value>
+  </data>
+  <data name="Experience_NoEntries" xml:space="preserve">
+    <value>Kokemuksia ei ole.</value>
+  </data>
+  <data name="Experience_Companies" xml:space="preserve">
+    <value>Yritykset</value>
+  </data>
+  <data name="Experience_AddCompany" xml:space="preserve">
+    <value>Lisää yritys</value>
+  </data>
+  <data name="Experience_NoCompanies" xml:space="preserve">
+    <value>Ei vielä yhtään yritystä.</value>
+  </data>
+  <data name="Experience_CreateModal" xml:space="preserve">
+    <value>Luo kokemus</value>
+  </data>
+  <data name="Experience_EditModal" xml:space="preserve">
+    <value>Muokkaa kokemusta</value>
+  </data>
+  <data name="Experience_FailedToLoad" xml:space="preserve">
+    <value>Kokemuksen tietojen lataus epäonnistui.</value>
+  </data>
+  <data name="Experience_FailedToCreate" xml:space="preserve">
+    <value>Kokemuksen luominen epäonnistui. Yritä uudelleen.</value>
+  </data>
+  <data name="Experience_FailedToDelete" xml:space="preserve">
+    <value>Kokemuksen poistaminen epäonnistui.</value>
+  </data>
+  <data name="Company_CreateModal" xml:space="preserve">
+    <value>Luo yritys</value>
+  </data>
+  <data name="Company_EditModal" xml:space="preserve">
+    <value>Muokkaa yritystä</value>
+  </data>
+  <data name="Company_FailedToCreate" xml:space="preserve">
+    <value>Yrityksen luominen epäonnistui. Yritä uudelleen.</value>
+  </data>
+  <data name="Company_FailedToSave" xml:space="preserve">
+    <value>Yrityksen tallentaminen epäonnistui.</value>
+  </data>
+  <data name="Company_FailedToDelete" xml:space="preserve">
+    <value>Yrityksen poistaminen epäonnistui.</value>
+  </data>
+  <data name="Institution_CreateModal" xml:space="preserve">
+    <value>Luo oppilaitos</value>
+  </data>
+  <data name="Institution_EditModal" xml:space="preserve">
+    <value>Muokkaa oppilaitosta</value>
+  </data>
+  <data name="Projects_PageTitle" xml:space="preserve">
+    <value>Projektit — Hallinta</value>
+  </data>
+  <data name="Projects_Heading" xml:space="preserve">
+    <value>Projektit</value>
+  </data>
+  <data name="Projects_Subtitle" xml:space="preserve">
+    <value>Hallinnoi portfolioprojekteja ja käännöksiä</value>
+  </data>
+  <data name="Projects_Add" xml:space="preserve">
+    <value>Lisää projekti</value>
+  </data>
+  <data name="Projects_NoEntries" xml:space="preserve">
+    <value>Projekteja ei ole.</value>
+  </data>
+  <data name="Projects_CreateModal" xml:space="preserve">
+    <value>Luo projekti</value>
+  </data>
+  <data name="Projects_EditModal" xml:space="preserve">
+    <value>Muokkaa projektia</value>
+  </data>
+  <data name="Projects_ProjectName" xml:space="preserve">
+    <value>Projektin nimi</value>
+  </data>
+  <data name="Projects_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Projects_ImageUrl" xml:space="preserve">
+    <value>Kuvan URL</value>
+  </data>
+  <data name="Keywords_PageTitle" xml:space="preserve">
+    <value>Avainsanat — Hallinta</value>
+  </data>
+  <data name="Keywords_Heading" xml:space="preserve">
+    <value>Avainsanat</value>
+  </data>
+  <data name="Keywords_Subtitle" xml:space="preserve">
+    <value>Hallinnoi avainsanoja ja osaamistasoja</value>
+  </data>
+  <data name="Keywords_VisibleOnly" xml:space="preserve">
+    <value>Vain näkyvät</value>
+  </data>
+  <data name="Keywords_ProficiencyLevels" xml:space="preserve">
+    <value>Osaamistasot</value>
+  </data>
+  <data name="Keywords_AddLevel" xml:space="preserve">
+    <value>Lisää taso</value>
+  </data>
+  <data name="Keywords_NoProficiency" xml:space="preserve">
+    <value>Osaamistasoja ei ole määritetty.</value>
+  </data>
+  <data name="Keywords_Add" xml:space="preserve">
+    <value>Lisää</value>
+  </data>
+  <data name="Keywords_NoKeywordsOfType" xml:space="preserve">
+    <value>Ei {0} vielä.</value>
+  </data>
+  <data name="Keywords_HiddenFromCv" xml:space="preserve">
+    <value>Piilotettu CV:stä</value>
+  </data>
+  <data name="Keywords_CreateModal" xml:space="preserve">
+    <value>Luo avainsana</value>
+  </data>
+  <data name="Keywords_EditModal" xml:space="preserve">
+    <value>Muokkaa avainsanaa</value>
+  </data>
+  <data name="Keywords_Type" xml:space="preserve">
+    <value>Tyyppi</value>
+  </data>
+  <data name="Keywords_Proficiency" xml:space="preserve">
+    <value>Osaamistaso</value>
+  </data>
+  <data name="Keywords_DisplayOnCv" xml:space="preserve">
+    <value>Näytä CV:ssä</value>
+  </data>
+  <data name="Keywords_Scale" xml:space="preserve">
+    <value>Asteikko</value>
+  </data>
+  <data name="Proficiency_CreateModal" xml:space="preserve">
+    <value>Luo osaamistaso</value>
+  </data>
+  <data name="Proficiency_EditModal" xml:space="preserve">
+    <value>Muokkaa osaamistasoa</value>
+  </data>
+  <data name="Experience_DeleteTitle" xml:space="preserve">
+    <value>Poista kokemus</value>
+  </data>
+  <data name="Experience_DeleteMessage" xml:space="preserve">
+    <value>Haluatko varmasti poistaa tämän kokemuksen? Toimintoa ei voi kumota</value>
+  </data>
+  <data name="Experience_UnknownCompany" xml:space="preserve">
+    <value>Tuntematon yritys</value>
+  </data>
+  <data name="Education_DeleteTitle" xml:space="preserve">
+    <value>Poista koulutus</value>
+  </data>
+  <data name="Education_DeleteMessage" xml:space="preserve">
+    <value>Haluatko varmasti poistaa tämän koulutuksen? Toimintoa ei voi kumota</value>
+  </data>
+  <data name="Education_UnknownInstitution" xml:space="preserve">
+    <value>Tuntematon oppilaitos</value>
+  </data>
+  <data name="Education_FailedToLoad" xml:space="preserve">
+    <value>Koulutuksen tietojen lataus epäonnistui.</value>
+  </data>
+  <data name="Education_FailedToCreate" xml:space="preserve">
+    <value>Koulutuksen luominen epäonnistui. Yritä uudelleen.</value>
+  </data>
+  <data name="Company_DeleteTitle" xml:space="preserve">
+    <value>Poista yritys</value>
+  </data>
+  <data name="Company_DeleteMessage" xml:space="preserve">
+    <value>Haluatko varmasti poistaa tämän yrityksen? Toimintoa ei voi kumota</value>
+  </data>
+  <data name="Company_ExperienceCount" xml:space="preserve">
+    <value>kokemusta</value>
+  </data>
+  <data name="Company_FailedToLoad" xml:space="preserve">
+    <value>Yrityksen tietojen lataus epäonnistui.</value>
+  </data>
+  <data name="Institution_DeleteTitle" xml:space="preserve">
+    <value>Poista oppilaitos</value>
+  </data>
+  <data name="Institution_DeleteMessage" xml:space="preserve">
+    <value>Haluatko varmasti poistaa tämän oppilaitoksen? Toimintoa ei voi kumota</value>
+  </data>
+  <data name="Institution_EducationCount" xml:space="preserve">
+    <value>koulutusta</value>
+  </data>
+  <data name="Institution_FailedToCreate" xml:space="preserve">
+    <value>Oppilaitoksen luominen epäonnistui. Yritä uudelleen.</value>
+  </data>
+  <data name="Institution_FailedToSave" xml:space="preserve">
+    <value>Oppilaitoksen tallennus epäonnistui.</value>
+  </data>
+  <data name="Institution_FailedToDelete" xml:space="preserve">
+    <value>Oppilaitoksen poistaminen epäonnistui.</value>
+  </data>
+  <data name="Institution_FailedToLoad" xml:space="preserve">
+    <value>Oppilaitoksen tietojen lataus epäonnistui.</value>
+  </data>
+  <data name="Projects_DeleteTitle" xml:space="preserve">
+    <value>Poista projekti</value>
+  </data>
+  <data name="Projects_DeleteMessage" xml:space="preserve">
+    <value>Haluatko varmasti poistaa tämän projektin? Toimintoa ei voi kumota.</value>
+  </data>
+  <data name="Projects_Visit" xml:space="preserve">
+    <value>Vieraile</value>
+  </data>
+  <data name="Projects_ProjectUrl" xml:space="preserve">
+    <value>Projektin URL</value>
+  </data>
+  <data name="Projects_ImageFilename" xml:space="preserve">
+    <value>Kuvan tiedostonimi</value>
+  </data>
+  <data name="Projects_InfoTagline" xml:space="preserve">
+    <value>(lyhyt tagline)</value>
+  </data>
+  <data name="Projects_FailedToLoad" xml:space="preserve">
+    <value>Projektin tietojen lataus epäonnistui.</value>
+  </data>
+  <data name="Projects_FailedToCreate" xml:space="preserve">
+    <value>Projektin luominen epäonnistui. Yritä uudelleen.</value>
+  </data>
+  <data name="Projects_FailedToDelete" xml:space="preserve">
+    <value>Projektin poistaminen epäonnistui.</value>
+  </data>
+  <data name="Projects_FailedToLoadKeywords" xml:space="preserve">
+    <value>Avainsanojen lataus epäonnistui.</value>
+  </data>
+  <data name="Keywords_DeleteTitle" xml:space="preserve">
+    <value>Poista avainsana</value>
+  </data>
+  <data name="Keywords_DeleteMessage" xml:space="preserve">
+    <value>Haluatko varmasti poistaa tämän avainsanan? Se poistetaan myös kaikilta siihen liittyviltä projekteilta</value>
+  </data>
+  <data name="Keywords_VisibleOnCv" xml:space="preserve">
+    <value>CV:llä näkyvä</value>
+  </data>
+  <data name="Keywords_Visible" xml:space="preserve">
+    <value>Näkyvä</value>
+  </data>
+  <data name="Keywords_FailedToLoad" xml:space="preserve">
+    <value>Avainsanojen tietojen lataus epäonnistui.</value>
+  </data>
+  <data name="Keywords_FailedToCreate" xml:space="preserve">
+    <value>Avainsanan luominen epäonnistui. Yritä uudelleen.</value>
+  </data>
+  <data name="Keywords_FailedToSave" xml:space="preserve">
+    <value>Avainsanojen tallennus epäonnistui.</value>
+  </data>
+  <data name="Keywords_FailedToDelete" xml:space="preserve">
+    <value>Avainsanan poistaminen epäonnistui.</value>
+  </data>
+  <data name="Proficiency_DeleteTitle" xml:space="preserve">
+    <value>Poista osaamistaso</value>
+  </data>
+  <data name="Proficiency_DeleteMessage" xml:space="preserve">
+    <value>Haluatko varmasti poistaa tämän osaamistason? Toimintoa ei voi kumota.</value>
+  </data>
+  <data name="Proficiency_KeywordCount" xml:space="preserve">
+    <value>avainsanaa</value>
+  </data>
+  <data name="Proficiency_ScaleLabel" xml:space="preserve">
+    <value>Skaala (0–100)</value>
+  </data>
+  <data name="Proficiency_FailedToLoad" xml:space="preserve">
+    <value>Osaamistason tietojen lataus epäonnistui.</value>
+  </data>
+  <data name="Proficiency_FailedToCreate" xml:space="preserve">
+    <value>Osaamistason luominen epäonnistui. Yritä uudelleen.</value>
+  </data>
+  <data name="Proficiency_FailedToSave" xml:space="preserve">
+    <value>Osaamistason tallennus epäonnistui.</value>
+  </data>
+  <data name="Proficiency_FailedToDelete" xml:space="preserve">
+    <value>Osaamistason poistaminen epäonnistui.</value>
+  </data>
+</root>

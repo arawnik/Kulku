@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -29,7 +30,7 @@ public static class DeleteNetworkInteraction
             );
 
             if (interaction is null)
-                return Error.NotFound("Interaction not found.");
+                return Error.NotFound(Strings.NotFound_Interaction);
 
             _interactionRepository.Remove(interaction);
             await _unitOfWork.CompleteAsync(cancellationToken);

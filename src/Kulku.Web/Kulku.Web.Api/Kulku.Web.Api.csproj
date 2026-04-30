@@ -4,7 +4,6 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..</DockerfileContext>
     <NeutralLanguage>en</NeutralLanguage>
-    <NeutralResourcesLanguage>en</NeutralResourcesLanguage>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Carter" />

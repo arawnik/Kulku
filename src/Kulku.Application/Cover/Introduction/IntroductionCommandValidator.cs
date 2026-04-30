@@ -1,4 +1,6 @@
+using System.Globalization;
 using Kulku.Application.Cover.Introduction.Models;
+using Kulku.Application.Resources;
 using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Application.Cover.Introduction;
@@ -18,15 +20,20 @@ internal static class IntroductionCommandValidator
 
         if (translations.Count == 0)
             errors.Add(
-                Error.Validation(nameof(translations), "At least one translation is required.")
+                Error.Validation(nameof(translations), Strings.Validation_TranslationsRequired)
             );
 
         if (string.IsNullOrWhiteSpace(avatarUrl))
-            errors.Add(Error.Validation(nameof(avatarUrl), "Avatar filename is required."));
+            errors.Add(
+                Error.Validation(nameof(avatarUrl), Strings.Validation_AvatarFilenameRequired)
+            );
 
         if (string.IsNullOrWhiteSpace(smallAvatarUrl))
             errors.Add(
-                Error.Validation(nameof(smallAvatarUrl), "Small avatar filename is required.")
+                Error.Validation(
+                    nameof(smallAvatarUrl),
+                    Strings.Validation_SmallAvatarFilenameRequired
+                )
             );
 
         for (var i = 0; i < translations.Count; i++)
@@ -35,7 +42,11 @@ internal static class IntroductionCommandValidator
                 errors.Add(
                     Error.Validation(
                         $"{nameof(translations)}[{i}].Title",
-                        $"Title is required for the {translations[i].Language} translation."
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Strings.Validation_TitleRequiredForLanguage,
+                            translations[i].Language
+                        )
                     )
                 );
         }

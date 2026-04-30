@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -30,7 +31,7 @@ public static class DeleteEducation
             );
 
             if (education is null)
-                return Error.NotFound("Education not found.");
+                return Error.NotFound(Strings.NotFound_Education);
 
             _educationRepository.Remove(education);
             await _unitOfWork.CompleteAsync(cancellationToken);

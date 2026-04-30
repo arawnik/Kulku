@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Application.IdeaBank;
@@ -12,16 +13,16 @@ internal static class IdeaCommandValidator
         List<Error> errors = [];
 
         if (string.IsNullOrWhiteSpace(title))
-            errors.Add(Error.Validation(nameof(title), "Title is required."));
+            errors.Add(Error.Validation(nameof(title), Strings.Validation_TitleRequired));
 
         if (domainId == Guid.Empty)
-            errors.Add(Error.Validation(nameof(domainId), "Domain is required."));
+            errors.Add(Error.Validation(nameof(domainId), Strings.Validation_DomainRequired));
 
         if (statusId == Guid.Empty)
-            errors.Add(Error.Validation(nameof(statusId), "Status is required."));
+            errors.Add(Error.Validation(nameof(statusId), Strings.Validation_StatusRequired));
 
         if (priorityId == Guid.Empty)
-            errors.Add(Error.Validation(nameof(priorityId), "Priority is required."));
+            errors.Add(Error.Validation(nameof(priorityId), Strings.Validation_PriorityRequired));
 
         return [.. errors];
     }

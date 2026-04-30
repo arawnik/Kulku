@@ -1,4 +1,5 @@
 using Kulku.Application.Cover.Experience.Models;
+using Kulku.Application.Resources;
 using Kulku.Domain.Cover;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
@@ -51,7 +52,7 @@ public static class UpdateExperience
             );
 
             if (experience is null)
-                return Error.NotFound("Experience not found.");
+                return Error.NotFound(Strings.NotFound_Experience);
 
             experience.StartDate = command.StartDate;
             experience.EndDate = command.EndDate;

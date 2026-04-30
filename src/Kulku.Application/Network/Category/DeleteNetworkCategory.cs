@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -28,7 +29,7 @@ public static class DeleteNetworkCategory
             );
 
             if (category is null)
-                return Error.NotFound("Category not found.");
+                return Error.NotFound(Strings.NotFound_Category);
 
             _categoryRepository.Remove(category);
             await _unitOfWork.CompleteAsync(cancellationToken);

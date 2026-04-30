@@ -17,7 +17,7 @@
 						 onerror="this.style.display='none'" />
 					<div>
 						<h5 class="mb-0 fw-semibold">
-							@(translations.FirstOrDefault()?.Name ?? "Untitled")
+							@(translations.FirstOrDefault()?.Name ?? Strings.Untitled)
 						</h5>
 						<div class="text-muted small">
 							@(translations.FirstOrDefault()?.Info ?? string.Empty)
@@ -25,10 +25,10 @@
 					</div>
 				</div>
 				<div class="d-flex align-items-center gap-2">
-					<span class="badge bg-secondary">Order: @Project.Order</span>
+					<span class="badge bg-secondary">@Strings.Order: @Project.Order</span>
 					<a href="@Project.Url" target="_blank" rel="noopener"
 						   class="btn btn-sm btn-outline-secondary">
-						Visit
+						@CvStrings.Projects_Visit
 					</a>
 				</div>
 			</div>
@@ -36,7 +36,7 @@
 			<div class="card-body">
 				@if (translations.Count == 0)
 				{
-					<div class="text-muted small">No translations available.</div>
+					<div class="text-muted small">@Strings.NoTranslationsAvailable</div>
 				}
 				else
 				{
@@ -77,15 +77,15 @@
 				<div class="d-flex align-items-center gap-2">
 					<button type="button" class="btn btn-sm btn-outline-primary"
 							@onclick="HandleEditClick">
-						<Icon Kind="IconKind.Pencil" Size="14" CssClass="me-1" />Edit
+						<Icon Kind="IconKind.Pencil" Size="14" CssClass="me-1" />@Strings.Edit
 					</button>
 					<button type="button" class="btn btn-sm btn-outline-danger"
 							@onclick="() => _confirmingDelete = true">
-						<Icon Kind="IconKind.Trash" Size="14" CssClass="me-1" />Delete
+						<Icon Kind="IconKind.Trash" Size="14" CssClass="me-1" />@Strings.Delete
 					</button>
 				</div>
 				<small class="text-muted">
-					@translations.Count translation(s)
+					@translations.Count @Strings.TranslationCount
 				</small>
 			</div>
 		}
@@ -93,9 +93,9 @@
 </div>
 
 <ConfirmDialog Visible="_confirmingDelete"
-			   Title="Delete Project"
-			   Message="Are you sure you want to delete this project? This action cannot be undone."
-			   ButtonText="Delete"
+			   Title="@CvStrings.Projects_DeleteTitle"
+			   Message="@CvStrings.Projects_DeleteMessage"
+			   ButtonText="@Strings.Delete"
 			   ButtonStyle="danger"
 			   ButtonIcon="IconKind.Trash"
 			   OnConfirm="HandleConfirmDelete"

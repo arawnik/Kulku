@@ -3,19 +3,19 @@
 @using Kulku.Application.Cover.Models
 @attribute [Authorize]
 
-<PageTitle>Experience — Admin</PageTitle>
+<PageTitle>@CvStrings.Experience_PageTitle</PageTitle>
 
 <div class="container-fluid py-4">
 	<div class="d-flex justify-content-between align-items-start mb-3">
 		<div>
-			<h1 class="h4 mb-1">Experience</h1>
-			<div class="text-muted">Manage experience entries, companies, and translations</div>
+			<h1 class="h4 mb-1">@CvStrings.Experience_Heading</h1>
+			<div class="text-muted">@CvStrings.Experience_Subtitle</div>
 		</div>
 		<div class="d-flex gap-2">
 			<button type="button" class="btn btn-sm btn-outline-success" @onclick="HandleCreate">
-				<Icon Kind="IconKind.Plus" CssClass="me-1" />Add Experience
+				<Icon Kind="IconKind.Plus" CssClass="me-1" />@CvStrings.Experience_Add
 			</button>
-			<NavLink class="btn btn-sm btn-outline-secondary" href="/cv">Back</NavLink>
+			<NavLink class="btn btn-sm btn-outline-secondary" href="/cv">@Strings.Back</NavLink>
 		</div>
 	</div>
 
@@ -26,7 +26,7 @@
 
 	@if (!_loaded)
 	{
-		<div class="text-muted">Loading…</div>
+		<div class="text-muted">@Strings.Loading</div>
 	}
 	else
 	{
@@ -35,14 +35,14 @@
 			<div class="card-header d-flex justify-content-between align-items-center py-2">
 				<button type="button" class="btn btn-sm btn-link text-decoration-none p-0"
 						@onclick="() => _companiesExpanded = !_companiesExpanded">
-					<Icon Kind="@(_companiesExpanded? IconKind.ChevronDown: IconKind.ChevronRight)"
+					<Icon Kind="@(_companiesExpanded ? IconKind.ChevronDown : IconKind.ChevronRight)"
 						  Size="16" CssClass="me-1" />
-					<span class="fw-semibold">Companies</span>
+					<span class="fw-semibold">@CvStrings.Experience_Companies</span>
 					<span class="badge bg-secondary ms-2">@_allCompanies.Count</span>
 				</button>
 				<button type="button" class="btn btn-sm btn-outline-success"
 						@onclick="HandleCreateCompany">
-					<Icon Kind="IconKind.Plus" CssClass="me-1" />Add Company
+					<Icon Kind="IconKind.Plus" CssClass="me-1" />@CvStrings.Experience_AddCompany
 				</button>
 			</div>
 
@@ -51,7 +51,7 @@
 				<div class="card-body pt-2 pb-1">
 					@if (_allCompanies.Count == 0)
 					{
-						<div class="text-muted mb-2">No companies yet.</div>
+						<div class="text-muted mb-2">@CvStrings.Experience_NoCompanies</div>
 					}
 					else
 					{
@@ -69,7 +69,7 @@
 		@* ── Experience entries ─────────────────── *@
 		@if (Experiences.Count <= 0)
 		{
-			<div class="alert alert-secondary">There are no experience entries.</div>
+			<div class="alert alert-secondary">@CvStrings.Experience_NoEntries</div>
 		}
 		else
 		{

@@ -3,13 +3,13 @@
 @using Kulku.Domain.Projects
 @attribute [Authorize]
 
-<PageTitle>Keywords — Admin</PageTitle>
+<PageTitle>@CvStrings.Keywords_PageTitle</PageTitle>
 
 <div class="container-fluid py-4">
 	<div class="d-flex justify-content-between align-items-start mb-3">
 		<div>
-			<h1 class="h4 mb-1">Keywords</h1>
-			<div class="text-muted">Manage keywords and proficiency levels</div>
+			<h1 class="h4 mb-1">@CvStrings.Keywords_Heading</h1>
+			<div class="text-muted">@CvStrings.Keywords_Subtitle</div>
 		</div>
 		<div class="d-flex gap-2 align-items-center">
 			<div class="form-check form-switch mb-0">
@@ -17,10 +17,10 @@
 					   checked="@_showVisibleOnly"
 					   @onchange="e => _showVisibleOnly = (bool)(e.Value ?? false)" />
 				<label class="form-check-label small" for="showVisibleOnly">
-					<Icon Kind="IconKind.Eye" Size="14" CssClass="me-1" />Visible only
+					<Icon Kind="IconKind.Eye" Size="14" CssClass="me-1" />@CvStrings.Keywords_VisibleOnly
 				</label>
 			</div>
-			<NavLink class="btn btn-sm btn-outline-secondary" href="/cv">Back</NavLink>
+			<NavLink class="btn btn-sm btn-outline-secondary" href="/cv">@Strings.Back</NavLink>
 		</div>
 	</div>
 
@@ -31,7 +31,7 @@
 
 	@if (!_loaded)
 	{
-		<div class="text-muted">Loading…</div>
+		<div class="text-muted">@Strings.Loading</div>
 	}
 	else
 	{
@@ -40,14 +40,14 @@
 			<div class="card-header d-flex justify-content-between align-items-center py-2">
 				<button type="button" class="btn btn-sm btn-link text-decoration-none p-0"
 						@onclick="() => _proficienciesExpanded = !_proficienciesExpanded">
-					<Icon Kind="@(_proficienciesExpanded? IconKind.ChevronDown: IconKind.ChevronRight)"
+					<Icon Kind="@(_proficienciesExpanded ? IconKind.ChevronDown : IconKind.ChevronRight)"
 						  Size="16" CssClass="me-1" />
-					<span class="fw-semibold">Proficiency Levels</span>
+					<span class="fw-semibold">@CvStrings.Keywords_ProficiencyLevels</span>
 					<span class="badge bg-secondary ms-2">@_proficiencies.Count</span>
 				</button>
 				<button type="button" class="btn btn-sm btn-outline-success"
 						@onclick="HandleCreateProficiency">
-					<Icon Kind="IconKind.Plus" CssClass="me-1" />Add Level
+					<Icon Kind="IconKind.Plus" CssClass="me-1" />@CvStrings.Keywords_AddLevel
 				</button>
 			</div>
 
@@ -56,7 +56,7 @@
 				<div class="card-body pt-2 pb-1">
 					@if (_proficiencies.Count == 0)
 					{
-						<div class="text-muted mb-2">No proficiency levels defined yet.</div>
+						<div class="text-muted mb-2">@CvStrings.Keywords_NoProficiency</div>
 					}
 					else
 					{
@@ -79,9 +79,9 @@
 			var hiddenCount = allOfType.Count - allOfType.Count(k => k.Display);
 			var typeName = type switch
 			{
-				KeywordType.Language => "Languages",
-				KeywordType.Skill => "Skills",
-				KeywordType.Technology => "Technologies",
+				KeywordType.Language => CvStrings.Overview_Languages,
+				KeywordType.Skill => CvStrings.Overview_Skills,
+				KeywordType.Technology => CvStrings.Overview_Technologies,
 				_ => type.ToString(),
 			};
 
@@ -92,20 +92,20 @@
 						<span class="badge bg-secondary ms-2">@allOfType.Count</span>
 						@if (hiddenCount > 0)
 						{
-							<span class="badge bg-warning bg-opacity-50 text-body-emphasis ms-1" title="Hidden from CV">
+							<span class="badge bg-warning bg-opacity-50 text-body-emphasis ms-1" title="@CvStrings.Keywords_HiddenFromCv">
 								<Icon Kind="IconKind.EyeSlash" Size="12" /> @hiddenCount
 							</span>
 						}
 					</div>
 					<button type="button" class="btn btn-sm btn-outline-success"
 							@onclick="() => HandleCreateKeyword(type)">
-						<Icon Kind="IconKind.Plus" CssClass="me-1" />Add
+						<Icon Kind="IconKind.Plus" CssClass="me-1" />@CvStrings.Keywords_Add
 					</button>
 				</div>
 				<div class="card-body pt-2 pb-1">
 					@if (keywords.Count == 0)
 					{
-						<div class="text-muted mb-2">No @(typeName.ToLowerInvariant()) yet.</div>
+						<div class="text-muted mb-2">@string.Format(CvStrings.Keywords_NoKeywordsOfType, typeName.ToLowerInvariant())</div>
 					}
 					else
 					{

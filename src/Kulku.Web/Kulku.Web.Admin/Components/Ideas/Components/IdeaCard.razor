@@ -7,7 +7,7 @@
 				<div class="d-flex align-items-center gap-2 mb-1">
 					<span class="badge @Idea.StatusStyle">@Idea.StatusName</span>
 					<span class="badge @Idea.PriorityStyle">@Idea.PriorityName</span>
-					<small class="text-muted" title="Domain">
+					<small class="text-muted" title="@Strings.Domain">
 						<i class="bi bi-@Idea.DomainIcon"></i> @Idea.DomainName
 					</small>
 				</div>
@@ -33,7 +33,7 @@
 
 					@if (Idea.NoteCount > 0)
 					{
-						<small class="text-muted" title="@Idea.NoteCount note(s)">
+						<small class="text-muted" title="@Idea.NoteCount @IdeasStrings.Detail_Notes">
 							📝 @Idea.NoteCount
 						</small>
 					}
@@ -41,23 +41,23 @@
 			</div>
 
 			<div class="d-flex gap-1 flex-shrink-0">
-				<button class="btn btn-sm btn-outline-primary" title="Edit" @onclick="() => OnEdit.InvokeAsync(Idea)">
+				<button class="btn btn-sm btn-outline-primary" title="@Strings.Edit" @onclick="() => OnEdit.InvokeAsync(Idea)">
 					<Icon Kind="IconKind.Pencil" Size="14" />
 				</button>
 				@if (!_confirmDelete)
 				{
-					<button class="btn btn-sm btn-outline-danger" title="Delete"
+					<button class="btn btn-sm btn-outline-danger" title="@Strings.Delete"
 							@onclick="() => _confirmDelete = true">
 						<Icon Kind="IconKind.Trash" Size="14" />
 					</button>
 				}
 				else
 				{
-					<button class="btn btn-sm btn-danger" title="Confirm delete"
+					<button class="btn btn-sm btn-danger" title="@Strings.ConfirmDelete"
 							@onclick="() => OnDelete.InvokeAsync(Idea.Id)">
 						<Icon Kind="IconKind.Check" Size="14" />
 					</button>
-					<button class="btn btn-sm btn-outline-secondary" title="Cancel"
+					<button class="btn btn-sm btn-outline-secondary" title="@Strings.Cancel"
 							@onclick="() => _confirmDelete = false">
 						✕
 					</button>

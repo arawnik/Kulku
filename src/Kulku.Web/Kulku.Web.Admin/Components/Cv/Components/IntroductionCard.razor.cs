@@ -1,4 +1,5 @@
 using Kulku.Application.Cover.Introduction.Models;
+using Kulku.Web.Admin.Resources;
 using Microsoft.AspNetCore.Components;
 
 namespace Kulku.Web.Admin.Components.Cv.Components;
@@ -18,7 +19,7 @@ partial class IntroductionCard
     /// Derived status label for display.
     /// </summary>
     [Parameter]
-    public string StatusLabel { get; set; } = "Superseded";
+    public string StatusLabel { get; set; } = CvStrings.Introduction_Superseded;
 
     [Parameter]
     public EventCallback<Guid> OnEdit { get; set; }
@@ -31,8 +32,8 @@ partial class IntroductionCard
     private string StatusBadgeClass =>
         StatusLabel switch
         {
-            "Active" => "bg-success",
-            "Scheduled" => "bg-info",
+            _ when StatusLabel == CvStrings.Introduction_Active => "bg-success",
+            _ when StatusLabel == CvStrings.Introduction_Scheduled => "bg-info",
             _ => "bg-secondary",
         };
 

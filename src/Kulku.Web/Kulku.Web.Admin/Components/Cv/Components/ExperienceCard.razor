@@ -11,14 +11,14 @@
 			<div class="card-header d-flex justify-content-between align-items-start gap-3">
 				<div>
 					<h5 class="mb-0 fw-semibold">
-						@(translations.FirstOrDefault()?.Title ?? "Untitled")
+						@(translations.FirstOrDefault()?.Title ?? Strings.Untitled)
 					</h5>
 					@{
 						var primaryCompany = companyTranslations
 							.FirstOrDefault(c => c.Language == (translations.FirstOrDefault()?.Language ?? default));
 					}
 					<div class="text-muted small">
-						@(primaryCompany?.Name ?? "Unknown company")
+						@(primaryCompany?.Name ?? CvStrings.Experience_UnknownCompany)
 					</div>
 				</div>
 				<div class="text-end text-nowrap">
@@ -31,7 +31,7 @@
 			<div class="card-body">
 				@if (translations.Count == 0)
 				{
-					<div class="text-muted small">No translations available.</div>
+					<div class="text-muted small">@Strings.NoTranslationsAvailable</div>
 				}
 				else
 				{
@@ -65,15 +65,15 @@
 				<div class="d-flex align-items-center gap-2">
 					<button type="button" class="btn btn-sm btn-outline-primary"
 							@onclick="HandleEditClick">
-						<Icon Kind="IconKind.Pencil" Size="14" CssClass="me-1" />Edit
+						<Icon Kind="IconKind.Pencil" Size="14" CssClass="me-1" />@Strings.Edit
 					</button>
 					<button type="button" class="btn btn-sm btn-outline-danger"
 							@onclick="() => _confirmingDelete = true">
-						<Icon Kind="IconKind.Trash" Size="14" CssClass="me-1" />Delete
+						<Icon Kind="IconKind.Trash" Size="14" CssClass="me-1" />@Strings.Delete
 					</button>
 				</div>
 				<small class="text-muted">
-					@translations.Count translation(s)
+					@translations.Count @Strings.TranslationCount
 				</small>
 			</div>
 		}
@@ -81,9 +81,9 @@
 </div>
 
 <ConfirmDialog Visible="_confirmingDelete"
-			   Title="Delete Experience"
-			   Message="Are you sure you want to delete this experience entry? This action cannot be undone."
-			   ButtonText="Delete"
+			   Title="@CvStrings.Experience_DeleteTitle"
+			   Message="@CvStrings.Experience_DeleteMessage"
+			   ButtonText="@Strings.Delete"
 			   ButtonStyle="danger"
 			   ButtonIcon="IconKind.Trash"
 			   OnConfirm="HandleConfirmDelete"

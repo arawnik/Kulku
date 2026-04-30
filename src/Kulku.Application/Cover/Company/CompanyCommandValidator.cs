@@ -1,4 +1,6 @@
+using System.Globalization;
 using Kulku.Application.Cover.Company.Models;
+using Kulku.Application.Resources;
 using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Application.Cover.Company;
@@ -14,7 +16,7 @@ internal static class CompanyCommandValidator
 
         if (translations.Count == 0)
             errors.Add(
-                Error.Validation(nameof(translations), "At least one translation is required.")
+                Error.Validation(nameof(translations), Strings.Validation_TranslationsRequired)
             );
 
         for (var i = 0; i < translations.Count; i++)
@@ -23,7 +25,11 @@ internal static class CompanyCommandValidator
                 errors.Add(
                     Error.Validation(
                         $"{nameof(translations)}[{i}].Name",
-                        $"Name is required for the {translations[i].Language} translation."
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Strings.Validation_NameRequiredForLanguage,
+                            translations[i].Language
+                        )
                     )
                 );
         }

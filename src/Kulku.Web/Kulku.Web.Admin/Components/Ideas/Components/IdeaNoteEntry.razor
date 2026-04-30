@@ -12,18 +12,18 @@
 			<div class="ms-2 flex-shrink-0">
 				@if (!_confirmDelete)
 				{
-					<button class="btn btn-sm btn-outline-danger" title="Delete note"
+					<button class="btn btn-sm btn-outline-danger" title="@Strings.Delete"
 							@onclick="() => _confirmDelete = true">
 						<Icon Kind="IconKind.Trash" Size="14" />
 					</button>
 				}
 				else
 				{
-					<button class="btn btn-sm btn-danger" title="Confirm delete"
+					<button class="btn btn-sm btn-danger" title="@Strings.ConfirmDelete"
 							@onclick="() => OnDelete.InvokeAsync(Note.Id)">
 						<Icon Kind="IconKind.Check" Size="14" />
 					</button>
-					<button class="btn btn-sm btn-outline-secondary" title="Cancel"
+					<button class="btn btn-sm btn-outline-secondary" title="@Strings.Cancel"
 							@onclick="() => _confirmDelete = false">
 						✕
 					</button>

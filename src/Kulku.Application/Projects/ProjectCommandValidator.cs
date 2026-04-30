@@ -1,4 +1,6 @@
+using System.Globalization;
 using Kulku.Application.Projects.Models;
+using Kulku.Application.Resources;
 using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Application.Projects;
@@ -22,14 +24,16 @@ internal static class ProjectCommandValidator
 
         if (translations.Count == 0)
             errors.Add(
-                Error.Validation(nameof(translations), "At least one translation is required.")
+                Error.Validation(nameof(translations), Strings.Validation_TranslationsRequired)
             );
 
         if (url is null || string.IsNullOrWhiteSpace(url.ToString()))
-            errors.Add(Error.Validation(nameof(url), "Project URL is required."));
+            errors.Add(Error.Validation(nameof(url), Strings.Validation_ProjectUrlRequired));
 
         if (string.IsNullOrWhiteSpace(imageUrl))
-            errors.Add(Error.Validation(nameof(imageUrl), "Image filename is required."));
+            errors.Add(
+                Error.Validation(nameof(imageUrl), Strings.Validation_ImageFilenameRequired)
+            );
 
         for (var i = 0; i < translations.Count; i++)
         {
@@ -37,7 +41,11 @@ internal static class ProjectCommandValidator
                 errors.Add(
                     Error.Validation(
                         $"{nameof(translations)}[{i}].Name",
-                        $"Name is required for the {translations[i].Language} translation."
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Strings.Validation_NameRequiredForLanguage,
+                            translations[i].Language
+                        )
                     )
                 );
         }

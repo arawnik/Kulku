@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Application.IdeaBank;
@@ -12,7 +13,7 @@ internal static class IdeaTagCommandValidator
         List<Error> errors = [];
 
         if (string.IsNullOrWhiteSpace(name))
-            errors.Add(Error.Validation(nameof(name), "Tag name is required."));
+            errors.Add(Error.Validation(nameof(name), Strings.Validation_TagNameRequired));
 
         return [.. errors];
     }

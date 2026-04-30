@@ -5,6 +5,7 @@ using Kulku.Application.Cover.Institution.Models;
 using Kulku.Application.Cover.Models;
 using Kulku.Web.Admin.Components.Cv.Components;
 using Kulku.Web.Admin.Components.Shared;
+using Kulku.Web.Admin.Resources;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 
 namespace Kulku.Web.Admin.Components.Cv.Pages;
@@ -122,7 +123,7 @@ partial class Education(
         }
         else
         {
-            _errorMessage = "Failed to load education details.";
+            _errorMessage = CvStrings.Education_FailedToLoad;
         }
     }
 
@@ -158,7 +159,7 @@ partial class Education(
                         createResult,
                         e => _editModal?.SetServerErrors(e),
                         ref _errorMessage,
-                        "Failed to create education. Please try again."
+                        CvStrings.Education_FailedToCreate
                     )
                 )
                 {
@@ -184,7 +185,7 @@ partial class Education(
                     result,
                     e => _editModal?.SetServerErrors(e),
                     ref _errorMessage,
-                    "Failed to save changes. Please try again."
+                    Strings.FailedToSave
                 )
             )
             {
@@ -213,7 +214,7 @@ partial class Education(
         }
         else
         {
-            _errorMessage = result.Error?.Message ?? "Failed to delete education entry.";
+            _errorMessage = result.Error?.Message ?? CvStrings.Education_FailedToDelete;
         }
     }
 
@@ -267,7 +268,7 @@ partial class Education(
         }
         else
         {
-            _errorMessage = "Failed to load institution details.";
+            _errorMessage = CvStrings.Institution_FailedToLoad;
         }
     }
 
@@ -299,7 +300,7 @@ partial class Education(
                         result,
                         e => _institutionModal?.SetServerErrors(e),
                         ref _institutionErrorMessage,
-                        "Failed to create institution."
+                        CvStrings.Institution_FailedToCreate
                     )
                 )
                 {
@@ -320,7 +321,7 @@ partial class Education(
                     updateResult,
                     e => _institutionModal?.SetServerErrors(e),
                     ref _institutionErrorMessage,
-                    "Failed to save institution."
+                    CvStrings.Institution_FailedToSave
                 )
             )
             {
@@ -348,7 +349,7 @@ partial class Education(
         }
         else
         {
-            _errorMessage = result.Error?.Message ?? "Failed to delete institution.";
+            _errorMessage = result.Error?.Message ?? CvStrings.Institution_FailedToDelete;
         }
     }
 

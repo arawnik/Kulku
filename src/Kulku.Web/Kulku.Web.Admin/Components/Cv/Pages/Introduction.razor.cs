@@ -2,6 +2,7 @@ using Kulku.Application.Cover.Introduction;
 using Kulku.Application.Cover.Introduction.Models;
 using Kulku.Web.Admin.Components.Cv.Components;
 using Kulku.Web.Admin.Components.Shared;
+using Kulku.Web.Admin.Resources;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 
 namespace Kulku.Web.Admin.Components.Cv.Pages;
@@ -95,7 +96,7 @@ partial class Introduction(
         }
         else
         {
-            _errorMessage = "Failed to load introduction details.";
+            _errorMessage = CvStrings.Introduction_FailedToLoad;
         }
     }
 
@@ -132,7 +133,7 @@ partial class Introduction(
                         createResult,
                         e => _editModal?.SetServerErrors(e),
                         ref _errorMessage,
-                        "Failed to create introduction. Please try again."
+                        CvStrings.Introduction_FailedToCreate
                     )
                 )
                 {
@@ -159,7 +160,7 @@ partial class Introduction(
                     result,
                     e => _editModal?.SetServerErrors(e),
                     ref _errorMessage,
-                    "Failed to save changes. Please try again."
+                    Strings.FailedToSave
                 )
             )
             {
@@ -188,7 +189,7 @@ partial class Introduction(
         }
         else
         {
-            _errorMessage = result.Error?.Message ?? "Failed to delete introduction.";
+            _errorMessage = result.Error?.Message ?? CvStrings.Introduction_FailedToDelete;
         }
     }
 

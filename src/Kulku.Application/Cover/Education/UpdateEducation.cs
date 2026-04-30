@@ -1,4 +1,5 @@
 using Kulku.Application.Cover.Education.Models;
+using Kulku.Application.Resources;
 using Kulku.Domain.Cover;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
@@ -49,7 +50,7 @@ public static class UpdateEducation
             );
 
             if (education is null)
-                return Error.NotFound("Education not found.");
+                return Error.NotFound(Strings.NotFound_Education);
 
             education.StartDate = command.StartDate;
             education.EndDate = command.EndDate;

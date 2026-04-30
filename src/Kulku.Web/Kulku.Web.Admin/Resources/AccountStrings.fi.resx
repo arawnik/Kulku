@@ -117,10 +117,94 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="InvalidReCAPTCHA" xml:space="preserve">
-    <value>virheellinen reCAPTCHA. Ole hyvä ja yritä uudelleen.</value>
+  <data name="Login_PageTitle" xml:space="preserve">
+    <value>Kirjaudu</value>
   </data>
-  <data name="Test" xml:space="preserve">
-    <value>Testi</value>
+  <data name="Login_Heading" xml:space="preserve">
+    <value>Kirjaudu</value>
+  </data>
+  <data name="Login_UseLocal" xml:space="preserve">
+    <value>Käytä paikallista tiliä kirjautuaksesi.</value>
+  </data>
+  <data name="Login_EmailPlaceholder" xml:space="preserve">
+    <value>nimi@esimerkki.fi</value>
+  </data>
+  <data name="Login_PasswordPlaceholder" xml:space="preserve">
+    <value>salasana</value>
+  </data>
+  <data name="Login_RememberMe" xml:space="preserve">
+    <value>Muista minut</value>
+  </data>
+  <data name="Login_Button" xml:space="preserve">
+    <value>Kirjaudu</value>
+  </data>
+  <data name="Login_Or" xml:space="preserve">
+    <value>TAI</value>
+  </data>
+  <data name="Login_Passkey" xml:space="preserve">
+    <value>Kirjaudu salausavaimella</value>
+  </data>
+  <data name="Login_ForgotPassword" xml:space="preserve">
+    <value>Unohditko salasanasi?</value>
+  </data>
+  <data name="Login_RegisterNew" xml:space="preserve">
+    <value>Rekisteröidy uutena käyttäjänä</value>
+  </data>
+  <data name="Login_ResendConfirmation" xml:space="preserve">
+    <value>Lähetä sähköpostivahvistus uudelleen</value>
+  </data>
+  <data name="Login_ExternalService" xml:space="preserve">
+    <value>Käytä toista palvelua kirjautuaksesi.</value>
+  </data>
+  <data name="Register_PageTitle" xml:space="preserve">
+    <value>Rekisteröidy</value>
+  </data>
+  <data name="Register_Heading" xml:space="preserve">
+    <value>Rekisteröidy</value>
+  </data>
+  <data name="Register_CreateNew" xml:space="preserve">
+    <value>Luo uusi tili.</value>
+  </data>
+  <data name="Register_ConfirmPassword" xml:space="preserve">
+    <value>Vahvista salasana</value>
+  </data>
+  <data name="Register_Button" xml:space="preserve">
+    <value>Rekisteröidy</value>
+  </data>
+  <data name="Register_ExternalService" xml:space="preserve">
+    <value>Käytä toista palvelua rekisteröityäksesi.</value>
+  </data>
+  <data name="Register_Closed" xml:space="preserve">
+    <value>Rekisteröinti on suljettu.</value>
+  </data>
+  <data name="Manage_Profile" xml:space="preserve">
+    <value>Profiili</value>
+  </data>
+  <data name="Manage_ExternalLogins" xml:space="preserve">
+    <value>Ulkoiset kirjautumiset</value>
+  </data>
+  <data name="Manage_TwoFactor" xml:space="preserve">
+    <value>Kaksivaiheinen tunnistus</value>
+  </data>
+  <data name="Manage_Passkeys" xml:space="preserve">
+    <value>Salausavaimet</value>
+  </data>
+  <data name="Manage_PersonalData" xml:space="preserve">
+    <value>Henkilötiedot</value>
+  </data>
+  <data name="Manage_ProfileTitle" xml:space="preserve">
+    <value>Profiili</value>
+  </data>
+  <data name="Manage_ProfileSubtitle" xml:space="preserve">
+    <value>Tilisi asetukset</value>
+  </data>
+  <data name="Manage_PhoneNumber" xml:space="preserve">
+    <value>Puhelinnumero</value>
+  </data>
+  <data name="Manage_ChangesSaved" xml:space="preserve">
+    <value>Muutokset tallennettu</value>
+  </data>
+  <data name="Manage_ChangePassword" xml:space="preserve">
+    <value>Vaihda salasana</value>
   </data>
 </root>

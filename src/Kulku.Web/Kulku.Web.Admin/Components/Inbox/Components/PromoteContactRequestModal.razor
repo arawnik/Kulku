@@ -1,7 +1,7 @@
 @using Kulku.Application.Contacts.Models
 @using Kulku.Application.Network.Models
 
-<ModalDialog Visible="@IsVisible" Title="Promote to Interaction"
+<ModalDialog Visible="@IsVisible" Title="@InboxStrings.Promote_Title"
 			 Size="ModalSize.Large"
 			 OnClose="OnCancel">
 	<ChildContent>
@@ -23,7 +23,7 @@
 				<DataAnnotationsValidator />
 
 				<div class="mb-3">
-					<label class="form-label">Company <span class="text-danger">*</span></label>
+					<label class="form-label">@Strings.Company <span class="text-danger">*</span></label>
 
 					<div class="btn-group btn-group-sm w-100 mb-2" role="group">
 						<button type="button"
@@ -41,17 +41,17 @@
 					@if (Form.IsNewCompany)
 					{
 						<div class="mb-2">
-							<label class="form-label">Company Name <span class="text-danger">*</span></label>
+							<label class="form-label">@Strings.CompanyName <span class="text-danger">*</span></label>
 							<InputText class="form-control" @bind-Value="Form.NewCompanyName" placeholder="Company name" />
 							<ValidationMessage For="@(() => Form.NewCompanyName)" />
 						</div>
 						<div class="row g-2">
 							<div class="col-md-6">
-								<label class="form-label">Website</label>
+								<label class="form-label">@Strings.Website</label>
 								<InputText class="form-control" @bind-Value="Form.NewCompanyWebsite" placeholder="https://..." />
 							</div>
 							<div class="col-md-6">
-								<label class="form-label">Region</label>
+								<label class="form-label">@Strings.Region</label>
 								<InputText class="form-control" @bind-Value="Form.NewCompanyRegion" placeholder="e.g. Helsinki, Finland" />
 							</div>
 						</div>
@@ -59,7 +59,7 @@
 					else
 					{
 						<select class="form-select" @bind="Form.SelectedCompanyId">
-							<option value="@Guid.Empty">— Select a company —</option>
+							<option value="@Guid.Empty">@InboxStrings.Promote_SelectCompany</option>
 							@foreach (var c in EnrolledCompanies.OrderBy(c => c.Name))
 							{
 								<option value="@c.CompanyId">@c.Name @(c.Region is not null ? $"({c.Region})" : "")</option>
@@ -69,7 +69,7 @@
 				</div>
 
 				<div class="mb-3">
-					<label class="form-label">Summary</label>
+					<label class="form-label">@Strings.Summary</label>
 					<textarea class="form-control" rows="3" @bind="Form.Summary"
 							  placeholder="Defaults to subject + message if left empty"></textarea>
 					<div class="form-text">Leave blank to use the original subject and message.</div>
@@ -83,9 +83,9 @@
 				<div class="d-flex gap-2">
 					<button type="submit" class="btn btn-success"
 							disabled="@IsSubmitDisabled">
-						<Icon Kind="IconKind.Check" Size="14" CssClass="me-1" />Promote
+						<Icon Kind="IconKind.Check" Size="14" CssClass="me-1" />@InboxStrings.Promote_Button
 					</button>
-					<button type="button" class="btn btn-outline-secondary" @onclick="OnCancel">Cancel</button>
+					<button type="button" class="btn btn-outline-secondary" @onclick="OnCancel">@Strings.Cancel</button>
 				</div>
 			</EditForm>
 		}

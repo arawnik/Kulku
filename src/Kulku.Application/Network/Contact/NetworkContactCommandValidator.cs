@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Application.Network.Contact;
@@ -18,10 +19,7 @@ internal static class NetworkContactCommandValidator
         )
         {
             errors.Add(
-                Error.Validation(
-                    nameof(personName),
-                    "At least one identifying field (name, email, or LinkedIn) is required."
-                )
+                Error.Validation(nameof(personName), Strings.Validation_ContactIdentifyingField)
             );
         }
 

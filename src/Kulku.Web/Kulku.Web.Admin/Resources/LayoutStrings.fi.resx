@@ -1,0 +1,313 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>Kulku Admin</value>
+  </data>
+  <data name="ToggleSidebar" xml:space="preserve">
+    <value>Vaihda sivupalkki</value>
+  </data>
+  <data name="Nav_Home" xml:space="preserve">
+    <value>Koti</value>
+  </data>
+  <data name="Nav_Inbox" xml:space="preserve">
+    <value>Saapuneet</value>
+  </data>
+  <data name="Nav_Network" xml:space="preserve">
+    <value>Verkosto</value>
+  </data>
+  <data name="Nav_Cv" xml:space="preserve">
+    <value>CV</value>
+  </data>
+  <data name="Nav_Ideas" xml:space="preserve">
+    <value>Ideat</value>
+  </data>
+  <data name="Nav_Dashboard" xml:space="preserve">
+    <value>Hallintapaneeli</value>
+  </data>
+  <data name="Nav_Companies" xml:space="preserve">
+    <value>Yritykset</value>
+  </data>
+  <data name="Nav_LogInteraction" xml:space="preserve">
+    <value>Kirjaa vuorovaikutus</value>
+  </data>
+  <data name="Nav_Overview" xml:space="preserve">
+    <value>Yleiskatsaus</value>
+  </data>
+  <data name="Nav_Introduction" xml:space="preserve">
+    <value>Esittely</value>
+  </data>
+  <data name="Nav_Education" xml:space="preserve">
+    <value>Koulutus</value>
+  </data>
+  <data name="Nav_Experience" xml:space="preserve">
+    <value>Kokemus</value>
+  </data>
+  <data name="Nav_Projects" xml:space="preserve">
+    <value>Projektit</value>
+  </data>
+  <data name="Nav_Keywords" xml:space="preserve">
+    <value>Avainsanat</value>
+  </data>
+  <data name="Nav_Profile" xml:space="preserve">
+    <value>Profiili</value>
+  </data>
+  <data name="Nav_Logout" xml:space="preserve">
+    <value>Kirjaudu ulos</value>
+  </data>
+  <data name="Nav_Login" xml:space="preserve">
+    <value>Kirjaudu</value>
+  </data>
+  <data name="Nav_Register" xml:space="preserve">
+    <value>Rekisteröidy</value>
+  </data>
+  <data name="Error_Unhandled" xml:space="preserve">
+    <value>Odottamaton virhe on tapahtunut.</value>
+  </data>
+  <data name="Reconnect_Rejoining" xml:space="preserve">
+    <value>Yhdistetään palvelimeen uudelleen...</value>
+  </data>
+  <data name="Reconnect_RejoinFailed" xml:space="preserve">
+    <value>Uudelleenyhdistäminen epäonnistui... yritetään uudelleen</value>
+  </data>
+  <data name="Reconnect_Seconds" xml:space="preserve">
+    <value>sekunnin kuluttua.</value>
+  </data>
+  <data name="Reconnect_Failed" xml:space="preserve">
+    <value>Uudelleenyhdistäminen epäonnistui.</value>
+  </data>
+  <data name="Reconnect_RetryOrReload" xml:space="preserve">
+    <value>Yritä uudelleen tai lataa sivu uudelleen.</value>
+  </data>
+  <data name="Reconnect_Paused" xml:space="preserve">
+    <value>Palvelin on keskeyttänyt istunnon.</value>
+  </data>
+  <data name="Reconnect_ResumeFailed" xml:space="preserve">
+    <value>Istunnon jatkaminen epäonnistui.</value>
+  </data>
+  <data name="Reconnect_PleaseReload" xml:space="preserve">
+    <value>Lataa sivu uudelleen.</value>
+  </data>
+  <data name="Dashboard_PageTitle" xml:space="preserve">
+    <value>Hallintapaneeli — Kulku Admin</value>
+  </data>
+  <data name="Dashboard_Heading" xml:space="preserve">
+    <value>Hallintapaneeli</value>
+  </data>
+  <data name="Dashboard_Welcome" xml:space="preserve">
+    <value>Tervetuloa takaisin,</value>
+  </data>
+  <data name="Dashboard_Inbox" xml:space="preserve">
+    <value>Saapuneet</value>
+  </data>
+  <data name="Dashboard_New" xml:space="preserve">
+    <value>uutta</value>
+  </data>
+  <data name="Dashboard_UnreadRequests" xml:space="preserve">
+    <value>Lukemattomat yhteydenotot</value>
+  </data>
+  <data name="Dashboard_Network" xml:space="preserve">
+    <value>Verkosto</value>
+  </data>
+  <data name="Dashboard_Companies" xml:space="preserve">
+    <value>yritystä</value>
+  </data>
+  <data name="Dashboard_TrackedRelationships" xml:space="preserve">
+    <value>Seuratut suhteet</value>
+  </data>
+  <data name="Dashboard_IdeaBank" xml:space="preserve">
+    <value>Ideapankki</value>
+  </data>
+  <data name="Dashboard_Ideas" xml:space="preserve">
+    <value>ideaa</value>
+  </data>
+  <data name="Dashboard_InTheIdeaBank" xml:space="preserve">
+    <value>Ideapankissa</value>
+  </data>
+  <data name="Dashboard_Portfolio" xml:space="preserve">
+    <value>Portfolio</value>
+  </data>
+  <data name="Dashboard_Projects" xml:space="preserve">
+    <value>projektia</value>
+  </data>
+  <data name="Dashboard_ShowcaseProjects" xml:space="preserve">
+    <value>Esittelyprojektit</value>
+  </data>
+  <data name="Dashboard_RecentRequests" xml:space="preserve">
+    <value>Viimeisimmät pyynnöt</value>
+  </data>
+  <data name="Dashboard_LatestNewRequests" xml:space="preserve">
+    <value>Viimeisimmät uudet yhteydenotot</value>
+  </data>
+  <data name="Dashboard_NoNewRequests" xml:space="preserve">
+    <value>Ei uusia pyyntöjä — saapuneet on tyhjä.</value>
+  </data>
+  <data name="Dashboard_AttentionNeeded" xml:space="preserve">
+    <value>Huomiota vaativat</value>
+  </data>
+  <data name="Dashboard_OverdueAndCold" xml:space="preserve">
+    <value>Myöhässä olevat toimenpiteet ja kylmenevät suhteet</value>
+  </data>
+  <data name="Dashboard_AllOnTrack" xml:space="preserve">
+    <value>Kaikki suhteet ovat kunnossa.</value>
+  </data>
+  <data name="Dashboard_Overdue" xml:space="preserve">
+    <value>Myöhässä</value>
+  </data>
+  <data name="Dashboard_Actions" xml:space="preserve">
+    <value>toimenpidettä</value>
+  </data>
+  <data name="Dashboard_GoingCold" xml:space="preserve">
+    <value>Kylmenemässä</value>
+  </data>
+  <data name="Dashboard_Relationships" xml:space="preserve">
+    <value>suhdetta</value>
+  </data>
+  <data name="Dashboard_RecentIdeas" xml:space="preserve">
+    <value>Viimeisimmät ideat</value>
+  </data>
+  <data name="Dashboard_RecentlyUpdatedIdeas" xml:space="preserve">
+    <value>Viimeksi päivitetyt ideat</value>
+  </data>
+  <data name="Dashboard_NoIdeasYet" xml:space="preserve">
+    <value>Ei ideoita vielä.</value>
+  </data>
+  <data name="Dashboard_LatestActivity" xml:space="preserve">
+    <value>Viimeisin toiminta</value>
+  </data>
+  <data name="Dashboard_NoInteractionsYet" xml:space="preserve">
+    <value>Ei vuorovaikutuksia vielä.</value>
+  </data>
+  <data name="Dashboard_CvOverview" xml:space="preserve">
+    <value>CV-yleiskatsaus</value>
+  </data>
+  <data name="Dashboard_ManageCv" xml:space="preserve">
+    <value>Hallinnoi CV:tä</value>
+  </data>
+  <data name="Dashboard_Experience" xml:space="preserve">
+    <value>kokemusta</value>
+  </data>
+  <data name="Dashboard_Education" xml:space="preserve">
+    <value>koulutusta</value>
+  </data>
+  <data name="Dashboard_Keywords" xml:space="preserve">
+    <value>avainsanaa</value>
+  </data>
+  <data name="Landing_Description" xml:space="preserve">
+    <value>Henkilökohtainen hallintapaneeli ammatillisen portfolion, CV-sisällön, projektiesittelyiden ja kehittäjätyönkulun ylläpitoon.</value>
+  </data>
+  <data name="Landing_GetInTouch" xml:space="preserve">
+    <value>Haluatko ottaa yhteyttä?</value>
+  </data>
+  <data name="Landing_RegistrationClosed" xml:space="preserve">
+    <value>Rekisteröinti on tällä hetkellä suljettu. Jos haluat ottaa yhteyttä, voit lähettää viestin yhteydenottolomakkeeni kautta.</value>
+  </data>
+  <data name="Landing_SendMessage" xml:space="preserve">
+    <value>Lähetä viesti</value>
+  </data>
+  <data name="Landing_SignIn" xml:space="preserve">
+    <value>Kirjaudu sisään</value>
+  </data>
+  <data name="Landing_Register" xml:space="preserve">
+    <value>Rekisteröidy</value>
+  </data>
+  <data name="Landing_CvManagement" xml:space="preserve">
+    <value>CV-hallinta</value>
+  </data>
+  <data name="Landing_CvManagementDesc" xml:space="preserve">
+    <value>Hallinnoi esittelyä, koulutusta, työkokemusta ja osaamisavainsanoja useilla kielillä.</value>
+  </data>
+  <data name="Landing_ProjectPortfolio" xml:space="preserve">
+    <value>Projektisalkku</value>
+  </data>
+  <data name="Landing_ProjectPortfolioDesc" xml:space="preserve">
+    <value>Esittele projektejasi kuvauksilla, kuvilla ja linkeillä. Sisältö syötetään suoraan julkiselle sivustolle.</value>
+  </data>
+  <data name="Landing_IdeaBank" xml:space="preserve">
+    <value>Ideapankki</value>
+  </data>
+  <data name="Landing_IdeaBankDesc" xml:space="preserve">
+    <value>Tallenna ja järjestä projekti-ideoita, ominaisuuspyyntöjä ja inspiraatiota tulevaa työtä varten.</value>
+  </data>
+  <data name="Landing_Network" xml:space="preserve">
+    <value>Verkosto</value>
+  </data>
+  <data name="Landing_NetworkDesc" xml:space="preserve">
+    <value>Seuraa yrityksiä, vuorovaikutuksia ja verkostoitumistoimintaa pysyäksesi ajan tasalla ammatillisessa yhteydenpidossasi.</value>
+  </data>
+  <data name="Error_PageTitle" xml:space="preserve">
+    <value>Virhe</value>
+  </data>
+  <data name="Error_Heading" xml:space="preserve">
+    <value>Virhe.</value>
+  </data>
+  <data name="Error_Message" xml:space="preserve">
+    <value>Pyyntösi käsittelyssä tapahtui virhe.</value>
+  </data>
+  <data name="Error_RequestId" xml:space="preserve">
+    <value>Pyyntötunnus:</value>
+  </data>
+  <data name="NotFound_Heading" xml:space="preserve">
+    <value>Ei löytynyt</value>
+  </data>
+  <data name="NotFound_Message" xml:space="preserve">
+    <value>Valitettavasti etsimääsi sisältöä ei löydy.</value>
+  </data>
+</root>

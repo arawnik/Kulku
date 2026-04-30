@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Network;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
@@ -34,7 +35,7 @@ public static class UpdateNetworkProfile
             );
 
             if (profile is null)
-                return Error.NotFound("Network profile not found.");
+                return Error.NotFound(Strings.NotFound_NetworkProfile);
 
             profile.Stage = command.Stage;
             profile.Notes = command.Notes?.Trim();

@@ -7,22 +7,22 @@
 
 @attribute [Authorize]
 
-<PageTitle>Log interaction</PageTitle>
+<PageTitle>@NetworkStrings.LogInteraction_PageTitle</PageTitle>
 
 <div class="container-fluid py-4">
 	<div class="d-flex justify-content-between align-items-start gap-2 mb-3">
 		<div>
-			<h1 class="h4 mb-1">Log interaction</h1>
-			<div class="text-muted">Companies are usually created here. Link history when possible.</div>
+			<h1 class="h4 mb-1">@NetworkStrings.LogInteraction_Heading</h1>
+			<div class="text-muted">@NetworkStrings.LogInteraction_Subtitle</div>
 		</div>
-		<NavLink class="btn btn-sm btn-outline-secondary" href="network">Back to dashboard</NavLink>
+		<NavLink class="btn btn-sm btn-outline-secondary" href="network">@NetworkStrings.LogInteraction_BackToDashboard</NavLink>
 	</div>
 
 	<div class="row g-3">
 		<div class="col-12 col-xl-7">
 			<div class="card shadow-sm">
 				<div class="card-header">
-					<strong>Interaction details</strong>
+					<strong>@NetworkStrings.LogInteraction_Details</strong>
 				</div>
 				<div class="card-body">
 					<EditForm Model="@Model" OnValidSubmit="@OnSubmit">
@@ -31,7 +31,7 @@
 
 						<div class="row g-3 mb-3">
 							<div class="col-md-4">
-								<label class="form-label">Direction</label>
+								<label class="form-label">@Strings.Direction</label>
 								<select class="form-select" @bind="Model.Direction">
 									@foreach (var d in Enum.GetValues<InteractionDirection>())
 									{
@@ -41,7 +41,7 @@
 							</div>
 
 							<div class="col-md-4">
-								<label class="form-label">Channel</label>
+								<label class="form-label">@Strings.Channel</label>
 								<select class="form-select" @bind="Model.Channel">
 									@foreach (var ch in Enum.GetValues<InteractionChannel>())
 									{
@@ -51,25 +51,25 @@
 							</div>
 
 							<div class="col-md-4">
-								<label class="form-label">Date</label>
+								<label class="form-label">@Strings.Date</label>
 								<input class="form-control" type="date" @bind="Model.Date" />
 							</div>
 						</div>
 
 						<!-- Company select -->
 						<div class="mb-3">
-							<label class="form-label">Company</label>
+							<label class="form-label">@Strings.Company</label>
 
 							<div class="row g-2">
 								<div class="col-md-7">
 									<select class="form-select" @onchange="OnCompanyChanged">
-										<option value="">— Select company —</option>
+										<option value="">@Strings.SelectCompany</option>
 										@foreach (var c in _enrolledCompanies.OrderBy(c => c.Name))
 										{
 											<option value="@c.CompanyId">@c.Name (@c.Region)</option>
 										}
 									</select>
-									<div class="form-text">Select an enrolled company to link this interaction.</div>
+									<div class="form-text">@NetworkStrings.LogInteraction_SelectCompany</div>
 								</div>
 							</div>
 						</div>
@@ -79,7 +79,7 @@
 							<div class="form-check">
 								<input class="form-check-input" type="checkbox" id="warmIntro" @bind="Model.IsWarmIntro" />
 								<label class="form-check-label" for="warmIntro">
-									Warm intro (friend / colleague)
+									@NetworkStrings.LogInteraction_WarmIntro
 								</label>
 							</div>
 
@@ -87,27 +87,27 @@
 								<div class="col-md-4">
 									<select class="form-select" @bind="Model.ReferredByRelation" disabled="@(!Model.IsWarmIntro)">
 										<option value="">—</option>
-										<option value="Friend">Friend</option>
-										<option value="Colleague">Colleague</option>
-										<option value="Other">Other</option>
+										<option value="Friend">@NetworkStrings.LogInteraction_Friend</option>
+										<option value="Colleague">@NetworkStrings.LogInteraction_Colleague</option>
+										<option value="Other">@NetworkStrings.LogInteraction_Other</option>
 									</select>
 								</div>
 								<div class="col-md-8">
-									<input class="form-control" placeholder="Referred by (name/context)" @bind="Model.ReferredByName" disabled="@(!Model.IsWarmIntro)" />
+									<input class="form-control" placeholder="@NetworkStrings.LogInteraction_ReferredBy" @bind="Model.ReferredByName" disabled="@(!Model.IsWarmIntro)" />
 								</div>
 							</div>
 						</div>
 
 						<!-- Contact selection -->
 						<div class="mb-3">
-							<label class="form-label">Contact</label>
+							<label class="form-label">@Strings.Contact</label>
 							@if (HasSelectedCompany && (CompanyContacts.Count > 0 || PersonalContacts.Count > 0))
 							{
 								<select class="form-select mb-2" @onchange="OnContactChanged">
-									<option value="">— New contact —</option>
+									<option value="">@NetworkStrings.LogInteraction_NewContact</option>
 									@if (CompanyContacts.Count > 0)
 									{
-										<optgroup label="Company contacts">
+										<optgroup label="@NetworkStrings.LogInteraction_CompanyContacts">
 											@foreach (var ct in CompanyContacts)
 											{
 												<option value="@ct.Id">@ct.PersonName (@ct.Title)</option>
@@ -116,10 +116,10 @@
 									}
 									@if (PersonalContacts.Count > 0)
 									{
-										<optgroup label="Personal contacts">
+										<optgroup label="@Strings.PersonalContacts">
 											@foreach (var ct in PersonalContacts)
 											{
-												<option value="@ct.Id">@ct.PersonName @(ct.Title is not null ? $"({ct.Title})" : "") — Personal</option>
+												<option value="@ct.Id">@ct.PersonName @(ct.Title is not null ? $"({ct.Title})" : "") @NetworkStrings.LogInteraction_Personal</option>
 											}
 										</optgroup>
 									}
@@ -127,42 +127,42 @@
 							}
 							<div class="row g-2">
 								<div class="col-md-4">
-									<input class="form-control" placeholder="Person name" @bind="Model.ContactPersonName" disabled="@SelectedContactId.HasValue" />
+									<input class="form-control" placeholder="@NetworkStrings.LogInteraction_PersonName" @bind="Model.ContactPersonName" disabled="@SelectedContactId.HasValue" />
 								</div>
 								<div class="col-md-4">
-									<input class="form-control" placeholder="Email" @bind="Model.ContactEmail" disabled="@SelectedContactId.HasValue" />
+									<input class="form-control" placeholder="@Strings.Email" @bind="Model.ContactEmail" disabled="@SelectedContactId.HasValue" />
 								</div>
 								<div class="col-md-4">
-									<input class="form-control" placeholder="Phone" @bind="Model.ContactPhone" disabled="@SelectedContactId.HasValue" />
+									<input class="form-control" placeholder="@Strings.Phone" @bind="Model.ContactPhone" disabled="@SelectedContactId.HasValue" />
 								</div>
 								<div class="col-md-6">
-									<input class="form-control" placeholder="LinkedIn URL" @bind="Model.ContactLinkedInUrl" disabled="@SelectedContactId.HasValue" />
+									<input class="form-control" placeholder="@NetworkStrings.LinkedInUrl" @bind="Model.ContactLinkedInUrl" disabled="@SelectedContactId.HasValue" />
 								</div>
 								<div class="col-md-6">
-									<input class="form-control" placeholder="Title/role" @bind="Model.ContactTitle" disabled="@SelectedContactId.HasValue" />
+									<input class="form-control" placeholder="@NetworkStrings.LogInteraction_TitleRole" @bind="Model.ContactTitle" disabled="@SelectedContactId.HasValue" />
 								</div>
 							</div>
 						</div>
 
 						<div class="mb-3">
-							<label class="form-label">Summary</label>
+							<label class="form-label">@Strings.Summary</label>
 							<textarea class="form-control" rows="3" @bind="Model.Summary"></textarea>
 						</div>
 
 						<div class="row g-3 mb-3">
 							<div class="col-md-8">
-								<label class="form-label">Next action (optional)</label>
-								<input class="form-control" @bind="Model.NextAction" placeholder="Concrete, time-bound action" />
+								<label class="form-label">@NetworkStrings.LogInteraction_NextAction</label>
+								<input class="form-control" @bind="Model.NextAction" placeholder="@NetworkStrings.LogInteraction_ActionPlaceholder" />
 							</div>
 							<div class="col-md-4">
-								<label class="form-label">Due date</label>
+								<label class="form-label">@NetworkStrings.LogInteraction_DueDate</label>
 								<input class="form-control" type="date" @bind="Model.NextActionDue" />
 							</div>
 						</div>
 
 						<div class="d-flex gap-2">
-							<button type="submit" class="btn btn-primary">Save interaction</button>
-							<button type="button" class="btn btn-outline-secondary" @onclick="ResetForm">Reset</button>
+							<button type="submit" class="btn btn-primary">@NetworkStrings.LogInteraction_SaveInteraction</button>
+							<button type="button" class="btn btn-outline-secondary" @onclick="ResetForm">@NetworkStrings.LogInteraction_Reset</button>
 						</div>
 					</EditForm>
 				</div>
@@ -173,13 +173,13 @@
 		<div class="col-12 col-xl-5">
 			<div class="card shadow-sm mb-3">
 				<div class="card-header">
-					<strong>Company categories</strong>
-					<div class="text-muted small">Shared taxonomy with Idea Bank.</div>
+					<strong>@NetworkStrings.LogInteraction_CompanyCategories</strong>
+					<div class="text-muted small">@NetworkStrings.LogInteraction_CategorySubtitle</div>
 				</div>
 				<div class="card-body">
 					@if (_categories.Count == 0)
 					{
-						<div class="text-muted">No categories configured.</div>
+						<div class="text-muted">@NetworkStrings.LogInteraction_NoCategories</div>
 					}
 					else
 					{
@@ -199,7 +199,7 @@
 							<div class="mt-2">
 								<button type="button" class="btn btn-sm btn-outline-primary"
 										@onclick="SaveCompanyCategories">
-									Update categories
+									@NetworkStrings.LogInteraction_UpdateCategories
 								</button>
 							</div>
 						}
@@ -209,13 +209,13 @@
 
 			<div class="card shadow-sm">
 				<div class="card-header d-flex justify-content-between align-items-center">
-					<strong>Company history</strong>
-					<span class="badge text-bg-light border">preview</span>
+					<strong>@NetworkStrings.LogInteraction_CompanyHistory</strong>
+					<span class="badge text-bg-light border">@NetworkStrings.LogInteraction_Preview</span>
 				</div>
 				<div class="card-body">
 					@if (!HasSelectedCompany)
 					{
-						<div class="text-muted">Select an existing company to see its history. New companies start empty.</div>
+						<div class="text-muted">@NetworkStrings.LogInteraction_CompanyHistoryEmpty</div>
 					}
 					else
 					{
@@ -238,7 +238,7 @@
 
 							@if (_companyHistory.Count == 0)
 							{
-								<div class="text-muted">No prior interactions recorded.</div>
+								<div class="text-muted">@NetworkStrings.LogInteraction_NoPriorInteractions</div>
 							}
 							else
 							{

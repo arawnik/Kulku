@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Contacts;
 using Kulku.Domain.Network;
 using Kulku.Domain.Repositories;
@@ -40,10 +41,10 @@ public static class PromoteContactRequest
             );
 
             if (request is null)
-                return Error.NotFound("Contact request not found.");
+                return Error.NotFound(Strings.NotFound_ContactRequest);
 
             if (request.Status == ContactRequestStatus.Promoted)
-                return Error.BusinessRule("Contact request has already been promoted.");
+                return Error.BusinessRule(Strings.BusinessRule_ContactRequestAlreadyPromoted);
 
             // Find or create network contact by email
             var contact = await _networkContactRepository.FindByEmailAsync(

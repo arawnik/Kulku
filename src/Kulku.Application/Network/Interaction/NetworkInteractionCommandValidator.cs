@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Application.Network.Interaction;
@@ -12,14 +13,11 @@ internal static class NetworkInteractionCommandValidator
         List<Error> errors = [];
 
         if (string.IsNullOrWhiteSpace(summary))
-            errors.Add(Error.Validation(nameof(summary), "Summary is required."));
+            errors.Add(Error.Validation(nameof(summary), Strings.Validation_SummaryRequired));
 
         if (isWarmIntro && string.IsNullOrWhiteSpace(referredByName))
             errors.Add(
-                Error.Validation(
-                    nameof(referredByName),
-                    "Referred-by name is required for warm introductions."
-                )
+                Error.Validation(nameof(referredByName), Strings.Validation_ReferredByNameRequired)
             );
 
         return [.. errors];

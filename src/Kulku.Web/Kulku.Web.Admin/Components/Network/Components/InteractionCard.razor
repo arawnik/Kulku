@@ -12,7 +12,7 @@
 					<span class="badge text-bg-light border">@ChannelLabel(Interaction.Channel)</span>
 					@if (Interaction.IsWarmIntro)
 					{
-						<span class="badge text-bg-success">Warm intro</span>
+						<span class="badge text-bg-success">@NetworkStrings.InteractionCard_WarmIntro</span>
 					}
 					<small class="text-muted">@Interaction.Date.ToString("yyyy-MM-dd")</small>
 				</div>
@@ -52,7 +52,7 @@
 				@if (!string.IsNullOrWhiteSpace(Interaction.NextAction))
 				{
 					<div class="mt-1 d-flex align-items-center gap-2">
-						<span class="text-muted small">Next:</span>
+						<span class="text-muted small">@Strings.Next</span>
 						<span class="small">@Interaction.NextAction</span>
 						@if (Interaction.NextActionDue.HasValue)
 						{
@@ -69,7 +69,7 @@
 				<div class="d-flex gap-1 flex-shrink-0">
 					@if (OnEdit.HasDelegate)
 					{
-						<button class="btn btn-sm btn-outline-primary" title="Edit"
+						<button class="btn btn-sm btn-outline-primary" title="@Strings.Edit"
 								@onclick="() => OnEdit.InvokeAsync(Interaction.Id)">
 							<Icon Kind="IconKind.Pencil" Size="14" />
 						</button>
@@ -78,18 +78,18 @@
 					{
 						@if (!_confirmDelete)
 						{
-							<button class="btn btn-sm btn-outline-danger" title="Delete"
+							<button class="btn btn-sm btn-outline-danger" title="@Strings.Delete"
 									@onclick="() => _confirmDelete = true">
 								<Icon Kind="IconKind.Trash" Size="14" />
 							</button>
 						}
 						else
 						{
-							<button class="btn btn-sm btn-danger" title="Confirm delete"
+							<button class="btn btn-sm btn-danger" title="@Strings.ConfirmDelete"
 									@onclick="() => OnDelete.InvokeAsync(Interaction.Id)">
 								<Icon Kind="IconKind.Check" Size="14" />
 							</button>
-							<button class="btn btn-sm btn-outline-secondary" title="Cancel"
+							<button class="btn btn-sm btn-outline-secondary" title="@Strings.Cancel"
 									@onclick="() => _confirmDelete = false">
 								✕
 							</button>

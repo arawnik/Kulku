@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -30,7 +31,7 @@ public static class DeleteProject
             );
 
             if (project is null)
-                return Error.NotFound("Project not found.");
+                return Error.NotFound(Strings.NotFound_Project);
 
             _projectRepository.Remove(project);
             await _unitOfWork.CompleteAsync(cancellationToken);

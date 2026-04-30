@@ -1,4 +1,6 @@
+using System.Globalization;
 using Kulku.Application.IdeaBank.Ports;
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -27,7 +29,7 @@ public static class DeleteIdeaTag
         {
             var tag = await _tagRepository.GetByIdAsync(command.TagId, cancellationToken);
             if (tag is null)
-                return Error.NotFound("Tag not found.");
+                return Error.NotFound(Strings.NotFound_Tag);
 
             var allTags = await _tagQueries.ListAllAsync(cancellationToken);
             var tagModel = allTags.FirstOrDefault(t => t.Id == command.TagId);
@@ -35,7 +37,11 @@ public static class DeleteIdeaTag
             if (tagModel is not null && tagModel.IdeaCount > 0)
                 return Error.Validation(
                     "tagId",
-                    $"Cannot delete this tag — {tagModel.IdeaCount} idea(s) still reference it."
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Strings.CannotDelete_TagReferenced,
+                        tagModel.IdeaCount
+                    )
                 );
 
             _tagRepository.Remove(tag);

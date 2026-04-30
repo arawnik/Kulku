@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -32,7 +33,7 @@ public static class UpdateNetworkCategory
             );
 
             if (category is null)
-                return Error.NotFound("Category not found.");
+                return Error.NotFound(Strings.NotFound_Category);
 
             category.Name = command.Name.Trim();
             category.ColorToken = command.ColorToken?.Trim();

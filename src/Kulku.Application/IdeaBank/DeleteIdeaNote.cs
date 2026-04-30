@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -22,11 +23,11 @@ public static class DeleteIdeaNote
         {
             var idea = await _ideaRepository.GetByIdAsync(command.IdeaId, cancellationToken);
             if (idea is null)
-                return Error.NotFound("Idea not found.");
+                return Error.NotFound(Strings.NotFound_Idea);
 
             var note = idea.Notes.FirstOrDefault(n => n.Id == command.NoteId);
             if (note is null)
-                return Error.NotFound("Note not found.");
+                return Error.NotFound(Strings.NotFound_Note);
 
             idea.Notes.Remove(note);
             idea.UpdatedAt = DateTime.UtcNow;

@@ -1,4 +1,6 @@
+using System.Globalization;
 using Kulku.Application.Cover.Ports;
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -31,7 +33,7 @@ public static class DeleteInstitution
             );
 
             if (institution is null)
-                return Error.NotFound("Institution not found.");
+                return Error.NotFound(Strings.NotFound_Institution);
 
             var detail = await _institutionQueries.FindByIdWithTranslationsAsync(
                 command.InstitutionId,
@@ -41,7 +43,11 @@ public static class DeleteInstitution
             if (detail is not null && detail.EducationCount > 0)
                 return Error.Validation(
                     "institutionId",
-                    $"Cannot delete this institution — {detail.EducationCount} education(s) still reference it."
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Strings.CannotDelete_InstitutionReferenced,
+                        detail.EducationCount
+                    )
                 );
 
             _institutionRepository.Remove(institution);
