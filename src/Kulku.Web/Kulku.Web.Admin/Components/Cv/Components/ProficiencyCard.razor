@@ -2,7 +2,7 @@
 
 <div class="card shadow-sm mb-2">
 	<div class="card-body py-2">
-		<div class="d-flex justify-content-between align-items-start">
+		<div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
 			@* Left: scale badge + translations *@
 			<div class="d-flex gap-3 align-items-start flex-grow-1">
 				<span class="badge bg-primary fs-6 mt-1" style="min-width:3rem">@Proficiency.Scale%</span>
@@ -43,7 +43,7 @@
 			</div>
 
 			@* Right: action buttons *@
-			<div class="d-flex gap-1 ms-3">
+			<div class="d-flex gap-1">
 				<button type="button" class="btn btn-sm btn-outline-primary"
 						@onclick="() => OnEdit.InvokeAsync(Proficiency.ProficiencyId)">
 					<Icon Kind="IconKind.Pencil" Size="14" />
