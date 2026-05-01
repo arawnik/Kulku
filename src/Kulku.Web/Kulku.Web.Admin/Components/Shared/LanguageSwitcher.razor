@@ -1,0 +1,32 @@
+@using Kulku.Domain
+@using Kulku.Web.Admin.Resources
+
+<div class="kulku-language-switcher">
+	@foreach (var culture in Defaults.SupportedCultures)
+	{
+		var isActive = string.Equals(culture, CurrentCulture, StringComparison.OrdinalIgnoreCase);
+
+		<form method="post" action="/Culture/Set">
+			<AntiforgeryToken />
+			<input type="hidden" name="culture" value="@culture" />
+			<input type="hidden" name="returnUrl" value="@CurrentUrl" />
+			<button type="submit"
+					class="btn btn-sm @(isActive ? "btn-light" : "btn-outline-light") kulku-lang-btn"
+					disabled="@isActive">
+				@GetDisplayName(culture)
+			</button>
+		</form>
+	}
+</div>
+
+@code {
+	[Inject]
+	private NavigationManager NavigationManager { get; set; } = default!;
+
+	private string CurrentCulture => System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+	private string CurrentUrl => new Uri(NavigationManager.Uri).PathAndQuery;
+
+	private static string GetDisplayName(string culture) =>
+		LayoutStrings.ResourceManager.GetString($"Language_{culture}", null) ?? culture.ToUpperInvariant();
+}

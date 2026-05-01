@@ -556,6 +556,24 @@ namespace Kulku.Web.Admin.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to EN.
+        /// </summary>
+        public static string Language_en {
+            get {
+                return ResourceManager.GetString("Language_en", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FI.
+        /// </summary>
+        public static string Language_fi {
+            get {
+                return ResourceManager.GetString("Language_fi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Companies.
         /// </summary>
         public static string Nav_Companies {

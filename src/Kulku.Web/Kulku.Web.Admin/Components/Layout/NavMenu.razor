@@ -98,9 +98,14 @@
 		</AuthorizeView>
 	</ul>
 
-	@* ── Footer: user menu ── *@
+	@* ── Footer: language + user menu ── *@
 	<div class="kulku-sidebar__footer">
 		<hr class="my-2" />
+
+		@if (!IsCollapsed)
+		{
+			<LanguageSwitcher />
+		}
 
 		<AuthorizeView>
 			<Authorized>

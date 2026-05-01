@@ -5,6 +5,7 @@ using Kulku.Infrastructure.Security;
 using Kulku.Web.Admin;
 using Kulku.Web.Admin.Components;
 using Kulku.Web.Admin.Components.Account;
+using Kulku.Web.Admin.Endpoints;
 using Kulku.Web.Admin.Options;
 using Microsoft.Extensions.Options;
 
@@ -59,6 +60,7 @@ app.UseAntiforgery();
 app.UseAssetStaticFiles();
 
 app.MapStaticAssets();
+app.MapCultureEndpoints();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
 // Add additional endpoints required by the Identity /Account Razor components.
