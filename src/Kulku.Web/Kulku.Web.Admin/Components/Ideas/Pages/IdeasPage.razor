@@ -5,25 +5,25 @@
 
 @attribute [Authorize]
 
-<PageTitle>Idea Bank</PageTitle>
+<PageTitle>@IdeasStrings.PageTitle</PageTitle>
 
 <div class="container-fluid py-4 px-4">
 	<div class="d-flex justify-content-between align-items-center mb-3">
-		<h3 class="mb-0">💡 Idea Bank</h3>
+		<h3 class="mb-0">💡 @IdeasStrings.Heading</h3>
 		<button class="btn btn-primary btn-sm" @onclick="HandleCreateIdea">
-			<Icon Kind="IconKind.Plus" Size="16" /> New Idea
+			<Icon Kind="IconKind.Plus" Size="16" /> @IdeasStrings.NewIdea
 		</button>
 	</div>
 
 	@* ── Filters ── *@
 	<div class="row g-2 mb-3">
 		<div class="col-md-3">
-			<input type="text" class="form-control form-control-sm" placeholder="Search…"
+			<input type="text" class="form-control form-control-sm" placeholder="@Strings.Search"
 				   @bind="_searchText" @bind:event="oninput" />
 		</div>
 		<div class="col-md-2">
 			<select class="form-select form-select-sm" @bind="_filterDomainId">
-				<option value="@Guid.Empty">All Domains</option>
+				<option value="@Guid.Empty">@IdeasStrings.AllDomains</option>
 				@foreach (var d in _domains)
 				{
 					<option value="@d.Id">@d.Name</option>
@@ -32,7 +32,7 @@
 		</div>
 		<div class="col-md-2">
 			<select class="form-select form-select-sm" @bind="_filterStatusId">
-				<option value="@Guid.Empty">All Statuses</option>
+				<option value="@Guid.Empty">@IdeasStrings.AllStatuses</option>
 				@foreach (var s in _statuses)
 				{
 					<option value="@s.Id">@s.Name</option>
@@ -41,7 +41,7 @@
 		</div>
 		<div class="col-md-2">
 			<select class="form-select form-select-sm" @bind="_filterPriorityId">
-				<option value="@Guid.Empty">All Priorities</option>
+				<option value="@Guid.Empty">@IdeasStrings.AllPriorities</option>
 				@foreach (var p in _priorities)
 				{
 					<option value="@p.Id">@p.Name</option>
@@ -50,7 +50,7 @@
 		</div>
 		<div class="col-md-2">
 			<select class="form-select form-select-sm" @bind="_filterTagId">
-				<option value="@Guid.Empty">All Tags</option>
+				<option value="@Guid.Empty">@IdeasStrings.AllTags</option>
 				@foreach (var t in _tags)
 				{
 					<option value="@t.Id">@t.Name</option>
@@ -67,7 +67,7 @@
 	@if (filtered.Count == 0)
 	{
 		<div class="text-muted text-center py-4">
-			@(_ideas.Count == 0 ? "No ideas yet. Capture your first spark!" : "No ideas match the current filters.")
+			@(_ideas.Count == 0 ? IdeasStrings.NoIdeas : IdeasStrings.NoMatch)
 		</div>
 	}
 	else
@@ -81,8 +81,8 @@
 	@* ── Tags Section (collapsible) ── *@
 	<div class="mt-4">
 		<div class="d-flex align-items-center gap-2 mb-2 cursor-pointer" @onclick="() => _tagsExpanded = !_tagsExpanded">
-			<Icon Kind="@(_tagsExpanded? IconKind.ChevronDown: IconKind.ChevronRight)" Size="16" />
-			<h5 class="mb-0">Tags</h5>
+			<Icon Kind="@(_tagsExpanded ? IconKind.ChevronDown : IconKind.ChevronRight)" Size="16" />
+			<h5 class="mb-0">@Strings.Tags</h5>
 			<span class="badge bg-secondary">@_tags.Count</span>
 		</div>
 
@@ -90,13 +90,13 @@
 		{
 			<div class="mb-2">
 				<button class="btn btn-outline-primary btn-sm" @onclick="HandleCreateTag">
-					<Icon Kind="IconKind.Plus" Size="14" /> New Tag
+					<Icon Kind="IconKind.Plus" Size="14" /> @IdeasStrings.NewTag
 				</button>
 			</div>
 
 			@if (_tags.Count == 0)
 			{
-				<p class="text-muted">No tags yet.</p>
+				<p class="text-muted">@IdeasStrings.NoTags</p>
 			}
 			else
 			{

@@ -5,7 +5,7 @@
 @using SoulNETLib.Clean.Domain
 
 <ModalDialog Visible="@(_form != null)"
-			 Title="@(Mode == ModalMode.Create ? "Create Education" : "Edit Education")"
+			 Title="@(Mode == ModalMode.Create ? CvStrings.Education_CreateModal : CvStrings.Education_EditModal)"
 			 OnClose="OnCancel">
 	<ChildContent>
 		@if (ErrorMessage is not null)
@@ -21,10 +21,10 @@
 				@if (Mode == ModalMode.Create && Institutions is not null)
 				{
 					<div class="mb-4">
-						<label class="form-label">Institution</label>
+						<label class="form-label">@Strings.Institution</label>
 						<InputSelect @bind-Value="_form.InstitutionId" class="form-select"
 									 disabled="@IsSaving">
-							<option value="">— Select institution —</option>
+							<option value="">@Strings.SelectInstitution</option>
 							@foreach (var inst in Institutions)
 							{
 								var name = inst.Translations.FirstOrDefault()?.Name ?? "Unnamed";
@@ -37,19 +37,19 @@
 
 				<div class="row g-3 mb-4">
 					<div class="col-md-6">
-						<label class="form-label">Start Date</label>
+						<label class="form-label">@Strings.StartDate</label>
 						<InputDate @bind-Value="_form.StartDate" class="form-control"
 								   disabled="@IsSaving" />
 					</div>
 					<div class="col-md-6">
-						<label class="form-label">End Date <span class="text-muted fw-normal">(empty = ongoing)</span></label>
+						<label class="form-label">@Strings.EndDate <span class="text-muted fw-normal">@Strings.EmptyOngoing</span></label>
 						<InputDate @bind-Value="_form.EndDate" class="form-control"
 								   disabled="@IsSaving" />
 						<ValidationMessage For="@(() => _form.EndDate)" />
 					</div>
 				</div>
 
-				<h6 class="mb-3">Translations</h6>
+				<h6 class="mb-3">@Strings.Translations</h6>
 
 				@for (var i = 0; i < _form.Translations.Count; i++)
 				{
@@ -62,13 +62,13 @@
 						</div>
 						<div class="card-body">
 							<div class="mb-3">
-								<label class="form-label">Title</label>
+								<label class="form-label">@Strings.Title</label>
 								<InputText @bind-Value="_form.Translations[index].Title"
 										   class="form-control" disabled="@IsSaving" />
 								<ValidationMessage For="@(() => _form.Translations[index].Title)" />
 							</div>
 							<div>
-								<label class="form-label">Description</label>
+								<label class="form-label">@Strings.Description</label>
 								<InputTextArea @bind-Value="_form.Translations[index].Description"
 											   class="form-control" rows="4"
 											   disabled="@IsSaving" />
@@ -82,18 +82,18 @@
 	<FooterContent>
 		<button type="button" class="btn btn-secondary"
 				@onclick="OnCancel" disabled="@IsSaving">
-			Cancel
+			@Strings.Cancel
 		</button>
 		<button type="button" class="btn btn-primary"
 				@onclick="HandleSubmit" disabled="@IsSaving">
 			@if (IsSaving)
 			{
 				<span class="spinner-border spinner-border-sm me-1"></span>
-				<span>Saving…</span>
+				<span>@Strings.Saving</span>
 			}
 			else
 			{
-				<span>@(Mode == ModalMode.Create ? "Create" : "Save Changes")</span>
+				<span>@(Mode == ModalMode.Create ? Strings.Create : Strings.SaveChanges)</span>
 			}
 		</button>
 	</FooterContent>

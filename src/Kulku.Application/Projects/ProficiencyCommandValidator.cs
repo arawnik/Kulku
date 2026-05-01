@@ -1,3 +1,5 @@
+using System.Globalization;
+using Kulku.Application.Resources;
 using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Application.Projects;
@@ -12,11 +14,11 @@ internal static class ProficiencyCommandValidator
         List<Error> errors = [];
 
         if (scale < 0 || scale > 100)
-            errors.Add(Error.Validation(nameof(scale), "Scale must be between 0 and 100."));
+            errors.Add(Error.Validation(nameof(scale), Strings.Validation_ScaleRange));
 
         if (translations.Count == 0)
             errors.Add(
-                Error.Validation(nameof(translations), "At least one translation is required.")
+                Error.Validation(nameof(translations), Strings.Validation_TranslationsRequired)
             );
 
         for (var i = 0; i < translations.Count; i++)
@@ -25,7 +27,11 @@ internal static class ProficiencyCommandValidator
                 errors.Add(
                     Error.Validation(
                         $"{nameof(translations)}[{i}].Name",
-                        $"Name is required for the {translations[i].Language} translation."
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Strings.Validation_NameRequiredForLanguage,
+                            translations[i].Language
+                        )
                     )
                 );
         }

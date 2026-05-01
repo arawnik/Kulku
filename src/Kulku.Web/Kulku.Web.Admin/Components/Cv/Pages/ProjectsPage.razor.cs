@@ -2,6 +2,7 @@ using Kulku.Application.Projects;
 using Kulku.Application.Projects.Models;
 using Kulku.Web.Admin.Components.Cv.Components;
 using Kulku.Web.Admin.Components.Shared;
+using Kulku.Web.Admin.Resources;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 
 namespace Kulku.Web.Admin.Components.Cv.Pages;
@@ -87,7 +88,7 @@ partial class ProjectsPage(
         }
         else
         {
-            _errorMessage = "Failed to load project details.";
+            _errorMessage = CvStrings.Projects_FailedToLoad;
         }
     }
 
@@ -125,7 +126,7 @@ partial class ProjectsPage(
                         createResult,
                         e => _editModal?.SetServerErrors(e),
                         ref _errorMessage,
-                        "Failed to create project. Please try again."
+                        CvStrings.Projects_FailedToCreate
                     )
                 )
                 {
@@ -153,7 +154,7 @@ partial class ProjectsPage(
                     result,
                     e => _editModal?.SetServerErrors(e),
                     ref _errorMessage,
-                    "Failed to save changes. Please try again."
+                    Strings.FailedToSave
                 )
             )
             {
@@ -182,7 +183,7 @@ partial class ProjectsPage(
         }
         else
         {
-            _errorMessage = result.Error?.Message ?? "Failed to delete project.";
+            _errorMessage = result.Error?.Message ?? CvStrings.Projects_FailedToDelete;
         }
     }
 
@@ -208,7 +209,7 @@ partial class ProjectsPage(
         if (result.IsSuccess)
             return result.Value ?? [];
 
-        _errorMessage = result.Error?.Message ?? "Failed to load keywords.";
+        _errorMessage = result.Error?.Message ?? CvStrings.Projects_FailedToLoadKeywords;
         return [];
     }
 

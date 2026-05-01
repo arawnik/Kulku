@@ -1,5 +1,6 @@
 using Kulku.Application.Contacts.Models;
 using Kulku.Domain.Contacts;
+using Kulku.Web.Admin.Resources;
 using Microsoft.AspNetCore.Components;
 
 namespace Kulku.Web.Admin.Components.Inbox.Components;
@@ -27,10 +28,10 @@ partial class ContactRequestCard
     private string StatusLabel =>
         Request.Status switch
         {
-            ContactRequestStatus.New => "New",
-            ContactRequestStatus.Promoted => "Promoted",
-            ContactRequestStatus.Spam => "Spam",
-            ContactRequestStatus.Dismissed => "Dismissed",
+            ContactRequestStatus.New => InboxStrings.Tab_New,
+            ContactRequestStatus.Promoted => InboxStrings.Tab_Promoted,
+            ContactRequestStatus.Spam => InboxStrings.Tab_Spam,
+            ContactRequestStatus.Dismissed => InboxStrings.Tab_Dismissed,
             _ => Request.Status.ToString(),
         };
 

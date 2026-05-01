@@ -5,13 +5,13 @@
 
 @attribute [Authorize]
 
-<PageTitle>Inbox</PageTitle>
+<PageTitle>@InboxStrings.PageTitle</PageTitle>
 
 <div class="container-fluid py-4">
 	<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
 		<div>
-			<h1 class="h4 mb-1">Inbox</h1>
-			<div class="text-muted">Contact requests submitted via the CV form.</div>
+			<h1 class="h4 mb-1">@InboxStrings.Heading</h1>
+			<div class="text-muted">@InboxStrings.Subtitle</div>
 		</div>
 	</div>
 
@@ -20,35 +20,35 @@
 		<li class="nav-item">
 			<button class="nav-link @(_statusFilter == ContactRequestStatus.New ? "active" : "")"
 					@onclick="() => SetFilter(ContactRequestStatus.New)">
-				New
+				@InboxStrings.Tab_New
 				<span class="badge text-bg-primary ms-1">@_allRequests.Count(r => r.Status == ContactRequestStatus.New)</span>
 			</button>
 		</li>
 		<li class="nav-item">
 			<button class="nav-link @(_statusFilter == ContactRequestStatus.Promoted ? "active" : "")"
 					@onclick="() => SetFilter(ContactRequestStatus.Promoted)">
-				Promoted
+				@InboxStrings.Tab_Promoted
 				<span class="badge text-bg-success ms-1">@_allRequests.Count(r => r.Status == ContactRequestStatus.Promoted)</span>
 			</button>
 		</li>
 		<li class="nav-item">
 			<button class="nav-link @(_statusFilter == ContactRequestStatus.Spam ? "active" : "")"
 					@onclick="() => SetFilter(ContactRequestStatus.Spam)">
-				Spam
+				@InboxStrings.Tab_Spam
 				<span class="badge text-bg-warning ms-1">@_allRequests.Count(r => r.Status == ContactRequestStatus.Spam)</span>
 			</button>
 		</li>
 		<li class="nav-item">
 			<button class="nav-link @(_statusFilter == ContactRequestStatus.Dismissed ? "active" : "")"
 					@onclick="() => SetFilter(ContactRequestStatus.Dismissed)">
-				Dismissed
+				@InboxStrings.Tab_Dismissed
 				<span class="badge text-bg-secondary ms-1">@_allRequests.Count(r => r.Status == ContactRequestStatus.Dismissed)</span>
 			</button>
 		</li>
 		<li class="nav-item">
 			<button class="nav-link @(_statusFilter is null ? "active" : "")"
 					@onclick="() => SetFilter(null)">
-				All
+				@Strings.All
 				<span class="badge text-bg-accent border ms-1">@_allRequests.Count</span>
 			</button>
 		</li>
@@ -69,18 +69,18 @@
 		<div class="text-muted text-center py-5">
 			@if (_allRequests.Count == 0)
 			{
-				<div>No contact requests received yet.</div>
+				<div>@InboxStrings.NoRequests</div>
 			}
 			else
 			{
-				<div>No requests match the current filter.</div>
+				<div>@InboxStrings.NoMatch</div>
 			}
 		</div>
 	}
 	else
 	{
 		<div class="mb-2 text-muted small">
-			Showing @filtered.Count request(s)
+			@string.Format(InboxStrings.ShowingCount, filtered.Count)
 		</div>
 
 		@foreach (var request in filtered)

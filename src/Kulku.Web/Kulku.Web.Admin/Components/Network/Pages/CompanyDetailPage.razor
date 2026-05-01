@@ -7,10 +7,10 @@
 
 @if (_company is null)
 {
-	<PageTitle>Company not found</PageTitle>
+	<PageTitle>@NetworkStrings.Detail_CompanyNotFoundTitle</PageTitle>
 	<div class="container-fluid py-4">
-		<div class="alert alert-warning">Company not found.</div>
-		<NavLink class="btn btn-sm btn-outline-secondary" href="network/companies">Back to companies</NavLink>
+		<div class="alert alert-warning">@NetworkStrings.Detail_NotFound</div>
+		<NavLink class="btn btn-sm btn-outline-secondary" href="network/companies">@NetworkStrings.Detail_BackToCompanies</NavLink>
 	</div>
 }
 else
@@ -23,7 +23,7 @@ else
 			<div>
 				<div class="d-flex align-items-center gap-2 mb-1">
 					<NavLink class="btn btn-sm btn-outline-secondary" href="network/companies">
-						<span style="display:inline-block;transform:rotate(180deg)"><Icon Kind="IconKind.ChevronRight" Size="14" /></span> Back
+						<span style="display:inline-block;transform:rotate(180deg)"><Icon Kind="IconKind.ChevronRight" Size="14" /></span> @Strings.Back
 					</NavLink>
 				</div>
 				<h1 class="h3 mb-1">@_company.Name</h1>
@@ -57,10 +57,10 @@ else
 
 			<div class="d-flex flex-wrap gap-2">
 				<button class="btn btn-sm btn-outline-primary" @onclick="HandleEditCompany">
-					<Icon Kind="IconKind.Pencil" Size="14" CssClass="me-1" />Edit Company
+					<Icon Kind="IconKind.Pencil" Size="14" CssClass="me-1" />@NetworkStrings.Detail_EditCompany
 				</button>
 				<NavLink class="btn btn-sm btn-primary" href="network/loginteraction">
-					<Icon Kind="IconKind.Plus" Size="14" CssClass="me-1" />Log Interaction
+					<Icon Kind="IconKind.Plus" Size="14" CssClass="me-1" />@NetworkStrings.Detail_LogInteraction
 				</NavLink>
 			</div>
 		</div>
@@ -69,7 +69,7 @@ else
 		<div class="card shadow-sm mb-4">
 			<div class="card-body py-2">
 				<div class="d-flex align-items-center gap-2">
-					<span class="small text-muted me-2">Stage:</span>
+					<span class="small text-muted me-2">@NetworkStrings.Detail_Stage</span>
 					@foreach (var stage in Enum.GetValues<CompanyStage>())
 					{
 						<button class="btn btn-sm @(stage == _company.Stage ? NetworkCompanyCard.StageBadgeClass(stage).Replace("text-bg-", "btn-") : "btn-outline-secondary")"
@@ -86,7 +86,7 @@ else
 		{
 			<div class="card shadow-sm mb-4">
 				<div class="card-header py-2">
-					<strong>Notes</strong>
+					<strong>@Strings.Notes</strong>
 				</div>
 				<div class="card-body py-2">
 					<p class="mb-0 text-muted">@_company.Notes</p>
@@ -100,7 +100,7 @@ else
 				<div class="card shadow-sm h-100">
 					<div class="card-header py-2 d-flex justify-content-between align-items-center">
 						<div class="d-flex align-items-center gap-2">
-							<strong>Contacts</strong>
+							<strong>@NetworkStrings.Detail_Contacts</strong>
 							<span class="badge bg-secondary">@_contacts.Count</span>
 						</div>
 						<button class="btn btn-sm btn-outline-success" @onclick="HandleCreateContact">
@@ -110,7 +110,7 @@ else
 					<div class="card-body p-2">
 						@if (_contacts.Count == 0)
 						{
-							<div class="text-muted small text-center py-3">No contacts yet.</div>
+							<div class="text-muted small text-center py-3">@NetworkStrings.Detail_NoContacts</div>
 						}
 						else
 						{
@@ -120,7 +120,7 @@ else
 									<div class="card-body py-2 px-3">
 										<div class="d-flex justify-content-between align-items-start">
 											<div>
-												<div class="fw-semibold small">@(contact.PersonName ?? "(unnamed)")</div>
+												<div class="fw-semibold small">@(contact.PersonName ?? NetworkStrings.Detail_Unnamed)</div>
 												@if (!string.IsNullOrWhiteSpace(contact.Title))
 												{
 													<small class="text-muted">@contact.Title</small>
@@ -139,23 +139,23 @@ else
 												{
 													<div class="mt-1">
 														<a href="@contact.LinkedInUrl" target="_blank"
-														   class="text-decoration-none small">LinkedIn</a>
+														   class="text-decoration-none small">@NetworkStrings.NetworkContact_LinkedIn</a>
 													</div>
 												}
 											</div>
 
 											<div class="d-flex gap-1">
-												<button class="btn btn-sm btn-outline-primary" title="Edit"
+												<button class="btn btn-sm btn-outline-primary" title="@Strings.Edit"
 														@onclick="() => HandleEditContact(contact)">
 													<Icon Kind="IconKind.Pencil" Size="12" />
 												</button>
 												<div class="dropdown">
-													<button class="btn btn-sm btn-outline-secondary dropdown-toggle" title="Move to…"
+													<button class="btn btn-sm btn-outline-secondary dropdown-toggle" title="@NetworkStrings.Detail_MoveTo"
 															data-bs-toggle="dropdown" data-bs-auto-close="true">
 														<Icon Kind="IconKind.PersonLinesFill" Size="12" />
 													</button>
 													<ul class="dropdown-menu dropdown-menu-end">
-														<li><h6 class="dropdown-header">Move to…</h6></li>
+														<li><h6 class="dropdown-header">@NetworkStrings.Detail_MoveTo</h6></li>
 														@foreach (var c in _enrolledCompanies.Where(c => c.CompanyId != CompanyId).OrderBy(c => c.Name))
 														{
 															<li>
@@ -169,12 +169,12 @@ else
 														<li>
 															<button class="dropdown-item small text-muted"
 																	@onclick="() => HandleUnaffiliateContact(contact.Id)">
-																Remove affiliation (personal)
+																@NetworkStrings.Detail_RemoveAffiliation
 															</button>
 														</li>
 													</ul>
 												</div>
-												<button class="btn btn-sm btn-outline-danger" title="Delete"
+												<button class="btn btn-sm btn-outline-danger" title="@Strings.Delete"
 														@onclick="() => HandleDeleteContact(contact.Id)">
 													<Icon Kind="IconKind.Trash" Size="12" />
 												</button>
@@ -193,7 +193,7 @@ else
 				<div class="card shadow-sm h-100">
 					<div class="card-header py-2 d-flex justify-content-between align-items-center">
 						<div class="d-flex align-items-center gap-2">
-							<strong>Interaction Timeline</strong>
+							<strong>@NetworkStrings.Detail_InteractionTimeline</strong>
 							<span class="badge bg-secondary">@_interactions.Count</span>
 						</div>
 					</div>
@@ -201,8 +201,8 @@ else
 						@if (_interactions.Count == 0)
 						{
 							<div class="text-muted small text-center py-3">
-								No interactions recorded.
-								<NavLink href="network/loginteraction" class="text-decoration-none">Log one now.</NavLink>
+								@NetworkStrings.Detail_NoInteractions
+								<NavLink href="network/loginteraction" class="text-decoration-none">@NetworkStrings.Detail_LogOneNow</NavLink>
 							</div>
 						}
 						else

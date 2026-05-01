@@ -48,7 +48,7 @@
 					@if (Relationship.FirstInteractionDate.HasValue)
 					{
 						<small class="text-muted opacity-75">
-							Since @Relationship.FirstInteractionDate.Value.ToString("MMM yyyy")
+							@NetworkStrings.RelationshipRow_Since @Relationship.FirstInteractionDate.Value.ToString("MMM yyyy")
 						</small>
 					}
 				</div>
@@ -58,7 +58,7 @@
 				{
 					<div class="d-flex align-items-center gap-2">
 						<small class="text-muted fw-semibold">
-							Last touch: @RelativeTime(Relationship.LastInteractionDate.Value)
+							@NetworkStrings.RelationshipRow_LastTouch @RelativeTime(Relationship.LastInteractionDate.Value)
 						</small>
 						@if (Relationship.LastChannel.HasValue)
 						{
@@ -76,14 +76,14 @@
 				}
 				else
 				{
-					<small class="text-muted fst-italic">No interactions recorded yet</small>
+					<small class="text-muted fst-italic">@NetworkStrings.RelationshipRow_NoInteractions</small>
 				}
 
 				@* Row 5: Next step (if any) *@
 				@if (!string.IsNullOrWhiteSpace(Relationship.NextAction))
 				{
 					<div class="d-flex align-items-center gap-2 mt-1">
-						<small class="text-muted">Next:</small>
+						<small class="text-muted">@Strings.Next</small>
 						<small>@Truncate(Relationship.NextAction, 60)</small>
 						@if (Relationship.NextActionDue.HasValue)
 						{
@@ -101,7 +101,7 @@
 				{
 					<div class="text-center">
 						<div class="h5 mb-0 @HealthTextClass">@Relationship.DaysSinceLastTouch.Value</div>
-						<small class="text-muted" style="font-size: 0.65rem;">days</small>
+						<small class="text-muted" style="font-size: 0.65rem;">@NetworkStrings.RelationshipRow_Days</small>
 					</div>
 				}
 				else

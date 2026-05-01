@@ -5,7 +5,7 @@
 @using SoulNETLib.Clean.Domain
 
 <ModalDialog Visible="@(_form != null)"
-			 Title="@(Mode == ModalMode.Create ? "Create Project" : "Edit Project")"
+			 Title="@(Mode == ModalMode.Create ? CvStrings.Projects_CreateModal : CvStrings.Projects_EditModal)"
 			 Size="ModalSize.Large"
 			 OnClose="OnCancel">
 	<ChildContent>
@@ -21,25 +21,25 @@
 
 				<div class="row g-3 mb-4">
 					<div class="col-md-5">
-						<label class="form-label">Project URL</label>
+						<label class="form-label">@CvStrings.Projects_ProjectUrl</label>
 						<InputText @bind-Value="_form.Url" class="form-control"
 								   placeholder="https://..." disabled="@IsSaving" />
 						<ValidationMessage For="@(() => _form.Url)" />
 					</div>
 					<div class="col-md-5">
-						<label class="form-label">Image filename</label>
+						<label class="form-label">@CvStrings.Projects_ImageFilename</label>
 						<InputText @bind-Value="_form.ImageUrl" class="form-control"
 								   placeholder="Project.webp" disabled="@IsSaving" />
 						<ValidationMessage For="@(() => _form.ImageUrl)" />
 					</div>
 					<div class="col-md-2">
-						<label class="form-label">Order</label>
+						<label class="form-label">@Strings.Order</label>
 						<InputNumber @bind-Value="_form.Order" class="form-control"
 									 disabled="@IsSaving" />
 					</div>
 				</div>
 
-				<h6 class="mb-3">Translations</h6>
+				<h6 class="mb-3">@Strings.Translations</h6>
 
 				@for (var i = 0; i < _form.Translations.Count; i++)
 				{
@@ -52,19 +52,19 @@
 						</div>
 						<div class="card-body">
 							<div class="mb-3">
-								<label class="form-label">Name</label>
+								<label class="form-label">@Strings.Name</label>
 								<InputText @bind-Value="_form.Translations[index].Name"
 										   class="form-control" disabled="@IsSaving" />
 								<ValidationMessage For="@(() => _form.Translations[index].Name)" />
 							</div>
 							<div class="mb-3">
-								<label class="form-label">Info <span class="text-muted fw-normal">(short tagline)</span></label>
+								<label class="form-label">@CvStrings.Projects_Info <span class="text-muted fw-normal">@CvStrings.Projects_InfoTagline</span></label>
 								<InputText @bind-Value="_form.Translations[index].Info"
 										   class="form-control" disabled="@IsSaving" />
 							</div>
 							<div class="mb-3">
 								<MarkdownEditor @bind-Value="_form.Translations[index].Description"
-												Label="Description"
+												Label="@Strings.Description"
 												Rows="4"
 												MinHeight="5"
 												Disabled="@IsSaving" />
@@ -75,7 +75,7 @@
 
 				@if (Keywords is not null && Keywords.Count > 0)
 				{
-					<h6 class="mb-3">Keywords</h6>
+					<h6 class="mb-3">@Strings.Keywords</h6>
 
 					@foreach (var group in Keywords.GroupBy(k => k.Type).OrderBy(g => g.Key))
 					{
@@ -109,18 +109,18 @@
 	<FooterContent>
 		<button type="button" class="btn btn-secondary"
 				@onclick="OnCancel" disabled="@IsSaving">
-			Cancel
+			@Strings.Cancel
 		</button>
 		<button type="button" class="btn btn-primary"
 				@onclick="HandleSubmit" disabled="@IsSaving">
 			@if (IsSaving)
 			{
 				<span class="spinner-border spinner-border-sm me-1"></span>
-				<span>Saving…</span>
+				<span>@Strings.Saving</span>
 			}
 			else
 			{
-				<span>@(Mode == ModalMode.Create ? "Create" : "Save Changes")</span>
+				<span>@(Mode == ModalMode.Create ? Strings.Create : Strings.SaveChanges)</span>
 			}
 		</button>
 	</FooterContent>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="NotFound_Project" xml:space="preserve">
+    <value>Project not found.</value>
+  </data>
+  <data name="NotFound_ProficiencyLevel" xml:space="preserve">
+    <value>Proficiency level not found.</value>
+  </data>
+  <data name="NotFound_Keyword" xml:space="preserve">
+    <value>Keyword not found.</value>
+  </data>
+  <data name="NotFound_Idea" xml:space="preserve">
+    <value>Idea not found.</value>
+  </data>
+  <data name="NotFound_Note" xml:space="preserve">
+    <value>Note not found.</value>
+  </data>
+  <data name="NotFound_Tag" xml:space="preserve">
+    <value>Tag not found.</value>
+  </data>
+  <data name="NotFound_Category" xml:space="preserve">
+    <value>Category not found.</value>
+  </data>
+  <data name="NotFound_Interaction" xml:space="preserve">
+    <value>Interaction not found.</value>
+  </data>
+  <data name="NotFound_Contact" xml:space="preserve">
+    <value>Contact not found.</value>
+  </data>
+  <data name="NotFound_NetworkProfile" xml:space="preserve">
+    <value>Network profile not found.</value>
+  </data>
+  <data name="NotFound_ContactRequest" xml:space="preserve">
+    <value>Contact request not found.</value>
+  </data>
+  <data name="NotFound_Introduction" xml:space="preserve">
+    <value>Introduction not found.</value>
+  </data>
+  <data name="NotFound_Institution" xml:space="preserve">
+    <value>Institution not found.</value>
+  </data>
+  <data name="NotFound_Company" xml:space="preserve">
+    <value>Company not found.</value>
+  </data>
+  <data name="NotFound_Education" xml:space="preserve">
+    <value>Education not found.</value>
+  </data>
+  <data name="NotFound_Experience" xml:space="preserve">
+    <value>Experience not found.</value>
+  </data>
+  <data name="Validation_TranslationsRequired" xml:space="preserve">
+    <value>At least one translation is required.</value>
+  </data>
+  <data name="Validation_ProjectUrlRequired" xml:space="preserve">
+    <value>Project URL is required.</value>
+  </data>
+  <data name="Validation_ImageFilenameRequired" xml:space="preserve">
+    <value>Image filename is required.</value>
+  </data>
+  <data name="Validation_ProficiencyRequired" xml:space="preserve">
+    <value>A proficiency level must be selected.</value>
+  </data>
+  <data name="Validation_ScaleRange" xml:space="preserve">
+    <value>Scale must be between 0 and 100.</value>
+  </data>
+  <data name="Validation_NoteContentRequired" xml:space="preserve">
+    <value>Note content is required.</value>
+  </data>
+  <data name="Validation_TitleRequired" xml:space="preserve">
+    <value>Title is required.</value>
+  </data>
+  <data name="Validation_DomainRequired" xml:space="preserve">
+    <value>Domain is required.</value>
+  </data>
+  <data name="Validation_StatusRequired" xml:space="preserve">
+    <value>Status is required.</value>
+  </data>
+  <data name="Validation_PriorityRequired" xml:space="preserve">
+    <value>Priority is required.</value>
+  </data>
+  <data name="Validation_TagNameRequired" xml:space="preserve">
+    <value>Tag name is required.</value>
+  </data>
+  <data name="Validation_CategoryNameRequired" xml:space="preserve">
+    <value>Category name is required.</value>
+  </data>
+  <data name="Validation_SummaryRequired" xml:space="preserve">
+    <value>Summary is required.</value>
+  </data>
+  <data name="Validation_ReferredByNameRequired" xml:space="preserve">
+    <value>Referred-by name is required for warm introductions.</value>
+  </data>
+  <data name="Validation_ContactIdentifyingField" xml:space="preserve">
+    <value>At least one identifying field (name, email, or LinkedIn) is required.</value>
+  </data>
+  <data name="Validation_AvatarFilenameRequired" xml:space="preserve">
+    <value>Avatar filename is required.</value>
+  </data>
+  <data name="Validation_SmallAvatarFilenameRequired" xml:space="preserve">
+    <value>Small avatar filename is required.</value>
+  </data>
+  <data name="Validation_EndDateBeforeStart" xml:space="preserve">
+    <value>End date cannot be before start date.</value>
+  </data>
+  <data name="Validation_NameRequiredForLanguage" xml:space="preserve">
+    <value>Name is required for the {0} translation.</value>
+  </data>
+  <data name="Validation_TitleRequiredForLanguage" xml:space="preserve">
+    <value>Title is required for the {0} translation.</value>
+  </data>
+  <data name="CannotDelete_ProficiencyReferenced" xml:space="preserve">
+    <value>Cannot delete this proficiency level — {0} keyword(s) still reference it.</value>
+  </data>
+  <data name="CannotDelete_TagReferenced" xml:space="preserve">
+    <value>Cannot delete this tag — {0} idea(s) still reference it.</value>
+  </data>
+  <data name="CannotDelete_CompanyReferenced" xml:space="preserve">
+    <value>Cannot delete this company — {0} experience(s) still reference it.</value>
+  </data>
+  <data name="CannotDelete_InstitutionReferenced" xml:space="preserve">
+    <value>Cannot delete this institution — {0} education(s) still reference it.</value>
+  </data>
+  <data name="CannotDelete_CategoryReferenced" xml:space="preserve">
+    <value>Cannot delete this category — {0} contact(s) still reference it.</value>
+  </data>
+  <data name="BusinessRule_ContactRequestAlreadyPromoted" xml:space="preserve">
+    <value>Contact request has already been promoted.</value>
+  </data>
+  <data name="BusinessRule_InvalidReCAPTCHA" xml:space="preserve">
+    <value>Invalid reCAPTCHA. Please try again.</value>
+  </data>
+  <data name="Test" xml:space="preserve">
+    <value>Test</value>
+  </data>
+</root>

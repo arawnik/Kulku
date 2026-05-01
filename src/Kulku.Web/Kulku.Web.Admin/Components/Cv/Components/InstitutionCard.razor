@@ -42,7 +42,7 @@
 						}
 					}
 					<span class="badge bg-secondary bg-opacity-25 text-body-emphasis">
-						@Institution.EducationCount education(s)
+						@Institution.EducationCount @CvStrings.Institution_EducationCount
 					</span>
 				</div>
 			</div>
@@ -63,9 +63,9 @@
 </div>
 
 <ConfirmDialog Visible="_confirmingDelete"
-			   Title="Delete Institution"
-			   Message="Are you sure you want to delete this institution?"
-			   ButtonText="Delete"
+			   Title="@CvStrings.Institution_DeleteTitle"
+			   Message="@CvStrings.Institution_DeleteMessage"
+			   ButtonText="@Strings.Delete"
 			   ButtonStyle="danger"
 			   ButtonIcon="IconKind.Trash"
 			   OnConfirm="HandleConfirmDelete"

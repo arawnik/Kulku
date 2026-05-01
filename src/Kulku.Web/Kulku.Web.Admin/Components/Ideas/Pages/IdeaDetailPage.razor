@@ -6,24 +6,24 @@
 
 @attribute [Authorize]
 
-<PageTitle>@(_idea?.Title ?? "Idea") — Idea Bank</PageTitle>
+<PageTitle>@(_idea?.Title ?? "Idea") — @IdeasStrings.PageTitle</PageTitle>
 
 <div class="container-fluid py-4 px-4">
 	@if (!_loaded)
 	{
-		<p class="text-muted">Loading…</p>
+		<p class="text-muted">@Strings.Loading</p>
 	}
 	else if (_idea is null)
 	{
-		<div class="alert alert-warning">Idea not found.</div>
-		<a href="/ideas" class="btn btn-outline-secondary btn-sm">← Back to Ideas</a>
+		<div class="alert alert-warning">@IdeasStrings.Detail_NotFound</div>
+		<a href="/ideas" class="btn btn-outline-secondary btn-sm">← @IdeasStrings.Detail_BackButton</a>
 	}
 	else
 	{
 		@* ── Header ── *@
 		<div class="d-flex justify-content-between align-items-center mb-3">
 			<div>
-				<a href="/ideas" class="text-decoration-none text-muted">← Ideas</a>
+				<a href="/ideas" class="text-decoration-none text-muted">← @IdeasStrings.Detail_BackToIdeas</a>
 				<h3 class="mt-1 mb-0">@_idea.Title</h3>
 				@if (!string.IsNullOrWhiteSpace(_idea.Summary))
 				{
@@ -31,7 +31,7 @@
 				}
 			</div>
 			<button class="btn btn-outline-primary btn-sm" @onclick="HandleEdit">
-				<Icon Kind="IconKind.Pencil" Size="16" /> Edit
+				<Icon Kind="IconKind.Pencil" Size="16" /> @Strings.Edit
 			</button>
 		</div>
 
@@ -57,7 +57,7 @@
 			<div class="col-lg-7 mb-4">
 				<div class="card">
 					<div class="card-header d-flex justify-content-between align-items-center">
-						<h5 class="mb-0">Description</h5>
+						<h5 class="mb-0">@Strings.Description</h5>
 					</div>
 					<div class="card-body">
 						@if (!string.IsNullOrWhiteSpace(_idea.Description))
@@ -66,7 +66,7 @@
 						}
 						else
 						{
-							<p class="text-muted fst-italic">No description yet.</p>
+							<p class="text-muted fst-italic">@IdeasStrings.Detail_NoDescription</p>
 						}
 					</div>
 				</div>
@@ -76,7 +76,7 @@
 			<div class="col-lg-5 mb-4">
 				<div class="card">
 					<div class="card-header d-flex justify-content-between align-items-center">
-						<h5 class="mb-0">Notes <span class="badge bg-secondary ms-1">@_idea.Notes.Count</span></h5>
+						<h5 class="mb-0">@Strings.Notes <span class="badge bg-secondary ms-1">@_idea.Notes.Count</span></h5>
 					</div>
 					<div class="card-body">
 						@* Add note form *@
@@ -85,7 +85,7 @@
 											Rows="2"
 											MinHeight="3"
 											Disabled="@_noteSaving"
-											Placeholder="Add a note…" />
+											Placeholder="@IdeasStrings.Detail_AddNotePlaceholder" />
 							<div class="mt-1 d-flex justify-content-end">
 								<button class="btn btn-primary btn-sm" @onclick="HandleAddNote"
 										disabled="@(_noteSaving || string.IsNullOrWhiteSpace(_newNoteContent))">
@@ -93,7 +93,7 @@
 									{
 										<span class="spinner-border spinner-border-sm me-1"></span>
 									}
-									Add Note
+									@IdeasStrings.Detail_AddNote
 								</button>
 							</div>
 						</div>
@@ -115,7 +115,7 @@
 		</div>
 
 		<div class="text-muted small">
-			Created @_idea.CreatedAt.ToString("dd MMM yyyy HH:mm") · Updated @_idea.UpdatedAt.ToString("dd MMM yyyy HH:mm")
+			Created @_idea.CreatedAt.ToString("dd MMM yyyy HH:mm") · @string.Format(IdeasStrings.Detail_Updated, _idea.UpdatedAt.ToString("dd MMM yyyy HH:mm"))
 		</div>
 	}
 </div>

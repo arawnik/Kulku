@@ -1,5 +1,5 @@
 using Carter;
-using Kulku.Domain.Resources;
+using Kulku.Application.Resources;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 

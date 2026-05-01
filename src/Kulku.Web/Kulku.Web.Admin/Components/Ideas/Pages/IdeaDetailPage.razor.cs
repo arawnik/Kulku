@@ -4,6 +4,7 @@ using Kulku.Application.IdeaBank.Models;
 using Kulku.Application.Projects;
 using Kulku.Application.Projects.Models;
 using Kulku.Web.Admin.Components.Ideas.Components;
+using Kulku.Web.Admin.Resources;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 
@@ -127,7 +128,7 @@ public partial class IdeaDetailPage(
                 if (result is IValidationResult validation)
                     _editModal?.SetServerErrors(validation.Errors);
                 else
-                    _ideaError = "An error occurred while saving.";
+                    _ideaError = Strings.AnErrorOccurred;
                 return;
             }
 

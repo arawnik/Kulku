@@ -7,7 +7,7 @@
 @inject IAssetUrlBuilder StaticAssets
 
 <ModalDialog Visible="@(_form != null)"
-			 Title="@(Mode == ModalMode.Create ? "Create Introduction" : "Edit Introduction")"
+			 Title="@(Mode == ModalMode.Create ? CvStrings.Introduction_CreateModal : CvStrings.Introduction_EditModal)"
 			 Size="ModalSize.Large"
 			 OnClose="OnCancel">
 	<ChildContent>
@@ -23,9 +23,9 @@
 
 				<div class="row g-3 mb-4">
 					<div class="col-md-5">
-						<label class="form-label">Avatar filename</label>
+						<label class="form-label">@CvStrings.Introduction_AvatarFilename</label>
 						<InputText @bind-Value="_form.AvatarUrl" class="form-control"
-								   placeholder="avatar.webp" disabled="@IsSaving" />
+								   placeholder="@CvStrings.Introduction_AvatarPlaceholder" disabled="@IsSaving" />
 						<ValidationMessage For="@(() => _form.AvatarUrl)" />
 						@if (!string.IsNullOrWhiteSpace(_form.AvatarUrl))
 						{
@@ -35,9 +35,9 @@
 						}
 					</div>
 					<div class="col-md-5">
-						<label class="form-label">Small avatar filename</label>
+						<label class="form-label">@CvStrings.Introduction_SmallAvatarFilename</label>
 						<InputText @bind-Value="_form.SmallAvatarUrl" class="form-control"
-								   placeholder="small_avatar.webp" disabled="@IsSaving" />
+								   placeholder="@CvStrings.Introduction_SmallAvatarPlaceholder" disabled="@IsSaving" />
 						<ValidationMessage For="@(() => _form.SmallAvatarUrl)" />
 						@if (!string.IsNullOrWhiteSpace(_form.SmallAvatarUrl))
 						{
@@ -47,14 +47,14 @@
 						}
 					</div>
 					<div class="col-md-2">
-						<label class="form-label">Pub Date</label>
+						<label class="form-label">@CvStrings.Introduction_PubDate</label>
 						<InputDate Type="InputDateType.DateTimeLocal"
 								   @bind-Value="_form.PubDate"
 								   class="form-control" disabled="@IsSaving" />
 					</div>
 				</div>
 
-				<h6 class="mb-3">Translations</h6>
+				<h6 class="mb-3">@Strings.Translations</h6>
 
 				@for (var i = 0; i < _form.Translations.Count; i++)
 				{
@@ -67,19 +67,19 @@
 						</div>
 						<div class="card-body">
 							<div class="mb-3">
-								<label class="form-label">Title</label>
+								<label class="form-label">@Strings.Title</label>
 								<InputText @bind-Value="_form.Translations[index].Title"
 										   class="form-control" disabled="@IsSaving" />
 								<ValidationMessage For="@(() => _form.Translations[index].Title)" />
 							</div>
 							<div class="mb-3">
-								<label class="form-label">Tagline</label>
+								<label class="form-label">@Strings.Tagline</label>
 								<InputText @bind-Value="_form.Translations[index].Tagline"
 										   class="form-control" disabled="@IsSaving" />
 							</div>
 							<div class="mb-3">
 								<MarkdownEditor @bind-Value="_form.Translations[index].Content"
-												Label="Content"
+												Label="@Strings.Content"
 												Rows="6"
 												Disabled="@IsSaving" />
 							</div>
@@ -92,18 +92,18 @@
 	<FooterContent>
 		<button type="button" class="btn btn-secondary"
 				@onclick="OnCancel" disabled="@IsSaving">
-			Cancel
+			@Strings.Cancel
 		</button>
 		<button type="button" class="btn btn-primary"
 				@onclick="HandleSubmit" disabled="@IsSaving">
 			@if (IsSaving)
 			{
 				<span class="spinner-border spinner-border-sm me-1"></span>
-				<span>Saving…</span>
+				<span>@Strings.Saving</span>
 			}
 			else
 			{
-				<span>@(Mode == ModalMode.Create ? "Create" : "Save Changes")</span>
+				<span>@(Mode == ModalMode.Create ? Strings.Create : Strings.SaveChanges)</span>
 			}
 		</button>
 	</FooterContent>

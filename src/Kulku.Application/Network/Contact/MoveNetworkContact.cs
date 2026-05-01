@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -28,7 +29,7 @@ public static class MoveNetworkContact
             );
 
             if (contact is null)
-                return Error.NotFound("Contact not found.");
+                return Error.NotFound(Strings.NotFound_Contact);
 
             contact.CompanyId = command.NewCompanyId;
 

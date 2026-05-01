@@ -1,3 +1,5 @@
+using System.Globalization;
+using Kulku.Application.Resources;
 using Kulku.Domain.Projects;
 using SoulNETLib.Clean.Domain;
 
@@ -18,12 +20,12 @@ internal static class KeywordCommandValidator
 
         if (proficiencyId == Guid.Empty)
             errors.Add(
-                Error.Validation(nameof(proficiencyId), "A proficiency level must be selected.")
+                Error.Validation(nameof(proficiencyId), Strings.Validation_ProficiencyRequired)
             );
 
         if (translations.Count == 0)
             errors.Add(
-                Error.Validation(nameof(translations), "At least one translation is required.")
+                Error.Validation(nameof(translations), Strings.Validation_TranslationsRequired)
             );
 
         for (var i = 0; i < translations.Count; i++)
@@ -32,7 +34,11 @@ internal static class KeywordCommandValidator
                 errors.Add(
                     Error.Validation(
                         $"{nameof(translations)}[{i}].Name",
-                        $"Name is required for the {translations[i].Language} translation."
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Strings.Validation_NameRequiredForLanguage,
+                            translations[i].Language
+                        )
                     )
                 );
         }

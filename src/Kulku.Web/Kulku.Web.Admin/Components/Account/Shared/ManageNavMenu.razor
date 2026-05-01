@@ -4,37 +4,37 @@
 @inject SignInManager<ApplicationUser> SignInManager
 
 <ul class="nav nav-pills flex-column">
-    <li class="nav-item">
-        <NavLink class="nav-link" href="Account/Manage" Match="NavLinkMatch.All">Profile</NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="Account/Manage/Email">Email</NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="Account/Manage/ChangePassword">Password</NavLink>
-    </li>
-    @if (hasExternalLogins)
-    {
-        <li class="nav-item">
-            <NavLink class="nav-link" href="Account/Manage/ExternalLogins">External logins</NavLink>
-        </li>
-    }
-    <li class="nav-item">
-        <NavLink class="nav-link" href="Account/Manage/TwoFactorAuthentication">Two-factor authentication</NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="Account/Manage/Passkeys">Passkeys</NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="Account/Manage/PersonalData">Personal data</NavLink>
-    </li>
+	<li class="nav-item">
+		<NavLink class="nav-link" href="Account/Manage" Match="NavLinkMatch.All">@AccountStrings.Manage_Profile</NavLink>
+	</li>
+	<li class="nav-item">
+		<NavLink class="nav-link" href="Account/Manage/Email">@Strings.Email</NavLink>
+	</li>
+	<li class="nav-item">
+		<NavLink class="nav-link" href="Account/Manage/ChangePassword">@Strings.Password</NavLink>
+	</li>
+	@if (hasExternalLogins)
+	{
+		<li class="nav-item">
+			<NavLink class="nav-link" href="Account/Manage/ExternalLogins">@AccountStrings.Manage_ExternalLogins</NavLink>
+		</li>
+	}
+	<li class="nav-item">
+		<NavLink class="nav-link" href="Account/Manage/TwoFactorAuthentication">@AccountStrings.Manage_TwoFactor</NavLink>
+	</li>
+	<li class="nav-item">
+		<NavLink class="nav-link" href="Account/Manage/Passkeys">@AccountStrings.Manage_Passkeys</NavLink>
+	</li>
+	<li class="nav-item">
+		<NavLink class="nav-link" href="Account/Manage/PersonalData">@AccountStrings.Manage_PersonalData</NavLink>
+	</li>
 </ul>
 
 @code {
-    private bool hasExternalLogins;
+	private bool hasExternalLogins;
 
-    protected override async Task OnInitializedAsync()
-    {
-        hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+	}
 }

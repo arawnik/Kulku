@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Application.Network.Category;
@@ -12,7 +13,7 @@ internal static class NetworkCategoryCommandValidator
         List<Error> errors = [];
 
         if (string.IsNullOrWhiteSpace(name))
-            errors.Add(Error.Validation(nameof(name), "Category name is required."));
+            errors.Add(Error.Validation(nameof(name), Strings.Validation_CategoryNameRequired));
 
         return [.. errors];
     }

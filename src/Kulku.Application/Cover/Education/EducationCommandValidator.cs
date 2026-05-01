@@ -1,4 +1,6 @@
+using System.Globalization;
 using Kulku.Application.Cover.Education.Models;
+using Kulku.Application.Resources;
 using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Application.Cover.Education;
@@ -22,11 +24,11 @@ internal static class EducationCommandValidator
 
         if (translations.Count == 0)
             errors.Add(
-                Error.Validation(nameof(translations), "At least one translation is required.")
+                Error.Validation(nameof(translations), Strings.Validation_TranslationsRequired)
             );
 
         if (endDate.HasValue && endDate < startDate)
-            errors.Add(Error.Validation(nameof(endDate), "End date cannot be before start date."));
+            errors.Add(Error.Validation(nameof(endDate), Strings.Validation_EndDateBeforeStart));
 
         for (var i = 0; i < translations.Count; i++)
         {
@@ -34,7 +36,11 @@ internal static class EducationCommandValidator
                 errors.Add(
                     Error.Validation(
                         $"{nameof(translations)}[{i}].Title",
-                        $"Title is required for the {translations[i].Language} translation."
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Strings.Validation_TitleRequiredForLanguage,
+                            translations[i].Language
+                        )
                     )
                 );
         }

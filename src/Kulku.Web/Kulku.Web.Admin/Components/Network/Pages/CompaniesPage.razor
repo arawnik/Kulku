@@ -5,27 +5,27 @@
 
 @attribute [Authorize]
 
-<PageTitle>Companies</PageTitle>
+<PageTitle>@NetworkStrings.Companies_PageTitle</PageTitle>
 
 <div class="container-fluid py-4">
 	<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
 		<div>
-			<h1 class="h4 mb-1">Companies</h1>
-			<div class="text-muted">Focus list — keep it small, quality relationships only.</div>
+			<h1 class="h4 mb-1">@NetworkStrings.Companies_Heading</h1>
+			<div class="text-muted">@NetworkStrings.Companies_Subtitle</div>
 		</div>
 
 		<div class="d-flex flex-wrap gap-2">
 			<button class="btn btn-sm btn-primary" @onclick="HandleEnrollCompany">
-				<Icon Kind="IconKind.Plus" Size="14" CssClass="me-1" />Enroll Company
+				<Icon Kind="IconKind.Plus" Size="14" CssClass="me-1" />@NetworkStrings.Companies_Enroll
 			</button>
 			<div class="btn-group btn-group-sm" role="group">
 				<button class="btn @(_viewMode == ViewMode.List ? "btn-primary" : "btn-outline-primary")"
 						@onclick="() => _viewMode = ViewMode.List">
-					<Icon Kind="IconKind.ListNested" Size="14" CssClass="me-1" />List
+					<Icon Kind="IconKind.ListNested" Size="14" CssClass="me-1" />@NetworkStrings.Companies_ListView
 				</button>
 				<button class="btn @(_viewMode == ViewMode.Pipeline ? "btn-primary" : "btn-outline-primary")"
 						@onclick="() => _viewMode = ViewMode.Pipeline">
-					<Icon Kind="IconKind.Kanban" Size="14" CssClass="me-1" />Pipeline
+					<Icon Kind="IconKind.Kanban" Size="14" CssClass="me-1" />@NetworkStrings.Pipeline
 				</button>
 			</div>
 		</div>
@@ -36,12 +36,12 @@
 	{
 		<div class="row g-2 mb-3">
 			<div class="col-md-3">
-				<input type="text" class="form-control form-control-sm" placeholder="Search…"
+				<input type="text" class="form-control form-control-sm" placeholder="@Strings.Search"
 					   @bind="_searchText" @bind:event="oninput" />
 			</div>
 			<div class="col-md-2">
 				<select class="form-select form-select-sm" @bind="_filterStage">
-					<option value="">All Stages</option>
+					<option value="">@Strings.AllStages</option>
 					@foreach (var s in Enum.GetValues<CompanyStage>())
 					{
 						<option value="@s">@NetworkCompanyCard.StageLabel(s)</option>
@@ -50,7 +50,7 @@
 			</div>
 			<div class="col-md-2">
 				<select class="form-select form-select-sm" @bind="_filterCategoryId">
-					<option value="@Guid.Empty">All Categories</option>
+					<option value="@Guid.Empty">@NetworkStrings.Companies_AllCategories</option>
 					@foreach (var c in _categories.OrderBy(c => c.Name))
 					{
 						<option value="@c.Id">@c.Name</option>
@@ -68,8 +68,8 @@
 		{
 			<div class="text-muted text-center py-4">
 				@(_companies.Count == 0
-				? "No companies tracked yet."
-				: "No companies match the current filters.")
+				? NetworkStrings.Companies_NoCompanies
+				: NetworkStrings.Companies_NoMatch)
 			</div>
 		}
 		else
@@ -104,8 +104,8 @@
 	<div class="mt-4">
 		<div class="d-flex align-items-center gap-2 mb-2 cursor-pointer"
 			 @onclick="() => _personalContactsExpanded = !_personalContactsExpanded">
-			<Icon Kind="@(_personalContactsExpanded? IconKind.ChevronDown: IconKind.ChevronRight)" Size="16" />
-			<h5 class="mb-0">Personal Contacts</h5>
+			<Icon Kind="@(_personalContactsExpanded ? IconKind.ChevronDown : IconKind.ChevronRight)" Size="16" />
+			<h5 class="mb-0">@Strings.PersonalContacts</h5>
 			<span class="badge bg-secondary">@_personalContacts.Count</span>
 		</div>
 
@@ -113,13 +113,13 @@
 		{
 			<div class="mb-2">
 				<button class="btn btn-outline-primary btn-sm" @onclick="HandleCreatePersonalContact">
-					<Icon Kind="IconKind.Plus" Size="14" CssClass="me-1" />New Personal Contact
+					<Icon Kind="IconKind.Plus" Size="14" CssClass="me-1" />@NetworkStrings.Companies_NewPersonalContact
 				</button>
 			</div>
 
 			@if (_personalContacts.Count == 0)
 			{
-				<p class="text-muted">No personal contacts. These are people not currently affiliated with a company.</p>
+				<p class="text-muted">@NetworkStrings.Companies_NoPersonalContacts</p>
 			}
 			else
 			{
@@ -129,7 +129,7 @@
 						<div class="card-body py-2 px-3">
 							<div class="d-flex justify-content-between align-items-start">
 								<div>
-									<div class="fw-semibold small">@(contact.PersonName ?? "(unnamed)")</div>
+									<div class="fw-semibold small">@(contact.PersonName ?? NetworkStrings.Detail_Unnamed)</div>
 									@if (!string.IsNullOrWhiteSpace(contact.Title))
 									{
 										<small class="text-muted">@contact.Title</small>
@@ -148,19 +148,19 @@
 									{
 										<div class="mt-1">
 											<a href="@contact.LinkedInUrl" target="_blank"
-											   class="text-decoration-none small">LinkedIn</a>
+											   class="text-decoration-none small">@NetworkStrings.NetworkContact_LinkedIn</a>
 										</div>
 									}
 								</div>
 
 								<div class="d-flex gap-1">
 									<div class="dropdown">
-										<button class="btn btn-sm btn-outline-success dropdown-toggle" title="Link to company"
+										<button class="btn btn-sm btn-outline-success dropdown-toggle" title="@NetworkStrings.Companies_LinkToCompany"
 												data-bs-toggle="dropdown" data-bs-auto-close="true">
 											<Icon Kind="IconKind.Building" Size="12" />
 										</button>
 										<ul class="dropdown-menu dropdown-menu-end">
-											<li><h6 class="dropdown-header">Link to company…</h6></li>
+											<li><h6 class="dropdown-header">@NetworkStrings.Companies_LinkToCompany</h6></li>
 											@foreach (var c in _companies.OrderBy(c => c.Name))
 											{
 												<li>
@@ -172,7 +172,7 @@
 											}
 										</ul>
 									</div>
-									<button class="btn btn-sm btn-outline-danger" title="Delete"
+									<button class="btn btn-sm btn-outline-danger" title="@Strings.Delete"
 											@onclick="() => HandleDeletePersonalContact(contact.Id)">
 										<Icon Kind="IconKind.Trash" Size="12" />
 									</button>
@@ -189,8 +189,8 @@
 	<div class="mt-4">
 		<div class="d-flex align-items-center gap-2 mb-2 cursor-pointer"
 			 @onclick="() => _categoriesExpanded = !_categoriesExpanded">
-			<Icon Kind="@(_categoriesExpanded? IconKind.ChevronDown: IconKind.ChevronRight)" Size="16" />
-			<h5 class="mb-0">Categories</h5>
+			<Icon Kind="@(_categoriesExpanded ? IconKind.ChevronDown : IconKind.ChevronRight)" Size="16" />
+			<h5 class="mb-0">@Strings.Categories</h5>
 			<span class="badge bg-secondary">@_categories.Count</span>
 		</div>
 
@@ -198,13 +198,13 @@
 		{
 			<div class="mb-2">
 				<button class="btn btn-outline-primary btn-sm" @onclick="HandleCreateCategory">
-					<Icon Kind="IconKind.Plus" Size="14" CssClass="me-1" />New Category
+					<Icon Kind="IconKind.Plus" Size="14" CssClass="me-1" />@NetworkStrings.Companies_NewCategory
 				</button>
 			</div>
 
 			@if (_categories.Count == 0)
 			{
-				<p class="text-muted">No categories yet.</p>
+				<p class="text-muted">@NetworkStrings.Companies_NoCategories</p>
 			}
 			else
 			{

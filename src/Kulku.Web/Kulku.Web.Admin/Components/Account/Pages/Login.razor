@@ -13,55 +13,55 @@
 @inject IdentityRedirectManager RedirectManager
 @inject IOptions<ManagementOptions> ManagementOptions
 
-<PageTitle>Log in</PageTitle>
+<PageTitle>@AccountStrings.Login_PageTitle</PageTitle>
 
-<h1>Log in</h1>
+<h1>@AccountStrings.Login_Heading</h1>
 <div class="row">
 	<div class="col-lg-6">
 		<section>
 			<StatusMessage Message="@errorMessage" />
 			<EditForm EditContext="editContext" method="post" OnSubmit="LoginUser" FormName="login">
 				<DataAnnotationsValidator />
-				<h2>Use a local account to log in.</h2>
+				<h2>@AccountStrings.Login_UseLocal</h2>
 				<hr />
 				<ValidationSummary class="text-danger" role="alert" />
 				<div class="form-floating mb-3">
-					<InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="username webauthn" aria-required="true" placeholder="name@example.com" />
-					<label for="Input.Email" class="form-label">Email</label>
+					<InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="username webauthn" aria-required="true" placeholder="@AccountStrings.Login_EmailPlaceholder" />
+					<label for="Input.Email" class="form-label">@Strings.Email</label>
 					<ValidationMessage For="() => Input.Email" class="text-danger" />
 				</div>
 				<div class="form-floating mb-3">
-					<InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-					<label for="Input.Password" class="form-label">Password</label>
+					<InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="@AccountStrings.Login_PasswordPlaceholder" />
+					<label for="Input.Password" class="form-label">@Strings.Password</label>
 					<ValidationMessage For="() => Input.Password" class="text-danger" />
 				</div>
 				<div class="checkbox mb-3">
 					<label class="form-label">
 						<InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-						Remember me
+						@AccountStrings.Login_RememberMe
 					</label>
 				</div>
 				<div>
-					<button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+					<button type="submit" class="w-100 btn btn-lg btn-primary">@AccountStrings.Login_Button</button>
 				</div>
 				<hr />
 				<div class="d-flex flex-column">
-					<span class="text-secondary mx-auto mt-2">OR</span>
-					<PasskeySubmit Operation="PasskeyOperation.Request" Name="Input.Passkey" EmailName="Input.Email" class="btn btn-link mx-auto">Log in with a passkey</PasskeySubmit>
+					<span class="text-secondary mx-auto mt-2">@AccountStrings.Login_Or</span>
+					<PasskeySubmit Operation="PasskeyOperation.Request" Name="Input.Passkey" EmailName="Input.Email" class="btn btn-link mx-auto">@AccountStrings.Login_Passkey</PasskeySubmit>
 				</div>
 				<hr />
 				<div>
 					<p>
-						<a href="Account/ForgotPassword">Forgot your password?</a>
+						<a href="Account/ForgotPassword">@AccountStrings.Login_ForgotPassword</a>
 					</p>
 					@if (ManagementOptions.Value.RegistrationEnabled)
 					{
 						<p>
-							<a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
+							<a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">@AccountStrings.Login_RegisterNew</a>
 						</p>
 					}
 					<p>
-						<a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
+						<a href="Account/ResendEmailConfirmation">@AccountStrings.Login_ResendConfirmation</a>
 					</p>
 				</div>
 			</EditForm>
@@ -69,7 +69,7 @@
 	</div>
 	<div class="col-lg-4 col-lg-offset-2">
 		<section>
-			<h3>Use another service to log in.</h3>
+			<h3>@AccountStrings.Login_ExternalService</h3>
 			<hr />
 			<ExternalLoginPicker />
 		</section>

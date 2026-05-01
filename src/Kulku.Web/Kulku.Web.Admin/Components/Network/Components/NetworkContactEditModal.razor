@@ -1,6 +1,6 @@
 @using Kulku.Web.Admin.Components.Network
 
-<ModalDialog Visible="@IsVisible" Title="@(Mode == ModalMode.Create ? "New Contact" : "Edit Contact")"
+<ModalDialog Visible="@IsVisible" Title="@(Mode == ModalMode.Create ? NetworkStrings.NetworkContact_NewTitle : NetworkStrings.NetworkContact_EditTitle)"
 			 Size="ModalSize.Default"
 			 OnClose="OnCancel">
 	<ChildContent>
@@ -8,36 +8,36 @@
 			<DataAnnotationsValidator />
 
 			<div class="mb-3">
-				<label class="form-label">Name</label>
+				<label class="form-label">@Strings.Name</label>
 				<InputText class="form-control" @bind-Value="Form.PersonName" />
 			</div>
 
 			<div class="mb-3">
-				<label class="form-label">Title / Role</label>
+				<label class="form-label">@NetworkStrings.NetworkContact_TitleRole</label>
 				<InputText class="form-control" @bind-Value="Form.Title" />
 			</div>
 
 			<div class="row g-3 mb-3">
 				<div class="col-md-6">
-					<label class="form-label">Email</label>
+					<label class="form-label">@Strings.Email</label>
 					<InputText class="form-control" @bind-Value="Form.Email" />
 				</div>
 				<div class="col-md-6">
-					<label class="form-label">Phone</label>
+					<label class="form-label">@Strings.Phone</label>
 					<InputText class="form-control" @bind-Value="Form.Phone" />
 				</div>
 			</div>
 
 			<div class="mb-3">
-				<label class="form-label">LinkedIn URL</label>
+				<label class="form-label">@NetworkStrings.LinkedInUrl</label>
 				<InputText class="form-control" @bind-Value="Form.LinkedInUrl" />
 			</div>
 
 			<div class="d-flex gap-2">
 				<button type="submit" class="btn btn-primary">
-					@(Mode == ModalMode.Create ? "Create" : "Save changes")
+					@(Mode == ModalMode.Create ? Strings.Create : Strings.SaveChanges)
 				</button>
-				<button type="button" class="btn btn-outline-secondary" @onclick="OnCancel">Cancel</button>
+				<button type="button" class="btn btn-outline-secondary" @onclick="OnCancel">@Strings.Cancel</button>
 			</div>
 		</EditForm>
 	</ChildContent>

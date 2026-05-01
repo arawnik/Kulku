@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -22,7 +23,7 @@ public static class DeleteIdea
         {
             var idea = await _ideaRepository.GetByIdAsync(command.IdeaId, cancellationToken);
             if (idea is null)
-                return Error.NotFound("Idea not found.");
+                return Error.NotFound(Strings.NotFound_Idea);
 
             _ideaRepository.Remove(idea);
             await _unitOfWork.CompleteAsync(cancellationToken);

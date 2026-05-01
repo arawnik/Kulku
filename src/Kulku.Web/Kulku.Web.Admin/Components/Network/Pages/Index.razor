@@ -5,27 +5,27 @@
 
 @attribute [Authorize]
 
-<PageTitle>Network Overview</PageTitle>
+<PageTitle>@NetworkStrings.Overview_PageTitle</PageTitle>
 
 <div class="container-fluid py-4">
 
 	<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-4">
 		<div>
-			<h1 class="h3 mb-1">Network Overview</h1>
+			<h1 class="h3 mb-1">@NetworkStrings.Overview_Heading</h1>
 			<div class="text-muted">
-				Your professional network — who you know, what happened, and where to reconnect.
+				@NetworkStrings.Overview_Subtitle
 			</div>
 		</div>
 
 		<div class="d-flex flex-wrap gap-2">
 			<NavLink class="btn btn-sm btn-outline-secondary" href="network/companies">
-				<Icon Kind="IconKind.Building" Size="14" CssClass="me-1" />Companies
+				<Icon Kind="IconKind.Building" Size="14" CssClass="me-1" />@NetworkStrings.Overview_Companies
 			</NavLink>
 			<NavLink class="btn btn-sm btn-outline-secondary" href="network/activity">
-				<Icon Kind="IconKind.ChatDots" Size="14" CssClass="me-1" />Activity log
+				<Icon Kind="IconKind.ChatDots" Size="14" CssClass="me-1" />@NetworkStrings.Overview_ActivityLog
 			</NavLink>
 			<NavLink class="btn btn-sm btn-primary" href="network/loginteraction">
-				<Icon Kind="IconKind.Plus" Size="14" CssClass="me-1" />Log interaction
+				<Icon Kind="IconKind.Plus" Size="14" CssClass="me-1" />@NetworkStrings.Overview_LogInteraction
 			</NavLink>
 		</div>
 	</div>
@@ -36,31 +36,31 @@
 			<div class="d-flex flex-wrap align-items-center gap-4">
 				<div class="d-flex align-items-baseline gap-2">
 					<span class="h4 mb-0">@_totalRelationships</span>
-					<span class="text-muted small">relationships</span>
+					<span class="text-muted small">@NetworkStrings.Overview_Relationships</span>
 				</div>
 
 				<div class="vr d-none d-md-block"></div>
 
 				<div class="d-flex align-items-baseline gap-2">
 					<span class="h4 mb-0 text-success">@_activeCount</span>
-					<span class="text-muted small">active <span class="opacity-50">(12mo)</span></span>
+					<span class="text-muted small">@NetworkStrings.Overview_Active <span class="opacity-50">@NetworkStrings.Overview_TwelveMonths</span></span>
 				</div>
 
 				<div class="vr d-none d-md-block"></div>
 
 				<div class="d-flex align-items-baseline gap-2">
 					<span class="h4 mb-0 @(_goingColdCount > 0 ? "text-danger" : "text-muted")">@_goingColdCount</span>
-					<span class="text-muted small">going cold</span>
+					<span class="text-muted small">@NetworkStrings.Overview_GoingCold</span>
 				</div>
 
 				<div class="vr d-none d-md-block"></div>
 
 				<div class="d-flex align-items-baseline gap-2">
 					<span class="h4 mb-0">@_followUpsDue</span>
-					<span class="text-muted small">follow-ups</span>
+					<span class="text-muted small">@NetworkStrings.Overview_FollowUps</span>
 					@if (_overdueCount > 0)
 					{
-						<span class="badge text-bg-danger">@_overdueCount overdue</span>
+						<span class="badge text-bg-danger">@_overdueCount @NetworkStrings.Overview_Overdue</span>
 					}
 				</div>
 			</div>
@@ -71,7 +71,7 @@
 	<div class="card shadow-sm mb-4">
 		<div class="card-body py-2">
 			<div class="d-flex align-items-center gap-3 flex-wrap">
-				<span class="small text-muted">Pipeline:</span>
+				<span class="small text-muted">@NetworkStrings.Overview_Pipeline</span>
 				@foreach (var stage in Enum.GetValues<CompanyStage>())
 				{
 					var count = _companies.Count(c => c.Stage == stage);
@@ -91,8 +91,8 @@
 			<div class="card shadow-sm h-100">
 				<div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
 					<div>
-						<strong>Relationship Directory</strong>
-						<div class="text-muted small">Every tracked company — coldest relationships first.</div>
+						<strong>@NetworkStrings.Overview_RelationshipDirectory</strong>
+						<div class="text-muted small">@NetworkStrings.Overview_DirectorySubtitle</div>
 					</div>
 				</div>
 
@@ -100,12 +100,12 @@
 					@* Filters *@
 					<div class="row g-2 mb-3">
 						<div class="col-md-5">
-							<input type="text" class="form-control form-control-sm" placeholder="Search name, region, contact…"
+							<input type="text" class="form-control form-control-sm" placeholder="@NetworkStrings.Overview_SearchPlaceholder"
 								   @bind="_searchText" @bind:event="oninput" />
 						</div>
 						<div class="col-md-3">
 							<select class="form-select form-select-sm" @bind="_filterStage">
-								<option value="">All stages</option>
+								<option value="">@Strings.AllStages</option>
 								@foreach (var s in Enum.GetValues<CompanyStage>())
 								{
 									<option value="@s">@NetworkCompanyCard.StageLabel(s)</option>
@@ -122,8 +122,8 @@
 					{
 						<div class="text-muted text-center py-4">
 							@(_relationships.Count == 0
-							? "No companies tracked yet. Enroll companies from the Companies page."
-							: "No relationships match the current filters.")
+							? NetworkStrings.Overview_NoCompaniesTracked
+							: NetworkStrings.Overview_NoRelationshipsMatch)
 						</div>
 					}
 					else
@@ -136,10 +136,10 @@
 				</div>
 
 				<div class="card-footer text-muted small">
-					Left border color: <span class="text-success">●</span> fresh (&lt;3mo)
-					<span class="text-warning ms-2">●</span> cooling (3–6mo)
-					<span class="text-danger ms-2">●</span> cold (&gt;6mo)
-					<span class="text-secondary ms-2">●</span> no history
+					@NetworkStrings.Overview_BorderColorLegend <span class="text-success">●</span> @NetworkStrings.Overview_FreshLegend
+					<span class="text-warning ms-2">●</span> @NetworkStrings.Overview_CoolingLegend
+					<span class="text-danger ms-2">●</span> @NetworkStrings.Overview_ColdLegend
+					<span class="text-secondary ms-2">●</span> @NetworkStrings.Overview_NoHistoryLegend
 				</div>
 			</div>
 		</div>
@@ -147,8 +147,8 @@
 		<div class="col-12 col-xl-4">
 			<div class="card shadow-sm h-100">
 				<div class="card-header">
-					<strong>Attention Needed</strong>
-					<div class="text-muted small">Overdue actions and relationships going cold.</div>
+					<strong>@NetworkStrings.Overview_AttentionNeeded</strong>
+					<div class="text-muted small">@NetworkStrings.Overview_AttentionSubtitle</div>
 				</div>
 
 				<div class="card-body">
@@ -158,7 +158,7 @@
 							<div class="text-success mb-2">
 								<Icon Kind="IconKind.Check" Size="24" />
 							</div>
-							<div class="text-muted">All relationships are on track.</div>
+							<div class="text-muted">@NetworkStrings.Overview_AllOnTrack</div>
 						</div>
 					}
 					else
@@ -167,8 +167,8 @@
 						{
 							<div class="mb-3">
 								<div class="d-flex align-items-center gap-2 mb-2">
-									<span class="badge text-bg-danger">Overdue</span>
-									<small class="text-muted">@_overdueActions.Count action(s)</small>
+									<span class="badge text-bg-danger">@NetworkStrings.Overview_OverdueLabel</span>
+									<small class="text-muted">@string.Format(NetworkStrings.Overview_ActionCount, _overdueActions.Count)</small>
 								</div>
 								<div class="list-group list-group-flush">
 									@foreach (var item in _overdueActions)
@@ -176,7 +176,7 @@
 										<a href="/network/companies/@item.CompanyId" class="list-group-item list-group-item-action px-0">
 											<div class="d-flex justify-content-between align-items-start">
 												<div class="fw-semibold small">@item.CompanyName</div>
-												<span class="badge text-bg-danger">@item.DaysCount d overdue</span>
+												<span class="badge text-bg-danger">@string.Format(NetworkStrings.Overview_DaysOverdue, item.DaysCount)</span>
 											</div>
 											<div class="text-muted small">@item.Detail</div>
 										</a>
@@ -189,8 +189,8 @@
 						{
 							<div>
 								<div class="d-flex align-items-center gap-2 mb-2">
-									<span class="badge text-bg-warning">Going cold</span>
-									<small class="text-muted">@_coldRelationships.Count relationship(s)</small>
+									<span class="badge text-bg-warning">@NetworkStrings.Overview_GoingColdBadge</span>
+									<small class="text-muted">@string.Format(NetworkStrings.Overview_RelationshipCount, _coldRelationships.Count)</small>
 								</div>
 								<div class="list-group list-group-flush">
 									@foreach (var item in _coldRelationships)
@@ -198,7 +198,7 @@
 										<a href="/network/companies/@item.CompanyId" class="list-group-item list-group-item-action px-0">
 											<div class="fw-semibold small">@item.CompanyName</div>
 											<div class="text-muted small">@item.Detail</div>
-											<small class="text-muted opacity-75">Consider checking in</small>
+											<small class="text-muted opacity-75">@NetworkStrings.Overview_ConsiderCheckingIn</small>
 										</a>
 									}
 								</div>
@@ -216,18 +216,18 @@
 			<div class="card shadow-sm">
 				<div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
 					<div>
-						<strong>Latest Activity</strong>
-						<div class="text-muted small">Your interaction journal.</div>
+						<strong>@NetworkStrings.Overview_LatestActivity</strong>
+						<div class="text-muted small">@NetworkStrings.Overview_JournalSubtitle</div>
 					</div>
 					<NavLink href="network/activity" class="btn btn-sm btn-outline-secondary text-decoration-none">
-						View all
+						@Strings.ViewAll
 					</NavLink>
 				</div>
 
 				<div class="card-body p-2">
 					@if (_streamInteractions.Count == 0)
 					{
-						<div class="p-3 text-muted">No interactions recorded yet.</div>
+						<div class="p-3 text-muted">@Strings.NoInteractionsRecorded</div>
 					}
 					else
 					{
@@ -240,7 +240,7 @@
 				</div>
 
 				<div class="card-footer text-muted small">
-					Showing up to 10 most recent. <a href="/network/activity" class="text-decoration-none">View full history →</a>
+					@NetworkStrings.Overview_ShowingRecent <a href="/network/activity" class="text-decoration-none">@NetworkStrings.Overview_ViewFullHistory <span>→</span></a>
 				</div>
 			</div>
 		</div>

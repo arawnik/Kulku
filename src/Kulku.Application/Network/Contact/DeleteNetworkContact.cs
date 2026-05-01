@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -29,7 +30,7 @@ public static class DeleteNetworkContact
             );
 
             if (contact is null)
-                return Error.NotFound("Contact not found.");
+                return Error.NotFound(Strings.NotFound_Contact);
 
             _contactRepository.Remove(contact);
             await _unitOfWork.CompleteAsync(cancellationToken);

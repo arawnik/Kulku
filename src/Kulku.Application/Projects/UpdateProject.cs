@@ -1,4 +1,5 @@
 using Kulku.Application.Projects.Models;
+using Kulku.Application.Resources;
 using Kulku.Domain.Projects;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
@@ -52,7 +53,7 @@ public static class UpdateProject
             );
 
             if (project is null)
-                return Error.NotFound("Project not found.");
+                return Error.NotFound(Strings.NotFound_Project);
 
             project.Url = command.Url;
             project.ImageUrl = command.ImageUrl;

@@ -15,44 +15,44 @@
 						<button type="button"
 								class="btn @(!Form.IsNewCompany ? "btn-primary" : "btn-outline-primary")"
 								@onclick="() => Form.IsNewCompany = false">
-							Pick existing
+							@NetworkStrings.NetworkCompany_PickExisting
 						</button>
 						<button type="button"
 								class="btn @(Form.IsNewCompany ? "btn-primary" : "btn-outline-primary")"
 								@onclick="() => Form.IsNewCompany = true">
-							Create new
+							@NetworkStrings.NetworkCompany_CreateNew
 						</button>
 					</div>
 
 					@if (Form.IsNewCompany)
 					{
 						<div class="mb-2">
-							<label class="form-label">Company Name <span class="text-danger">*</span></label>
-							<InputText class="form-control" @bind-Value="Form.NewCompanyName" placeholder="Company name" />
+							<label class="form-label">@Strings.CompanyName <span class="text-danger">*</span></label>
+							<InputText class="form-control" @bind-Value="Form.NewCompanyName" placeholder="@Strings.CompanyName" />
 							<ValidationMessage For="@(() => Form.NewCompanyName)" />
 						</div>
 						<div class="row g-2">
 							<div class="col-md-6">
-								<label class="form-label">Website</label>
+								<label class="form-label">@Strings.Website</label>
 								<InputText class="form-control" @bind-Value="Form.NewCompanyWebsite" placeholder="https://..." />
 							</div>
 							<div class="col-md-6">
-								<label class="form-label">Region</label>
-								<InputText class="form-control" @bind-Value="Form.NewCompanyRegion" placeholder="e.g. Helsinki, Finland" />
+								<label class="form-label">@Strings.Region</label>
+								<InputText class="form-control" @bind-Value="Form.NewCompanyRegion" placeholder="@NetworkStrings.NetworkCompany_RegionPlaceholder" />
 							</div>
 						</div>
 					}
 					else
 					{
-						<label class="form-label">Company</label>
+						<label class="form-label">@Strings.Company</label>
 						@if (AvailableCompanies.Count == 0)
 						{
-							<div class="text-muted small">All companies are already enrolled in the network.</div>
+							<div class="text-muted small">@NetworkStrings.NetworkCompany_AllEnrolled</div>
 						}
 						else
 						{
 							<InputSelect class="form-select" @bind-Value="Form.SelectedCompanyId">
-								<option value="@Guid.Empty">— Select a company —</option>
+								<option value="@Guid.Empty">@NetworkStrings.NetworkCompany_SelectCompany</option>
 								@foreach (var c in AvailableCompanies.OrderBy(c => c.Name))
 								{
 									<option value="@c.CompanyId">@c.Name @(c.Region is not null ? $"({c.Region})" : "")</option>
@@ -65,7 +65,7 @@
 			}
 
 			<div class="mb-3">
-				<label class="form-label">Stage</label>
+				<label class="form-label">@Strings.Stage</label>
 				<InputSelect class="form-select" @bind-Value="Form.Stage">
 					@foreach (var s in Enum.GetValues<CompanyStage>())
 					{
@@ -75,12 +75,12 @@
 			</div>
 
 			<div class="mb-3">
-				<label class="form-label">Notes</label>
+				<label class="form-label">@Strings.Notes</label>
 				<InputTextArea class="form-control" rows="3" @bind-Value="Form.Notes" />
 			</div>
 
 			<div class="mb-3">
-				<label class="form-label">Categories</label>
+				<label class="form-label">@Strings.Categories</label>
 				<div class="d-flex flex-wrap gap-2">
 					@foreach (var cat in Categories.OrderBy(c => c.Name))
 					{
@@ -99,7 +99,7 @@
 						disabled="@IsSubmitDisabled">
 					@SubmitLabel
 				</button>
-				<button type="button" class="btn btn-outline-secondary" @onclick="OnCancel">Cancel</button>
+				<button type="button" class="btn btn-outline-secondary" @onclick="OnCancel">@Strings.Cancel</button>
 			</div>
 		</EditForm>
 	</ChildContent>

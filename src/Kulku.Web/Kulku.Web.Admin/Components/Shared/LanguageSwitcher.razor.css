@@ -1,0 +1,15 @@
+.kulku-language-switcher {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.kulku-language-switcher form {
+  display: contents;
+}
+
+.kulku-lang-btn {
+  min-width: 2.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}

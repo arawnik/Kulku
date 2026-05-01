@@ -5,6 +5,7 @@ using Kulku.Application.Cover.Experience.Models;
 using Kulku.Application.Cover.Models;
 using Kulku.Web.Admin.Components.Cv.Components;
 using Kulku.Web.Admin.Components.Shared;
+using Kulku.Web.Admin.Resources;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 
 namespace Kulku.Web.Admin.Components.Cv.Pages;
@@ -114,7 +115,7 @@ partial class Experience(
         }
         else
         {
-            _errorMessage = "Failed to load experience details.";
+            _errorMessage = CvStrings.Experience_FailedToLoad;
         }
     }
 
@@ -150,7 +151,7 @@ partial class Experience(
                         createResult,
                         e => _editModal?.SetServerErrors(e),
                         ref _errorMessage,
-                        "Failed to create experience. Please try again."
+                        CvStrings.Experience_FailedToCreate
                     )
                 )
                 {
@@ -176,7 +177,7 @@ partial class Experience(
                     result,
                     e => _editModal?.SetServerErrors(e),
                     ref _errorMessage,
-                    "Failed to save changes. Please try again."
+                    Strings.FailedToSave
                 )
             )
             {
@@ -205,7 +206,7 @@ partial class Experience(
         }
         else
         {
-            _errorMessage = result.Error?.Message ?? "Failed to delete experience entry.";
+            _errorMessage = result.Error?.Message ?? CvStrings.Experience_FailedToDelete;
         }
     }
 
@@ -260,7 +261,7 @@ partial class Experience(
         }
         else
         {
-            _errorMessage = "Failed to load company details.";
+            _errorMessage = CvStrings.Company_FailedToLoad;
         }
     }
 
@@ -291,7 +292,7 @@ partial class Experience(
                         result,
                         e => _companyModal?.SetServerErrors(e),
                         ref _companyErrorMessage,
-                        "Failed to create company."
+                        CvStrings.Company_FailedToCreate
                     )
                 )
                 {
@@ -317,7 +318,7 @@ partial class Experience(
                     updateResult,
                     e => _companyModal?.SetServerErrors(e),
                     ref _companyErrorMessage,
-                    "Failed to save company."
+                    CvStrings.Company_FailedToSave
                 )
             )
             {
@@ -345,7 +346,7 @@ partial class Experience(
         }
         else
         {
-            _errorMessage = result.Error?.Message ?? "Failed to delete company.";
+            _errorMessage = result.Error?.Message ?? CvStrings.Company_FailedToDelete;
         }
     }
 

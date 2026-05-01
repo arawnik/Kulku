@@ -1,4 +1,5 @@
 using Kulku.Application.Cover.Introduction.Models;
+using Kulku.Application.Resources;
 using Kulku.Domain.Cover;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
@@ -45,7 +46,7 @@ public static class UpdateIntroduction
             );
 
             if (introduction is null)
-                return Error.NotFound("Introduction not found.");
+                return Error.NotFound(Strings.NotFound_Introduction);
 
             introduction.AvatarUrl = command.AvatarUrl;
             introduction.SmallAvatarUrl = command.SmallAvatarUrl;

@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Projects;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
@@ -42,7 +43,7 @@ public static class UpdateKeyword
             );
 
             if (keyword is null)
-                return Error.NotFound("Keyword not found.");
+                return Error.NotFound(Strings.NotFound_Keyword);
 
             keyword.Type = command.Type;
             keyword.ProficiencyId = command.ProficiencyId;

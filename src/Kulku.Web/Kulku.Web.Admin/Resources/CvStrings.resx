@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Overview_PageTitle" xml:space="preserve">
+    <value>CV Overview</value>
+  </data>
+  <data name="Overview_Subtitle" xml:space="preserve">
+    <value>Quick preview of all CV sections.</value>
+  </data>
+  <data name="Overview_NoActiveIntroduction" xml:space="preserve">
+    <value>No active introduction.</value>
+  </data>
+  <data name="Overview_NoKeywords" xml:space="preserve">
+    <value>No keywords available.</value>
+  </data>
+  <data name="Overview_Languages" xml:space="preserve">
+    <value>Languages</value>
+  </data>
+  <data name="Overview_Skills" xml:space="preserve">
+    <value>Skills</value>
+  </data>
+  <data name="Overview_Technologies" xml:space="preserve">
+    <value>Technologies</value>
+  </data>
+  <data name="Overview_NoExperiences" xml:space="preserve">
+    <value>No experiences available.</value>
+  </data>
+  <data name="Overview_NoEducation" xml:space="preserve">
+    <value>No education entries available.</value>
+  </data>
+  <data name="Overview_NoProjects" xml:space="preserve">
+    <value>No projects available.</value>
+  </data>
+  <data name="Overview_KeywordSingular" xml:space="preserve">
+    <value>keyword</value>
+  </data>
+  <data name="Overview_KeywordPlural" xml:space="preserve">
+    <value>keywords</value>
+  </data>
+  <data name="Introduction_PageTitle" xml:space="preserve">
+    <value>Introduction — Admin</value>
+  </data>
+  <data name="Introduction_Heading" xml:space="preserve">
+    <value>Introduction</value>
+  </data>
+  <data name="Introduction_Subtitle" xml:space="preserve">
+    <value>Manage introductions and schedule publications</value>
+  </data>
+  <data name="Introduction_Add" xml:space="preserve">
+    <value>Add Introduction</value>
+  </data>
+  <data name="Introduction_NoEntries" xml:space="preserve">
+    <value>There are no introductions.</value>
+  </data>
+  <data name="Introduction_Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Introduction_Scheduled" xml:space="preserve">
+    <value>Scheduled</value>
+  </data>
+  <data name="Introduction_History" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="Introduction_Superseded" xml:space="preserve">
+    <value>Superseded</value>
+  </data>
+  <data name="Introduction_CreateModal" xml:space="preserve">
+    <value>Create Introduction</value>
+  </data>
+  <data name="Introduction_EditModal" xml:space="preserve">
+    <value>Edit Introduction</value>
+  </data>
+  <data name="Introduction_AvatarFilename" xml:space="preserve">
+    <value>Avatar filename</value>
+  </data>
+  <data name="Introduction_AvatarPlaceholder" xml:space="preserve">
+    <value>avatar.webp</value>
+  </data>
+  <data name="Introduction_SmallAvatarFilename" xml:space="preserve">
+    <value>Small avatar filename</value>
+  </data>
+  <data name="Introduction_SmallAvatarPlaceholder" xml:space="preserve">
+    <value>small_avatar.webp</value>
+  </data>
+  <data name="Introduction_PubDate" xml:space="preserve">
+    <value>Pub Date</value>
+  </data>
+  <data name="Introduction_DeleteTitle" xml:space="preserve">
+    <value>Delete Introduction</value>
+  </data>
+  <data name="Introduction_DeleteMessage" xml:space="preserve">
+    <value>Are you sure you want to delete this introduction? This action cannot be undone.</value>
+  </data>
+  <data name="Introduction_FailedToLoad" xml:space="preserve">
+    <value>Failed to load introduction details.</value>
+  </data>
+  <data name="Introduction_FailedToCreate" xml:space="preserve">
+    <value>Failed to create introduction. Please try again.</value>
+  </data>
+  <data name="Introduction_FailedToDelete" xml:space="preserve">
+    <value>Failed to delete introduction.</value>
+  </data>
+  <data name="Education_PageTitle" xml:space="preserve">
+    <value>Education — Admin</value>
+  </data>
+  <data name="Education_Heading" xml:space="preserve">
+    <value>Education</value>
+  </data>
+  <data name="Education_Subtitle" xml:space="preserve">
+    <value>Manage education entries, institutions, and translations</value>
+  </data>
+  <data name="Education_Add" xml:space="preserve">
+    <value>Add Education</value>
+  </data>
+  <data name="Education_NoEntries" xml:space="preserve">
+    <value>There are no education entries.</value>
+  </data>
+  <data name="Education_Institutions" xml:space="preserve">
+    <value>Institutions</value>
+  </data>
+  <data name="Education_AddInstitution" xml:space="preserve">
+    <value>Add Institution</value>
+  </data>
+  <data name="Education_NoInstitutions" xml:space="preserve">
+    <value>No institutions yet.</value>
+  </data>
+  <data name="Education_CreateModal" xml:space="preserve">
+    <value>Create Education</value>
+  </data>
+  <data name="Education_EditModal" xml:space="preserve">
+    <value>Edit Education</value>
+  </data>
+  <data name="Education_FailedToDelete" xml:space="preserve">
+    <value>Failed to delete education entry.</value>
+  </data>
+  <data name="Experience_PageTitle" xml:space="preserve">
+    <value>Experience — Admin</value>
+  </data>
+  <data name="Experience_Heading" xml:space="preserve">
+    <value>Experience</value>
+  </data>
+  <data name="Experience_Subtitle" xml:space="preserve">
+    <value>Manage experience entries, companies, and translations</value>
+  </data>
+  <data name="Experience_Add" xml:space="preserve">
+    <value>Add Experience</value>
+  </data>
+  <data name="Experience_NoEntries" xml:space="preserve">
+    <value>There are no experience entries.</value>
+  </data>
+  <data name="Experience_Companies" xml:space="preserve">
+    <value>Companies</value>
+  </data>
+  <data name="Experience_AddCompany" xml:space="preserve">
+    <value>Add Company</value>
+  </data>
+  <data name="Experience_NoCompanies" xml:space="preserve">
+    <value>No companies yet.</value>
+  </data>
+  <data name="Experience_CreateModal" xml:space="preserve">
+    <value>Create Experience</value>
+  </data>
+  <data name="Experience_EditModal" xml:space="preserve">
+    <value>Edit Experience</value>
+  </data>
+  <data name="Experience_FailedToLoad" xml:space="preserve">
+    <value>Failed to load experience details.</value>
+  </data>
+  <data name="Experience_FailedToCreate" xml:space="preserve">
+    <value>Failed to create experience. Please try again.</value>
+  </data>
+  <data name="Experience_FailedToDelete" xml:space="preserve">
+    <value>Failed to delete experience entry.</value>
+  </data>
+  <data name="Company_CreateModal" xml:space="preserve">
+    <value>Create Company</value>
+  </data>
+  <data name="Company_EditModal" xml:space="preserve">
+    <value>Edit Company</value>
+  </data>
+  <data name="Company_FailedToCreate" xml:space="preserve">
+    <value>Failed to create company. Please try again.</value>
+  </data>
+  <data name="Company_FailedToSave" xml:space="preserve">
+    <value>Failed to save company.</value>
+  </data>
+  <data name="Company_FailedToDelete" xml:space="preserve">
+    <value>Failed to delete company.</value>
+  </data>
+  <data name="Institution_CreateModal" xml:space="preserve">
+    <value>Create Institution</value>
+  </data>
+  <data name="Institution_EditModal" xml:space="preserve">
+    <value>Edit Institution</value>
+  </data>
+  <data name="Projects_PageTitle" xml:space="preserve">
+    <value>Projects — Admin</value>
+  </data>
+  <data name="Projects_Heading" xml:space="preserve">
+    <value>Projects</value>
+  </data>
+  <data name="Projects_Subtitle" xml:space="preserve">
+    <value>Manage portfolio projects and translations</value>
+  </data>
+  <data name="Projects_Add" xml:space="preserve">
+    <value>Add Project</value>
+  </data>
+  <data name="Projects_NoEntries" xml:space="preserve">
+    <value>There are no projects.</value>
+  </data>
+  <data name="Projects_CreateModal" xml:space="preserve">
+    <value>Create Project</value>
+  </data>
+  <data name="Projects_EditModal" xml:space="preserve">
+    <value>Edit Project</value>
+  </data>
+  <data name="Projects_ProjectName" xml:space="preserve">
+    <value>Project Name</value>
+  </data>
+  <data name="Projects_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Projects_ImageUrl" xml:space="preserve">
+    <value>Image URL</value>
+  </data>
+  <data name="Keywords_PageTitle" xml:space="preserve">
+    <value>Keywords — Admin</value>
+  </data>
+  <data name="Keywords_Heading" xml:space="preserve">
+    <value>Keywords</value>
+  </data>
+  <data name="Keywords_Subtitle" xml:space="preserve">
+    <value>Manage keywords and proficiency levels</value>
+  </data>
+  <data name="Keywords_VisibleOnly" xml:space="preserve">
+    <value>Visible only</value>
+  </data>
+  <data name="Keywords_ProficiencyLevels" xml:space="preserve">
+    <value>Proficiency Levels</value>
+  </data>
+  <data name="Keywords_AddLevel" xml:space="preserve">
+    <value>Add Level</value>
+  </data>
+  <data name="Keywords_NoProficiency" xml:space="preserve">
+    <value>No proficiency levels defined yet.</value>
+  </data>
+  <data name="Keywords_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Keywords_NoKeywordsOfType" xml:space="preserve">
+    <value>No {0} yet.</value>
+  </data>
+  <data name="Keywords_HiddenFromCv" xml:space="preserve">
+    <value>Hidden from CV</value>
+  </data>
+  <data name="Keywords_CreateModal" xml:space="preserve">
+    <value>Create Keyword</value>
+  </data>
+  <data name="Keywords_EditModal" xml:space="preserve">
+    <value>Edit Keyword</value>
+  </data>
+  <data name="Keywords_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Keywords_Proficiency" xml:space="preserve">
+    <value>Proficiency</value>
+  </data>
+  <data name="Keywords_DisplayOnCv" xml:space="preserve">
+    <value>Display on CV</value>
+  </data>
+  <data name="Keywords_Scale" xml:space="preserve">
+    <value>Scale</value>
+  </data>
+  <data name="Proficiency_CreateModal" xml:space="preserve">
+    <value>Create Proficiency Level</value>
+  </data>
+  <data name="Proficiency_EditModal" xml:space="preserve">
+    <value>Edit Proficiency Level</value>
+  </data>
+  <data name="Experience_DeleteTitle" xml:space="preserve">
+    <value>Delete Experience</value>
+  </data>
+  <data name="Experience_DeleteMessage" xml:space="preserve">
+    <value>Are you sure you want to delete this experience entry? This action cannot be undone.</value>
+  </data>
+  <data name="Experience_UnknownCompany" xml:space="preserve">
+    <value>Unknown company</value>
+  </data>
+  <data name="Education_DeleteTitle" xml:space="preserve">
+    <value>Delete Education</value>
+  </data>
+  <data name="Education_DeleteMessage" xml:space="preserve">
+    <value>Are you sure you want to delete this education entry? This action cannot be undone.</value>
+  </data>
+  <data name="Education_UnknownInstitution" xml:space="preserve">
+    <value>Unknown institution</value>
+  </data>
+  <data name="Education_FailedToLoad" xml:space="preserve">
+    <value>Failed to load education details.</value>
+  </data>
+  <data name="Education_FailedToCreate" xml:space="preserve">
+    <value>Failed to create education. Please try again.</value>
+  </data>
+  <data name="Company_DeleteTitle" xml:space="preserve">
+    <value>Delete Company</value>
+  </data>
+  <data name="Company_DeleteMessage" xml:space="preserve">
+    <value>Are you sure you want to delete this company? This action cannot be undone.</value>
+  </data>
+  <data name="Company_ExperienceCount" xml:space="preserve">
+    <value>experiences</value>
+  </data>
+  <data name="Company_FailedToLoad" xml:space="preserve">
+    <value>Failed to load company details.</value>
+  </data>
+  <data name="Institution_DeleteTitle" xml:space="preserve">
+    <value>Delete Institution</value>
+  </data>
+  <data name="Institution_DeleteMessage" xml:space="preserve">
+    <value>Are you sure you want to delete this institution? This action cannot be undone.</value>
+  </data>
+  <data name="Institution_EducationCount" xml:space="preserve">
+    <value>educations</value>
+  </data>
+  <data name="Institution_FailedToCreate" xml:space="preserve">
+    <value>Failed to create institution. Please try again.</value>
+  </data>
+  <data name="Institution_FailedToSave" xml:space="preserve">
+    <value>Failed to save institution.</value>
+  </data>
+  <data name="Institution_FailedToDelete" xml:space="preserve">
+    <value>Failed to delete institution.</value>
+  </data>
+  <data name="Institution_FailedToLoad" xml:space="preserve">
+    <value>Failed to load institution details.</value>
+  </data>
+  <data name="Projects_DeleteTitle" xml:space="preserve">
+    <value>Delete Project</value>
+  </data>
+  <data name="Projects_DeleteMessage" xml:space="preserve">
+    <value>Are you sure you want to delete this project? This action cannot be undone.</value>
+  </data>
+  <data name="Projects_Visit" xml:space="preserve">
+    <value>Visit</value>
+  </data>
+  <data name="Projects_ProjectUrl" xml:space="preserve">
+    <value>Project URL</value>
+  </data>
+  <data name="Projects_ImageFilename" xml:space="preserve">
+    <value>Image filename</value>
+  </data>
+  <data name="Projects_InfoTagline" xml:space="preserve">
+    <value>(short tagline)</value>
+  </data>
+  <data name="Projects_FailedToLoad" xml:space="preserve">
+    <value>Failed to load project details.</value>
+  </data>
+  <data name="Projects_FailedToCreate" xml:space="preserve">
+    <value>Failed to create project. Please try again.</value>
+  </data>
+  <data name="Projects_FailedToDelete" xml:space="preserve">
+    <value>Failed to delete project.</value>
+  </data>
+  <data name="Projects_FailedToLoadKeywords" xml:space="preserve">
+    <value>Failed to load keywords.</value>
+  </data>
+  <data name="Keywords_DeleteTitle" xml:space="preserve">
+    <value>Delete Keyword</value>
+  </data>
+  <data name="Keywords_DeleteMessage" xml:space="preserve">
+    <value>Are you sure you want to delete this keyword? This will also remove it from any associated projects.</value>
+  </data>
+  <data name="Keywords_VisibleOnCv" xml:space="preserve">
+    <value>Visible on CV</value>
+  </data>
+  <data name="Keywords_Visible" xml:space="preserve">
+    <value>Visible</value>
+  </data>
+  <data name="Keywords_FailedToLoad" xml:space="preserve">
+    <value>Failed to load keyword details.</value>
+  </data>
+  <data name="Keywords_FailedToCreate" xml:space="preserve">
+    <value>Failed to create keyword. Please try again.</value>
+  </data>
+  <data name="Keywords_FailedToSave" xml:space="preserve">
+    <value>Failed to save keyword.</value>
+  </data>
+  <data name="Keywords_FailedToDelete" xml:space="preserve">
+    <value>Failed to delete keyword.</value>
+  </data>
+  <data name="Proficiency_DeleteTitle" xml:space="preserve">
+    <value>Delete Proficiency Level</value>
+  </data>
+  <data name="Proficiency_DeleteMessage" xml:space="preserve">
+    <value>Are you sure you want to delete this proficiency level? This action cannot be undone.</value>
+  </data>
+  <data name="Proficiency_KeywordCount" xml:space="preserve">
+    <value>keywords</value>
+  </data>
+  <data name="Proficiency_ScaleLabel" xml:space="preserve">
+    <value>Scale (0–100)</value>
+  </data>
+  <data name="Proficiency_FailedToLoad" xml:space="preserve">
+    <value>Failed to load proficiency details.</value>
+  </data>
+  <data name="Proficiency_FailedToCreate" xml:space="preserve">
+    <value>Failed to create proficiency. Please try again.</value>
+  </data>
+  <data name="Proficiency_FailedToSave" xml:space="preserve">
+    <value>Failed to save proficiency.</value>
+  </data>
+  <data name="Proficiency_FailedToDelete" xml:space="preserve">
+    <value>Failed to delete proficiency.</value>
+  </data>
+</root>

@@ -117,10 +117,82 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="InvalidReCAPTCHA" xml:space="preserve">
-    <value>Invalid reCAPTCHA. Please try again.</value>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Idea Bank</value>
   </data>
-  <data name="Test" xml:space="preserve">
-    <value>Test</value>
+  <data name="Heading" xml:space="preserve">
+    <value>Idea Bank</value>
+  </data>
+  <data name="NewIdea" xml:space="preserve">
+    <value>New Idea</value>
+  </data>
+  <data name="AllDomains" xml:space="preserve">
+    <value>All Domains</value>
+  </data>
+  <data name="AllStatuses" xml:space="preserve">
+    <value>All Statuses</value>
+  </data>
+  <data name="AllPriorities" xml:space="preserve">
+    <value>All Priorities</value>
+  </data>
+  <data name="AllTags" xml:space="preserve">
+    <value>All Tags</value>
+  </data>
+  <data name="NoIdeas" xml:space="preserve">
+    <value>No ideas yet. Capture your first spark!</value>
+  </data>
+  <data name="NoMatch" xml:space="preserve">
+    <value>No ideas match the current filters.</value>
+  </data>
+  <data name="NewTag" xml:space="preserve">
+    <value>New Tag</value>
+  </data>
+  <data name="NoTags" xml:space="preserve">
+    <value>No tags yet.</value>
+  </data>
+  <data name="Detail_BackToIdeas" xml:space="preserve">
+    <value>Ideas</value>
+  </data>
+  <data name="Detail_NotFound" xml:space="preserve">
+    <value>Idea not found.</value>
+  </data>
+  <data name="Detail_BackButton" xml:space="preserve">
+    <value>Back to Ideas</value>
+  </data>
+  <data name="Detail_NoDescription" xml:space="preserve">
+    <value>No description yet.</value>
+  </data>
+  <data name="Detail_AddNotePlaceholder" xml:space="preserve">
+    <value>Add a note…</value>
+  </data>
+  <data name="Detail_AddNote" xml:space="preserve">
+    <value>Add Note</value>
+  </data>
+  <data name="Detail_Notes" xml:space="preserve">
+    <value>notes</value>
+  </data>
+  <data name="Detail_Updated" xml:space="preserve">
+    <value>Updated {0}</value>
+  </data>
+  <data name="Idea_CreateModal" xml:space="preserve">
+    <value>Create Idea</value>
+  </data>
+  <data name="Idea_EditModal" xml:space="preserve">
+    <value>Edit Idea</value>
+  </data>
+  <data name="Tag_CreateModal" xml:space="preserve">
+    <value>Create Tag</value>
+  </data>
+  <data name="Tag_EditModal" xml:space="preserve">
+    <value>Edit Tag</value>
+  </data>
+  <data name="Tag_Name" xml:space="preserve">
+    <value>Tag Name</value>
+  </data>
+  <data name="FailedToLoad" xml:space="preserve">
+    <value>Failed to load idea details.</value>
+  </data>
+  <data name="SummaryPlaceholder" xml:space="preserve">
+    <value>One-liner hook or intent (optional)</value>
   </data>
 </root>

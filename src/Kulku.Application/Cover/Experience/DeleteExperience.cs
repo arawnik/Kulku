@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -32,7 +33,7 @@ public static class DeleteExperience
             );
 
             if (experience is null)
-                return Error.NotFound("Experience not found.");
+                return Error.NotFound(Strings.NotFound_Experience);
 
             _experienceRepository.Remove(experience);
             await _unitOfWork.CompleteAsync(cancellationToken);

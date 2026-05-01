@@ -3,7 +3,7 @@
 @using SoulNETLib.Clean.Domain
 
 <ModalDialog Visible="@(_form != null)"
-			 Title="@(Mode == ModalMode.Create ? "New Tag" : "Edit Tag")"
+			 Title="@(Mode == ModalMode.Create ? IdeasStrings.Tag_CreateModal : IdeasStrings.Tag_EditModal)"
 			 Size="ModalSize.Default"
 			 OnClose="OnCancel">
 	<ChildContent>
@@ -18,14 +18,14 @@
 				<ServerValidation @ref="_serverValidation" />
 
 				<div class="mb-3">
-					<label class="form-label">Name</label>
+					<label class="form-label">@Strings.Name</label>
 					<InputText @bind-Value="_form.Name" class="form-control" disabled="@IsSaving"
 							   placeholder="e.g. AI/ML, Architecture, .NET" />
 					<ValidationMessage For="@(() => _form.Name)" />
 				</div>
 
 				<div class="mb-3">
-					<label class="form-label">Color (optional)</label>
+					<label class="form-label">@Strings.Color (@Strings.Optional)</label>
 					<div class="d-flex align-items-center gap-2">
 						<input type="color" class="form-control form-control-color"
 							   value="@(_form.ColorHex ?? "#6c757d")"
@@ -48,18 +48,18 @@
 	<FooterContent>
 		<button type="button" class="btn btn-secondary"
 				@onclick="OnCancel" disabled="@IsSaving">
-			Cancel
+			@Strings.Cancel
 		</button>
 		<button type="button" class="btn btn-primary"
 				@onclick="HandleSubmit" disabled="@IsSaving">
 			@if (IsSaving)
 			{
 				<span class="spinner-border spinner-border-sm me-1"></span>
-				<span>Saving…</span>
+				<span>@Strings.Saving</span>
 			}
 			else
 			{
-				<span>@(Mode == ModalMode.Create ? "Create" : "Save Changes")</span>
+				<span>@(Mode == ModalMode.Create ? Strings.Create : Strings.SaveChanges)</span>
 			}
 		</button>
 	</FooterContent>

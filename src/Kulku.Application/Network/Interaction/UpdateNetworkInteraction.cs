@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Network;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
@@ -50,7 +51,7 @@ public static class UpdateNetworkInteraction
             );
 
             if (interaction is null)
-                return Error.NotFound("Interaction not found.");
+                return Error.NotFound(Strings.NotFound_Interaction);
 
             interaction.Date = command.Date;
             interaction.Direction = command.Direction;

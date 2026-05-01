@@ -10,16 +10,16 @@
 		@if (!IsCollapsed)
 		{
 			<NavLink class="d-flex align-items-center gap-2 text-white text-decoration-none" href="">
-				<span class="fs-5 fw-semibold">Kulku Admin</span>
+				<span class="fs-5 fw-semibold">@LayoutStrings.AppTitle</span>
 			</NavLink>
 		}
 
 		<button type="button"
 				class="btn btn-sm btn-outline-light kulku-sidebar-toggle"
-				title="Toggle sidebar"
+				title="@LayoutStrings.ToggleSidebar"
 				@onclick="ToggleCollapsed">
-			<Icon Kind="@(IsCollapsed? IconKind.ArrowBarRight: IconKind.ArrowBarLeft)" Size="20" />
-			<span class="visually-hidden">Toggle sidebar</span>
+			<Icon Kind="@(IsCollapsed ? IconKind.ArrowBarRight : IconKind.ArrowBarLeft)" Size="20" />
+			<span class="visually-hidden">@LayoutStrings.ToggleSidebar</span>
 		</button>
 	</div>
 
@@ -29,19 +29,20 @@
 	<ul class="nav nav-pills flex-column kulku-sidebar__nav">
 		<li class="nav-item">
 			<NavLink class="nav-link text-white kulku-navlink" href="" Match="NavLinkMatch.All"
-					 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Home" : null)">
+					 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? LayoutStrings.Nav_Home : null)">
 				<Icon Kind="IconKind.House" Size="20" />
-				<span class="kulku-link-text">Home</span>
+				<span class="kulku-link-text">@LayoutStrings.Nav_Home</span>
 			</NavLink>
 		</li>
 
 		<AuthorizeView>
 			<li class="nav-item">
 				<NavLink class="nav-link text-white kulku-navlink" href="inbox" Match="NavLinkMatch.All"
-						 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Inbox" : null)">
+						 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? LayoutStrings.Nav_Inbox : null)">
 					<Icon Kind="IconKind.Envelope" Size="20" />
 					<span class="kulku-link-text">
-						Inbox
+						@LayoutStrings.Nav_Inbox
+
 						@if (_newCount > 0)
 						{
 							<span class="badge text-bg-danger ms-1">@_newCount</span>
@@ -52,54 +53,59 @@
 
 			<li class="nav-item">
 				<NavLink class="nav-link text-white kulku-navlink" href="network"
-						 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Network" : null)">
+						 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? LayoutStrings.Nav_Network : null)">
 					<Icon Kind="IconKind.Lightbulb" Size="20" />
-					<span class="kulku-link-text">Network</span>
+					<span class="kulku-link-text">@LayoutStrings.Nav_Network</span>
 				</NavLink>
 
 				@if (!IsCollapsed)
 				{
 					<ul class="nav flex-column kulku-subnav">
-						<li><NavLink class="nav-link kulku-sublink" href="network" Match="NavLinkMatch.All"><Icon Kind="IconKind.Speedometer" Size="14" /> Dashboard</NavLink></li>
-						<li><NavLink class="nav-link kulku-sublink" href="network/companies"><Icon Kind="IconKind.Building" Size="14" /> Companies</NavLink></li>
-						<li><NavLink class="nav-link kulku-sublink" href="network/loginteraction"><Icon Kind="IconKind.ChatDots" Size="14" /> Log Interaction</NavLink></li>
+						<li><NavLink class="nav-link kulku-sublink" href="network" Match="NavLinkMatch.All"><Icon Kind="IconKind.Speedometer" Size="14" /> @LayoutStrings.Nav_Dashboard</NavLink></li>
+						<li><NavLink class="nav-link kulku-sublink" href="network/companies"><Icon Kind="IconKind.Building" Size="14" /> @LayoutStrings.Nav_Companies</NavLink></li>
+						<li><NavLink class="nav-link kulku-sublink" href="network/loginteraction"><Icon Kind="IconKind.ChatDots" Size="14" /> @LayoutStrings.Nav_LogInteraction</NavLink></li>
 					</ul>
 				}
 			</li>
 
 			<li class="nav-item">
 				<NavLink class="nav-link text-white kulku-navlink" href="cv"
-						 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Cv" : null)">
+						 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? LayoutStrings.Nav_Cv : null)">
 					<Icon Kind="IconKind.FileEarmarkPerson" Size="20" />
-					<span class="kulku-link-text">Cv</span>
+					<span class="kulku-link-text">@LayoutStrings.Nav_Cv</span>
 				</NavLink>
 
 				@if (!IsCollapsed)
 				{
 					<ul class="nav flex-column kulku-subnav">
-						<li><NavLink class="nav-link kulku-sublink" href="cv" Match="NavLinkMatch.All"><Icon Kind="IconKind.Speedometer" Size="14" /> Overview</NavLink></li>
-						<li><NavLink class="nav-link kulku-sublink" href="cv/introduction"><Icon Kind="IconKind.FileText" Size="14" /> Introduction</NavLink></li>
-						<li><NavLink class="nav-link kulku-sublink" href="cv/education"><Icon Kind="IconKind.Mortarboard" Size="14" /> Education</NavLink></li>
-						<li><NavLink class="nav-link kulku-sublink" href="cv/experience"><Icon Kind="IconKind.Briefcase" Size="14" /> Experience</NavLink></li>
-						<li><NavLink class="nav-link kulku-sublink" href="cv/projects"><Icon Kind="IconKind.Folder" Size="14" /> Projects</NavLink></li>
-						<li><NavLink class="nav-link kulku-sublink" href="cv/keywords"><Icon Kind="IconKind.Tags" Size="14" /> Keywords</NavLink></li>
+						<li><NavLink class="nav-link kulku-sublink" href="cv" Match="NavLinkMatch.All"><Icon Kind="IconKind.Speedometer" Size="14" /> @LayoutStrings.Nav_Overview</NavLink></li>
+						<li><NavLink class="nav-link kulku-sublink" href="cv/introduction"><Icon Kind="IconKind.FileText" Size="14" /> @LayoutStrings.Nav_Introduction</NavLink></li>
+						<li><NavLink class="nav-link kulku-sublink" href="cv/education"><Icon Kind="IconKind.Mortarboard" Size="14" /> @LayoutStrings.Nav_Education</NavLink></li>
+						<li><NavLink class="nav-link kulku-sublink" href="cv/experience"><Icon Kind="IconKind.Briefcase" Size="14" /> @LayoutStrings.Nav_Experience</NavLink></li>
+						<li><NavLink class="nav-link kulku-sublink" href="cv/projects"><Icon Kind="IconKind.Folder" Size="14" /> @LayoutStrings.Nav_Projects</NavLink></li>
+						<li><NavLink class="nav-link kulku-sublink" href="cv/keywords"><Icon Kind="IconKind.Tags" Size="14" /> @LayoutStrings.Nav_Keywords</NavLink></li>
 					</ul>
 				}
 			</li>
 
 			<li class="nav-item">
 				<NavLink class="nav-link text-white kulku-navlink" href="ideas"
-						 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Ideas" : null)">
+						 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? LayoutStrings.Nav_Ideas : null)">
 					<Icon Kind="IconKind.Journal" Size="20" />
-					<span class="kulku-link-text">Ideas</span>
+					<span class="kulku-link-text">@LayoutStrings.Nav_Ideas</span>
 				</NavLink>
 			</li>
 		</AuthorizeView>
 	</ul>
 
-	@* ── Footer: user menu ── *@
+	@* ── Footer: language + user menu ── *@
 	<div class="kulku-sidebar__footer">
 		<hr class="my-2" />
+
+		@if (!IsCollapsed)
+		{
+			<LanguageSwitcher />
+		}
 
 		<AuthorizeView>
 			<Authorized>
@@ -114,14 +120,14 @@
 
 					<ul class="dropdown-menu dropdown-menu-dark text-small shadow">
 						<li>
-							<NavLink class="dropdown-item" href="Account/Manage">Profile</NavLink>
+							<NavLink class="dropdown-item" href="Account/Manage">@LayoutStrings.Nav_Profile</NavLink>
 						</li>
 						<li><hr class="dropdown-divider" /></li>
 						<li>
 							<form class="px-3 py-2" action="Account/Logout" method="post">
 								<AntiforgeryToken />
 								<input type="hidden" name="ReturnUrl" value="@currentUrl" />
-								<button type="submit" class="btn btn-sm btn-danger w-100">Logout</button>
+								<button type="submit" class="btn btn-sm btn-danger w-100">@LayoutStrings.Nav_Logout</button>
 							</form>
 						</li>
 					</ul>
@@ -132,18 +138,18 @@
 				<ul class="nav nav-pills flex-column">
 					<li class="nav-item">
 						<NavLink class="nav-link text-white kulku-navlink" href="Account/Login"
-								 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Login" : null)">
+								 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? LayoutStrings.Nav_Login : null)">
 							<Icon Kind="IconKind.PersonBadge" Size="20" />
-							<span class="kulku-link-text">Login</span>
+							<span class="kulku-link-text">@LayoutStrings.Nav_Login</span>
 						</NavLink>
 					</li>
 					@if (ManagementOptions.Value.RegistrationEnabled)
 					{
 						<li class="nav-item">
 							<NavLink class="nav-link text-white kulku-navlink" href="Account/Register"
-									 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? "Register" : null)">
+									 data-bs-toggle="@(IsCollapsed ? "tooltip" : null)" data-bs-placement="right" title="@(IsCollapsed ? LayoutStrings.Nav_Register : null)">
 								<Icon Kind="IconKind.Person" Size="20" />
-								<span class="kulku-link-text">Register</span>
+								<span class="kulku-link-text">@LayoutStrings.Nav_Register</span>
 							</NavLink>
 						</li>
 					}

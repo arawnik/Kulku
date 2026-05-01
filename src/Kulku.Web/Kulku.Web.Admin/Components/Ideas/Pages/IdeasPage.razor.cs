@@ -5,6 +5,7 @@ using Kulku.Application.Projects;
 using Kulku.Application.Projects.Models;
 using Kulku.Web.Admin.Components.Ideas.Components;
 using Kulku.Web.Admin.Components.Shared;
+using Kulku.Web.Admin.Resources;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 
@@ -188,7 +189,7 @@ public partial class IdeasPage(
         }
         else
         {
-            _ideaError = result.Error?.Message ?? "Failed to load idea details.";
+            _ideaError = result.Error?.Message ?? IdeasStrings.FailedToLoad;
         }
     }
 
@@ -367,7 +368,7 @@ public partial class IdeasPage(
         if (result is IValidationResult validation)
             modal?.SetServerErrors(validation.Errors);
         else
-            _ideaError = "An error occurred while saving.";
+            _ideaError = Strings.AnErrorOccurred;
     }
 
     private void HandleValidationErrors(Result result, IdeaEditModal? modal)
@@ -375,7 +376,7 @@ public partial class IdeasPage(
         if (result is IValidationResult validation)
             modal?.SetServerErrors(validation.Errors);
         else
-            _ideaError = "An error occurred while saving.";
+            _ideaError = Strings.AnErrorOccurred;
     }
 
     private void HandleValidationErrors<T>(Result<T> result, IdeaTagEditModal? modal)
@@ -383,7 +384,7 @@ public partial class IdeasPage(
         if (result is IValidationResult validation)
             modal?.SetServerErrors(validation.Errors);
         else
-            _tagError = "An error occurred while saving.";
+            _tagError = Strings.AnErrorOccurred;
     }
 
     private void HandleValidationErrors(Result result, IdeaTagEditModal? modal)
@@ -391,6 +392,6 @@ public partial class IdeasPage(
         if (result is IValidationResult validation)
             modal?.SetServerErrors(validation.Errors);
         else
-            _tagError = "An error occurred while saving.";
+            _tagError = Strings.AnErrorOccurred;
     }
 }

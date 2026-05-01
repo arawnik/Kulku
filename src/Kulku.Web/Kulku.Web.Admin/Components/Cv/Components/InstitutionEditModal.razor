@@ -4,7 +4,7 @@
 @using SoulNETLib.Clean.Domain
 
 <ModalDialog Visible="@(_form != null)"
-			 Title="@(Mode == ModalMode.Create ? "Create Institution" : "Edit Institution")"
+			 Title="@(Mode == ModalMode.Create ? CvStrings.Institution_CreateModal : CvStrings.Institution_EditModal)"
 			 Size="ModalSize.Default"
 			 OnClose="OnCancel">
 	<ChildContent>
@@ -18,7 +18,7 @@
 				<DataAnnotationsValidator />
 				<ServerValidation @ref="_serverValidation" />
 
-				<h6 class="mb-3">Translations</h6>
+				<h6 class="mb-3">@Strings.Translations</h6>
 
 				@for (var i = 0; i < _form.Translations.Count; i++)
 				{
@@ -31,19 +31,19 @@
 						</div>
 						<div class="card-body">
 							<div class="mb-3">
-								<label class="form-label">Name</label>
+								<label class="form-label">@Strings.Name</label>
 								<InputText @bind-Value="_form.Translations[index].Name"
 										   class="form-control" disabled="@IsSaving" />
 								<ValidationMessage For="@(() => _form.Translations[index].Name)" />
 							</div>
 							<div class="mb-3">
-								<label class="form-label">Department</label>
+								<label class="form-label">@Strings.Department</label>
 								<InputText @bind-Value="_form.Translations[index].Department"
 										   class="form-control" disabled="@IsSaving"
-										   placeholder="Optional" />
+										   placeholder="@Strings.Optional" />
 							</div>
 							<div>
-								<label class="form-label">Description</label>
+								<label class="form-label">@Strings.Description</label>
 								<InputTextArea @bind-Value="_form.Translations[index].Description"
 											   class="form-control" rows="2" disabled="@IsSaving" />
 							</div>
@@ -56,18 +56,18 @@
 	<FooterContent>
 		<button type="button" class="btn btn-secondary"
 				@onclick="OnCancel" disabled="@IsSaving">
-			Cancel
+			@Strings.Cancel
 		</button>
 		<button type="button" class="btn btn-primary"
 				@onclick="HandleSubmit" disabled="@IsSaving">
 			@if (IsSaving)
 			{
 				<span class="spinner-border spinner-border-sm me-1"></span>
-				<span>Saving…</span>
+				<span>@Strings.Saving</span>
 			}
 			else
 			{
-				<span>@(Mode == ModalMode.Create ? "Create" : "Save Changes")</span>
+				<span>@(Mode == ModalMode.Create ? Strings.Create : Strings.SaveChanges)</span>
 			}
 		</button>
 	</FooterContent>

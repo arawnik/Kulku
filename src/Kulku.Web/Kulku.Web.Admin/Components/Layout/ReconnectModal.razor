@@ -7,25 +7,25 @@
 			<div></div>
 		</div>
 		<p class="components-reconnect-first-attempt-visible">
-			Rejoining the server...
+			@LayoutStrings.Reconnect_Rejoining
 		</p>
 		<p class="components-reconnect-repeated-attempt-visible">
-			Rejoin failed... trying again in <span id="components-seconds-to-next-attempt"></span> seconds.
+			@LayoutStrings.Reconnect_RejoinFailed <span id="components-seconds-to-next-attempt"></span> @LayoutStrings.Reconnect_Seconds
 		</p>
 		<p class="components-reconnect-failed-visible">
-			Failed to rejoin.<br />Please retry or reload the page.
+			@LayoutStrings.Reconnect_Failed<br />@LayoutStrings.Reconnect_RetryOrReload
 		</p>
 		<button id="components-reconnect-button" class="components-reconnect-failed-visible">
-			Retry
+			@Strings.Retry
 		</button>
 		<p class="components-pause-visible">
-			The session has been paused by the server.
+			@LayoutStrings.Reconnect_Paused
 		</p>
 		<button id="components-resume-button" class="components-pause-visible">
-			Resume
+			@Strings.Resume
 		</button>
 		<p class="components-resume-failed-visible">
-			Failed to resume the session.<br />Please reload the page.
+			@LayoutStrings.Reconnect_ResumeFailed<br />@LayoutStrings.Reconnect_PleaseReload
 		</p>
 	</div>
 </dialog>

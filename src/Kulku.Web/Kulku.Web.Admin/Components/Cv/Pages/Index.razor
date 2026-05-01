@@ -2,19 +2,19 @@
 @inject NavigationManager Nav
 @attribute [Authorize]
 
-<PageTitle>CV Overview</PageTitle>
+<PageTitle>@CvStrings.Overview_PageTitle</PageTitle>
 
 <div class="container-fluid py-4">
 	<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-4">
 		<div>
-			<h1 class="h3 mb-1">CV Overview</h1>
-			<div class="text-muted">Quick preview of all CV sections.</div>
+			<h1 class="h3 mb-1">@CvStrings.Overview_PageTitle</h1>
+			<div class="text-muted">@CvStrings.Overview_Subtitle</div>
 		</div>
 	</div>
 
 	@if (!_loaded)
 	{
-		<div class="text-muted">Loading…</div>
+		<div class="text-muted">@Strings.Loading</div>
 	}
 	else
 	{
@@ -23,13 +23,13 @@
 			<div class="col-12 col-lg-6">
 				<div class="card shadow-sm h-100">
 					<div class="card-header d-flex justify-content-between align-items-center">
-						<strong>Introduction</strong>
-						<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/introduction">Open</NavLink>
+						<strong>@CvStrings.Introduction_Heading</strong>
+						<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/introduction">@Strings.Open</NavLink>
 					</div>
 					<div class="card-body">
 						@if (IntroductionPreview is null)
 						{
-							<div class="text-muted">No active introduction.</div>
+							<div class="text-muted">@CvStrings.Overview_NoActiveIntroduction</div>
 						}
 						else
 						{
@@ -53,20 +53,20 @@
 			<div class="col-12 col-lg-6">
 				<div class="card shadow-sm h-100">
 					<div class="card-header d-flex justify-content-between align-items-center">
-						<strong>Keywords</strong>
-						<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/keywords">Open</NavLink>
+						<strong>@CvStrings.Keywords_Heading</strong>
+						<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/keywords">@Strings.Open</NavLink>
 					</div>
 					<div class="card-body">
 						@if (!LanguageKeywords.Any() && !SkillKeywords.Any() && !TechnologyKeywords.Any())
 						{
-							<div class="text-muted">No keywords available.</div>
+							<div class="text-muted">@CvStrings.Overview_NoKeywords</div>
 						}
 						else
 						{
 							@if (LanguageKeywords.Any())
 							{
 								<div class="mb-2">
-									<strong class="small text-muted">Languages</strong>
+									<strong class="small text-muted">@CvStrings.Overview_Languages</strong>
 									<div class="d-flex flex-wrap gap-1 mt-1">
 										@foreach (var kw in LanguageKeywords)
 										{
@@ -78,7 +78,7 @@
 							@if (SkillKeywords.Any())
 							{
 								<div class="mb-2">
-									<strong class="small text-muted">Skills</strong>
+									<strong class="small text-muted">@CvStrings.Overview_Skills</strong>
 									<div class="d-flex flex-wrap gap-1 mt-1">
 										@foreach (var kw in SkillKeywords)
 										{
@@ -90,7 +90,7 @@
 							@if (TechnologyKeywords.Any())
 							{
 								<div>
-									<strong class="small text-muted">Technologies</strong>
+									<strong class="small text-muted">@CvStrings.Overview_Technologies</strong>
 									<div class="d-flex flex-wrap gap-1 mt-1">
 										@foreach (var kw in TechnologyKeywords)
 										{
@@ -108,13 +108,13 @@
 			<div class="col-12 col-lg-6">
 				<div class="card shadow-sm h-100">
 					<div class="card-header d-flex justify-content-between align-items-center">
-						<strong>Experience</strong>
-						<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/experience">Open</NavLink>
+						<strong>@CvStrings.Experience_Heading</strong>
+						<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/experience">@Strings.Open</NavLink>
 					</div>
 					<div class="card-body">
 						@if (!Experiences.Any())
 						{
-							<div class="text-muted">No experiences available.</div>
+							<div class="text-muted">@CvStrings.Overview_NoExperiences</div>
 						}
 						else
 						{
@@ -147,13 +147,13 @@
 			<div class="col-12 col-lg-6">
 				<div class="card shadow-sm h-100">
 					<div class="card-header d-flex justify-content-between align-items-center">
-						<strong>Education</strong>
-						<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/education">Open</NavLink>
+						<strong>@CvStrings.Education_Heading</strong>
+						<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/education">@Strings.Open</NavLink>
 					</div>
 					<div class="card-body">
 						@if (!Educations.Any())
 						{
-							<div class="text-muted">No education entries available.</div>
+							<div class="text-muted">@CvStrings.Overview_NoEducation</div>
 						}
 						else
 						{
@@ -186,13 +186,13 @@
 			<div class="col-12">
 				<div class="card shadow-sm">
 					<div class="card-header d-flex justify-content-between align-items-center">
-						<strong>Projects</strong>
-						<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/projects">Open</NavLink>
+						<strong>@CvStrings.Projects_Heading</strong>
+						<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/projects">@Strings.Open</NavLink>
 					</div>
 					<div class="card-body">
 						@if (!Projects.Any())
 						{
-							<div class="text-muted">No projects available.</div>
+							<div class="text-muted">@CvStrings.Overview_NoProjects</div>
 						}
 						else
 						{
@@ -211,7 +211,7 @@
 													@if (project.Keywords.Any())
 													{
 														<span class="text-muted small text-nowrap ms-2">
-															@project.Keywords.Count keyword@(project.Keywords.Count != 1 ? "s" : "")
+															@project.Keywords.Count @(project.Keywords.Count != 1 ? CvStrings.Overview_KeywordPlural : CvStrings.Overview_KeywordSingular)
 														</span>
 													}
 												</div>

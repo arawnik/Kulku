@@ -4,7 +4,7 @@
 @using SoulNETLib.Clean.Domain
 
 <ModalDialog Visible="@(_form != null)"
-			 Title="@(Mode == ModalMode.Create ? "Create Company" : "Edit Company")"
+			 Title="@(Mode == ModalMode.Create ? CvStrings.Company_CreateModal : CvStrings.Company_EditModal)"
 			 Size="ModalSize.Default"
 			 OnClose="OnCancel">
 	<ChildContent>
@@ -20,18 +20,18 @@
 
 				<div class="row mb-3">
 					<div class="col-md-6">
-						<label class="form-label">Website</label>
+						<label class="form-label">@Strings.Website</label>
 						<InputText @bind-Value="_form.Website"
 								   class="form-control" placeholder="https://example.com" disabled="@IsSaving" />
 					</div>
 					<div class="col-md-6">
-						<label class="form-label">Region</label>
+						<label class="form-label">@Strings.Region</label>
 						<InputText @bind-Value="_form.Region"
 								   class="form-control" placeholder="e.g. Helsinki, Finland" disabled="@IsSaving" />
 					</div>
 				</div>
 
-				<h6 class="mb-3">Translations</h6>
+				<h6 class="mb-3">@Strings.Translations</h6>
 
 				@for (var i = 0; i < _form.Translations.Count; i++)
 				{
@@ -44,13 +44,13 @@
 						</div>
 						<div class="card-body">
 							<div class="mb-3">
-								<label class="form-label">Name</label>
+								<label class="form-label">@Strings.Name</label>
 								<InputText @bind-Value="_form.Translations[index].Name"
 										   class="form-control" disabled="@IsSaving" />
 								<ValidationMessage For="@(() => _form.Translations[index].Name)" />
 							</div>
 							<div>
-								<label class="form-label">Description</label>
+								<label class="form-label">@Strings.Description</label>
 								<InputTextArea @bind-Value="_form.Translations[index].Description"
 											   class="form-control" rows="2" disabled="@IsSaving" />
 							</div>
@@ -63,18 +63,18 @@
 	<FooterContent>
 		<button type="button" class="btn btn-secondary"
 				@onclick="OnCancel" disabled="@IsSaving">
-			Cancel
+			@Strings.Cancel
 		</button>
 		<button type="button" class="btn btn-primary"
 				@onclick="HandleSubmit" disabled="@IsSaving">
 			@if (IsSaving)
 			{
 				<span class="spinner-border spinner-border-sm me-1"></span>
-				<span>Saving…</span>
+				<span>@Strings.Saving</span>
 			}
 			else
 			{
-				<span>@(Mode == ModalMode.Create ? "Create" : "Save Changes")</span>
+				<span>@(Mode == ModalMode.Create ? Strings.Create : Strings.SaveChanges)</span>
 			}
 		</button>
 	</FooterContent>

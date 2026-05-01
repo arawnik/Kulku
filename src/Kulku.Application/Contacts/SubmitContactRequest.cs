@@ -1,8 +1,8 @@
 using Kulku.Application.Abstractions.Security;
 using Kulku.Application.Contacts.Models;
+using Kulku.Application.Resources;
 using Kulku.Domain.Contacts;
 using Kulku.Domain.Repositories;
-using Kulku.Domain.Resources;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
@@ -32,7 +32,7 @@ public static class SubmitContactRequest
 
             if (!await _recaptcha.ValidateAsync(command.Request.CaptchaToken, cancellationToken))
             {
-                return Error.BusinessRule(Strings.InvalidReCAPTCHA);
+                return Error.BusinessRule(Strings.BusinessRule_InvalidReCAPTCHA);
             }
 
             var contactRequest = new ContactRequest

@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -26,7 +27,7 @@ public static class UpdateIdeaTag
 
             var tag = await _tagRepository.GetByIdAsync(command.TagId, cancellationToken);
             if (tag is null)
-                return Error.NotFound("Tag not found.");
+                return Error.NotFound(Strings.NotFound_Tag);
 
             tag.Name = command.Name;
             tag.ColorHex = command.ColorHex;

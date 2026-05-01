@@ -1,6 +1,7 @@
 using Kulku.Application.Network.Models;
 using Kulku.Domain.Network;
 using Kulku.Web.Admin.Components.Shared;
+using Kulku.Web.Admin.Resources;
 using Microsoft.AspNetCore.Components;
 
 namespace Kulku.Web.Admin.Components.Network.Components;
@@ -35,17 +36,19 @@ partial class NetworkCompanyEditModal
     private string ModalTitle =>
         Mode switch
         {
-            ModalMode.Create when Form.IsNewCompany => "Create & Enroll Company",
-            ModalMode.Create => "Enroll Company",
-            _ => "Edit Network Profile",
+            ModalMode.Create when Form.IsNewCompany =>
+                NetworkStrings.NetworkCompany_CreateAndEnrollTitle,
+            ModalMode.Create => NetworkStrings.NetworkCompany_EnrollTitle,
+            _ => NetworkStrings.NetworkCompany_EditProfileTitle,
         };
 
     private string SubmitLabel =>
         Mode switch
         {
-            ModalMode.Create when Form.IsNewCompany => "Create & Enroll",
-            ModalMode.Create => "Enroll",
-            _ => "Save changes",
+            ModalMode.Create when Form.IsNewCompany =>
+                NetworkStrings.NetworkCompany_CreateAndEnrollButton,
+            ModalMode.Create => NetworkStrings.NetworkCompany_EnrollButton,
+            _ => Strings.SaveChanges,
         };
 
     private bool IsSubmitDisabled =>

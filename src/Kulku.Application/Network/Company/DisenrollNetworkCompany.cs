@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -29,7 +30,7 @@ public static class DisenrollNetworkCompany
             );
 
             if (profile is null)
-                return Error.NotFound("Network profile not found.");
+                return Error.NotFound(Strings.NotFound_NetworkProfile);
 
             _profileRepository.Remove(profile);
             await _unitOfWork.CompleteAsync(cancellationToken);

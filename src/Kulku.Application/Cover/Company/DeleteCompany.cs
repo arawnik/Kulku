@@ -1,4 +1,6 @@
+using System.Globalization;
 using Kulku.Application.Cover.Ports;
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -31,7 +33,7 @@ public static class DeleteCompany
             );
 
             if (company is null)
-                return Error.NotFound("Company not found.");
+                return Error.NotFound(Strings.NotFound_Company);
 
             var detail = await _companyQueries.FindByIdWithTranslationsAsync(
                 command.CompanyId,
@@ -41,7 +43,11 @@ public static class DeleteCompany
             if (detail is not null && detail.ExperienceCount > 0)
                 return Error.Validation(
                     "companyId",
-                    $"Cannot delete this company — {detail.ExperienceCount} experience(s) still reference it."
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Strings.CannotDelete_CompanyReferenced,
+                        detail.ExperienceCount
+                    )
                 );
 
             _companyRepository.Remove(company);

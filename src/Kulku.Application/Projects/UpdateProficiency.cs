@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Projects;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
@@ -38,7 +39,7 @@ public static class UpdateProficiency
             );
 
             if (proficiency is null)
-                return Error.NotFound("Proficiency level not found.");
+                return Error.NotFound(Strings.NotFound_ProficiencyLevel);
 
             proficiency.Scale = command.Scale;
             proficiency.Order = command.Order;

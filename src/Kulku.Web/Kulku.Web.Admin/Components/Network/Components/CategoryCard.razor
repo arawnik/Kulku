@@ -12,24 +12,24 @@
 			</div>
 
 			<div class="d-flex gap-1">
-				<button class="btn btn-sm btn-outline-primary" title="Edit"
+				<button class="btn btn-sm btn-outline-primary" title="@Strings.Edit"
 						@onclick="() => OnEdit.InvokeAsync(Category)">
 					<Icon Kind="IconKind.Pencil" Size="14" />
 				</button>
 				@if (!_confirmDelete)
 				{
-					<button class="btn btn-sm btn-outline-danger" title="Delete"
+					<button class="btn btn-sm btn-outline-danger" title="@Strings.Delete"
 							@onclick="() => _confirmDelete = true">
 						<Icon Kind="IconKind.Trash" Size="14" />
 					</button>
 				}
 				else
 				{
-					<button class="btn btn-sm btn-danger" title="Confirm delete"
+					<button class="btn btn-sm btn-danger" title="@Strings.ConfirmDelete"
 							@onclick="() => OnDelete.InvokeAsync(Category.Id)">
 						<Icon Kind="IconKind.Check" Size="14" />
 					</button>
-					<button class="btn btn-sm btn-outline-secondary" title="Cancel"
+					<button class="btn btn-sm btn-outline-secondary" title="@Strings.Cancel"
 							@onclick="() => _confirmDelete = false">
 						✕
 					</button>

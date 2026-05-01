@@ -2,29 +2,29 @@
 @using Kulku.Application.Projects.Models
 @attribute [Authorize]
 
-<PageTitle>Projects — Admin</PageTitle>
+<PageTitle>@CvStrings.Projects_PageTitle</PageTitle>
 
 <div class="container-fluid py-4">
 	<div class="d-flex justify-content-between align-items-start mb-3">
 		<div>
-			<h1 class="h4 mb-1">Projects</h1>
-			<div class="text-muted">Manage portfolio projects and translations</div>
+			<h1 class="h4 mb-1">@CvStrings.Projects_Heading</h1>
+			<div class="text-muted">@CvStrings.Projects_Subtitle</div>
 		</div>
 		<div class="d-flex gap-2">
 			<button type="button" class="btn btn-sm btn-outline-success" @onclick="HandleCreate">
-				<Icon Kind="IconKind.Plus" CssClass="me-1" />Add Project
+				<Icon Kind="IconKind.Plus" CssClass="me-1" />@CvStrings.Projects_Add
 			</button>
-			<NavLink class="btn btn-sm btn-outline-secondary" href="/cv">Back</NavLink>
+			<NavLink class="btn btn-sm btn-outline-secondary" href="/cv">@Strings.Back</NavLink>
 		</div>
 	</div>
 
 	@if (!_loaded)
 	{
-		<div class="text-muted">Loading…</div>
+		<div class="text-muted">@Strings.Loading</div>
 	}
 	else if (Projects.Count <= 0)
 	{
-		<div class="alert alert-secondary">There are no projects.</div>
+		<div class="alert alert-secondary">@CvStrings.Projects_NoEntries</div>
 	}
 	else
 	{

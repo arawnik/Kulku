@@ -1,9 +1,9 @@
 using Kulku.Application.Abstractions.Security;
 using Kulku.Application.Contacts;
 using Kulku.Application.Contacts.Models;
+using Kulku.Application.Resources;
 using Kulku.Domain.Contacts;
 using Kulku.Domain.Repositories;
-using Kulku.Domain.Resources;
 using Moq;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain.Repositories;
@@ -85,7 +85,7 @@ public class SubmitContactRequestTests
         // Assert
         Assert.False(result.IsSuccess);
         Assert.NotNull(result.Error);
-        Assert.Equal(Strings.InvalidReCAPTCHA, result.Error!.Message);
+        Assert.Equal(Strings.BusinessRule_InvalidReCAPTCHA, result.Error!.Message);
     }
 
     [Fact]

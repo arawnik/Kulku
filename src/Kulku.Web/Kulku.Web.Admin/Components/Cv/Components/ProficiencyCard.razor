@@ -34,9 +34,9 @@
 
 					@* Metadata row *@
 					<div class="d-flex flex-wrap gap-2 align-items-center">
-						<span class="text-muted small">Order: @Proficiency.Order</span>
+						<span class="text-muted small">@Strings.Order: @Proficiency.Order</span>
 						<span class="badge bg-secondary bg-opacity-25 text-body-emphasis">
-							@Proficiency.KeywordCount keyword(s)
+							@Proficiency.KeywordCount @CvStrings.Proficiency_KeywordCount
 						</span>
 					</div>
 				</div>
@@ -59,9 +59,9 @@
 </div>
 
 <ConfirmDialog Visible="_confirmingDelete"
-			   Title="Delete Proficiency Level"
-			   Message="Are you sure you want to delete this proficiency level?"
-			   ButtonText="Delete"
+			   Title="@CvStrings.Proficiency_DeleteTitle"
+			   Message="@CvStrings.Proficiency_DeleteMessage"
+			   ButtonText="@Strings.Delete"
 			   ButtonStyle="danger"
 			   ButtonIcon="IconKind.Trash"
 			   OnConfirm="HandleConfirmDelete"

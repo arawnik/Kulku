@@ -3,6 +3,7 @@ using Kulku.Application.Projects.Models;
 using Kulku.Domain.Projects;
 using Kulku.Web.Admin.Components.Cv.Components;
 using Kulku.Web.Admin.Components.Shared;
+using Kulku.Web.Admin.Resources;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 
 namespace Kulku.Web.Admin.Components.Cv.Pages;
@@ -108,7 +109,7 @@ partial class Keywords(
         }
         else
         {
-            _errorMessage = "Failed to load proficiency details.";
+            _errorMessage = CvStrings.Proficiency_FailedToLoad;
         }
     }
 
@@ -139,7 +140,7 @@ partial class Keywords(
                         result,
                         e => _proficiencyModal?.SetServerErrors(e),
                         ref _errorMessage,
-                        "Failed to create proficiency."
+                        CvStrings.Proficiency_FailedToCreate
                     )
                 )
                 {
@@ -165,7 +166,7 @@ partial class Keywords(
                     updateResult,
                     e => _proficiencyModal?.SetServerErrors(e),
                     ref _errorMessage,
-                    "Failed to save proficiency."
+                    CvStrings.Proficiency_FailedToSave
                 )
             )
             {
@@ -193,7 +194,7 @@ partial class Keywords(
         }
         else
         {
-            _errorMessage = result.Error?.Message ?? "Failed to delete proficiency.";
+            _errorMessage = result.Error?.Message ?? CvStrings.Proficiency_FailedToDelete;
         }
     }
 
@@ -250,7 +251,7 @@ partial class Keywords(
         }
         else
         {
-            _errorMessage = "Failed to load keyword details.";
+            _errorMessage = CvStrings.Keywords_FailedToLoad;
         }
     }
 
@@ -283,7 +284,7 @@ partial class Keywords(
                         result,
                         e => _keywordModal?.SetServerErrors(e),
                         ref _errorMessage,
-                        "Failed to create keyword."
+                        CvStrings.Keywords_FailedToCreate
                     )
                 )
                 {
@@ -311,7 +312,7 @@ partial class Keywords(
                     updateResult,
                     e => _keywordModal?.SetServerErrors(e),
                     ref _errorMessage,
-                    "Failed to save keyword."
+                    CvStrings.Keywords_FailedToSave
                 )
             )
             {
@@ -339,7 +340,7 @@ partial class Keywords(
         }
         else
         {
-            _errorMessage = result.Error?.Message ?? "Failed to delete keyword.";
+            _errorMessage = result.Error?.Message ?? CvStrings.Keywords_FailedToDelete;
         }
     }
 

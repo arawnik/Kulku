@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>Kulku Admin</value>
+  </data>
+  <data name="ToggleSidebar" xml:space="preserve">
+    <value>Toggle sidebar</value>
+  </data>
+  <data name="Nav_Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Nav_Inbox" xml:space="preserve">
+    <value>Inbox</value>
+  </data>
+  <data name="Nav_Network" xml:space="preserve">
+    <value>Network</value>
+  </data>
+  <data name="Nav_Cv" xml:space="preserve">
+    <value>Cv</value>
+  </data>
+  <data name="Nav_Ideas" xml:space="preserve">
+    <value>Ideas</value>
+  </data>
+  <data name="Nav_Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Nav_Companies" xml:space="preserve">
+    <value>Companies</value>
+  </data>
+  <data name="Nav_LogInteraction" xml:space="preserve">
+    <value>Log Interaction</value>
+  </data>
+  <data name="Nav_Overview" xml:space="preserve">
+    <value>Overview</value>
+  </data>
+  <data name="Nav_Introduction" xml:space="preserve">
+    <value>Introduction</value>
+  </data>
+  <data name="Nav_Education" xml:space="preserve">
+    <value>Education</value>
+  </data>
+  <data name="Nav_Experience" xml:space="preserve">
+    <value>Experience</value>
+  </data>
+  <data name="Nav_Projects" xml:space="preserve">
+    <value>Projects</value>
+  </data>
+  <data name="Nav_Keywords" xml:space="preserve">
+    <value>Keywords</value>
+  </data>
+  <data name="Nav_Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Nav_Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="Nav_Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Nav_Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Error_Unhandled" xml:space="preserve">
+    <value>An unhandled error has occurred.</value>
+  </data>
+  <data name="Reconnect_Rejoining" xml:space="preserve">
+    <value>Rejoining the server...</value>
+  </data>
+  <data name="Reconnect_RejoinFailed" xml:space="preserve">
+    <value>Rejoin failed... trying again in</value>
+  </data>
+  <data name="Reconnect_Seconds" xml:space="preserve">
+    <value>seconds.</value>
+  </data>
+  <data name="Reconnect_Failed" xml:space="preserve">
+    <value>Failed to rejoin.</value>
+  </data>
+  <data name="Reconnect_RetryOrReload" xml:space="preserve">
+    <value>Please retry or reload the page.</value>
+  </data>
+  <data name="Reconnect_Paused" xml:space="preserve">
+    <value>The session has been paused by the server.</value>
+  </data>
+  <data name="Reconnect_ResumeFailed" xml:space="preserve">
+    <value>Failed to resume the session.</value>
+  </data>
+  <data name="Reconnect_PleaseReload" xml:space="preserve">
+    <value>Please reload the page.</value>
+  </data>
+  <data name="Dashboard_PageTitle" xml:space="preserve">
+    <value>Dashboard — Kulku Admin</value>
+  </data>
+  <data name="Dashboard_Heading" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Dashboard_Welcome" xml:space="preserve">
+    <value>Welcome back,</value>
+  </data>
+  <data name="Dashboard_Inbox" xml:space="preserve">
+    <value>Inbox</value>
+  </data>
+  <data name="Dashboard_New" xml:space="preserve">
+    <value>new</value>
+  </data>
+  <data name="Dashboard_UnreadRequests" xml:space="preserve">
+    <value>Unread contact requests</value>
+  </data>
+  <data name="Dashboard_Network" xml:space="preserve">
+    <value>Network</value>
+  </data>
+  <data name="Dashboard_Companies" xml:space="preserve">
+    <value>companies</value>
+  </data>
+  <data name="Dashboard_TrackedRelationships" xml:space="preserve">
+    <value>Tracked relationships</value>
+  </data>
+  <data name="Dashboard_IdeaBank" xml:space="preserve">
+    <value>Idea Bank</value>
+  </data>
+  <data name="Dashboard_Ideas" xml:space="preserve">
+    <value>ideas</value>
+  </data>
+  <data name="Dashboard_InTheIdeaBank" xml:space="preserve">
+    <value>In the idea bank</value>
+  </data>
+  <data name="Dashboard_Portfolio" xml:space="preserve">
+    <value>Portfolio</value>
+  </data>
+  <data name="Dashboard_Projects" xml:space="preserve">
+    <value>projects</value>
+  </data>
+  <data name="Dashboard_ShowcaseProjects" xml:space="preserve">
+    <value>Showcase projects</value>
+  </data>
+  <data name="Dashboard_RecentRequests" xml:space="preserve">
+    <value>Recent Requests</value>
+  </data>
+  <data name="Dashboard_LatestNewRequests" xml:space="preserve">
+    <value>Latest new contact requests</value>
+  </data>
+  <data name="Dashboard_NoNewRequests" xml:space="preserve">
+    <value>No new requests — inbox is clear.</value>
+  </data>
+  <data name="Dashboard_AttentionNeeded" xml:space="preserve">
+    <value>Attention Needed</value>
+  </data>
+  <data name="Dashboard_OverdueAndCold" xml:space="preserve">
+    <value>Overdue actions &amp; cold relationships</value>
+  </data>
+  <data name="Dashboard_AllOnTrack" xml:space="preserve">
+    <value>All relationships are on track.</value>
+  </data>
+  <data name="Dashboard_Overdue" xml:space="preserve">
+    <value>Overdue</value>
+  </data>
+  <data name="Dashboard_Actions" xml:space="preserve">
+    <value>actions</value>
+  </data>
+  <data name="Dashboard_GoingCold" xml:space="preserve">
+    <value>Going cold</value>
+  </data>
+  <data name="Dashboard_Relationships" xml:space="preserve">
+    <value>relationships</value>
+  </data>
+  <data name="Dashboard_RecentIdeas" xml:space="preserve">
+    <value>Recent Ideas</value>
+  </data>
+  <data name="Dashboard_RecentlyUpdatedIdeas" xml:space="preserve">
+    <value>Recently updated ideas</value>
+  </data>
+  <data name="Dashboard_NoIdeasYet" xml:space="preserve">
+    <value>No ideas yet.</value>
+  </data>
+  <data name="Dashboard_LatestActivity" xml:space="preserve">
+    <value>Latest activity</value>
+  </data>
+  <data name="Dashboard_NoInteractionsYet" xml:space="preserve">
+    <value>No interactions yet.</value>
+  </data>
+  <data name="Dashboard_CvOverview" xml:space="preserve">
+    <value>CV Overview</value>
+  </data>
+  <data name="Dashboard_ManageCv" xml:space="preserve">
+    <value>Manage CV</value>
+  </data>
+  <data name="Dashboard_Experience" xml:space="preserve">
+    <value>experience</value>
+  </data>
+  <data name="Dashboard_Education" xml:space="preserve">
+    <value>education</value>
+  </data>
+  <data name="Dashboard_Keywords" xml:space="preserve">
+    <value>keywords</value>
+  </data>
+  <data name="Landing_Description" xml:space="preserve">
+    <value>A personal management dashboard for maintaining your professional portfolio, CV content, project showcases, and developer workflow.</value>
+  </data>
+  <data name="Landing_GetInTouch" xml:space="preserve">
+    <value>Want to get in touch?</value>
+  </data>
+  <data name="Landing_RegistrationClosed" xml:space="preserve">
+    <value>Registration is currently closed. If you'd like to reach out, you can send me a message through my contact form.</value>
+  </data>
+  <data name="Landing_SendMessage" xml:space="preserve">
+    <value>Send a message</value>
+  </data>
+  <data name="Landing_SignIn" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="Landing_Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Landing_CvManagement" xml:space="preserve">
+    <value>CV Management</value>
+  </data>
+  <data name="Landing_CvManagementDesc" xml:space="preserve">
+    <value>Manage your introduction, education, work experience, and skill keywords across multiple languages.</value>
+  </data>
+  <data name="Landing_ProjectPortfolio" xml:space="preserve">
+    <value>Project Portfolio</value>
+  </data>
+  <data name="Landing_ProjectPortfolioDesc" xml:space="preserve">
+    <value>Showcase your projects with descriptions, images, and links. Content feeds directly to the public site.</value>
+  </data>
+  <data name="Landing_IdeaBank" xml:space="preserve">
+    <value>Idea Bank</value>
+  </data>
+  <data name="Landing_IdeaBankDesc" xml:space="preserve">
+    <value>Capture and organize project ideas, feature requests, and inspiration for future work.</value>
+  </data>
+  <data name="Landing_Network" xml:space="preserve">
+    <value>Network</value>
+  </data>
+  <data name="Landing_NetworkDesc" xml:space="preserve">
+    <value>Track companies, interactions, and networking activity to stay on top of your professional outreach.</value>
+  </data>
+  <data name="Error_PageTitle" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Error_Heading" xml:space="preserve">
+    <value>Error.</value>
+  </data>
+  <data name="Error_Message" xml:space="preserve">
+    <value>An error occurred while processing your request.</value>
+  </data>
+  <data name="Error_RequestId" xml:space="preserve">
+    <value>Request ID:</value>
+  </data>
+  <data name="NotFound_Heading" xml:space="preserve">
+    <value>Not Found</value>
+  </data>
+  <data name="NotFound_Message" xml:space="preserve">
+    <value>Sorry, the content you are looking for does not exist.</value>
+  </data>
+  <data name="Language_en" xml:space="preserve">
+    <value>EN</value>
+  </data>
+  <data name="Language_fi" xml:space="preserve">
+    <value>FI</value>
+  </data>
+</root>

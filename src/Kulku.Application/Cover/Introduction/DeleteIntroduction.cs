@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -28,7 +29,7 @@ public static class DeleteIntroduction
             );
 
             if (introduction is null)
-                return Error.NotFound("Introduction not found.");
+                return Error.NotFound(Strings.NotFound_Introduction);
 
             _introductionRepository.Remove(introduction);
             await _unitOfWork.CompleteAsync(cancellationToken);

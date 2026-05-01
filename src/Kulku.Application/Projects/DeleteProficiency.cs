@@ -1,4 +1,6 @@
+using System.Globalization;
 using Kulku.Application.Projects.Ports;
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -31,7 +33,7 @@ public static class DeleteProficiency
             );
 
             if (proficiency is null)
-                return Error.NotFound("Proficiency level not found.");
+                return Error.NotFound(Strings.NotFound_ProficiencyLevel);
 
             // Guard: reject if keywords still reference this proficiency
             var allKeywords = await _keywordQueries.ListAllWithTranslationsAsync(cancellationToken);
@@ -40,7 +42,11 @@ public static class DeleteProficiency
             if (referencingCount > 0)
                 return Error.Validation(
                     "proficiencyId",
-                    $"Cannot delete this proficiency level — {referencingCount} keyword(s) still reference it."
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Strings.CannotDelete_ProficiencyReferenced,
+                        referencingCount
+                    )
                 );
 
             _proficiencyRepository.Remove(proficiency);

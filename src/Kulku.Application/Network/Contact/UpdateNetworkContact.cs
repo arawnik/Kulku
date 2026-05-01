@@ -1,3 +1,4 @@
+using Kulku.Application.Resources;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -48,7 +49,7 @@ public static class UpdateNetworkContact
             );
 
             if (contact is null)
-                return Error.NotFound("Contact not found.");
+                return Error.NotFound(Strings.NotFound_Contact);
 
             contact.PersonName = command.PersonName?.Trim();
             contact.Email = command.Email?.Trim();
