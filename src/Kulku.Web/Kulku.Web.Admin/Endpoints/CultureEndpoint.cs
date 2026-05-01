@@ -39,6 +39,7 @@ public static class CultureEndpoint
                             Expires = DateTimeOffset.UtcNow.AddYears(1),
                             IsEssential = true,
                             SameSite = SameSiteMode.Strict,
+                            Secure = true,
                         }
                     );
 
