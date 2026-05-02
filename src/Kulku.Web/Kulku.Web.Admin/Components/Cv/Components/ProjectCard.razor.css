@@ -7,6 +7,8 @@
 
 .project-description {
   line-height: 1.5;
+  overflow: hidden;
+  word-break: break-word;
 }
 
   /* Tighten Markdig-generated HTML inside the card */

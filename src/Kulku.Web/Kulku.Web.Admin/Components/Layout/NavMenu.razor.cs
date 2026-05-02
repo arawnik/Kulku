@@ -7,6 +7,12 @@ namespace Kulku.Web.Admin.Components.Layout;
 
 partial class NavMenu
 {
+    [Parameter]
+    public bool IsMobile { get; set; }
+
+    [Parameter]
+    public EventCallback OnCloseMobile { get; set; }
+
     [Inject]
     private IServiceScopeFactory ScopeFactory { get; set; } = null!;
 
@@ -18,6 +24,30 @@ partial class NavMenu
 
     //TODO: Persist per-user.
     private bool IsCollapsed { get; set; }
+
+    /// <summary>
+    /// Returns tooltip attributes for collapsed desktop sidebar, or empty dict otherwise.
+    /// </summary>
+    private Dictionary<string, object> NavTooltip(string text)
+    {
+        if (!IsMobile && IsCollapsed)
+        {
+            return new Dictionary<string, object>
+            {
+                ["data-bs-toggle"] = "tooltip",
+                ["data-bs-placement"] = "right",
+                ["title"] = text,
+            };
+        }
+
+        return new Dictionary<string, object>();
+    }
+
+    private async Task HandleNavClick()
+    {
+        if (IsMobile && OnCloseMobile.HasDelegate)
+            await OnCloseMobile.InvokeAsync();
+    }
 
     protected override async Task OnInitializedAsync()
     {

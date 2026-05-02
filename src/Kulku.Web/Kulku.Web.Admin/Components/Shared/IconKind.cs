@@ -111,4 +111,9 @@ public enum IconKind
 
     /// <summary>Exclamation triangle — warning / spam.</summary>
     ExclamationTriangle,
+
+    // ── Mobile ──
+
+    /// <summary>Three horizontal lines — hamburger menu / mobile nav toggle.</summary>
+    HamburgerMenu,
 }

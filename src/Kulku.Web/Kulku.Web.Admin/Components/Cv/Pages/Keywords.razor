@@ -6,7 +6,7 @@
 <PageTitle>@CvStrings.Keywords_PageTitle</PageTitle>
 
 <div class="container-fluid py-4">
-	<div class="d-flex justify-content-between align-items-start mb-3">
+	<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
 		<div>
 			<h1 class="h4 mb-1">@CvStrings.Keywords_Heading</h1>
 			<div class="text-muted">@CvStrings.Keywords_Subtitle</div>
@@ -37,7 +37,7 @@
 	{
 		@* ── Proficiency Levels ─────────────────────────── *@
 		<div class="card mb-4">
-			<div class="card-header d-flex justify-content-between align-items-center py-2">
+			<div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2 py-2">
 				<button type="button" class="btn btn-sm btn-link text-decoration-none p-0"
 						@onclick="() => _proficienciesExpanded = !_proficienciesExpanded">
 					<Icon Kind="@(_proficienciesExpanded ? IconKind.ChevronDown : IconKind.ChevronRight)"
@@ -86,7 +86,7 @@
 			};
 
 			<div class="card mb-3">
-				<div class="card-header d-flex justify-content-between align-items-center py-2">
+				<div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2 py-2">
 					<div>
 						<span class="fw-semibold">@typeName</span>
 						<span class="badge bg-secondary ms-2">@allOfType.Count</span>

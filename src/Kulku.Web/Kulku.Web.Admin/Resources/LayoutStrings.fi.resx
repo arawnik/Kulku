@@ -316,4 +316,7 @@
   <data name="Language_fi" xml:space="preserve">
     <value>FI</value>
   </data>
+  <data name="OpenMenu" xml:space="preserve">
+    <value>Avaa valikko</value>
+  </data>
 </root>

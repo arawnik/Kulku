@@ -9,22 +9,22 @@
 		var translations = Introduction.Translations
 			.OrderBy(t => t.Language.ToString()).ToList();
 
-		<div class="card-header d-flex justify-content-between align-items-start gap-3">
-			<div class="d-flex align-items-center gap-3">
+		<div class="card-header d-flex flex-wrap justify-content-between align-items-start gap-2">
+			<div class="d-flex align-items-center gap-3 overflow-hidden">
 				<img src="@StaticAssets.Introduction(Introduction.SmallAvatarUrl)" alt="Avatar"
 					 class="rounded-circle flex-shrink-0"
 					 style="width:48px;height:48px;object-fit:cover;"
 					 onerror="this.style.display='none'" />
-				<div>
-					<h5 class="mb-0 fw-semibold">
+				<div class="overflow-hidden">
+					<h5 class="mb-0 fw-semibold text-break">
 						@(translations.FirstOrDefault()?.Title ?? Strings.Untitled)
 					</h5>
-					<div class="text-muted small">
+					<div class="text-muted small text-break">
 						@(translations.FirstOrDefault()?.Tagline ?? string.Empty)
 					</div>
 				</div>
 			</div>
-			<div class="d-flex align-items-center gap-2">
+			<div class="d-flex flex-wrap align-items-center gap-2">
 				<span class="badge @StatusBadgeClass">@StatusLabel</span>
 				<span class="text-muted small text-nowrap">
 					@Introduction.PubDate.ToString("yyyy-MM-dd HH:mm")
@@ -62,7 +62,7 @@
 			}
 		</div>
 
-		<div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
+		<div class="card-footer bg-transparent d-flex flex-wrap justify-content-between align-items-center gap-2">
 			<div class="d-flex align-items-center gap-2">
 				<button type="button" class="btn btn-sm btn-outline-primary"
 						@onclick="HandleEditClick">

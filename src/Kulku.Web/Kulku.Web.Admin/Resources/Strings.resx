@@ -259,4 +259,7 @@
   <data name="Select" xml:space="preserve">
     <value>— Select —</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
 </root>

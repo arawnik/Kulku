@@ -754,6 +754,15 @@ namespace Kulku.Web.Admin.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open menu.
+        /// </summary>
+        public static string OpenMenu {
+            get {
+                return ResourceManager.GetString("OpenMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to rejoin..
         /// </summary>
         public static string Reconnect_Failed {

@@ -18,6 +18,14 @@
   padding: 1rem 0.75rem;
 }
 
+/* ── Mobile: fill offcanvas, no sticky/fixed sizing ── */
+.kulku-sidebar--mobile {
+  width: 100%;
+  height: auto;
+  position: static;
+  padding: 0 1rem 1rem;
+}
+
 /* ── Header: fixed at top ── */
 .kulku-sidebar__header {
   display: flex;

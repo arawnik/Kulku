@@ -2,7 +2,7 @@
 
 <div class="card shadow-sm mb-2">
 	<div class="card-body py-2">
-		<div class="d-flex justify-content-between align-items-start">
+		<div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
 			<div class="flex-grow-1">
 				@{
 					var translations = Institution.Translations.OrderBy(t => t.Language.ToString()).ToList();

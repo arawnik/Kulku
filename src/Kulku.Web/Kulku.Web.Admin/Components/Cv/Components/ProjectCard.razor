@@ -10,7 +10,7 @@
 			var translations = Project.Translations
 				.OrderBy(t => t.Language.ToString()).ToList();
 
-			<div class="card-header d-flex justify-content-between align-items-start gap-3">
+			<div class="card-header d-flex flex-wrap justify-content-between align-items-start gap-2">
 				<div class="d-flex align-items-center gap-3">
 					<img src="@StaticAssets.Project(Project.ImageUrl)" alt="Project thumbnail"
 						 class="project-thumbnail rounded"

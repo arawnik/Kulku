@@ -318,4 +318,7 @@
   <data name="Select" xml:space="preserve">
     <value>— Valitse —</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Sulje</value>
+  </data>
 </root>

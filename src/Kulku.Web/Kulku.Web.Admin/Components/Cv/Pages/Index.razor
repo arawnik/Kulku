@@ -21,12 +21,12 @@
 		<div class="row g-3">
 			@* ── Introduction ── *@
 			<div class="col-12 col-lg-6">
-				<div class="card shadow-sm h-100">
+				<div class="card shadow-sm h-100 overflow-hidden">
 					<div class="card-header d-flex justify-content-between align-items-center">
 						<strong>@CvStrings.Introduction_Heading</strong>
 						<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/introduction">@Strings.Open</NavLink>
 					</div>
-					<div class="card-body">
+					<div class="card-body overflow-hidden">
 						@if (IntroductionPreview is null)
 						{
 							<div class="text-muted">@CvStrings.Overview_NoActiveIntroduction</div>
@@ -184,12 +184,12 @@
 
 			@* ── Projects ── *@
 			<div class="col-12">
-				<div class="card shadow-sm">
+				<div class="card shadow-sm overflow-hidden">
 					<div class="card-header d-flex justify-content-between align-items-center">
 						<strong>@CvStrings.Projects_Heading</strong>
 						<NavLink class="btn btn-sm btn-outline-secondary" href="/cv/projects">@Strings.Open</NavLink>
 					</div>
-					<div class="card-body">
+					<div class="card-body overflow-hidden">
 						@if (!Projects.Any())
 						{
 							<div class="text-muted">@CvStrings.Overview_NoProjects</div>
