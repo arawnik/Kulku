@@ -187,6 +187,21 @@
   <data name="BusinessRule_InvalidReCAPTCHA" xml:space="preserve">
     <value>Virheellinen reCAPTCHA. Ole hyvä ja yritä uudelleen.</value>
   </data>
+  <data name="Validation_ContactNameRequired" xml:space="preserve">
+    <value>Nimi vaaditaan.</value>
+  </data>
+  <data name="Validation_ContactEmailRequired" xml:space="preserve">
+    <value>Sähköposti vaaditaan.</value>
+  </data>
+  <data name="Validation_ContactSubjectRequired" xml:space="preserve">
+    <value>Aihe vaaditaan.</value>
+  </data>
+  <data name="Validation_ContactMessageRequired" xml:space="preserve">
+    <value>Viesti vaaditaan.</value>
+  </data>
+  <data name="Validation_CaptchaTokenRequired" xml:space="preserve">
+    <value>CAPTCHA-varmennus vaaditaan.</value>
+  </data>
   <data name="Test" xml:space="preserve">
     <value>Testi</value>
   </data>

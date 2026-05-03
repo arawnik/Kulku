@@ -25,10 +25,17 @@ public static class SubmitContactRequest
 
         public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
         {
-            ArgumentNullException.ThrowIfNull(
-                command.Request.CaptchaToken,
-                nameof(command.Request.CaptchaToken)
+            var errors = ContactRequestCommandValidator.Validate(
+                command.Request.Name,
+                command.Request.Email,
+                command.Request.Subject,
+                command.Request.Message,
+                command.Request.CaptchaToken
             );
+            if (errors.Length > 0)
+            {
+                return ValidationResult.WithErrors(errors);
+            }
 
             if (!await _recaptcha.ValidateAsync(command.Request.CaptchaToken, cancellationToken))
             {

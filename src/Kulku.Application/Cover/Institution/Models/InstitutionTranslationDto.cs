@@ -1,4 +1,5 @@
 using Kulku.Domain;
+using Kulku.Domain.Abstractions;
 
 namespace Kulku.Application.Cover.Institution.Models;
 
@@ -10,4 +11,4 @@ public sealed record InstitutionTranslationDto(
     string Name,
     string? Department,
     string Description
-);
+) : ITranslationDto;

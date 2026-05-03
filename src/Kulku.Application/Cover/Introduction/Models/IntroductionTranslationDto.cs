@@ -1,4 +1,5 @@
 using Kulku.Domain;
+using Kulku.Domain.Abstractions;
 
 namespace Kulku.Application.Cover.Introduction.Models;
 
@@ -10,4 +11,4 @@ public sealed record IntroductionTranslationDto(
     string Title,
     string Tagline,
     string Content
-);
+) : ITranslationDto;

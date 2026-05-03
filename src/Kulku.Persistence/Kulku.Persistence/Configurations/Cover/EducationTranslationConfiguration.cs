@@ -18,6 +18,6 @@ public class EducationTranslationConfiguration : IEntityTypeConfiguration<Educat
         builder.Property(t => t.Language).IsRequired();
 
         // Indexing for performance
-        builder.HasIndex(t => new { t.Language, t.EducationId }).IsUnique();
+        builder.HasIndex(t => new { t.EducationId, t.Language }).IsUnique();
     }
 }

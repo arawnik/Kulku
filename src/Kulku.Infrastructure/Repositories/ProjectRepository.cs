@@ -21,7 +21,7 @@ public class ProjectRepository(AppDbContext context) : IProjectRepository
     /// <inheritdoc />
     public void Remove(Project project)
     {
-        _context.Projects.Remove(project);
+        _context.Remove(project);
     }
 
     /// <inheritdoc />

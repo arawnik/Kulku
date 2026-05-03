@@ -19,6 +19,6 @@ public class InstitutionTranslationConfiguration : IEntityTypeConfiguration<Inst
         builder.Property(t => t.Language).IsRequired();
 
         // Indexing for performance
-        builder.HasIndex(t => new { t.Language, t.InstitutionId }).IsUnique();
+        builder.HasIndex(t => new { t.InstitutionId, t.Language }).IsUnique();
     }
 }

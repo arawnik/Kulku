@@ -6,4 +6,4 @@ namespace Kulku.Domain.Repositories;
 /// <summary>
 /// Repository for managing <see cref="Education"/> entities.
 /// </summary>
-public interface IEducationRepository : IEntityRepository<Education> { }
+public interface IEducationRepository : IEntityRepository<Education>;

@@ -6,4 +6,4 @@ namespace Kulku.Domain.Repositories;
 /// <summary>
 /// Repository for managing <see cref="Experience"/> entities.
 /// </summary>
-public interface IExperienceRepository : IEntityRepository<Experience> { }
+public interface IExperienceRepository : IEntityRepository<Experience>;

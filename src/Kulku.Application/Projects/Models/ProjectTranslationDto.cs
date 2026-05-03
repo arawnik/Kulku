@@ -1,4 +1,5 @@
 using Kulku.Domain;
+using Kulku.Domain.Abstractions;
 
 namespace Kulku.Application.Projects.Models;
 
@@ -10,4 +11,4 @@ public sealed record ProjectTranslationDto(
     string Name,
     string Info,
     string Description
-);
+) : ITranslationDto;

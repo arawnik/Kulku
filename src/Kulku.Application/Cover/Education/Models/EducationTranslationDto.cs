@@ -1,4 +1,5 @@
 using Kulku.Domain;
+using Kulku.Domain.Abstractions;
 
 namespace Kulku.Application.Cover.Education.Models;
 
@@ -10,4 +11,4 @@ public sealed record EducationTranslationDto(
     LanguageCode Language,
     string Title,
     string Description
-);
+) : ITranslationDto;

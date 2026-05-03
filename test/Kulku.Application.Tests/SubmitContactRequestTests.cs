@@ -6,6 +6,7 @@ using Kulku.Domain.Contacts;
 using Kulku.Domain.Repositories;
 using Moq;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 
 namespace Kulku.Application.Tests;
@@ -89,22 +90,20 @@ public class SubmitContactRequestTests
     }
 
     [Fact]
-    public void HandleThrowsArgumentNullExceptionWhenCaptchaTokenIsNull()
+    public async Task HandleReturnsValidationErrorWhenCaptchaTokenIsNull()
     {
         // Arrange
         var (handler, _, _, _) = CreateHandler(true);
         var dto = CreateSampleDto(null);
 
-        // Act & Assert
-        Assert.Throws<ArgumentNullException>(() =>
-        {
-            handler
-                .Handle(
-                    new SubmitContactRequest.Command(dto),
-                    TestContext.Current.CancellationToken
-                )
-                .GetAwaiter()
-                .GetResult();
-        });
+        // Act
+        var result = await handler.Handle(
+            new SubmitContactRequest.Command(dto),
+            TestContext.Current.CancellationToken
+        );
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.IsAssignableFrom<IValidationResult>(result);
     }
 }

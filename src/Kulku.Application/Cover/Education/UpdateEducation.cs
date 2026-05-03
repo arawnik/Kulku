@@ -1,11 +1,10 @@
 using Kulku.Application.Cover.Education.Models;
 using Kulku.Application.Resources;
-using Kulku.Domain.Cover;
+using Kulku.Domain.Abstractions;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
-using DomainEducation = Kulku.Domain.Cover.Education;
 
 namespace Kulku.Application.Cover.Education;
 
@@ -55,40 +54,17 @@ public static class UpdateEducation
             education.StartDate = command.StartDate;
             education.EndDate = command.EndDate;
 
-            MergeTranslations(education, command.Translations);
+            education.MergeTranslations(
+                command.Translations,
+                (dto, t) =>
+                {
+                    t.Title = dto.Title;
+                    t.Description = dto.Description;
+                }
+            );
 
             await _unitOfWork.CompleteAsync(cancellationToken);
             return Result.Success();
-        }
-
-        private static void MergeTranslations(
-            DomainEducation education,
-            IReadOnlyList<EducationTranslationDto> incoming
-        )
-        {
-            var existing = education.Translations.ToDictionary(t => t.Language);
-            education.Translations.Clear();
-
-            foreach (var dto in incoming)
-            {
-                if (existing.TryGetValue(dto.Language, out var translation))
-                {
-                    translation.Title = dto.Title;
-                    translation.Description = dto.Description;
-                    education.Translations.Add(translation);
-                }
-                else
-                {
-                    education.Translations.Add(
-                        new EducationTranslation
-                        {
-                            Language = dto.Language,
-                            Title = dto.Title,
-                            Description = dto.Description,
-                        }
-                    );
-                }
-            }
         }
     }
 }

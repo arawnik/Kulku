@@ -1,4 +1,5 @@
 using Kulku.Domain;
+using Kulku.Domain.Abstractions;
 
 namespace Kulku.Application.Cover.Experience.Models;
 
@@ -10,4 +11,4 @@ public sealed record ExperienceTranslationDto(
     LanguageCode Language,
     string Title,
     string Description
-);
+) : ITranslationDto;

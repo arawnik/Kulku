@@ -1,5 +1,5 @@
 using Kulku.Application.Resources;
-using Kulku.Domain.Projects;
+using Kulku.Domain.Abstractions;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
@@ -44,40 +44,17 @@ public static class UpdateProficiency
             proficiency.Scale = command.Scale;
             proficiency.Order = command.Order;
 
-            MergeTranslations(proficiency, command.Translations);
+            proficiency.MergeTranslations(
+                command.Translations,
+                (dto, t) =>
+                {
+                    t.Name = dto.Name;
+                    t.Description = dto.Description;
+                }
+            );
 
             await _unitOfWork.CompleteAsync(cancellationToken);
             return Result.Success();
-        }
-
-        private static void MergeTranslations(
-            Proficiency proficiency,
-            IReadOnlyList<ProficiencyTranslationDto> incoming
-        )
-        {
-            var existing = proficiency.Translations.ToDictionary(t => t.Language);
-            proficiency.Translations.Clear();
-
-            foreach (var dto in incoming)
-            {
-                if (existing.TryGetValue(dto.Language, out var translation))
-                {
-                    translation.Name = dto.Name;
-                    translation.Description = dto.Description;
-                    proficiency.Translations.Add(translation);
-                }
-                else
-                {
-                    proficiency.Translations.Add(
-                        new ProficiencyTranslation
-                        {
-                            Language = dto.Language,
-                            Name = dto.Name,
-                            Description = dto.Description,
-                        }
-                    );
-                }
-            }
         }
     }
 }

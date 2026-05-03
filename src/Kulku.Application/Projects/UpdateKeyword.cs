@@ -1,4 +1,5 @@
 using Kulku.Application.Resources;
+using Kulku.Domain.Abstractions;
 using Kulku.Domain.Projects;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
@@ -50,34 +51,10 @@ public static class UpdateKeyword
             keyword.Order = command.Order;
             keyword.Display = command.Display;
 
-            MergeTranslations(keyword, command.Translations);
+            keyword.MergeTranslations(command.Translations, (dto, t) => t.Name = dto.Name);
 
             await _unitOfWork.CompleteAsync(cancellationToken);
             return Result.Success();
-        }
-
-        private static void MergeTranslations(
-            Keyword keyword,
-            IReadOnlyList<KeywordTranslationDto> incoming
-        )
-        {
-            var existing = keyword.Translations.ToDictionary(t => t.Language);
-            keyword.Translations.Clear();
-
-            foreach (var dto in incoming)
-            {
-                if (existing.TryGetValue(dto.Language, out var translation))
-                {
-                    translation.Name = dto.Name;
-                    keyword.Translations.Add(translation);
-                }
-                else
-                {
-                    keyword.Translations.Add(
-                        new KeywordTranslation { Language = dto.Language, Name = dto.Name }
-                    );
-                }
-            }
         }
     }
 }
