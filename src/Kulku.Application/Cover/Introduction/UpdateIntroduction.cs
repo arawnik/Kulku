@@ -1,11 +1,10 @@
 using Kulku.Application.Cover.Introduction.Models;
 using Kulku.Application.Resources;
-using Kulku.Domain.Cover;
+using Kulku.Domain.Abstractions;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
-using DomainIntroduction = Kulku.Domain.Cover.Introduction;
 
 namespace Kulku.Application.Cover.Introduction;
 
@@ -52,42 +51,18 @@ public static class UpdateIntroduction
             introduction.SmallAvatarUrl = command.SmallAvatarUrl;
             introduction.PubDate = DateTime.SpecifyKind(command.PubDate, DateTimeKind.Utc);
 
-            MergeTranslations(introduction, command.Translations);
+            introduction.MergeTranslations(
+                command.Translations,
+                (dto, t) =>
+                {
+                    t.Title = dto.Title;
+                    t.Tagline = dto.Tagline;
+                    t.Content = dto.Content;
+                }
+            );
 
             await _unitOfWork.CompleteAsync(cancellationToken);
             return Result.Success();
-        }
-
-        private static void MergeTranslations(
-            DomainIntroduction introduction,
-            IReadOnlyList<IntroductionTranslationDto> incoming
-        )
-        {
-            var existing = introduction.Translations.ToDictionary(t => t.Language);
-            introduction.Translations.Clear();
-
-            foreach (var dto in incoming)
-            {
-                if (existing.TryGetValue(dto.Language, out var translation))
-                {
-                    translation.Title = dto.Title;
-                    translation.Tagline = dto.Tagline;
-                    translation.Content = dto.Content;
-                    introduction.Translations.Add(translation);
-                }
-                else
-                {
-                    introduction.Translations.Add(
-                        new IntroductionTranslation
-                        {
-                            Language = dto.Language,
-                            Title = dto.Title,
-                            Tagline = dto.Tagline,
-                            Content = dto.Content,
-                        }
-                    );
-                }
-            }
         }
     }
 }

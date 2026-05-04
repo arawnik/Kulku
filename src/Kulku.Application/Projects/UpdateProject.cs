@@ -1,5 +1,6 @@
 using Kulku.Application.Projects.Models;
 using Kulku.Application.Resources;
+using Kulku.Domain.Abstractions;
 using Kulku.Domain.Projects;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
@@ -59,43 +60,20 @@ public static class UpdateProject
             project.ImageUrl = command.ImageUrl;
             project.Order = command.Order;
 
-            MergeTranslations(project, command.Translations);
+            project.MergeTranslations(
+                command.Translations,
+                (dto, t) =>
+                {
+                    t.Name = dto.Name;
+                    t.Info = dto.Info;
+                    t.Description = dto.Description;
+                }
+            );
+
             SyncKeywords(project, command.KeywordIds);
 
             await _unitOfWork.CompleteAsync(cancellationToken);
             return Result.Success();
-        }
-
-        private static void MergeTranslations(
-            Project project,
-            IReadOnlyList<ProjectTranslationDto> incoming
-        )
-        {
-            var existing = project.Translations.ToDictionary(t => t.Language);
-            project.Translations.Clear();
-
-            foreach (var dto in incoming)
-            {
-                if (existing.TryGetValue(dto.Language, out var translation))
-                {
-                    translation.Name = dto.Name;
-                    translation.Info = dto.Info;
-                    translation.Description = dto.Description;
-                    project.Translations.Add(translation);
-                }
-                else
-                {
-                    project.Translations.Add(
-                        new ProjectTranslation
-                        {
-                            Language = dto.Language,
-                            Name = dto.Name,
-                            Info = dto.Info,
-                            Description = dto.Description,
-                        }
-                    );
-                }
-            }
         }
 
         private static void SyncKeywords(Project project, IReadOnlyList<Guid> keywordIds)

@@ -18,6 +18,6 @@ public class CompanyTranslationConfiguration : IEntityTypeConfiguration<CompanyT
         builder.Property(t => t.Language).IsRequired();
 
         // Indexing for performance
-        builder.HasIndex(t => new { t.Language, t.CompanyId }).IsUnique();
+        builder.HasIndex(t => new { t.CompanyId, t.Language }).IsUnique();
     }
 }

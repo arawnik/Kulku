@@ -1,11 +1,10 @@
 using Kulku.Application.Cover.Institution.Models;
 using Kulku.Application.Resources;
-using Kulku.Domain.Cover;
+using Kulku.Domain.Abstractions;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
-using DomainInstitution = Kulku.Domain.Cover.Institution;
 
 namespace Kulku.Application.Cover.Institution;
 
@@ -41,42 +40,18 @@ public static class UpdateInstitution
             if (institution is null)
                 return Error.NotFound(Strings.NotFound_Institution);
 
-            MergeTranslations(institution, command.Translations);
+            institution.MergeTranslations(
+                command.Translations,
+                (dto, t) =>
+                {
+                    t.Name = dto.Name;
+                    t.Department = dto.Department;
+                    t.Description = dto.Description;
+                }
+            );
 
             await _unitOfWork.CompleteAsync(cancellationToken);
             return Result.Success();
-        }
-
-        private static void MergeTranslations(
-            DomainInstitution institution,
-            IReadOnlyList<InstitutionTranslationDto> incoming
-        )
-        {
-            var existing = institution.Translations.ToDictionary(t => t.Language);
-            institution.Translations.Clear();
-
-            foreach (var dto in incoming)
-            {
-                if (existing.TryGetValue(dto.Language, out var translation))
-                {
-                    translation.Name = dto.Name;
-                    translation.Department = dto.Department;
-                    translation.Description = dto.Description;
-                    institution.Translations.Add(translation);
-                }
-                else
-                {
-                    institution.Translations.Add(
-                        new InstitutionTranslation
-                        {
-                            Language = dto.Language,
-                            Name = dto.Name,
-                            Department = dto.Department,
-                            Description = dto.Description,
-                        }
-                    );
-                }
-            }
         }
     }
 }

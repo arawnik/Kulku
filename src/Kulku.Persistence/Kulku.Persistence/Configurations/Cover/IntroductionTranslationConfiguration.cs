@@ -20,6 +20,6 @@ public class IntroductionTranslationConfiguration
         builder.Property(t => t.Language).IsRequired();
 
         // Indexing for performance
-        builder.HasIndex(t => new { t.Language, t.IntroductionId }).IsUnique();
+        builder.HasIndex(t => new { t.IntroductionId, t.Language }).IsUnique();
     }
 }

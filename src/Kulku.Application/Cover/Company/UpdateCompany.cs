@@ -1,11 +1,10 @@
 using Kulku.Application.Cover.Company.Models;
 using Kulku.Application.Resources;
-using Kulku.Domain.Cover;
+using Kulku.Domain.Abstractions;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
-using DomainCompany = Kulku.Domain.Cover.Company;
 
 namespace Kulku.Application.Cover.Company;
 
@@ -44,40 +43,17 @@ public static class UpdateCompany
             company.Website = command.Website;
             company.Region = command.Region;
 
-            MergeTranslations(company, command.Translations);
+            company.MergeTranslations(
+                command.Translations,
+                (dto, t) =>
+                {
+                    t.Name = dto.Name;
+                    t.Description = dto.Description;
+                }
+            );
 
             await _unitOfWork.CompleteAsync(cancellationToken);
             return Result.Success();
-        }
-
-        private static void MergeTranslations(
-            DomainCompany company,
-            IReadOnlyList<CompanyTranslationDto> incoming
-        )
-        {
-            var existing = company.Translations.ToDictionary(t => t.Language);
-            company.Translations.Clear();
-
-            foreach (var dto in incoming)
-            {
-                if (existing.TryGetValue(dto.Language, out var translation))
-                {
-                    translation.Name = dto.Name;
-                    translation.Description = dto.Description;
-                    company.Translations.Add(translation);
-                }
-                else
-                {
-                    company.Translations.Add(
-                        new CompanyTranslation
-                        {
-                            Language = dto.Language,
-                            Name = dto.Name,
-                            Description = dto.Description,
-                        }
-                    );
-                }
-            }
         }
     }
 }

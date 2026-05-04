@@ -1,11 +1,10 @@
 using Kulku.Application.Cover.Experience.Models;
 using Kulku.Application.Resources;
-using Kulku.Domain.Cover;
+using Kulku.Domain.Abstractions;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
-using DomainExperience = Kulku.Domain.Cover.Experience;
 
 namespace Kulku.Application.Cover.Experience;
 
@@ -57,40 +56,17 @@ public static class UpdateExperience
             experience.StartDate = command.StartDate;
             experience.EndDate = command.EndDate;
 
-            MergeTranslations(experience, command.Translations);
+            experience.MergeTranslations(
+                command.Translations,
+                (dto, t) =>
+                {
+                    t.Title = dto.Title;
+                    t.Description = dto.Description;
+                }
+            );
 
             await _unitOfWork.CompleteAsync(cancellationToken);
             return Result.Success();
-        }
-
-        private static void MergeTranslations(
-            DomainExperience experience,
-            IReadOnlyList<ExperienceTranslationDto> incoming
-        )
-        {
-            var existing = experience.Translations.ToDictionary(t => t.Language);
-            experience.Translations.Clear();
-
-            foreach (var dto in incoming)
-            {
-                if (existing.TryGetValue(dto.Language, out var translation))
-                {
-                    translation.Title = dto.Title;
-                    translation.Description = dto.Description;
-                    experience.Translations.Add(translation);
-                }
-                else
-                {
-                    experience.Translations.Add(
-                        new ExperienceTranslation
-                        {
-                            Language = dto.Language,
-                            Title = dto.Title,
-                            Description = dto.Description,
-                        }
-                    );
-                }
-            }
         }
     }
 }

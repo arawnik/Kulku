@@ -6,4 +6,4 @@ namespace Kulku.Domain.Repositories;
 /// <summary>
 /// Repository for managing <see cref="Project"/> entities.
 /// </summary>
-public interface IProjectRepository : IEntityRepository<Project> { }
+public interface IProjectRepository : IEntityRepository<Project>;

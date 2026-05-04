@@ -286,6 +286,15 @@ namespace Kulku.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CAPTCHA verification is required..
+        /// </summary>
+        public static string Validation_CaptchaTokenRequired {
+            get {
+                return ResourceManager.GetString("Validation_CaptchaTokenRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Category name is required..
         /// </summary>
         public static string Validation_CategoryNameRequired {
@@ -295,11 +304,47 @@ namespace Kulku.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email is required..
+        /// </summary>
+        public static string Validation_ContactEmailRequired {
+            get {
+                return ResourceManager.GetString("Validation_ContactEmailRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to At least one identifying field (name, email, or LinkedIn) is required..
         /// </summary>
         public static string Validation_ContactIdentifyingField {
             get {
                 return ResourceManager.GetString("Validation_ContactIdentifyingField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Message is required..
+        /// </summary>
+        public static string Validation_ContactMessageRequired {
+            get {
+                return ResourceManager.GetString("Validation_ContactMessageRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name is required..
+        /// </summary>
+        public static string Validation_ContactNameRequired {
+            get {
+                return ResourceManager.GetString("Validation_ContactNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subject is required..
+        /// </summary>
+        public static string Validation_ContactSubjectRequired {
+            get {
+                return ResourceManager.GetString("Validation_ContactSubjectRequired", resourceCulture);
             }
         }
         

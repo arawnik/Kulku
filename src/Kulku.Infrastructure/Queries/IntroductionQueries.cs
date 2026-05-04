@@ -21,7 +21,8 @@ public class IntroductionQueries(AppDbContext context) : IIntroductionQueries
     )
     {
         var result = await _context
-            .Introductions.Where(i => i.PubDate <= DateTime.UtcNow)
+            .Introductions.AsNoTracking()
+            .Where(i => i.PubDate <= DateTime.UtcNow)
             .OrderByDescending(i => i.PubDate)
             .LeftJoin(
                 _context.IntroductionTranslations.Where(t => t.Language == language),
