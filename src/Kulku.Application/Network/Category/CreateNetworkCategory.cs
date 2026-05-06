@@ -1,6 +1,7 @@
 using Kulku.Domain.Network;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 
@@ -13,6 +14,12 @@ public static class CreateNetworkCategory
 {
     public sealed record Command(string Name, string? ColorToken) : ICommand<Guid>;
 
+    internal sealed class Validator : ICommandValidator<Command>
+    {
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken cancellationToken) =>
+            Task.FromResult(NetworkCategoryUpsertRules.Validate(command.Name));
+    }
+
     internal sealed class Handler(
         INetworkCategoryRepository categoryRepository,
         IUnitOfWork unitOfWork
@@ -23,10 +30,6 @@ public static class CreateNetworkCategory
 
         public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errors = NetworkCategoryCommandValidator.Validate(command.Name);
-            if (errors.Length > 0)
-                return ValidationResult<Guid>.WithErrors(errors);
-
             var category = new NetworkCategory
             {
                 Name = command.Name.Trim(),

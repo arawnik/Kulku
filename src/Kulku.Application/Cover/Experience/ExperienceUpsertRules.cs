@@ -1,19 +1,19 @@
 using System.Globalization;
-using Kulku.Application.Cover.Introduction.Models;
+using Kulku.Application.Cover.Experience.Models;
 using Kulku.Application.Resources;
 using SoulNETLib.Clean.Domain;
 
-namespace Kulku.Application.Cover.Introduction;
+namespace Kulku.Application.Cover.Experience;
 
 /// <summary>
-/// Shared validation logic for introduction create and update commands.
+/// Shared validation rules for experience create and update commands.
 /// </summary>
-internal static class IntroductionCommandValidator
+internal static class ExperienceUpsertRules
 {
     public static Error[] Validate(
-        string? avatarUrl,
-        string? smallAvatarUrl,
-        IReadOnlyList<IntroductionTranslationDto> translations
+        DateOnly startDate,
+        DateOnly? endDate,
+        IReadOnlyList<ExperienceTranslationDto> translations
     )
     {
         List<Error> errors = [];
@@ -23,18 +23,8 @@ internal static class IntroductionCommandValidator
                 Error.Validation(nameof(translations), Strings.Validation_TranslationsRequired)
             );
 
-        if (string.IsNullOrWhiteSpace(avatarUrl))
-            errors.Add(
-                Error.Validation(nameof(avatarUrl), Strings.Validation_AvatarFilenameRequired)
-            );
-
-        if (string.IsNullOrWhiteSpace(smallAvatarUrl))
-            errors.Add(
-                Error.Validation(
-                    nameof(smallAvatarUrl),
-                    Strings.Validation_SmallAvatarFilenameRequired
-                )
-            );
+        if (endDate.HasValue && endDate < startDate)
+            errors.Add(Error.Validation(nameof(endDate), Strings.Validation_EndDateBeforeStart));
 
         for (var i = 0; i < translations.Count; i++)
         {

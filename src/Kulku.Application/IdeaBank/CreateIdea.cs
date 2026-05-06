@@ -1,6 +1,7 @@
 using Kulku.Domain.Ideas;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 
@@ -22,6 +23,19 @@ public static class CreateIdea
         IReadOnlyList<Guid> KeywordIds
     ) : ICommand<Guid>;
 
+    internal sealed class Validator : ICommandValidator<Command>
+    {
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken cancellationToken) =>
+            Task.FromResult(
+                IdeaUpsertRules.Validate(
+                    command.Title,
+                    command.DomainId,
+                    command.StatusId,
+                    command.PriorityId
+                )
+            );
+    }
+
     internal sealed class Handler(IIdeaRepository ideaRepository, IUnitOfWork unitOfWork)
         : ICommandHandler<Command, Guid>
     {
@@ -30,15 +44,6 @@ public static class CreateIdea
 
         public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errors = IdeaCommandValidator.Validate(
-                command.Title,
-                command.DomainId,
-                command.StatusId,
-                command.PriorityId
-            );
-            if (errors.Length > 0)
-                return ValidationResult<Guid>.WithErrors(errors);
-
             var idea = new Idea
             {
                 Title = command.Title,

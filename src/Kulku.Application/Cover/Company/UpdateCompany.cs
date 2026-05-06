@@ -3,6 +3,7 @@ using Kulku.Application.Resources;
 using Kulku.Domain.Abstractions;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 
@@ -20,6 +21,12 @@ public static class UpdateCompany
         IReadOnlyList<CompanyTranslationDto> Translations
     ) : ICommand;
 
+    internal sealed class Validator : ICommandValidator<Command>
+    {
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken cancellationToken) =>
+            Task.FromResult(CompanyUpsertRules.Validate(command.Translations));
+    }
+
     internal sealed class Handler(ICompanyRepository companyRepository, IUnitOfWork unitOfWork)
         : ICommandHandler<Command>
     {
@@ -28,10 +35,6 @@ public static class UpdateCompany
 
         public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errors = CompanyCommandValidator.Validate(command.Translations);
-            if (errors.Length > 0)
-                return ValidationResult.WithErrors(errors);
-
             var company = await _companyRepository.GetByIdAsync(
                 command.CompanyId,
                 cancellationToken

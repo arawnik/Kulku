@@ -4,9 +4,9 @@ using SoulNETLib.Clean.Domain;
 namespace Kulku.Application.Network.Interaction;
 
 /// <summary>
-/// Shared validation logic for network interaction commands.
+/// Shared validation rules for network interaction create and update commands.
 /// </summary>
-internal static class NetworkInteractionCommandValidator
+internal static class NetworkInteractionUpsertRules
 {
     public static Error[] Validate(string summary, bool isWarmIntro, string? referredByName)
     {

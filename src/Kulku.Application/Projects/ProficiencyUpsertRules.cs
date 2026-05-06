@@ -1,18 +1,20 @@
 using System.Globalization;
-using Kulku.Application.Cover.Institution.Models;
 using Kulku.Application.Resources;
 using SoulNETLib.Clean.Domain;
 
-namespace Kulku.Application.Cover.Institution;
+namespace Kulku.Application.Projects;
 
 /// <summary>
-/// Shared validation logic for institution create and update commands.
+/// Shared validation rules for proficiency create and update commands.
 /// </summary>
-internal static class InstitutionCommandValidator
+internal static class ProficiencyUpsertRules
 {
-    public static Error[] Validate(IReadOnlyList<InstitutionTranslationDto> translations)
+    public static Error[] Validate(int scale, IReadOnlyList<ProficiencyTranslationDto> translations)
     {
         List<Error> errors = [];
+
+        if (scale < 0 || scale > 100)
+            errors.Add(Error.Validation(nameof(scale), Strings.Validation_ScaleRange));
 
         if (translations.Count == 0)
             errors.Add(

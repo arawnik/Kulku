@@ -2,6 +2,7 @@ using Kulku.Application.Projects.Models;
 using Kulku.Domain.Projects;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 
@@ -28,6 +29,14 @@ public static class CreateProject
         IReadOnlyList<Guid> KeywordIds
     ) : ICommand<Guid>;
 
+    internal sealed class Validator : ICommandValidator<Command>
+    {
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken cancellationToken) =>
+            Task.FromResult(
+                ProjectUpsertRules.Validate(command.Url, command.ImageUrl, command.Translations)
+            );
+    }
+
     internal sealed class Handler(IProjectRepository projectRepository, IUnitOfWork unitOfWork)
         : ICommandHandler<Command, Guid>
     {
@@ -36,14 +45,6 @@ public static class CreateProject
 
         public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errors = ProjectCommandValidator.Validate(
-                command.Url,
-                command.ImageUrl,
-                command.Translations
-            );
-            if (errors.Length > 0)
-                return ValidationResult<Guid>.WithErrors(errors);
-
             var project = new Project
             {
                 Url = command.Url,

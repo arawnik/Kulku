@@ -132,7 +132,7 @@ The architecture uses two parallel port families for data access, one for each s
 - Keep methods small; extract private helpers where it improves readability.
 - No “magic strings” for persisted codes—use constants or converters.
 - Use XML doc comments on public APIs and cross-cutting abstractions.
-- Validate input at the edges (API/UI). Do not scatter ad-hoc validation deep in infrastructure.
+- Validate input via pipeline behaviors (command validators). Do not scatter ad-hoc validation deep in infrastructure or handlers.
 
 ## When generating new code, Copilot must
 
@@ -203,16 +203,93 @@ Reusable components live in `Components/Shared/` and are globally available via 
 
 ## DI registration discipline
 
-- **No assembly scanning** — every handler and port implementation is explicitly registered.
-- Command/query handlers: `ApplicationDependencyInjection.cs` (`AddApplication()`).
+- **No assembly scanning** — every handler, validator, and port implementation is explicitly registered.
+- `ApplicationDependencyInjection` is a **partial class** split by feature:
+  - `ApplicationDependencyInjection.cs` — pipeline behaviors + calls to feature methods.
+  - `ApplicationDependencyInjection.Projects.cs` — keywords, proficiencies, projects.
+  - `ApplicationDependencyInjection.Cover.cs` — introduction, experience, education, company, institution.
+  - `ApplicationDependencyInjection.Contacts.cs` — contact requests.
+  - `ApplicationDependencyInjection.IdeaBank.cs` — ideas, notes, tags.
+  - `ApplicationDependencyInjection.Network.cs` — categories, companies, contacts, interactions.
+- Each feature file groups: validators → query handlers → command handlers.
 - Query implementations and repositories: `InfrastructureDependencyInjection.cs` (`AddInfrastructure()`).
-- When adding a new use case, always update **both** files.
-- Group registrations by feature (experience, education, projects, etc.) for readability.
+- When adding a new use case, update the relevant `ApplicationDependencyInjection.*.cs` file and `InfrastructureDependencyInjection.cs`.
 
-## Command validation pattern
+## Pipeline behaviors and command validation
 
-- Shared validation logic lives in a `*CommandValidator` static class (e.g. `ExperienceCommandValidator`) with a `Validate()` method.
-- Both Create and Update handlers call the same validator to avoid duplication.
+The project uses `SoulNETLib.Clean.Application` pipeline behaviors for cross-cutting concerns. Validation is handled automatically by `ValidationBehavior<>` — **handlers must not contain inline validation logic**.
+
+### Pipeline registration
+
+```csharp
+// In ApplicationDependencyInjection.cs (main file)
+services.AddScoped(typeof(IPipelineBehavior<>), typeof(ValidationBehavior<>));
+services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+```
+
+### Validator structure (paired commands with shared rules)
+
+For commands that share validation logic between Create and Update:
+
+- **`*UpsertRules.cs`** — `internal static` class with a `public static Error[] Validate(...)` method containing the shared rules.
+- **Nested `Validator` class** inside each command file — implements `ICommandValidator<Command>` and delegates to `*UpsertRules.Validate(...)`.
+
+```csharp
+// EducationUpsertRules.cs
+internal static class EducationUpsertRules
+{
+    public static Error[] Validate(DateOnly startDate, DateOnly? endDate, IReadOnlyList<EducationTranslationDto> translations)
+    { /* shared validation rules */ }
+}
+
+// CreateEducation.cs
+public static class CreateEducation
+{
+    public sealed record Command(...) : ICommand<Guid>;
+
+    internal sealed class Validator : ICommandValidator<Command>
+    {
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken ct)
+            => Task.FromResult(EducationUpsertRules.Validate(command.StartDate, command.EndDate, command.Translations));
+    }
+
+    internal sealed class Handler(...) : ICommandHandler<Command, Guid> { /* business logic only */ }
+}
+```
+
+### Validator structure (single command, no shared rules)
+
+For commands that are the sole consumer of their validation logic, the `Validate` method lives as a `private static` method on the outer use-case class (at the bottom of the file):
+
+```csharp
+public static class SubmitContactRequest
+{
+    public sealed record Command(ContactRequestDto Request) : ICommand;
+
+    internal sealed class Validator : ICommandValidator<Command>
+    {
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken ct)
+            => Task.FromResult(Validate(command.Request.Name, command.Request.Email, ...));
+    }
+
+    internal sealed class Handler(...) : ICommandHandler<Command> { /* business logic only */ }
+
+    private static Error[] Validate(string? name, string? email, ...) { /* rules */ }
+}
+```
+
+### DI registration for validators
+
+```csharp
+services.AddCommandValidator<CreateEducation.Command, CreateEducation.Validator>();
+services.AddCommandValidator<UpdateEducation.Command, UpdateEducation.Validator>();
+```
+
+### Key rules
+
+- **Handlers must not validate** — `ValidationBehavior<>` runs all registered `ICommandValidator<T>` instances before the handler executes. If validation fails, the pipeline returns `ValidationResult.WithErrors(errors)` without calling the handler.
+- **Handlers retain non-validation concerns** — not-found checks, business rules, persistence, etc. remain in the handler.
 - Returns `Error[]` — empty array means valid.
 - Use `Error.Validation(fieldPath, message)` where `fieldPath` matches the form model structure (e.g. `"translations[0].Title"`).
 - `nameof()` produces camelCase field names — this is intentional. The `ServerValidation.ToFieldIdentifier` method resolves them case-insensitively via `BindingFlags.IgnoreCase`.
+- Multiple validators per command are supported — all are executed and errors are aggregated.

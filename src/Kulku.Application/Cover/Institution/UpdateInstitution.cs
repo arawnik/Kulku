@@ -3,6 +3,7 @@ using Kulku.Application.Resources;
 using Kulku.Domain.Abstractions;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 
@@ -18,6 +19,12 @@ public static class UpdateInstitution
         IReadOnlyList<InstitutionTranslationDto> Translations
     ) : ICommand;
 
+    internal sealed class Validator : ICommandValidator<Command>
+    {
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken cancellationToken) =>
+            Task.FromResult(InstitutionUpsertRules.Validate(command.Translations));
+    }
+
     internal sealed class Handler(
         IInstitutionRepository institutionRepository,
         IUnitOfWork unitOfWork
@@ -28,10 +35,6 @@ public static class UpdateInstitution
 
         public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errors = InstitutionCommandValidator.Validate(command.Translations);
-            if (errors.Length > 0)
-                return ValidationResult.WithErrors(errors);
-
             var institution = await _institutionRepository.GetByIdAsync(
                 command.InstitutionId,
                 cancellationToken

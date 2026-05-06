@@ -2,6 +2,7 @@ using Kulku.Application.Resources;
 using Kulku.Domain.Ideas;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 
@@ -14,16 +15,12 @@ public static class AddIdeaNote
 {
     public sealed record Command(Guid IdeaId, string Content) : ICommand<Guid>;
 
-    internal sealed class Handler(IIdeaRepository ideaRepository, IUnitOfWork unitOfWork)
-        : ICommandHandler<Command, Guid>
+    internal sealed class Validator : ICommandValidator<Command>
     {
-        private readonly IIdeaRepository _ideaRepository = ideaRepository;
-        private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
-        public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(command.Content))
-                return ValidationResult<Guid>.WithErrors(
+                return Task.FromResult<Error[]>(
                     [
                         Error.Validation(
                             nameof(command.Content),
@@ -32,6 +29,18 @@ public static class AddIdeaNote
                     ]
                 );
 
+            return Task.FromResult(Array.Empty<Error>());
+        }
+    }
+
+    internal sealed class Handler(IIdeaRepository ideaRepository, IUnitOfWork unitOfWork)
+        : ICommandHandler<Command, Guid>
+    {
+        private readonly IIdeaRepository _ideaRepository = ideaRepository;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+
+        public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
+        {
             var idea = await _ideaRepository.GetByIdAsync(command.IdeaId, cancellationToken);
             if (idea is null)
                 return Error.NotFound(Strings.NotFound_Idea);

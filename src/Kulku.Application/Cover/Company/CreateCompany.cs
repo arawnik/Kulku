@@ -2,6 +2,7 @@ using Kulku.Application.Cover.Company.Models;
 using Kulku.Domain.Cover;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 using DomainCompany = Kulku.Domain.Cover.Company;
@@ -19,6 +20,12 @@ public static class CreateCompany
         IReadOnlyList<CompanyTranslationDto> Translations
     ) : ICommand<Guid>;
 
+    internal sealed class Validator : ICommandValidator<Command>
+    {
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken cancellationToken) =>
+            Task.FromResult(CompanyUpsertRules.Validate(command.Translations));
+    }
+
     internal sealed class Handler(ICompanyRepository companyRepository, IUnitOfWork unitOfWork)
         : ICommandHandler<Command, Guid>
     {
@@ -27,10 +34,6 @@ public static class CreateCompany
 
         public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errors = CompanyCommandValidator.Validate(command.Translations);
-            if (errors.Length > 0)
-                return ValidationResult<Guid>.WithErrors(errors);
-
             var company = new DomainCompany
             {
                 Website = command.Website,

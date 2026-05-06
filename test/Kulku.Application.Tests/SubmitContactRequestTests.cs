@@ -90,20 +90,18 @@ public class SubmitContactRequestTests
     }
 
     [Fact]
-    public async Task HandleReturnsValidationErrorWhenCaptchaTokenIsNull()
+    public async Task ValidatorReturnsErrorsWhenCaptchaTokenIsNull()
     {
         // Arrange
-        var (handler, _, _, _) = CreateHandler(true);
+        var validator = new SubmitContactRequest.Validator();
         var dto = CreateSampleDto(null);
+        var command = new SubmitContactRequest.Command(dto);
 
         // Act
-        var result = await handler.Handle(
-            new SubmitContactRequest.Command(dto),
-            TestContext.Current.CancellationToken
-        );
+        var errors = await validator.ValidateAsync(command, TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.IsAssignableFrom<IValidationResult>(result);
+        Assert.NotEmpty(errors);
+        Assert.Contains(errors, e => e.Field == "captchaToken");
     }
 }

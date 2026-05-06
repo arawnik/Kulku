@@ -4,9 +4,9 @@ using SoulNETLib.Clean.Domain;
 namespace Kulku.Application.Network.Contact;
 
 /// <summary>
-/// Shared validation logic for network contact commands.
+/// Shared validation rules for network contact create and update commands.
 /// </summary>
-internal static class NetworkContactCommandValidator
+internal static class NetworkContactUpsertRules
 {
     public static Error[] Validate(string? personName, string? email, string? linkedInUrl)
     {

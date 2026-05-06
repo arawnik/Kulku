@@ -1,18 +1,27 @@
 using System.Globalization;
-using Kulku.Application.Cover.Company.Models;
 using Kulku.Application.Resources;
+using Kulku.Domain.Projects;
 using SoulNETLib.Clean.Domain;
 
-namespace Kulku.Application.Cover.Company;
+namespace Kulku.Application.Projects;
 
 /// <summary>
-/// Shared validation logic for company create and update commands.
+/// Shared validation rules for keyword create and update commands.
 /// </summary>
-internal static class CompanyCommandValidator
+internal static class KeywordUpsertRules
 {
-    public static Error[] Validate(IReadOnlyList<CompanyTranslationDto> translations)
+    public static Error[] Validate(
+        KeywordType type,
+        Guid proficiencyId,
+        IReadOnlyList<KeywordTranslationDto> translations
+    )
     {
         List<Error> errors = [];
+
+        if (proficiencyId == Guid.Empty)
+            errors.Add(
+                Error.Validation(nameof(proficiencyId), Strings.Validation_ProficiencyRequired)
+            );
 
         if (translations.Count == 0)
             errors.Add(

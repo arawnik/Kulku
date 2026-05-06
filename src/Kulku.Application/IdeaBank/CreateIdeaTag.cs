@@ -1,6 +1,7 @@
 using Kulku.Domain.Ideas;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 
@@ -13,6 +14,12 @@ public static class CreateIdeaTag
 {
     public sealed record Command(string Name, string? ColorHex) : ICommand<Guid>;
 
+    internal sealed class Validator : ICommandValidator<Command>
+    {
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken cancellationToken) =>
+            Task.FromResult(IdeaTagUpsertRules.Validate(command.Name));
+    }
+
     internal sealed class Handler(IIdeaTagRepository tagRepository, IUnitOfWork unitOfWork)
         : ICommandHandler<Command, Guid>
     {
@@ -21,10 +28,6 @@ public static class CreateIdeaTag
 
         public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errors = IdeaTagCommandValidator.Validate(command.Name);
-            if (errors.Length > 0)
-                return ValidationResult<Guid>.WithErrors(errors);
-
             var tag = new IdeaTag { Name = command.Name, ColorHex = command.ColorHex };
 
             _tagRepository.Add(tag);

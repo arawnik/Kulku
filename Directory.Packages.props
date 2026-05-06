@@ -19,9 +19,9 @@
     <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.7" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
-    <PackageVersion Include="SoulNETLib.Clean.Application" Version="0.3.0" />
-    <PackageVersion Include="SoulNETLib.Clean.Domain" Version="0.3.0" />
-    <PackageVersion Include="SoulNETLib.Common" Version="0.3.0" />
+    <PackageVersion Include="SoulNETLib.Clean.Application" Version="0.4.1" />
+    <PackageVersion Include="SoulNETLib.Clean.Domain" Version="0.4.1" />
+    <PackageVersion Include="SoulNETLib.Common" Version="0.4.1" />
     <!-- Test-only packages -->
     <PackageVersion Include="coverlet.collector" Version="10.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
