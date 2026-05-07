@@ -1,6 +1,7 @@
 using Kulku.Domain.Network;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 
@@ -25,6 +26,18 @@ public static class CreateNetworkContact
         string? Title
     ) : ICommand<Guid>;
 
+    internal sealed class Validator : ICommandValidator<Command>
+    {
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken cancellationToken) =>
+            Task.FromResult(
+                NetworkContactUpsertRules.Validate(
+                    command.PersonName,
+                    command.Email,
+                    command.LinkedInUrl
+                )
+            );
+    }
+
     internal sealed class Handler(
         INetworkContactRepository contactRepository,
         IUnitOfWork unitOfWork
@@ -35,14 +48,6 @@ public static class CreateNetworkContact
 
         public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errors = NetworkContactCommandValidator.Validate(
-                command.PersonName,
-                command.Email,
-                command.LinkedInUrl
-            );
-            if (errors.Length > 0)
-                return ValidationResult<Guid>.WithErrors(errors);
-
             var contact = new NetworkContact
             {
                 CompanyId = command.CompanyId,

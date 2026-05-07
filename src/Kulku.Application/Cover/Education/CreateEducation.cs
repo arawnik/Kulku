@@ -1,8 +1,8 @@
 using Kulku.Application.Cover.Education.Models;
-using Kulku.Domain;
 using Kulku.Domain.Cover;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 using DomainEducation = Kulku.Domain.Cover.Education;
@@ -28,6 +28,18 @@ public static class CreateEducation
         IReadOnlyList<EducationTranslationDto> Translations
     ) : ICommand<Guid>;
 
+    internal sealed class Validator : ICommandValidator<Command>
+    {
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken cancellationToken) =>
+            Task.FromResult(
+                EducationUpsertRules.Validate(
+                    command.StartDate,
+                    command.EndDate,
+                    command.Translations
+                )
+            );
+    }
+
     internal sealed class Handler(IEducationRepository educationRepository, IUnitOfWork unitOfWork)
         : ICommandHandler<Command, Guid>
     {
@@ -36,14 +48,6 @@ public static class CreateEducation
 
         public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errors = EducationCommandValidator.Validate(
-                command.StartDate,
-                command.EndDate,
-                command.Translations
-            );
-            if (errors.Length > 0)
-                return ValidationResult<Guid>.WithErrors(errors);
-
             var education = new DomainEducation
             {
                 InstitutionId = command.InstitutionId,

@@ -2,6 +2,7 @@ using Kulku.Application.Cover.Experience.Models;
 using Kulku.Domain.Cover;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 using DomainExperience = Kulku.Domain.Cover.Experience;
@@ -27,6 +28,18 @@ public static class CreateExperience
         IReadOnlyList<ExperienceTranslationDto> Translations
     ) : ICommand<Guid>;
 
+    internal sealed class Validator : ICommandValidator<Command>
+    {
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken cancellationToken) =>
+            Task.FromResult(
+                ExperienceUpsertRules.Validate(
+                    command.StartDate,
+                    command.EndDate,
+                    command.Translations
+                )
+            );
+    }
+
     internal sealed class Handler(
         IExperienceRepository experienceRepository,
         IUnitOfWork unitOfWork
@@ -37,14 +50,6 @@ public static class CreateExperience
 
         public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errors = ExperienceCommandValidator.Validate(
-                command.StartDate,
-                command.EndDate,
-                command.Translations
-            );
-            if (errors.Length > 0)
-                return ValidationResult<Guid>.WithErrors(errors);
-
             var experience = new DomainExperience
             {
                 CompanyId = command.CompanyId,

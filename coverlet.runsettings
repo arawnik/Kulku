@@ -7,7 +7,7 @@
           <Format>cobertura</Format>
           <CollectCoverage>true</CollectCoverage>
           <ExcludeByFile>**/Migrations/**/*.cs,**/*Designer.cs,**/*Generated*.cs</ExcludeByFile>
-          <Exclude>[xunit.*]*</Exclude>
+          <Exclude>[xunit.*]*,[*Tests]*</Exclude>
         </Configuration>
       </DataCollector>
     </DataCollectors>

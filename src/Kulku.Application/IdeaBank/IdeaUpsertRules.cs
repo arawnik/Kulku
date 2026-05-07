@@ -4,9 +4,9 @@ using SoulNETLib.Clean.Domain;
 namespace Kulku.Application.IdeaBank;
 
 /// <summary>
-/// Shared validation logic for idea create and update commands.
+/// Shared validation rules for idea create and update commands.
 /// </summary>
-internal static class IdeaCommandValidator
+internal static class IdeaUpsertRules
 {
     public static Error[] Validate(string title, Guid domainId, Guid statusId, Guid priorityId)
     {

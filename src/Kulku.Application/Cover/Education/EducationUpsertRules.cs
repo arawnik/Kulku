@@ -6,14 +6,10 @@ using SoulNETLib.Clean.Domain;
 namespace Kulku.Application.Cover.Education;
 
 /// <summary>
-/// Shared validation logic for education create and update commands.
+/// Shared validation rules for education create and update commands.
 /// </summary>
-internal static class EducationCommandValidator
+internal static class EducationUpsertRules
 {
-    /// <summary>
-    /// Validates the common fields shared by create and update education commands.
-    /// Returns an empty array when the input is valid.
-    /// </summary>
     public static Error[] Validate(
         DateOnly startDate,
         DateOnly? endDate,

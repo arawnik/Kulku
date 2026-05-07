@@ -3,6 +3,7 @@ using Kulku.Domain.Abstractions;
 using Kulku.Domain.Projects;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 
@@ -22,6 +23,18 @@ public static class UpdateKeyword
         IReadOnlyList<KeywordTranslationDto> Translations
     ) : ICommand;
 
+    internal sealed class Validator : ICommandValidator<Command>
+    {
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken cancellationToken) =>
+            Task.FromResult(
+                KeywordUpsertRules.Validate(
+                    command.Type,
+                    command.ProficiencyId,
+                    command.Translations
+                )
+            );
+    }
+
     internal sealed class Handler(IKeywordRepository keywordRepository, IUnitOfWork unitOfWork)
         : ICommandHandler<Command>
     {
@@ -30,14 +43,6 @@ public static class UpdateKeyword
 
         public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errors = KeywordCommandValidator.Validate(
-                command.Type,
-                command.ProficiencyId,
-                command.Translations
-            );
-            if (errors.Length > 0)
-                return ValidationResult.WithErrors(errors);
-
             var keyword = await _keywordRepository.GetByIdAsync(
                 command.KeywordId,
                 cancellationToken

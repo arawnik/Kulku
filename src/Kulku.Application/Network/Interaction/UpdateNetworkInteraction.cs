@@ -2,6 +2,7 @@ using Kulku.Application.Resources;
 using Kulku.Domain.Network;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 
@@ -26,6 +27,18 @@ public static class UpdateNetworkInteraction
         DateTime? NextActionDue
     ) : ICommand;
 
+    internal sealed class Validator : ICommandValidator<Command>
+    {
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken cancellationToken) =>
+            Task.FromResult(
+                NetworkInteractionUpsertRules.Validate(
+                    command.Summary,
+                    command.IsWarmIntro,
+                    command.ReferredByName
+                )
+            );
+    }
+
     internal sealed class Handler(
         INetworkInteractionRepository interactionRepository,
         IUnitOfWork unitOfWork
@@ -37,14 +50,6 @@ public static class UpdateNetworkInteraction
 
         public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errors = NetworkInteractionCommandValidator.Validate(
-                command.Summary,
-                command.IsWarmIntro,
-                command.ReferredByName
-            );
-            if (errors.Length > 0)
-                return ValidationResult.WithErrors(errors);
-
             var interaction = await _interactionRepository.GetByIdAsync(
                 command.InteractionId,
                 cancellationToken

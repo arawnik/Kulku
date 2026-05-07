@@ -1,27 +1,18 @@
 using System.Globalization;
+using Kulku.Application.Cover.Institution.Models;
 using Kulku.Application.Resources;
-using Kulku.Domain.Projects;
 using SoulNETLib.Clean.Domain;
 
-namespace Kulku.Application.Projects;
+namespace Kulku.Application.Cover.Institution;
 
 /// <summary>
-/// Shared validation logic for keyword create and update commands.
+/// Shared validation rules for institution create and update commands.
 /// </summary>
-internal static class KeywordCommandValidator
+internal static class InstitutionUpsertRules
 {
-    public static Error[] Validate(
-        KeywordType type,
-        Guid proficiencyId,
-        IReadOnlyList<KeywordTranslationDto> translations
-    )
+    public static Error[] Validate(IReadOnlyList<InstitutionTranslationDto> translations)
     {
         List<Error> errors = [];
-
-        if (proficiencyId == Guid.Empty)
-            errors.Add(
-                Error.Validation(nameof(proficiencyId), Strings.Validation_ProficiencyRequired)
-            );
 
         if (translations.Count == 0)
             errors.Add(

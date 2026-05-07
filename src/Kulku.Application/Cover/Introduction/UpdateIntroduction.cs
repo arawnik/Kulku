@@ -3,6 +3,7 @@ using Kulku.Application.Resources;
 using Kulku.Domain.Abstractions;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 
@@ -21,6 +22,18 @@ public static class UpdateIntroduction
         IReadOnlyList<IntroductionTranslationDto> Translations
     ) : ICommand;
 
+    internal sealed class Validator : ICommandValidator<Command>
+    {
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken cancellationToken) =>
+            Task.FromResult(
+                IntroductionUpsertRules.Validate(
+                    command.AvatarUrl,
+                    command.SmallAvatarUrl,
+                    command.Translations
+                )
+            );
+    }
+
     internal sealed class Handler(
         IIntroductionRepository introductionRepository,
         IUnitOfWork unitOfWork
@@ -31,14 +44,6 @@ public static class UpdateIntroduction
 
         public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errors = IntroductionCommandValidator.Validate(
-                command.AvatarUrl,
-                command.SmallAvatarUrl,
-                command.Translations
-            );
-            if (errors.Length > 0)
-                return ValidationResult.WithErrors(errors);
-
             var introduction = await _introductionRepository.GetByIdAsync(
                 command.IntroductionId,
                 cancellationToken

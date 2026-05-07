@@ -1,6 +1,7 @@
 using Kulku.Domain.Projects;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 
@@ -17,6 +18,12 @@ public static class CreateProficiency
         IReadOnlyList<ProficiencyTranslationDto> Translations
     ) : ICommand<Guid>;
 
+    internal sealed class Validator : ICommandValidator<Command>
+    {
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken cancellationToken) =>
+            Task.FromResult(ProficiencyUpsertRules.Validate(command.Scale, command.Translations));
+    }
+
     internal sealed class Handler(
         IProficiencyRepository proficiencyRepository,
         IUnitOfWork unitOfWork
@@ -27,10 +34,6 @@ public static class CreateProficiency
 
         public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errors = ProficiencyCommandValidator.Validate(command.Scale, command.Translations);
-            if (errors.Length > 0)
-                return ValidationResult<Guid>.WithErrors(errors);
-
             var proficiency = new Proficiency
             {
                 Scale = command.Scale,

@@ -1,6 +1,7 @@
 using Kulku.Domain.Network;
 using Kulku.Domain.Repositories;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
+using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
 
@@ -25,6 +26,18 @@ public static class CreateNetworkInteraction
         DateTime? NextActionDue
     ) : ICommand<Guid>;
 
+    internal sealed class Validator : ICommandValidator<Command>
+    {
+        public Task<Error[]> ValidateAsync(Command command, CancellationToken cancellationToken) =>
+            Task.FromResult(
+                NetworkInteractionUpsertRules.Validate(
+                    command.Summary,
+                    command.IsWarmIntro,
+                    command.ReferredByName
+                )
+            );
+    }
+
     internal sealed class Handler(
         INetworkInteractionRepository interactionRepository,
         IUnitOfWork unitOfWork
@@ -36,14 +49,6 @@ public static class CreateNetworkInteraction
 
         public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errors = NetworkInteractionCommandValidator.Validate(
-                command.Summary,
-                command.IsWarmIntro,
-                command.ReferredByName
-            );
-            if (errors.Length > 0)
-                return ValidationResult<Guid>.WithErrors(errors);
-
             var interaction = new NetworkInteraction
             {
                 CompanyId = command.CompanyId,
