@@ -1,6 +1,5 @@
 using Kulku.Domain;
 using Kulku.Domain.Ideas;
-using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,7 +10,6 @@ public class IdeaDomainTranslationConfiguration : IEntityTypeConfiguration<IdeaD
     public void Configure(EntityTypeBuilder<IdeaDomainTranslation> builder)
     {
         builder.HasKey(t => t.Id);
-        builder.Property(t => t.Id).UuidGeneratedOnAdd();
 
         builder.Property(t => t.Name).IsRequired().HasMaxLength(Defaults.TextFieldLength);
         builder.Property(t => t.Language).IsRequired();

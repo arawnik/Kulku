@@ -6,6 +6,7 @@ using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
+using SoulNETLib.Common.Extension;
 
 namespace Kulku.Application.Cover.Introduction;
 
@@ -54,7 +55,7 @@ public static class UpdateIntroduction
 
             introduction.AvatarUrl = command.AvatarUrl;
             introduction.SmallAvatarUrl = command.SmallAvatarUrl;
-            introduction.PubDate = DateTime.SpecifyKind(command.PubDate, DateTimeKind.Utc);
+            introduction.PubDate = command.PubDate.AsUtc();
 
             introduction.MergeTranslations(
                 command.Translations,

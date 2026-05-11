@@ -1,5 +1,4 @@
 using Kulku.Domain.Cover;
-using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +9,6 @@ public class InstitutionConfiguration : IEntityTypeConfiguration<Institution>
     public void Configure(EntityTypeBuilder<Institution> builder)
     {
         builder.HasKey(i => i.Id);
-        builder.Property(i => i.Id).UuidGeneratedOnAdd();
 
         builder
             .HasMany(i => i.Translations)

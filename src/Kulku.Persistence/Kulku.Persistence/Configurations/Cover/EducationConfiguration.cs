@@ -1,5 +1,4 @@
 using Kulku.Domain.Cover;
-using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +9,6 @@ public class EducationConfiguration : IEntityTypeConfiguration<Education>
     public void Configure(EntityTypeBuilder<Education> builder)
     {
         builder.HasKey(e => e.Id);
-        builder.Property(e => e.Id).UuidGeneratedOnAdd();
 
         builder.Property(e => e.StartDate).IsRequired();
         builder.Property(e => e.EndDate).IsRequired(false);

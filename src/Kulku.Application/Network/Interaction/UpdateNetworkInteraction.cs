@@ -5,6 +5,7 @@ using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
+using SoulNETLib.Common.Extension;
 
 namespace Kulku.Application.Network.Interaction;
 
@@ -58,7 +59,7 @@ public static class UpdateNetworkInteraction
             if (interaction is null)
                 return Error.NotFound(Strings.NotFound_Interaction);
 
-            interaction.Date = command.Date;
+            interaction.Date = command.Date.AsUtc();
             interaction.Direction = command.Direction;
             interaction.Channel = command.Channel;
             interaction.IsWarmIntro = command.IsWarmIntro;
@@ -73,7 +74,7 @@ public static class UpdateNetworkInteraction
             interaction.NextAction = string.IsNullOrWhiteSpace(command.NextAction)
                 ? null
                 : command.NextAction.Trim();
-            interaction.NextActionDue = command.NextActionDue;
+            interaction.NextActionDue = command.NextActionDue.AsUtc();
 
             await _unitOfWork.CompleteAsync(cancellationToken);
             return Result.Success();

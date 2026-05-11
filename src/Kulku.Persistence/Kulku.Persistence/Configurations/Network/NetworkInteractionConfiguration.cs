@@ -1,6 +1,5 @@
 using Kulku.Domain;
 using Kulku.Domain.Network;
-using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,7 +10,6 @@ public class NetworkInteractionConfiguration : IEntityTypeConfiguration<NetworkI
     public void Configure(EntityTypeBuilder<NetworkInteraction> builder)
     {
         builder.HasKey(i => i.Id);
-        builder.Property(i => i.Id).UuidGeneratedOnAdd();
 
         builder.Property(i => i.Date).IsRequired();
         builder.HasIndex(i => i.Date);

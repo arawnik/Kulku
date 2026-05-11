@@ -1,6 +1,5 @@
 using Kulku.Domain;
 using Kulku.Domain.Cover;
-using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -12,7 +11,6 @@ public class IntroductionTranslationConfiguration
     public void Configure(EntityTypeBuilder<IntroductionTranslation> builder)
     {
         builder.HasKey(t => t.Id);
-        builder.Property(t => t.Id).UuidGeneratedOnAdd();
 
         builder.Property(t => t.Title).IsRequired().HasMaxLength(Defaults.TextFieldLength);
         builder.Property(t => t.Tagline).HasMaxLength(Defaults.TextFieldLength);

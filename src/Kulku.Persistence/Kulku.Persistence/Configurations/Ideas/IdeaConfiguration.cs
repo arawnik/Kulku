@@ -1,6 +1,5 @@
 using Kulku.Domain;
 using Kulku.Domain.Ideas;
-using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,7 +10,6 @@ public class IdeaConfiguration : IEntityTypeConfiguration<Idea>
     public void Configure(EntityTypeBuilder<Idea> builder)
     {
         builder.HasKey(i => i.Id);
-        builder.Property(i => i.Id).UuidGeneratedOnAdd();
 
         builder.Property(i => i.Title).IsRequired().HasMaxLength(Defaults.TextFieldLength);
         builder.Property(i => i.Summary).HasMaxLength(Defaults.TextFieldLength);

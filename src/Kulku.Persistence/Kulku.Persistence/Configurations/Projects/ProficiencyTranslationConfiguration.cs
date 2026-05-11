@@ -1,6 +1,5 @@
 using Kulku.Domain;
 using Kulku.Domain.Projects;
-using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,7 +10,6 @@ public class ProficiencyTranslationConfiguration : IEntityTypeConfiguration<Prof
     public void Configure(EntityTypeBuilder<ProficiencyTranslation> builder)
     {
         builder.HasKey(t => t.Id);
-        builder.Property(k => k.Id).UuidGeneratedOnAdd();
 
         builder.Property(t => t.Name).IsRequired().HasMaxLength(Defaults.TextFieldLength);
         builder.Property(t => t.Description).HasMaxLength(Defaults.TextAreaLength);
