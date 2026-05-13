@@ -149,7 +149,10 @@ partial class Home
         var eduResult = await EducationQuery.Handle(new GetEducations.Query(lang), ct);
         _educationCount = eduResult.IsSuccess ? (eduResult.Value?.Count ?? 0) : 0;
 
-        var kwResult = await KeywordQuery.Handle(new GetKeywordsForPicker.Query(), ct);
+        var kwResult = await KeywordQuery.Handle(
+            new GetKeywordsForPicker.Query(LanguageContext.Current),
+            ct
+        );
         _keywordCount = kwResult.IsSuccess ? (kwResult.Value?.Count ?? 0) : 0;
 
         var introResult = await IntroQuery.Handle(new GetIntroduction.Query(lang), ct);

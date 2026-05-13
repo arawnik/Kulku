@@ -1,3 +1,4 @@
+using Kulku.Application.Abstractions.Localization;
 using Kulku.Application.Projects;
 using Kulku.Application.Projects.Models;
 using Kulku.Web.Admin.Components.Cv.Components;
@@ -16,7 +17,8 @@ partial class ProjectsPage(
     IQueryHandler<GetKeywordsForPicker.Query, IReadOnlyList<KeywordPickerModel>> getKeywordsHandler,
     ICommandHandler<UpdateProject.Command> updateHandler,
     ICommandHandler<CreateProject.Command, Guid> createHandler,
-    ICommandHandler<DeleteProject.Command> deleteHandler
+    ICommandHandler<DeleteProject.Command> deleteHandler,
+    ILanguageContext languageContext
 )
 {
     private IReadOnlyList<ProjectTranslationsModel> Projects { get; set; } = [];
@@ -203,7 +205,7 @@ partial class ProjectsPage(
     private async Task<IReadOnlyList<KeywordPickerModel>> LoadKeywordsAsync()
     {
         var result = await getKeywordsHandler.Handle(
-            new GetKeywordsForPicker.Query(),
+            new GetKeywordsForPicker.Query(languageContext.Current),
             CancellationToken
         );
 

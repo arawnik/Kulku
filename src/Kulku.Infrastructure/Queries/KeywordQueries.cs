@@ -47,6 +47,7 @@ public class KeywordQueries(AppDbContext context) : IKeywordQueries
 
     /// <inheritdoc />
     public async Task<IReadOnlyList<KeywordPickerModel>> ListAllForPickerAsync(
+        LanguageCode language,
         CancellationToken cancellationToken = default
     )
     {
@@ -56,7 +57,11 @@ public class KeywordQueries(AppDbContext context) : IKeywordQueries
             .ThenBy(k => k.Order)
             .Select(k => new KeywordPickerModel(
                 k.Id,
-                k.Translations.Select(t => t.Name).FirstOrDefault() ?? string.Empty,
+                k.Translations.Where(t => t.Language == language)
+                    .Select(t => t.Name)
+                    .FirstOrDefault()
+                    ?? k.Translations.Select(t => t.Name).FirstOrDefault()
+                    ?? string.Empty,
                 k.Type
             ))
             .ToListAsync(cancellationToken);

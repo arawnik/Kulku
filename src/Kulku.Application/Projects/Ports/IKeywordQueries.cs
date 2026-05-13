@@ -29,9 +29,10 @@ public interface IKeywordQueries
 
     /// <summary>
     /// Returns all keywords as lightweight picker models for admin forms.
-    /// Uses the first available translation for the name.
+    /// Uses the translation matching the specified language.
     /// </summary>
     Task<IReadOnlyList<KeywordPickerModel>> ListAllForPickerAsync(
+        LanguageCode language,
         CancellationToken cancellationToken = default
     );
 
