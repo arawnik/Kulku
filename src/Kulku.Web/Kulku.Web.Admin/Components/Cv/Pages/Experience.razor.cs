@@ -3,6 +3,8 @@ using Kulku.Application.Cover.Company.Models;
 using Kulku.Application.Cover.Experience;
 using Kulku.Application.Cover.Experience.Models;
 using Kulku.Application.Cover.Models;
+using Kulku.Application.Projects;
+using Kulku.Application.Projects.Models;
 using Kulku.Web.Admin.Components.Cv.Components;
 using Kulku.Web.Admin.Components.Shared;
 using Kulku.Web.Admin.Resources;
@@ -24,7 +26,8 @@ partial class Experience(
     IQueryHandler<GetCompanyDetail.Query, CompanyTranslationsModel?> companyDetailHandler,
     ICommandHandler<CreateCompany.Command, Guid> createCompanyHandler,
     ICommandHandler<UpdateCompany.Command> updateCompanyHandler,
-    ICommandHandler<DeleteCompany.Command> deleteCompanyHandler
+    ICommandHandler<DeleteCompany.Command> deleteCompanyHandler,
+    IQueryHandler<GetKeywordsForPicker.Query, IReadOnlyList<KeywordPickerModel>> keywordsHandler
 )
 {
     private IReadOnlyList<ExperienceTranslationsModel> Experiences { get; set; } = [];
@@ -35,6 +38,7 @@ partial class Experience(
     private string? _errorMessage;
     private ExperienceEditModal? _editModal;
     private IReadOnlyList<CompanyTranslationsModel>? _companies;
+    private IReadOnlyList<KeywordPickerModel>? _keywords;
 
     // Company inline CRUD state
     private IReadOnlyList<CompanyTranslationsModel> _allCompanies = [];
@@ -48,6 +52,7 @@ partial class Experience(
     protected override async Task OnInitializedAsync()
     {
         await LoadAllAsync();
+        _keywords ??= await LoadKeywordsAsync();
     }
 
     private async Task LoadAllAsync()
@@ -80,6 +85,7 @@ partial class Experience(
     private async Task HandleCreate()
     {
         _errorMessage = null;
+        _keywords ??= await LoadKeywordsAsync();
 
         var blankTranslations = BuildBlankTranslations(lc => new ExperienceTranslationItem(
             lc,
@@ -94,7 +100,7 @@ partial class Experience(
             EndDate: null,
             Translations: blankTranslations,
             CompanyTranslations: [],
-            KeywordNames: []
+            KeywordIds: []
         );
         _modalMode = ModalMode.Create;
     }
@@ -102,6 +108,7 @@ partial class Experience(
     private async Task HandleEdit(Guid experienceId)
     {
         _errorMessage = null;
+        _keywords ??= await LoadKeywordsAsync();
 
         var result = await detailHandler.Handle(
             new GetExperienceDetail.Query(experienceId),
@@ -141,7 +148,8 @@ partial class Experience(
                         model.CompanyId,
                         model.StartDate,
                         model.EndDate,
-                        translations
+                        translations,
+                        model.KeywordIds
                     ),
                     CancellationToken
                 );
@@ -167,7 +175,8 @@ partial class Experience(
                     model.ExperienceId,
                     model.StartDate,
                     model.EndDate,
-                    translations
+                    translations,
+                    model.KeywordIds
                 ),
                 CancellationToken
             );
@@ -220,6 +229,32 @@ partial class Experience(
         _modalMode = null;
         CurrentEditModel = null;
         _errorMessage = null;
+    }
+
+    private async Task<IReadOnlyList<KeywordPickerModel>> LoadKeywordsAsync()
+    {
+        var result = await keywordsHandler.Handle(
+            new GetKeywordsForPicker.Query(),
+            CancellationToken
+        );
+
+        if (result.IsSuccess)
+            return result.Value ?? [];
+
+        _errorMessage = result.Error?.Message;
+        return [];
+    }
+
+    /// <summary>
+    /// Resolves keyword IDs to display names using the loaded keyword picker data.
+    /// </summary>
+    private IReadOnlyList<string> ResolveKeywordNames(IReadOnlyList<Guid> keywordIds)
+    {
+        if (_keywords is null || keywordIds.Count == 0)
+            return [];
+
+        var lookup = _keywords.ToDictionary(k => k.Id, k => k.Name);
+        return keywordIds.Where(id => lookup.ContainsKey(id)).Select(id => lookup[id]).ToList();
     }
 
     // ── Company CRUD ─────────────────────────────────

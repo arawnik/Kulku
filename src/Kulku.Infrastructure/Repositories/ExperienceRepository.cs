@@ -33,8 +33,29 @@ public class ExperienceRepository(AppDbContext context) : IExperienceRepository
         return await _context
             .Experiences.Where(e => e.Id == id)
             .Include(e => e.Translations)
+            .Include(e => e.Keywords)
             .Include(e => e.Company)
             .ThenInclude(ec => ec.Translations)
             .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task SyncKeywordsAsync(
+        Experience experience,
+        IReadOnlyList<Guid> keywordIds,
+        CancellationToken cancellationToken = default
+    )
+    {
+        experience.Keywords.Clear();
+
+        if (keywordIds.Count > 0)
+        {
+            var keywords = await _context
+                .Keywords.Where(k => keywordIds.Contains(k.Id))
+                .ToListAsync(cancellationToken);
+
+            foreach (var kw in keywords)
+                experience.Keywords.Add(kw);
+        }
     }
 }

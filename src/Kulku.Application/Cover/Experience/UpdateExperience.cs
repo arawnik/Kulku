@@ -21,11 +21,13 @@ public static class UpdateExperience
     /// <param name="StartDate">Updated start date.</param>
     /// <param name="EndDate">Updated end date, or <c>null</c> if ongoing.</param>
     /// <param name="Translations">Full set of translations to replace existing ones.</param>
+    /// <param name="KeywordIds">Full set of keyword IDs to replace existing associations.</param>
     public sealed record Command(
         Guid ExperienceId,
         DateOnly StartDate,
         DateOnly? EndDate,
-        IReadOnlyList<ExperienceTranslationDto> Translations
+        IReadOnlyList<ExperienceTranslationDto> Translations,
+        IReadOnlyList<Guid> KeywordIds
     ) : ICommand;
 
     internal sealed class Validator : ICommandValidator<Command>
@@ -68,6 +70,12 @@ public static class UpdateExperience
                     t.Title = dto.Title;
                     t.Description = dto.Description;
                 }
+            );
+
+            await _experienceRepository.SyncKeywordsAsync(
+                experience,
+                command.KeywordIds,
+                cancellationToken
             );
 
             await _unitOfWork.CompleteAsync(cancellationToken);

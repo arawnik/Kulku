@@ -132,7 +132,7 @@ public class ExperienceQueries(AppDbContext context) : IExperienceQueries
                         ct.Description
                     ))
                     .ToList(),
-                KeywordNames: Array.Empty<string>()
+                KeywordIds: e.Keywords.Select(k => k.Id).ToList()
             ))
             .ToListAsync(cancellationToken);
 
@@ -165,7 +165,7 @@ public class ExperienceQueries(AppDbContext context) : IExperienceQueries
                         ct.Description
                     ))
                     .ToList(),
-                KeywordNames: Array.Empty<string>()
+                KeywordIds: e.Keywords.Select(k => k.Id).ToList()
             ))
             .FirstOrDefaultAsync(cancellationToken);
 

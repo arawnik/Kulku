@@ -21,11 +21,13 @@ public static class CreateExperience
     /// <param name="StartDate">When the experience started.</param>
     /// <param name="EndDate">When the experience ended, or <c>null</c> if ongoing.</param>
     /// <param name="Translations">Localized title and description per language.</param>
+    /// <param name="KeywordIds">IDs of keywords to associate with this experience.</param>
     public sealed record Command(
         Guid CompanyId,
         DateOnly StartDate,
         DateOnly? EndDate,
-        IReadOnlyList<ExperienceTranslationDto> Translations
+        IReadOnlyList<ExperienceTranslationDto> Translations,
+        IReadOnlyList<Guid> KeywordIds
     ) : ICommand<Guid>;
 
     internal sealed class Validator : ICommandValidator<Command>
@@ -67,6 +69,11 @@ public static class CreateExperience
             };
 
             _experienceRepository.Add(experience);
+            await _experienceRepository.SyncKeywordsAsync(
+                experience,
+                command.KeywordIds,
+                cancellationToken
+            );
             await _unitOfWork.CompleteAsync(cancellationToken);
 
             return Result.Success(experience.Id);

@@ -8,6 +8,12 @@ partial class ExperienceCard
     [Parameter, EditorRequired]
     public ExperienceTranslationsModel? Experience { get; set; }
 
+    /// <summary>
+    /// Keyword names resolved by the parent page for display as badges.
+    /// </summary>
+    [Parameter]
+    public IReadOnlyList<string> KeywordNames { get; set; } = [];
+
     [Parameter]
     public EventCallback<Guid> OnEdit { get; set; }
 

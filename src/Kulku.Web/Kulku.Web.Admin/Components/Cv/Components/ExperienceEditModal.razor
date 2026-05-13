@@ -1,11 +1,13 @@
 @using System.ComponentModel.DataAnnotations
 @using Kulku.Application.Cover.Experience.Models
 @using Kulku.Application.Cover.Models
+@using Kulku.Application.Projects.Models
 @using Kulku.Domain
 @using SoulNETLib.Clean.Domain
 
 <ModalDialog Visible="@(_form != null)"
 			 Title="@(Mode == ModalMode.Create ? CvStrings.Experience_CreateModal : CvStrings.Experience_EditModal)"
+			 Size="ModalSize.Large"
 			 OnClose="OnCancel">
 	<ChildContent>
 		@if (ErrorMessage is not null)
@@ -75,6 +77,13 @@
 							</div>
 						</div>
 					</div>
+				}
+
+				@if (Keywords is not null && Keywords.Count > 0)
+				{
+					<KeywordPicker Keywords="Keywords"
+								   SelectedKeywordIds="_form.SelectedKeywordIds"
+								   Disabled="IsSaving" />
 				}
 			</EditForm>
 		}

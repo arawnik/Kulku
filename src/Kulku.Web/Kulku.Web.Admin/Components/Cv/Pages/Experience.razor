@@ -76,7 +76,9 @@
 			<div class="row g-3">
 				@foreach (var exp in Experiences)
 				{
-					<ExperienceCard Experience="exp" OnEdit="HandleEdit" OnDelete="HandleDelete" />
+					<ExperienceCard Experience="exp"
+									KeywordNames="ResolveKeywordNames(exp.KeywordIds)"
+									OnEdit="HandleEdit" OnDelete="HandleDelete" />
 				}
 			</div>
 		}
@@ -89,6 +91,7 @@
 						 Model="CurrentEditModel"
 						 Mode="_modalMode.Value"
 						 Companies="_companies"
+						 Keywords="_keywords"
 						 OnSave="HandleSave"
 						 OnCancel="HandleCancel"
 						 IsSaving="IsSaving"

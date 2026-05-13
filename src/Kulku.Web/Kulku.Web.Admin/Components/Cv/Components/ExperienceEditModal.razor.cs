@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Kulku.Application.Cover.Experience.Models;
 using Kulku.Application.Cover.Models;
+using Kulku.Application.Projects.Models;
 using Kulku.Domain;
 using Kulku.Web.Admin.Components.Shared;
 using Microsoft.AspNetCore.Components;
@@ -22,6 +23,12 @@ partial class ExperienceEditModal
     /// </summary>
     [Parameter]
     public IReadOnlyList<CompanyTranslationsModel>? Companies { get; set; }
+
+    /// <summary>
+    /// All available keywords for the checkbox picker.
+    /// </summary>
+    [Parameter]
+    public IReadOnlyList<KeywordPickerModel>? Keywords { get; set; }
 
     [Parameter]
     public EventCallback<ExperienceTranslationsModel> OnSave { get; set; }
@@ -76,6 +83,7 @@ partial class ExperienceEditModal
                 CompanyId = Model.CompanyId,
                 StartDate = Model.StartDate,
                 EndDate = Model.EndDate,
+                SelectedKeywordIds = [.. Model.KeywordIds],
                 Translations =
                 [
                     .. Model.Translations.Select(t => new TranslationEditModel
@@ -120,6 +128,7 @@ partial class ExperienceEditModal
             StartDate = _form.StartDate,
             EndDate = _form.EndDate,
             Translations = updatedTranslations,
+            KeywordIds = [.. _form.SelectedKeywordIds],
         };
 
         await OnSave.InvokeAsync(updated);
@@ -131,6 +140,7 @@ partial class ExperienceEditModal
         public Guid CompanyId { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly? EndDate { get; set; }
+        public HashSet<Guid> SelectedKeywordIds { get; set; } = [];
         public List<TranslationEditModel> Translations { get; set; } = [];
     }
 
