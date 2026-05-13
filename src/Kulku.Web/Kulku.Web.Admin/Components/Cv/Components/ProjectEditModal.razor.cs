@@ -80,17 +80,6 @@ partial class ProjectEditModal
         }
     }
 
-    private void ToggleKeyword(Guid keywordId, bool isChecked)
-    {
-        if (_form is null)
-            return;
-
-        if (isChecked && !_form.SelectedKeywordIds.Contains(keywordId))
-            _form.SelectedKeywordIds.Add(keywordId);
-        else if (!isChecked)
-            _form.SelectedKeywordIds.Remove(keywordId);
-    }
-
     private async Task HandleSubmit()
     {
         if (_form is null || Model is null || _editContext is null)

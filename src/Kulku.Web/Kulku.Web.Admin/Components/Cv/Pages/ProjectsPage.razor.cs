@@ -31,6 +31,7 @@ partial class ProjectsPage(
     protected override async Task OnInitializedAsync()
     {
         await LoadProjectsAsync();
+        _keywords ??= await LoadKeywordsAsync();
     }
 
     private async Task LoadProjectsAsync()

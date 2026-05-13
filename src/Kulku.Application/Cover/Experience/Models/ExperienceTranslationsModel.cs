@@ -13,5 +13,5 @@ public sealed record ExperienceTranslationsModel(
     DateOnly? EndDate,
     IReadOnlyList<ExperienceTranslationItem> Translations,
     IReadOnlyList<CompanyTranslationItem> CompanyTranslations,
-    IReadOnlyList<string> KeywordNames
+    IReadOnlyList<Guid> KeywordIds
 );
