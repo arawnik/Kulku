@@ -1,6 +1,5 @@
 using Kulku.Domain;
 using Kulku.Domain.Ideas;
-using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,7 +10,6 @@ public class IdeaDomainConfiguration : IEntityTypeConfiguration<IdeaDomain>
     public void Configure(EntityTypeBuilder<IdeaDomain> builder)
     {
         builder.HasKey(d => d.Id);
-        builder.Property(d => d.Id).UuidGeneratedOnAdd();
 
         builder.Property(d => d.Icon).IsRequired().HasMaxLength(Defaults.StyleFieldLength);
         builder.Property(d => d.Order).IsRequired();

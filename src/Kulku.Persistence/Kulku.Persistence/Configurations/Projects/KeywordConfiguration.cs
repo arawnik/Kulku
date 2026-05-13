@@ -1,5 +1,4 @@
 using Kulku.Domain.Projects;
-using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +9,6 @@ public class KeywordConfiguration : IEntityTypeConfiguration<Keyword>
     public void Configure(EntityTypeBuilder<Keyword> builder)
     {
         builder.HasKey(k => k.Id);
-        builder.Property(k => k.Id).UuidGeneratedOnAdd();
 
         builder.Property(k => k.Type).IsRequired();
         builder.Property(k => k.Order).IsRequired();

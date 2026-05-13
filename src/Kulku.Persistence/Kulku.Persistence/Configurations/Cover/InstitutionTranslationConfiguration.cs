@@ -1,6 +1,5 @@
 using Kulku.Domain;
 using Kulku.Domain.Cover;
-using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,7 +10,6 @@ public class InstitutionTranslationConfiguration : IEntityTypeConfiguration<Inst
     public void Configure(EntityTypeBuilder<InstitutionTranslation> builder)
     {
         builder.HasKey(t => t.Id);
-        builder.Property(t => t.Id).UuidGeneratedOnAdd();
 
         builder.Property(t => t.Name).IsRequired().HasMaxLength(Defaults.TextFieldLength);
         builder.Property(t => t.Department).HasMaxLength(Defaults.TextFieldLength);

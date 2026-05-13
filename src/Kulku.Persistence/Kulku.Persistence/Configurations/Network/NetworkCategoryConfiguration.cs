@@ -1,6 +1,5 @@
 using Kulku.Domain;
 using Kulku.Domain.Network;
-using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,7 +10,6 @@ public class NetworkCategoryConfiguration : IEntityTypeConfiguration<NetworkCate
     public void Configure(EntityTypeBuilder<NetworkCategory> builder)
     {
         builder.HasKey(c => c.Id);
-        builder.Property(c => c.Id).UuidGeneratedOnAdd();
 
         builder.Property(c => c.Name).IsRequired().HasMaxLength(Defaults.TextFieldLength);
         builder.Property(c => c.ColorToken).HasMaxLength(Defaults.StyleFieldLength);

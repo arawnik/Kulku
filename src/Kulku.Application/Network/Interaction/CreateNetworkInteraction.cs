@@ -4,6 +4,7 @@ using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Application.Abstractions.Validation;
 using SoulNETLib.Clean.Domain;
 using SoulNETLib.Clean.Domain.Repositories;
+using SoulNETLib.Common.Extension;
 
 namespace Kulku.Application.Network.Interaction;
 
@@ -53,7 +54,7 @@ public static class CreateNetworkInteraction
             {
                 CompanyId = command.CompanyId,
                 ContactId = command.ContactId,
-                Date = command.Date,
+                Date = command.Date.AsUtc(),
                 Direction = command.Direction,
                 Channel = command.Channel,
                 IsWarmIntro = command.IsWarmIntro,
@@ -65,7 +66,7 @@ public static class CreateNetworkInteraction
                 NextAction = string.IsNullOrWhiteSpace(command.NextAction)
                     ? null
                     : command.NextAction.Trim(),
-                NextActionDue = command.NextActionDue,
+                NextActionDue = command.NextActionDue.AsUtc(),
             };
 
             _interactionRepository.Add(interaction);

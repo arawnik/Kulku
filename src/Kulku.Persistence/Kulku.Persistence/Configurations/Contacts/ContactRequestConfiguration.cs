@@ -1,6 +1,5 @@
 using Kulku.Domain;
 using Kulku.Domain.Contacts;
-using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,7 +10,6 @@ public class ContactRequestConfiguration : IEntityTypeConfiguration<ContactReque
     public void Configure(EntityTypeBuilder<ContactRequest> builder)
     {
         builder.HasKey(c => c.Id);
-        builder.Property(c => c.Id).UuidGeneratedOnAdd();
 
         builder.Property(t => t.Name).IsRequired().HasMaxLength(Defaults.TextFieldLength);
         builder.Property(t => t.Email).IsRequired().HasMaxLength(Defaults.TextFieldLength);

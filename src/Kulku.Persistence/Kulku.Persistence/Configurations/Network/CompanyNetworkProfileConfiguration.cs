@@ -1,6 +1,5 @@
 using Kulku.Domain;
 using Kulku.Domain.Network;
-using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,7 +10,6 @@ public class CompanyNetworkProfileConfiguration : IEntityTypeConfiguration<Compa
     public void Configure(EntityTypeBuilder<CompanyNetworkProfile> builder)
     {
         builder.HasKey(p => p.Id);
-        builder.Property(p => p.Id).UuidGeneratedOnAdd();
 
         builder.HasIndex(p => p.CompanyId).IsUnique();
 

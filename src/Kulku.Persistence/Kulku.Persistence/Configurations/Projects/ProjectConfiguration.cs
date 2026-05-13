@@ -1,5 +1,4 @@
 using Kulku.Domain.Projects;
-using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +9,6 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
     public void Configure(EntityTypeBuilder<Project> builder)
     {
         builder.HasKey(p => p.Id);
-        builder.Property(k => k.Id).UuidGeneratedOnAdd();
 
         builder.Property(p => p.Url).IsRequired();
         builder.Property(p => p.ImageUrl).IsRequired();

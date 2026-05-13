@@ -1,6 +1,5 @@
 using Kulku.Domain;
 using Kulku.Domain.Ideas;
-using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,7 +10,6 @@ public class IdeaPriorityConfiguration : IEntityTypeConfiguration<IdeaPriority>
     public void Configure(EntityTypeBuilder<IdeaPriority> builder)
     {
         builder.HasKey(p => p.Id);
-        builder.Property(p => p.Id).UuidGeneratedOnAdd();
 
         builder.Property(p => p.Order).IsRequired();
         builder.Property(p => p.Style).IsRequired().HasMaxLength(Defaults.StyleFieldLength);

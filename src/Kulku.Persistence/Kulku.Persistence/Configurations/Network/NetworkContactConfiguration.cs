@@ -1,6 +1,5 @@
 using Kulku.Domain;
 using Kulku.Domain.Network;
-using Kulku.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,7 +10,6 @@ public class NetworkContactConfiguration : IEntityTypeConfiguration<NetworkConta
     public void Configure(EntityTypeBuilder<NetworkContact> builder)
     {
         builder.HasKey(c => c.Id);
-        builder.Property(c => c.Id).UuidGeneratedOnAdd();
 
         builder.Property(c => c.PersonName).HasMaxLength(Defaults.TextFieldLength);
         builder.Property(c => c.Email).HasMaxLength(Defaults.TextFieldLength);
