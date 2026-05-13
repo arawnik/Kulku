@@ -1,5 +1,6 @@
 using Kulku.Application.Projects.Models;
 using Kulku.Application.Projects.Ports;
+using Kulku.Domain;
 using SoulNETLib.Clean.Application.Abstractions.CQRS;
 using SoulNETLib.Clean.Domain;
 
@@ -10,7 +11,7 @@ namespace Kulku.Application.Projects;
 /// </summary>
 public static class GetKeywordsForPicker
 {
-    public sealed record Query() : IQuery<IReadOnlyList<KeywordPickerModel>>;
+    public sealed record Query(LanguageCode Language) : IQuery<IReadOnlyList<KeywordPickerModel>>;
 
     internal sealed class Handler(IKeywordQueries queries)
         : IQueryHandler<Query, IReadOnlyList<KeywordPickerModel>>
@@ -22,7 +23,9 @@ public static class GetKeywordsForPicker
             CancellationToken cancellationToken
         )
         {
-            return Result.Success(await _queries.ListAllForPickerAsync(cancellationToken));
+            return Result.Success(
+                await _queries.ListAllForPickerAsync(query.Language, cancellationToken)
+            );
         }
     }
 }

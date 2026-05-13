@@ -85,7 +85,7 @@ public partial class IdeaDetailPage(
         _tags = tagsResult.IsSuccess ? tagsResult.Value ?? [] : [];
 
         var keywordsResult = await getKeywordsHandler.Handle(
-            new GetKeywordsForPicker.Query(),
+            new GetKeywordsForPicker.Query(languageContext.Current),
             CancellationToken.None
         );
         _keywords = keywordsResult.IsSuccess ? keywordsResult.Value ?? [] : [];

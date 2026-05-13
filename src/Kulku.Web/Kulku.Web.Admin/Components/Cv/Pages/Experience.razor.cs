@@ -1,3 +1,4 @@
+using Kulku.Application.Abstractions.Localization;
 using Kulku.Application.Cover.Company;
 using Kulku.Application.Cover.Company.Models;
 using Kulku.Application.Cover.Experience;
@@ -27,7 +28,8 @@ partial class Experience(
     ICommandHandler<CreateCompany.Command, Guid> createCompanyHandler,
     ICommandHandler<UpdateCompany.Command> updateCompanyHandler,
     ICommandHandler<DeleteCompany.Command> deleteCompanyHandler,
-    IQueryHandler<GetKeywordsForPicker.Query, IReadOnlyList<KeywordPickerModel>> keywordsHandler
+    IQueryHandler<GetKeywordsForPicker.Query, IReadOnlyList<KeywordPickerModel>> keywordsHandler,
+    ILanguageContext languageContext
 )
 {
     private IReadOnlyList<ExperienceTranslationsModel> Experiences { get; set; } = [];
@@ -234,7 +236,7 @@ partial class Experience(
     private async Task<IReadOnlyList<KeywordPickerModel>> LoadKeywordsAsync()
     {
         var result = await keywordsHandler.Handle(
-            new GetKeywordsForPicker.Query(),
+            new GetKeywordsForPicker.Query(languageContext.Current),
             CancellationToken
         );
 
