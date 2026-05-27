@@ -362,6 +362,13 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+
+# Ignore all files in the .idea folder
+.idea/
+
+# Mac specific ignore
+*.DS_Store
+
 # Ignore style libraries
 src/Kulku.Web/Kulku.Web.Admin/styles/lib/
 

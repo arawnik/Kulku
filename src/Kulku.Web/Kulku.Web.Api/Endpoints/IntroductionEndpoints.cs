@@ -32,14 +32,20 @@ public class IntroductionEndpoints : ICarterModule
             new GetIntroduction.Query(languageContext.Current),
             cancellationToken
         );
-        if (result.IsSuccess && result.Value is not null)
+        if (!result.IsSuccess)
         {
-            var rendered = result.Value with
-            {
-                Content = markdownRenderer.ToHtml(result.Value.Content),
-            };
-            return TypedResults.Ok(rendered);
+            return result.HandleFailure();
         }
-        return result.HandleFailure();
+
+        if (result.Value is null)
+        {
+            return TypedResults.NotFound();
+        }
+
+        var rendered = result.Value with
+        {
+            Content = markdownRenderer.ToHtml(result.Value.Content),
+        };
+        return TypedResults.Ok(rendered);
     }
 }

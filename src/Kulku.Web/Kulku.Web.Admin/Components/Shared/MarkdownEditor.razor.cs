@@ -5,13 +5,13 @@ namespace Kulku.Web.Admin.Components.Shared;
 partial class MarkdownEditor
 {
     /// <summary>
-    /// The markdown text value (two-way bindable).
+    /// The Markdown text value (two-way bindable).
     /// </summary>
     [Parameter]
-    public string Value { get; set; } = string.Empty;
+    public string? Value { get; set; }
 
     [Parameter]
-    public EventCallback<string> ValueChanged { get; set; }
+    public EventCallback<string?> ValueChanged { get; set; }
 
     /// <summary>
     /// Optional label shown above the toggle buttons.
