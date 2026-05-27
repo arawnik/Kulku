@@ -34,20 +34,21 @@ public class ProjectEndpoints : ICarterModule
             new GetProjects.Query(languageContext.Current),
             cancellationToken
         );
-        if (result.IsSuccess && result.Value is not null)
+        if (!result.IsSuccess)
         {
-            IReadOnlyList<ProjectModel> rendered =
-            [
-                .. result.Value.Select(p =>
-                    p with
-                    {
-                        Description = markdownRenderer.ToHtml(p.Description),
-                    }
-                ),
-            ];
-            return TypedResults.Ok(rendered);
+            return result.HandleFailure();
         }
-        return result.HandleFailure();
+
+        IReadOnlyList<ProjectModel> rendered =
+        [
+            .. (result.Value ?? []).Select(p =>
+                p with
+                {
+                    Description = markdownRenderer.ToHtml(p.Description),
+                }
+            ),
+        ];
+        return TypedResults.Ok(rendered);
     }
 
     public static async Task<
