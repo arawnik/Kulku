@@ -1,18 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="true" type="com.intellij.execution.configurations.multilaunch" factoryName="MultiLaunchConfiguration">
+  <configuration default="false" name="Site" type="com.intellij.execution.configurations.multilaunch" factoryName="MultiLaunchConfiguration">
     <rows>
-      <ExecutableRowSnapshot>
-        <option name="condition">
-          <ConditionSnapshot>
-            <option name="type" value="immediately" />
-          </ConditionSnapshot>
-        </option>
-        <option name="executable">
-          <ExecutableSnapshot>
-            <option name="id" value="runConfig:.NET Launch Settings Profile.Kulku.Web.Admin: https" />
-          </ExecutableSnapshot>
-        </option>
-      </ExecutableRowSnapshot>
       <ExecutableRowSnapshot>
         <option name="condition">
           <ConditionSnapshot>
@@ -28,12 +16,12 @@
       <ExecutableRowSnapshot>
         <option name="condition">
           <ConditionSnapshot>
-            <option name="type" value="afterPreviousFinished" />
+            <option name="type" value="afterPreviousStarted" />
           </ConditionSnapshot>
         </option>
         <option name="executable">
           <ExecutableSnapshot>
-            <option name="id" value="runConfig:npm.kulku.web.client: run" />
+            <option name="id" value="runConfig:npm.kulku.web.client" />
           </ExecutableSnapshot>
         </option>
       </ExecutableRowSnapshot>

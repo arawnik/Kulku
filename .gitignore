@@ -366,6 +366,9 @@ FodyWeavers.xsd
 # Ignore all files in the .idea folder
 .idea/
 
+# VS Code workspace settings
+.vscode/
+
 # Mac specific ignore
 *.DS_Store
 
