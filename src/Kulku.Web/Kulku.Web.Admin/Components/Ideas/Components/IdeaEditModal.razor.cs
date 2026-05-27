@@ -4,6 +4,7 @@ using Kulku.Application.Projects.Models;
 using Kulku.Web.Admin.Components.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using SoulNETLib.Blazor.Bootstrap;
 using SoulNETLib.Clean.Domain;
 
 namespace Kulku.Web.Admin.Components.Ideas.Components;
