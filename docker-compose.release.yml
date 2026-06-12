@@ -1,9 +1,9 @@
 version: "3.9"
 
 secrets:
-  kulku-default-conn:
+  kulku-default-conn_v3:
     external: true
-  kulku-user-conn:
+  kulku-user-conn_v3:
     external: true
   kulku-recaptcha-secret:
     external: true
@@ -11,44 +11,64 @@ secrets:
 services:
   api:
     image: ghcr.io/arawnik/kulku-api:stable
-    restart: unless-stopped
     secrets:
-      - kulku-default-conn
-      - kulku-user-conn
+      - source: kulku-default-conn_v3
+        target: kulku-default-conn
+      - source: kulku-user-conn_v3
+        target: kulku-user-conn
       - kulku-recaptcha-secret
     volumes:
       - /var/www/manager/letsencrypt:/etc/letsencrypt:ro
     environment:
-      - ASPNETCORE_HTTPS_PORTS
-      - ASPNETCORE_ENVIRONMENT
       - ForceHttps
+      - ASPNETCORE_ENVIRONMENT
       - Cors__AllowedOrigins
     ports:
-      - 5144:5144
+      - target: 5144
+        published: 5144
+        protocol: tcp
+        mode: host
+    networks:
+      - app_net
+      - data_net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
 
   admin:
     image: ghcr.io/arawnik/kulku-admin:stable
-    restart: unless-stopped
     secrets:
-      - kulku-default-conn
-      - kulku-user-conn
+      - source: kulku-default-conn_v3
+        target: kulku-default-conn
+      - source: kulku-user-conn_v3
+        target: kulku-user-conn
     volumes:
       - /var/www/manager/letsencrypt:/etc/letsencrypt:ro
       - /var/www/jerejunttila/out:/app/assets:ro
     environment:
-      - ASPNETCORE_HTTPS_PORTS
-      - ASPNETCORE_ENVIRONMENT
       - ForceHttps
+      - ASPNETCORE_ENVIRONMENT
       - Management__MigrateOnStart
       - Management__ContactUrl
       - Assets__LocalPath
     ports:
-      - 7215:7215
-      - 5090:5090
+      - target: 5090
+        published: 5090
+        protocol: tcp
+        mode: host
+    networks:
+      - app_net
+      - data_net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
 
   client:
     image: ghcr.io/arawnik/kulku-client:stable
-    restart: unless-stopped
     volumes:
       - /var/www/jerejunttila/out/downloads:/app/public/static/downloads:ro
       - /var/www/jerejunttila/out/introductions:/app/public/static/introductions:ro
@@ -60,6 +80,21 @@ services:
       - API_BASE_URL
       - BASE_PROTO
     ports:
-      - 8086:3000
-    depends_on:
-      - api
+      - target: 3000
+        published: 8086
+        protocol: tcp
+        mode: host
+    networks:
+      - app_net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+
+networks:
+  app_net:
+    driver: overlay
+
+  data_net:
+    external: true

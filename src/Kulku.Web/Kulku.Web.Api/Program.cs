@@ -3,15 +3,14 @@ using Kulku.Application;
 using Kulku.Application.Abstractions.Localization;
 using Kulku.Domain;
 using Kulku.Infrastructure;
-using Kulku.Infrastructure.Security;
 using Kulku.Web.Api.Localization;
 using Microsoft.AspNetCore.HttpOverrides;
+using SoulNETLib.Clean.Infrastructure.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add docker secrets to configuration for deployments
-SecretLoader.LoadFileSecretsIntoConfiguration(
-    builder.Configuration,
+builder.Configuration.AddDockerSecrets(
     new Dictionary<string, string>
     {
         { "ConnectionStrings:DefaultConnection", "kulku-default-conn" },
