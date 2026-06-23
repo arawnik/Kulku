@@ -93,4 +93,11 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <Target Name="RestoreClientLibraries" BeforeTargets="CompileScss" Condition="'$(SkipScssCompilation)' != 'true'">
+    <Exec Command="dotnet tool run libman -- restore" WorkingDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
+  <Target Name="CompileScss" BeforeTargets="Build" Condition="'$(SkipScssCompilation)' != 'true'">
+    <Exec Command="dotnet tool run webcompiler -- -c webcompilerconfiguration.json Styles/app.scss -o wwwroot/css -p disable" WorkingDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
+
 </Project>
