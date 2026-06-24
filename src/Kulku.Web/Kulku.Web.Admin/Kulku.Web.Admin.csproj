@@ -14,6 +14,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Web.LibraryManager.Build" />
     <PackageReference Include="SoulNETLib.Blazor" />
   </ItemGroup>
   <ItemGroup>
@@ -93,11 +94,24 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <Target Name="RestoreClientLibraries" BeforeTargets="CompileScss" Condition="'$(SkipScssCompilation)' != 'true'">
-    <Exec Command="dotnet tool run libman -- restore" WorkingDirectory="$(MSBuildProjectDirectory)" />
-  </Target>
-  <Target Name="CompileScss" BeforeTargets="Build" Condition="'$(SkipScssCompilation)' != 'true'">
-    <Exec Command="dotnet tool run webcompiler -- -c webcompilerconfiguration.json Styles/app.scss -o wwwroot/css -p disable" WorkingDirectory="$(MSBuildProjectDirectory)" />
+  <PropertyGroup>
+    <CompileScss Condition="'$(CompileScss)' == ''">true</CompileScss>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ScssFiles Include="Styles/**/*.scss" />
+  </ItemGroup>
+
+  <Target
+    Name="CompileScss"
+    BeforeTargets="Build"
+    Inputs="@(ScssFiles);webcompilerconfiguration.json"
+    Outputs="wwwroot/css/app.css"
+    Condition="'$(CompileScss)' == 'true'">
+
+    <Exec
+      Command="dotnet tool run webcompiler -- -c webcompilerconfiguration.json Styles/app.scss -o wwwroot/css -p disable"
+      WorkingDirectory="$(MSBuildProjectDirectory)" />
   </Target>
 
 </Project>
