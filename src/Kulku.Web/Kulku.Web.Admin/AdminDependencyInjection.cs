@@ -2,11 +2,12 @@ using System.Diagnostics.CodeAnalysis;
 using Kulku.Application.Abstractions.Localization;
 using Kulku.Persistence;
 using Kulku.Persistence.Data;
+using Kulku.Presentation.AspNetCore;
 using Kulku.Web.Admin.Components.Account;
+using Kulku.Web.Admin.Components.Layout;
 using Kulku.Web.Admin.Localization;
 using Kulku.Web.Admin.Options;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 
 namespace Kulku.Web.Admin;
@@ -39,28 +40,14 @@ public static class AdminDependencyInjection
     /// <returns>The updated <see cref="IServiceCollection"/>.</returns>
     public static IServiceCollection AddAdminCore(this IServiceCollection services)
     {
-        services.Configure<ForwardedHeadersOptions>(options =>
-        {
-            options.ForwardedHeaders =
-                ForwardedHeaders.XForwardedFor
-                | ForwardedHeaders.XForwardedProto
-                | ForwardedHeaders.XForwardedHost;
-            // Clear defaults so any reverse proxy (NPM) on a non-loopback network is trusted.
-            // Safe as long as the app port is not publicly exposed.
-            options.KnownIPNetworks.Clear();
-            options.KnownProxies.Clear();
-        });
-
-        services.AddLocalization();
-        services.AddHttpContextAccessor();
+        services.AddPresentationCore();
 
         services.AddRazorComponents().AddInteractiveServerComponents();
 
-        services.AddScoped<ILanguageContext, RequestLanguageContext>();
-
-        services.AddScoped<Components.Layout.InboxBadgeNotifier>();
-
-        services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+        services
+            .AddScoped<ILanguageContext, RequestLanguageContext>()
+            .AddScoped<InboxBadgeNotifier>()
+            .AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
         return services;
     }

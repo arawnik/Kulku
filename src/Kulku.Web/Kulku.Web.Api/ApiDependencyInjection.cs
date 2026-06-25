@@ -1,8 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using Carter;
 using Kulku.Application.Abstractions.Localization;
+using Kulku.Presentation.AspNetCore;
 using Kulku.Web.Api.Localization;
-using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Kulku.Web.Api;
 
@@ -19,26 +19,11 @@ public static class ApiDependencyInjection
     /// <returns>The updated <see cref="IServiceCollection"/>.</returns>
     public static IServiceCollection AddApiCore(this IServiceCollection services)
     {
-        services.Configure<ForwardedHeadersOptions>(options =>
-        {
-            options.ForwardedHeaders =
-                ForwardedHeaders.XForwardedFor
-                | ForwardedHeaders.XForwardedProto
-                | ForwardedHeaders.XForwardedHost;
-
-            // Clear defaults so any reverse proxy (NPM, nginx) on a non-loopback network is trusted.
-            // Safe as long as the app port is not publicly exposed.
-            options.KnownIPNetworks.Clear();
-            options.KnownProxies.Clear();
-        });
-
-        services.AddLocalization();
-
-        services.AddProblemDetails();
-        services.AddCarter();
-
-        services.AddHttpContextAccessor();
-        services.AddScoped<ILanguageContext, RequestLanguageContext>();
+        services
+            .AddPresentationCore()
+            .AddProblemDetails()
+            .AddCarter()
+            .AddScoped<ILanguageContext, RequestLanguageContext>();
 
         return services;
     }
