@@ -8,33 +8,41 @@ EXPOSE 5144
 
 USER $APP_UID
 
-#ENV ASPNETCORE_HTTPS_PORTS=7219
 ENV ASPNETCORE_HTTP_PORTS=5144
 
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
+
 WORKDIR /src
 
-# Copy solution-related files FIRST (important for dependency resolution)
 COPY ["Directory.Build.props", "."]
 COPY ["Directory.Packages.props", "."]
 COPY [".editorconfig", "."]
 
 COPY ["src/Kulku.Web/Kulku.Web.Api/Kulku.Web.Api.csproj", "src/Kulku.Web/Kulku.Web.Api/"]
+COPY ["src/Kulku.Web/Kulku.Web.AspNetCore/Kulku.Web.AspNetCore.csproj", "src/Kulku.Web/Kulku.Web.AspNetCore/"]
+COPY ["src/Kulku.Infrastructure/Kulku.Infrastructure.csproj", "src/Kulku.Infrastructure/"]
+COPY ["src/Kulku.Application/Kulku.Application.csproj", "src/Kulku.Application/"]
+COPY ["src/Kulku.Domain/Kulku.Domain.csproj", "src/Kulku.Domain/"]
+COPY ["src/Kulku.Persistence/Kulku.Persistence.Pgsql/Kulku.Persistence.Pgsql.csproj", "src/Kulku.Persistence/Kulku.Persistence.Pgsql/"]
+COPY ["src/Kulku.Persistence/Kulku.Persistence/Kulku.Persistence.csproj", "src/Kulku.Persistence/Kulku.Persistence/"]
 
 # Restore dependencies
 RUN dotnet restore "./src/Kulku.Web/Kulku.Web.Api/Kulku.Web.Api.csproj"
 
 # Copy everything else and build
 COPY . .
+
 WORKDIR "/src/src/Kulku.Web/Kulku.Web.Api"
+
 RUN dotnet build "./Kulku.Web.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
+
 RUN dotnet publish "./Kulku.Web.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)

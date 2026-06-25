@@ -14,6 +14,7 @@ ENV ASPNETCORE_HTTP_PORTS=5090
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+ARG BUILD_CONFIGURATION=Release
 
 WORKDIR /src
 COPY ["Directory.Packages.props", "."]
@@ -21,6 +22,7 @@ COPY ["Directory.Build.props", "."]
 COPY [".editorconfig", "."]
 
 COPY ["src/Kulku.Web/Kulku.Web.Admin/Kulku.Web.Admin.csproj", "src/Kulku.Web/Kulku.Web.Admin/"]
+COPY ["src/Kulku.Web/Kulku.Web.AspNetCore/Kulku.Web.AspNetCore.csproj", "src/Kulku.Web/Kulku.Web.AspNetCore/"]
 COPY ["src/Kulku.Infrastructure/Kulku.Infrastructure.csproj", "src/Kulku.Infrastructure/"]
 COPY ["src/Kulku.Application/Kulku.Application.csproj", "src/Kulku.Application/"]
 COPY ["src/Kulku.Domain/Kulku.Domain.csproj", "src/Kulku.Domain/"]
@@ -32,13 +34,12 @@ RUN dotnet restore "./src/Kulku.Web/Kulku.Web.Admin/Kulku.Web.Admin.csproj"
 COPY . .
 WORKDIR "/src/src/Kulku.Web/Kulku.Web.Admin"
 
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet build "./Kulku.Web.Admin.csproj" -c $BUILD_CONFIGURATION -p:CompileScss=false -o /app/build
+RUN dotnet build "./Kulku.Web.Admin.csproj" -c $BUILD_CONFIGURATION -p:CompileScss=false --no-restore -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Kulku.Web.Admin.csproj" -c $BUILD_CONFIGURATION -p:CompileScss=false -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Kulku.Web.Admin.csproj" -c $BUILD_CONFIGURATION -p:CompileScss=false --no-restore -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final

@@ -1,4 +1,4 @@
-namespace Kulku.Presentation.AspNetCore.Logging;
+namespace Kulku.Web.AspNetCore.Logging;
 
 public sealed class KulkuSerilogOptions
 {

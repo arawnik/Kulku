@@ -7,7 +7,7 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
 
-namespace Kulku.Presentation.AspNetCore.Logging;
+namespace Kulku.Web.AspNetCore.Logging;
 
 public static class SerilogExtensions
 {

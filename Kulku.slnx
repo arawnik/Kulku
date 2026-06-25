@@ -31,9 +31,9 @@
     <Project Path="src/Kulku.Persistence/Kulku.Persistence.Pgsql/Kulku.Persistence.Pgsql.csproj" />
     <Project Path="src/Kulku.Persistence/Kulku.Persistence.SqlServer/Kulku.Persistence.SqlServer.csproj" />
     <Project Path="src/Kulku.Persistence/Kulku.Persistence/Kulku.Persistence.csproj" />
-    <Project Path="src/Kulku.Presentation.AspNetCore/Kulku.Presentation.AspNetCore.csproj" Id="df2b98b7-232c-4ae0-817f-a41be4fb0ad6" />
     <Project Path="src/Kulku.Web/Kulku.Web.Admin/Kulku.Web.Admin.csproj" />
     <Project Path="src/Kulku.Web/Kulku.Web.Api/Kulku.Web.Api.csproj" />
+    <Project Path="src/Kulku.Web/Kulku.Web.AspNetCore/Kulku.Web.AspNetCore.csproj" Id="f0a6acfe-2b85-4cc1-b7b1-754572e4c0ee" />
     <Project Path="src/Kulku.Web/kulku.web.client/kulku.web.client.esproj">
       <Build />
       <Deploy />

@@ -1,8 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using Carter;
 using Kulku.Application.Abstractions.Localization;
-using Kulku.Presentation.AspNetCore;
 using Kulku.Web.Api.Localization;
+using Kulku.Web.AspNetCore;
 
 namespace Kulku.Web.Api;
 

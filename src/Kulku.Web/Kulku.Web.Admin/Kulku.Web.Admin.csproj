@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Kulku.Infrastructure\Kulku.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\Kulku.Presentation.AspNetCore\Kulku.Presentation.AspNetCore.csproj" />
+    <ProjectReference Include="..\Kulku.Web.AspNetCore\Kulku.Web.AspNetCore.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="styles\lib\" />

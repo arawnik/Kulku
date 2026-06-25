@@ -1,12 +1,12 @@
 using Kulku.Application;
 using Kulku.Domain;
 using Kulku.Infrastructure;
-using Kulku.Presentation.AspNetCore.Logging;
 using Kulku.Web.Admin;
 using Kulku.Web.Admin.Components;
 using Kulku.Web.Admin.Components.Account;
 using Kulku.Web.Admin.Endpoints;
 using Kulku.Web.Admin.Options;
+using Kulku.Web.AspNetCore.Logging;
 using Microsoft.Extensions.Options;
 using Serilog;
 using SoulNETLib.Clean.Infrastructure.Security;

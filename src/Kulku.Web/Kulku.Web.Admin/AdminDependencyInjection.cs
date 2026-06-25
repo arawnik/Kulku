@@ -2,11 +2,11 @@ using System.Diagnostics.CodeAnalysis;
 using Kulku.Application.Abstractions.Localization;
 using Kulku.Persistence;
 using Kulku.Persistence.Data;
-using Kulku.Presentation.AspNetCore;
 using Kulku.Web.Admin.Components.Account;
 using Kulku.Web.Admin.Components.Layout;
 using Kulku.Web.Admin.Localization;
 using Kulku.Web.Admin.Options;
+using Kulku.Web.AspNetCore;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 

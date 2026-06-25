@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Kulku.Presentation.AspNetCore;
+namespace Kulku.Web.AspNetCore;
 
 [ExcludeFromCodeCoverage]
 public static class PresentationDependencyInjection

@@ -2,8 +2,8 @@ using Carter;
 using Kulku.Application;
 using Kulku.Domain;
 using Kulku.Infrastructure;
-using Kulku.Presentation.AspNetCore.Logging;
 using Kulku.Web.Api;
+using Kulku.Web.AspNetCore.Logging;
 using Serilog;
 using SoulNETLib.Clean.Infrastructure.Security;
 
