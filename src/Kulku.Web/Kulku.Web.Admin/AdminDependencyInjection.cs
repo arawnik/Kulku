@@ -3,8 +3,10 @@ using Kulku.Application.Abstractions.Localization;
 using Kulku.Persistence;
 using Kulku.Persistence.Data;
 using Kulku.Web.Admin.Components.Account;
+using Kulku.Web.Admin.Components.Layout;
 using Kulku.Web.Admin.Localization;
 using Kulku.Web.Admin.Options;
+using Kulku.Web.AspNetCore;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 
@@ -38,16 +40,14 @@ public static class AdminDependencyInjection
     /// <returns>The updated <see cref="IServiceCollection"/>.</returns>
     public static IServiceCollection AddAdminCore(this IServiceCollection services)
     {
-        services.AddLocalization();
-        services.AddHttpContextAccessor();
+        services.AddPresentationCore();
 
         services.AddRazorComponents().AddInteractiveServerComponents();
 
-        services.AddScoped<ILanguageContext, RequestLanguageContext>();
-
-        services.AddScoped<Components.Layout.InboxBadgeNotifier>();
-
-        services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+        services
+            .AddScoped<ILanguageContext, RequestLanguageContext>()
+            .AddScoped<InboxBadgeNotifier>()
+            .AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
         return services;
     }

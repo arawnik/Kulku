@@ -14,10 +14,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+    <PackageReference Include="Microsoft.Web.LibraryManager.Build" />
     <PackageReference Include="SoulNETLib.Blazor" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Kulku.Infrastructure\Kulku.Infrastructure.csproj" />
+    <ProjectReference Include="..\Kulku.Web.AspNetCore\Kulku.Web.AspNetCore.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="styles\lib\" />
@@ -92,5 +95,18 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>
+
+  <PropertyGroup>
+    <CompileScss Condition="'$(CompileScss)' == ''">true</CompileScss>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ScssFiles Include="Styles/**/*.scss" />
+  </ItemGroup>
+
+  <Target Name="CompileScss" BeforeTargets="Build" Inputs="@(ScssFiles);webcompilerconfiguration.json" Outputs="wwwroot/css/app.css" Condition="'$(CompileScss)' == 'true'">
+
+    <Exec Command="dotnet tool run webcompiler -- -c webcompilerconfiguration.json Styles/app.scss -o wwwroot/css -p disable" WorkingDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
 
 </Project>

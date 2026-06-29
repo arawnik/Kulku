@@ -95,6 +95,7 @@ Here's how to set up the project locally
    ```bash
    git clone https://dev.azure.com/jerejunttila/_git/Kulku
    cd Kulku
+   dotnet tool restore
    ```
 2. Follow instructions of each project to get them running:
    - For [**Frontend** (React + Next.js)](src/Kulku.Web/kulku.web.client/README.md)

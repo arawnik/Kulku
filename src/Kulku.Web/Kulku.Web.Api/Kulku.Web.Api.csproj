@@ -12,5 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Kulku.Infrastructure\Kulku.Infrastructure.csproj" />
+    <ProjectReference Include="..\Kulku.Web.AspNetCore\Kulku.Web.AspNetCore.csproj" />
   </ItemGroup>
 </Project>

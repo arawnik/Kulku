@@ -21,10 +21,14 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
-LICENSE
-README.md
 **/appsettings.*.json
 !**/appsettings.json
+**/.config
+**/libman.json
+**/Styles
+**/webcompilerconfiguration.json
+LICENSE
+README.md
 !**/.gitignore
 !.git/HEAD
 !.git/config

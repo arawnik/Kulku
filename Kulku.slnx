@@ -15,6 +15,7 @@
     <File Path=".github/workflows/docker-publish.yml" />
   </Folder>
   <Folder Name="/solution/">
+    <File Path=".config/dotnet-tools.json" />
     <File Path=".csharpierrc.yml" />
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
@@ -32,6 +33,7 @@
     <Project Path="src/Kulku.Persistence/Kulku.Persistence/Kulku.Persistence.csproj" />
     <Project Path="src/Kulku.Web/Kulku.Web.Admin/Kulku.Web.Admin.csproj" />
     <Project Path="src/Kulku.Web/Kulku.Web.Api/Kulku.Web.Api.csproj" />
+    <Project Path="src/Kulku.Web/Kulku.Web.AspNetCore/Kulku.Web.AspNetCore.csproj" Id="f0a6acfe-2b85-4cc1-b7b1-754572e4c0ee" />
     <Project Path="src/Kulku.Web/kulku.web.client/kulku.web.client.esproj">
       <Build />
       <Deploy />
