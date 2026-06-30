@@ -13,6 +13,18 @@ namespace Kulku.Web.Api;
 public static class ApiDependencyInjection
 {
     /// <summary>
+    /// Binds API-specific options from configuration.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection"/> to register options into.</param>
+    /// <returns>The updated <see cref="IServiceCollection"/>.</returns>
+    public static IServiceCollection AddApiOptions(this IServiceCollection services)
+    {
+        services.AddPresentationOptions();
+
+        return services;
+    }
+
+    /// <summary>
     /// Registers core API services.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/> to register services into.</param>

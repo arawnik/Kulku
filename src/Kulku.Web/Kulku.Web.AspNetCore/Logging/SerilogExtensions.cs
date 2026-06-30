@@ -1,4 +1,5 @@
 using System.Globalization;
+using Kulku.Web.AspNetCore.Observability;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -43,11 +44,13 @@ public static class SerilogExtensions
         builder.Services.AddSerilog(
             (services, loggerConfiguration) =>
             {
-                loggerConfiguration.ConfigureKulkuSerilog(
-                    builder.Configuration,
-                    builder.Environment,
-                    applicationName
-                );
+                loggerConfiguration
+                    .ConfigureKulkuSerilog(
+                        builder.Configuration,
+                        builder.Environment,
+                        applicationName
+                    )
+                    .ConfigureSerilogOtel(builder.Configuration, builder.Environment);
             }
         );
     }
@@ -119,6 +122,8 @@ public static class SerilogExtensions
         string applicationName
     )
     {
+        // Prevent accidental use of the full Serilog.Settings.Configuration DSL.
+        // Sinks, enrichers, and formatters are intentionally owned by code here.
         ValidateNoUnsupportedSerilogConfiguration(configuration);
 
         var loggingOptions =

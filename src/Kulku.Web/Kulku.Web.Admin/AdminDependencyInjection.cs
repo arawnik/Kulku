@@ -30,6 +30,8 @@ public static class AdminDependencyInjection
             .BindConfiguration(ManagementOptions.SectionName)
             .ValidateOnStart();
 
+        services.AddPresentationOptions();
+
         return services;
     }
 
