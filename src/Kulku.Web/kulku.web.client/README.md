@@ -6,7 +6,7 @@ Public-facing [React](https://react.dev) (with [Next.js](https://nextjs.org) fra
 
 ### Prerequisites
 
-- Node.js (≥22) & npm or Yarn
+- Node.js (≥26) & npm or Yarn
 - [.NET 10 API backend](../Kulku.Web.Api) running at `https://localhost:7219`
 - (Optional) Docker & Docker Compose
 

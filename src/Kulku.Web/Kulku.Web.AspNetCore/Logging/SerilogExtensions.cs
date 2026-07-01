@@ -19,6 +19,7 @@ public static class SerilogExtensions
             ["Microsoft.AspNetCore"] = LogEventLevel.Warning,
             ["Microsoft.Hosting.Lifetime"] = LogEventLevel.Information,
             ["Microsoft.EntityFrameworkCore.Database.Command"] = LogEventLevel.Warning,
+            ["OpenTelemetry"] = LogEventLevel.Warning,
             ["System"] = LogEventLevel.Warning,
             ["System.Net.Http.HttpClient"] = LogEventLevel.Warning,
             ["Kulku"] = LogEventLevel.Information,
@@ -29,6 +30,7 @@ public static class SerilogExtensions
         return new LoggerConfiguration()
             .MinimumLevel.Information()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
             .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
             .Enrich.FromLogContext()
             .Enrich.WithProperty("Application", applicationName)
@@ -50,7 +52,7 @@ public static class SerilogExtensions
                         builder.Environment,
                         applicationName
                     )
-                    .ConfigureSerilogOtel(builder.Configuration, builder.Environment);
+                    .ConfigureSerilogOtel(builder.Configuration, builder.Environment, applicationName);
             }
         );
     }

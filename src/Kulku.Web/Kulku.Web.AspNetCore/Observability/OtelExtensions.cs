@@ -52,7 +52,8 @@ internal static class OtelExtensions
     internal static void ConfigureSerilogOtel(
         this LoggerConfiguration loggerConfiguration,
         IConfiguration configuration,
-        IHostEnvironment environment
+        IHostEnvironment environment,
+        string applicationName
     )
     {
         // When OTLP log export is enabled, forward Serilog events to the collector via the
@@ -78,8 +79,10 @@ internal static class OtelExtensions
                 return;
             }
 
+            // Prefer the explicit service name from options; fall back to the application name
+            // so the Serilog OTLP sink always reports the same service.name as the OTel SDK resource.
             var serviceName = string.IsNullOrWhiteSpace(observabilityOptions.ServiceName)
-                ? "holdion"
+                ? applicationName
                 : observabilityOptions.ServiceName;
             var protocol = observabilityOptions.OtlpProtocol.ParseOtlpExportProtocol();
             var endpoint = OtlpSignalType.Logs.CreateOtlpSignalEndpoint(

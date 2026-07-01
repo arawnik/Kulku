@@ -32,7 +32,8 @@ public static class PresentationDependencyInjection
                     !o.TraceSampleRatio.HasValue
                     || (o.TraceSampleRatio.Value >= 0.0 && o.TraceSampleRatio.Value <= 1.0),
                 "Observability:TraceSampleRatio must be between 0.0 and 1.0."
-            );
+            )
+            .ValidateOnStart();
 
         services
             .AddOptions<KulkuLoggingOptions>()
@@ -44,7 +45,8 @@ public static class PresentationDependencyInjection
             .Validate(
                 o => o.FileSizeLimitBytes > 0,
                 "Logging:FileSizeLimitBytes must be greater than zero."
-            );
+            )
+            .ValidateOnStart();
 
         return services;
     }
@@ -146,6 +148,7 @@ public static class PresentationDependencyInjection
                 tracing
                     .AddAspNetCoreInstrumentation(o => o.RecordException = true)
                     .AddHttpClientInstrumentation()
+                    // db.statement (SQL text) is intentionally not captured for security.
                     .AddEntityFrameworkCoreInstrumentation()
                     .AddNpgsql();
 
