@@ -1,8 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 using Carter;
 using Kulku.Application.Abstractions.Localization;
+using Kulku.Persistence.Data;
 using Kulku.Web.Api.Localization;
 using Kulku.Web.AspNetCore;
+using Kulku.Web.AspNetCore.Health;
 
 namespace Kulku.Web.Api;
 
@@ -36,6 +38,11 @@ public static class ApiDependencyInjection
             .AddProblemDetails()
             .AddCarter()
             .AddScoped<ILanguageContext, RequestLanguageContext>();
+
+        services
+            .AddHealthChecks()
+            .AddDbContextCheck<AppDbContext>(HealthCheckNames.PostgresApp, tags: [HealthCheckTags.Ready])
+            .AddDbContextCheck<UserDbContext>(HealthCheckNames.PostgresUser, tags: [HealthCheckTags.Ready]);
 
         return services;
     }

@@ -71,6 +71,8 @@ try
 
     app.UsePresentationRequestLogging();
 
+    app.MapPresentationHealthEndpoints();
+
     app.UseAntiforgery();
     app.UseAssetStaticFiles();
 

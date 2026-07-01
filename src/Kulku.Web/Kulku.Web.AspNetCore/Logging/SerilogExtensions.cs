@@ -1,4 +1,5 @@
 using System.Globalization;
+using Kulku.Web.AspNetCore.Http;
 using Kulku.Web.AspNetCore.Observability;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -52,7 +53,11 @@ public static class SerilogExtensions
                         builder.Environment,
                         applicationName
                     )
-                    .ConfigureSerilogOtel(builder.Configuration, builder.Environment, applicationName);
+                    .ConfigureSerilogOtel(
+                        builder.Configuration,
+                        builder.Environment,
+                        applicationName
+                    );
             }
         );
     }
@@ -105,17 +110,7 @@ public static class SerilogExtensions
         return app;
     }
 
-    private static bool IsNoisyPath(PathString path)
-    {
-        return path.StartsWithSegments("/health", StringComparison.OrdinalIgnoreCase)
-            || path.StartsWithSegments("/openapi", StringComparison.OrdinalIgnoreCase)
-            || path.StartsWithSegments("/_framework", StringComparison.OrdinalIgnoreCase)
-            || path.StartsWithSegments("/_content", StringComparison.OrdinalIgnoreCase)
-            || path.StartsWithSegments("/css", StringComparison.OrdinalIgnoreCase)
-            || path.StartsWithSegments("/js", StringComparison.OrdinalIgnoreCase)
-            || path.StartsWithSegments("/images", StringComparison.OrdinalIgnoreCase)
-            || path.Equals("/favicon.ico", StringComparison.OrdinalIgnoreCase);
-    }
+    private static bool IsNoisyPath(PathString path) => NoisyPaths.IsNoisyPath(path);
 
     private static LoggerConfiguration ConfigureKulkuSerilog(
         this LoggerConfiguration loggerConfiguration,

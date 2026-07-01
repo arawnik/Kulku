@@ -1,10 +1,18 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Kulku.Web.AspNetCore.Health;
+using Kulku.Web.AspNetCore.Http;
 using Kulku.Web.AspNetCore.Logging;
 using Kulku.Web.AspNetCore.Observability;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
 using OpenTelemetry.Exporter;
@@ -150,7 +158,13 @@ public static class PresentationDependencyInjection
                 ApplySamplerIfConfigured(tracing, options);
 
                 tracing
-                    .AddAspNetCoreInstrumentation(o => o.RecordException = true)
+                    .AddAspNetCoreInstrumentation(o =>
+                    {
+                        o.RecordException = true;
+                        // Exclude health probes and static assets — they generate high-frequency
+                        // spans with no diagnostic value and inflate trace volume.
+                        o.Filter = ctx => !NoisyPaths.IsNoisyPath(ctx.Request.Path);
+                    })
                     .AddHttpClientInstrumentation()
                     // db.statement (SQL text) is intentionally not captured for security.
                     .AddEntityFrameworkCoreInstrumentation()
@@ -225,5 +239,62 @@ public static class PresentationDependencyInjection
         }
 
         tracing.SetSampler(new ParentBasedSampler(new TraceIdRatioBasedSampler(ratio)));
+    }
+
+    /// <summary>
+    /// Maps <c>/health/live</c> and <c>/health/ready</c> health check endpoints.
+    /// <para>
+    /// Use this in applications that do not use Carter (e.g. the Admin Blazor app).
+    /// Applications using Carter should register a <c>HealthEndpoints : ICarterModule</c> instead.
+    /// </para>
+    /// </summary>
+    public static IEndpointRouteBuilder MapPresentationHealthEndpoints(
+        this IEndpointRouteBuilder app
+    )
+    {
+        app.MapHealthChecks(
+                "/health/live",
+                new HealthCheckOptions
+                {
+                    Predicate = _ => false, // no checks: if the process responds, it's alive
+                }
+            )
+            .AllowAnonymous();
+        app.MapHealthChecks(
+                "/health/ready",
+                new HealthCheckOptions
+                {
+                    Predicate = check => check.Tags.Contains(HealthCheckTags.Ready),
+                    ResponseWriter = WriteHealthJsonResponse,
+                }
+            )
+            .AllowAnonymous();
+
+        return app;
+    }
+
+    private static Task WriteHealthJsonResponse(HttpContext context, HealthReport report)
+    {
+        context.Response.ContentType = "application/json";
+
+        var result = new
+        {
+            status = report.Status.ToString(),
+            checks = report.Entries.Select(e => new
+            {
+                name = e.Key,
+                status = e.Value.Status.ToString(),
+                duration = e.Value.Duration.ToString(),
+                description = e.Value.Exception?.Message,
+            }),
+        };
+
+        return context.Response.WriteAsJsonAsync(
+            result,
+            new JsonSerializerOptions
+            {
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            }
+        );
     }
 }

@@ -7,6 +7,7 @@ using Kulku.Web.Admin.Components.Layout;
 using Kulku.Web.Admin.Localization;
 using Kulku.Web.Admin.Options;
 using Kulku.Web.AspNetCore;
+using Kulku.Web.AspNetCore.Health;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 
@@ -45,6 +46,11 @@ public static class AdminDependencyInjection
         services.AddPresentationCore();
 
         services.AddRazorComponents().AddInteractiveServerComponents();
+
+        services
+            .AddHealthChecks()
+            .AddDbContextCheck<AppDbContext>(HealthCheckNames.PostgresApp, tags: [HealthCheckTags.Ready])
+            .AddDbContextCheck<UserDbContext>(HealthCheckNames.PostgresUser, tags: [HealthCheckTags.Ready]);
 
         services
             .AddScoped<ILanguageContext, RequestLanguageContext>()
