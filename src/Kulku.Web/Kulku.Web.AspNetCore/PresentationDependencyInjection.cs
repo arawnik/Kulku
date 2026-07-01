@@ -27,6 +27,10 @@ public static class PresentationDependencyInjection
         services
             .AddOptions<ObservabilityOptions>()
             .BindConfiguration(ObservabilityOptions.SectionName)
+            // Guard #1: validates the DI-bound IOptions<ObservabilityOptions> instance at host start.
+            // Guard #2 lives in ApplySamplerIfConfigured, which reads IConfiguration directly at
+            // service-registration time (before Build/host start). Both guards are intentional
+            // because they operate on independent object instances at different lifecycle stages.
             .Validate(
                 o =>
                     !o.TraceSampleRatio.HasValue
@@ -167,6 +171,7 @@ public static class PresentationDependencyInjection
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation()
+                    .AddProcessInstrumentation()
                     .AddNpgsqlInstrumentation()
                     .AddMeter("Microsoft.EntityFrameworkCore")
                     .AddMeter("Kulku.*")
@@ -208,6 +213,10 @@ public static class PresentationDependencyInjection
 
         var ratio = options.TraceSampleRatio.Value;
 
+        // Guard #2: validates the IConfiguration-read options instance at service-registration time
+        // (before Build/host start). Guard #1 lives in AddPresentationOptions via ValidateOnStart()
+        // and operates on the DI-bound IOptions<ObservabilityOptions> instance at a later stage.
+        // Both guards are intentional because they cover independent object instances.
         if (ratio is < 0.0 or > 1.0)
         {
             throw new InvalidOperationException(
