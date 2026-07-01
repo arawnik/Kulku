@@ -82,7 +82,7 @@ public static class SerilogExtensions
                 if (statusCode >= StatusCodes.Status400BadRequest)
                     return LogEventLevel.Warning;
 
-                if (IsNoisyPath(httpContext.Request.Path))
+                if (NoisyPaths.IsNoisyPath(httpContext.Request.Path))
                     return LogEventLevel.Debug;
 
                 return LogEventLevel.Information;
@@ -109,8 +109,6 @@ public static class SerilogExtensions
 
         return app;
     }
-
-    private static bool IsNoisyPath(PathString path) => NoisyPaths.IsNoisyPath(path);
 
     private static LoggerConfiguration ConfigureKulkuSerilog(
         this LoggerConfiguration loggerConfiguration,
