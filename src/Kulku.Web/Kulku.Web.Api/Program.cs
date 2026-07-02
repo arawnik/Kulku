@@ -21,9 +21,10 @@ try
     builder.Configuration.AddDockerSecrets(
         new Dictionary<string, string>
         {
-            { "ConnectionStrings:DefaultConnection", "kulku-default-conn" },
-            { "ConnectionStrings:UserConnection", "kulku-user-conn" },
-            { "Recaptcha:SecretKey", "kulku-recaptcha-secret" },
+            { "ConnectionStrings:DefaultConnection", "default-conn" },
+            { "ConnectionStrings:UserConnection", "user-conn" },
+            { "Recaptcha:SecretKey", "recaptcha-secret" },
+            { "Observability:OtlpHeaders", "otlp-headers" },
         }
     );
 
