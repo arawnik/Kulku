@@ -1,8 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 using Carter;
 using Kulku.Application.Abstractions.Localization;
+using Kulku.Persistence.Data;
 using Kulku.Web.Api.Localization;
 using Kulku.Web.AspNetCore;
+using Kulku.Web.AspNetCore.Health;
 
 namespace Kulku.Web.Api;
 
@@ -12,6 +14,18 @@ namespace Kulku.Web.Api;
 [ExcludeFromCodeCoverage]
 public static class ApiDependencyInjection
 {
+    /// <summary>
+    /// Binds API-specific options from configuration.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection"/> to register options into.</param>
+    /// <returns>The updated <see cref="IServiceCollection"/>.</returns>
+    public static IServiceCollection AddApiOptions(this IServiceCollection services)
+    {
+        services.AddPresentationOptions();
+
+        return services;
+    }
+
     /// <summary>
     /// Registers core API services.
     /// </summary>
@@ -24,6 +38,11 @@ public static class ApiDependencyInjection
             .AddProblemDetails()
             .AddCarter()
             .AddScoped<ILanguageContext, RequestLanguageContext>();
+
+        services
+            .AddHealthChecks()
+            .AddDbContextCheck<AppDbContext>(HealthCheckNames.PostgresApp, tags: [HealthCheckTags.Ready])
+            .AddDbContextCheck<UserDbContext>(HealthCheckNames.PostgresUser, tags: [HealthCheckTags.Ready]);
 
         return services;
     }

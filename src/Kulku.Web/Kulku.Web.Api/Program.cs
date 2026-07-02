@@ -3,6 +3,7 @@ using Kulku.Application;
 using Kulku.Domain;
 using Kulku.Infrastructure;
 using Kulku.Web.Api;
+using Kulku.Web.AspNetCore;
 using Kulku.Web.AspNetCore.Logging;
 using Serilog;
 using SoulNETLib.Clean.Infrastructure.Security;
@@ -30,11 +31,13 @@ try
 
     // Bind options and register services
     builder
-        .Services.AddApiCore()
+        .Services.AddApiOptions()
+        .AddApiCore()
         .AddApplication()
         .AddInfrastructure(builder.Configuration)
         .AddApiCors(builder.Configuration)
-        .AddApiOpenApi();
+        .AddApiOpenApi()
+        .AddObservability(builder.Configuration, builder.Environment);
 
     var app = builder.Build();
 

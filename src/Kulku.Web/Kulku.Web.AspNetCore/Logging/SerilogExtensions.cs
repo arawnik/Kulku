@@ -1,4 +1,6 @@
 using System.Globalization;
+using Kulku.Web.AspNetCore.Http;
+using Kulku.Web.AspNetCore.Observability;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +20,7 @@ public static class SerilogExtensions
             ["Microsoft.AspNetCore"] = LogEventLevel.Warning,
             ["Microsoft.Hosting.Lifetime"] = LogEventLevel.Information,
             ["Microsoft.EntityFrameworkCore.Database.Command"] = LogEventLevel.Warning,
+            ["OpenTelemetry"] = LogEventLevel.Warning,
             ["System"] = LogEventLevel.Warning,
             ["System.Net.Http.HttpClient"] = LogEventLevel.Warning,
             ["Kulku"] = LogEventLevel.Information,
@@ -28,6 +31,7 @@ public static class SerilogExtensions
         return new LoggerConfiguration()
             .MinimumLevel.Information()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
             .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
             .Enrich.FromLogContext()
             .Enrich.WithProperty("Application", applicationName)
@@ -43,11 +47,17 @@ public static class SerilogExtensions
         builder.Services.AddSerilog(
             (services, loggerConfiguration) =>
             {
-                loggerConfiguration.ConfigureKulkuSerilog(
-                    builder.Configuration,
-                    builder.Environment,
-                    applicationName
-                );
+                loggerConfiguration
+                    .ConfigureKulkuSerilog(
+                        builder.Configuration,
+                        builder.Environment,
+                        applicationName
+                    )
+                    .ConfigureSerilogOtel(
+                        builder.Configuration,
+                        builder.Environment,
+                        applicationName
+                    );
             }
         );
     }
@@ -72,7 +82,7 @@ public static class SerilogExtensions
                 if (statusCode >= StatusCodes.Status400BadRequest)
                     return LogEventLevel.Warning;
 
-                if (IsNoisyPath(httpContext.Request.Path))
+                if (NoisyPaths.IsNoisyPath(httpContext.Request.Path))
                     return LogEventLevel.Debug;
 
                 return LogEventLevel.Information;
@@ -100,18 +110,6 @@ public static class SerilogExtensions
         return app;
     }
 
-    private static bool IsNoisyPath(PathString path)
-    {
-        return path.StartsWithSegments("/health", StringComparison.OrdinalIgnoreCase)
-            || path.StartsWithSegments("/openapi", StringComparison.OrdinalIgnoreCase)
-            || path.StartsWithSegments("/_framework", StringComparison.OrdinalIgnoreCase)
-            || path.StartsWithSegments("/_content", StringComparison.OrdinalIgnoreCase)
-            || path.StartsWithSegments("/css", StringComparison.OrdinalIgnoreCase)
-            || path.StartsWithSegments("/js", StringComparison.OrdinalIgnoreCase)
-            || path.StartsWithSegments("/images", StringComparison.OrdinalIgnoreCase)
-            || path.Equals("/favicon.ico", StringComparison.OrdinalIgnoreCase);
-    }
-
     private static LoggerConfiguration ConfigureKulkuSerilog(
         this LoggerConfiguration loggerConfiguration,
         IConfiguration configuration,
@@ -119,6 +117,8 @@ public static class SerilogExtensions
         string applicationName
     )
     {
+        // Prevent accidental use of the full Serilog.Settings.Configuration DSL.
+        // Sinks, enrichers, and formatters are intentionally owned by code here.
         ValidateNoUnsupportedSerilogConfiguration(configuration);
 
         var loggingOptions =

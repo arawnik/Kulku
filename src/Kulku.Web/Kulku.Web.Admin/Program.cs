@@ -6,6 +6,7 @@ using Kulku.Web.Admin.Components;
 using Kulku.Web.Admin.Components.Account;
 using Kulku.Web.Admin.Endpoints;
 using Kulku.Web.Admin.Options;
+using Kulku.Web.AspNetCore;
 using Kulku.Web.AspNetCore.Logging;
 using Microsoft.Extensions.Options;
 using Serilog;
@@ -38,7 +39,8 @@ try
         .AddAdminAuthentication()
         .AddApplication()
         .AddInfrastructure(builder.Configuration)
-        .AddAssets();
+        .AddAssets()
+        .AddObservability(builder.Configuration, builder.Environment);
 
     var app = builder.Build();
 
@@ -68,6 +70,8 @@ try
     app.UseHttpsRedirection();
 
     app.UsePresentationRequestLogging();
+
+    app.MapPresentationHealthEndpoints();
 
     app.UseAntiforgery();
     app.UseAssetStaticFiles();

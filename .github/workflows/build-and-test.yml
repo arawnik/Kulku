@@ -11,7 +11,7 @@ permissions:
 
 env:
   DOTNET_VERSION: '10.0.x'
-  NODE_VERSION: '22'
+  NODE_VERSION: '26'
 
 jobs:
   build-and-test:
@@ -51,10 +51,16 @@ jobs:
       - name: Test server
         run: dotnet test -c Release --no-restore --no-build --verbosity normal --settings coverlet.runsettings --results-directory ./coverage
 
+      - name: Install dotnet-coverage
+        run: dotnet tool install --global dotnet-coverage
+
+      - name: Merge coverage reports
+        run: dotnet-coverage merge coverage/**/coverage.cobertura.xml --output coverage/merged.cobertura.xml --output-format cobertura
+
       - name: Code Coverage Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          filename: coverage/**/coverage.cobertura.xml
+          filename: coverage/merged.cobertura.xml
           badge: true
           fail_below_min: false
           format: markdown
@@ -70,7 +76,3 @@ jobs:
         with:
           recreate: true
           path: code-coverage-results.md
-
-#      - name: Test client
-#        working-directory: src/Kulku.Web/kulku.web.client
-#        run: npm run test

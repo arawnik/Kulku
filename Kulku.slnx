@@ -1,11 +1,11 @@
 <Solution>
-  <Folder Name="/docker/">
+  <Folder Name="/Docker/">
     <File Path=".dockerignore" />
     <File Path=".env.docker" />
     <File Path="docker-compose.release.yml" />
     <File Path="docker-compose.yml" />
   </Folder>
-  <Folder Name="/documents/">
+  <Folder Name="/Documents/">
     <File Path=".env.template" />
     <File Path="README.md" />
   </Folder>
@@ -14,15 +14,18 @@
     <File Path=".github/workflows/build-and-test.yml" />
     <File Path=".github/workflows/docker-publish.yml" />
   </Folder>
-  <Folder Name="/solution/">
+  <Folder Name="/Solution/">
     <File Path=".config/dotnet-tools.json" />
+    <File Path="coverlet.runsettings" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/Solution/Configs/">
     <File Path=".csharpierrc.yml" />
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
-    <File Path="coverlet.runsettings" />
-    <File Path="Directory.Build.props" />
-    <File Path="Directory.Packages.props" />
+    <File Path="src/Kulku.Web/Kulku.Web.Admin/webcompilerconfiguration.json" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/Kulku.Application/Kulku.Application.csproj" />
@@ -33,7 +36,7 @@
     <Project Path="src/Kulku.Persistence/Kulku.Persistence/Kulku.Persistence.csproj" />
     <Project Path="src/Kulku.Web/Kulku.Web.Admin/Kulku.Web.Admin.csproj" />
     <Project Path="src/Kulku.Web/Kulku.Web.Api/Kulku.Web.Api.csproj" />
-    <Project Path="src/Kulku.Web/Kulku.Web.AspNetCore/Kulku.Web.AspNetCore.csproj" Id="f0a6acfe-2b85-4cc1-b7b1-754572e4c0ee" />
+    <Project Path="src/Kulku.Web/Kulku.Web.AspNetCore/Kulku.Web.AspNetCore.csproj" />
     <Project Path="src/Kulku.Web/kulku.web.client/kulku.web.client.esproj">
       <Build />
       <Deploy />
