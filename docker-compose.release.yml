@@ -18,14 +18,18 @@ services:
         target: default-conn
       - source: kulku-user-conn_v3
         target: user-conn
+      - source: kulku-recaptcha-secret
+        target: recaptcha-secret
       - source: holdion-otlp-headers
         target: otlp-headers
-      - kulku-recaptcha-secret
     volumes:
       - /var/www/manager/letsencrypt:/etc/letsencrypt:ro
     environment:
       - ForceHttps
       - ASPNETCORE_ENVIRONMENT
+      - Observability__OtlpEndpoint
+      - ApplicationLogging__WriteToFile
+      - ApplicationLogging__WriteToConsole
       - Cors__AllowedOrigins
     ports:
       - target: 5144
@@ -56,6 +60,9 @@ services:
     environment:
       - ForceHttps
       - ASPNETCORE_ENVIRONMENT
+      - Observability__OtlpEndpoint
+      - ApplicationLogging__WriteToFile
+      - ApplicationLogging__WriteToConsole
       - Management__MigrateOnStart
       - Management__ContactUrl
       - Assets__LocalPath
