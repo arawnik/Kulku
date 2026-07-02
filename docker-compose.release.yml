@@ -7,15 +7,19 @@ secrets:
     external: true
   kulku-recaptcha-secret:
     external: true
+  holdion-otlp-headers:
+    external: true
 
 services:
   api:
     image: ghcr.io/arawnik/kulku-api:stable
     secrets:
       - source: kulku-default-conn_v3
-        target: kulku-default-conn
+        target: default-conn
       - source: kulku-user-conn_v3
-        target: kulku-user-conn
+        target: user-conn
+      - source: holdion-otlp-headers
+        target: otlp-headers
       - kulku-recaptcha-secret
     volumes:
       - /var/www/manager/letsencrypt:/etc/letsencrypt:ro
@@ -41,9 +45,11 @@ services:
     image: ghcr.io/arawnik/kulku-admin:stable
     secrets:
       - source: kulku-default-conn_v3
-        target: kulku-default-conn
+        target: default-conn
       - source: kulku-user-conn_v3
-        target: kulku-user-conn
+        target: user-conn
+      - source: holdion-otlp-headers
+        target: otlp-headers
     volumes:
       - /var/www/manager/letsencrypt:/etc/letsencrypt:ro
       - /var/www/jerejunttila/out:/app/assets:ro

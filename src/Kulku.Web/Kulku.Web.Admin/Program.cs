@@ -25,8 +25,9 @@ try
     builder.Configuration.AddDockerSecrets(
         new Dictionary<string, string>
         {
-            { "ConnectionStrings:DefaultConnection", "kulku-default-conn" },
-            { "ConnectionStrings:UserConnection", "kulku-user-conn" },
+            { "ConnectionStrings:DefaultConnection", "default-conn" },
+            { "ConnectionStrings:UserConnection", "user-conn" },
+            { "Observability:OtlpHeaders", "otlp-headers" },
         }
     );
 
