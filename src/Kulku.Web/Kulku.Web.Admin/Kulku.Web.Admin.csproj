@@ -5,6 +5,9 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..</DockerfileContext>
     <NeutralLanguage>en</NeutralLanguage>
+    <!-- Force the framework static web assets to always be generated to ensure docker works
+         correctly even when restoring with partial source -->
+    <RequiresAspNetWebAssets>true</RequiresAspNetWebAssets>
   </PropertyGroup>
 
   <ItemGroup>
