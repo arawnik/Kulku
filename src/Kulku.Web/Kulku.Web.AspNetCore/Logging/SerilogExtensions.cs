@@ -26,7 +26,7 @@ public static class SerilogExtensions
             ["Kulku"] = LogEventLevel.Information,
         };
 
-    public static ILogger CreateBootstrapLogger(string applicationName)
+    public static Serilog.ILogger CreateBootstrapLogger(string applicationName)
     {
         return new LoggerConfiguration()
             .MinimumLevel.Information()
